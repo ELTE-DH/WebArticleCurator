@@ -1,0 +1,15 @@
+{
+  "site": "blikk",
+  "site_schemas": "site_schemas.json",
+  "tags": "tags.json",
+  "year_from": 2009,
+  "month_from": 1,
+  "day_from":  21,
+  "year_until": 2018,
+  "month_until": 3,
+  "day_until": 22,
+  "output_file": "blikk_corpus__2009_01_21__2018_03_22.txt",
+  "log_file": "blikk_log__2009_01_21__2018_03_22.txt",
+  "article_begin_flag": "##docitem##\n",
+  "article_end_flag": "##docitem-end##\n"
+}

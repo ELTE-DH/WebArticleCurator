@@ -1,0 +1,91 @@
+{
+  "origo": {
+    "first_article_year": 1998,
+    "first_article_month": 12,
+    "first_article_day": 1,
+    "article_list_url_format": "http://www.origo.hu/hir-archivum/#year/#year#month#day.html",
+    "article_url_format": "http://www\\.origo\\.hu/.*?\\.html",
+    "before_article_url": "<h3><a href=\"",
+    "after_article_url": "\" title=\".*?\">.*?</a></h3>",
+    "article_list_urls_by_date": 1,
+    "article_list_urls_by_id": 0,
+    "encoding": "iso-8859-2",
+    "tags_key": "origo-html"
+  },	
+  "index": {
+    "first_article_year": 1999,
+    "first_article_month": 6,
+    "first_article_day": 30,
+    "article_list_url_format": "https://index.hu/24ora/?s=&tol=#year-#month-#day&ig=#year-#month-#day&tarskiadvanyokbanis=1&profil=&rovat=&cimke=&word=1&pepe=1&p=",
+    "article_url_format": "https://.*?\\.hu/.*/",
+    "before_article_url": "<h2 class=\"cim\"><a href=\"",
+    "after_article_url": "\">.*?</a></h2>",
+    "article_list_urls_by_date": 1,
+    "article_list_urls_by_id": 1,
+    "encoding": "utf-8",
+    "tags_key": "index-html"
+  },	
+  "index-warc": {
+    "tags_key": "index-warc"
+  },
+  "totalcar": {
+    "tags_key": "index-html"
+  },
+  "totalbike": {
+    "tags_key": "index-html"
+  },
+  "velvet": {
+    "tags_key": "index-html"
+  },
+  "divany": {
+    "tags_key": "divany-html"
+  },
+  "konyves.blog": {
+    "tags_key": "bloghu-html"
+  },
+  "homar.blog": {
+    "tags_key": "bloghu-html"
+  },
+  "comment.blog": {
+    "tags_key": "bloghu-html"
+  },
+  "blikk": {
+    "first_article_year": 2009,
+    "first_article_month": 1,
+    "first_article_day": 21,
+    "article_list_url_format": "http://www.blikk.hu/archivum/online?date=#year-#month-#day&page=",
+    "article_url_format": "http://www\\.blikk\\.hu/.*?",
+    "before_article_url": "<span class=\"archiveText\"><a href=\"",
+    "after_article_url": "\">",
+    "article_list_urls_by_date": 1,
+    "article_list_urls_by_id": 1,
+    "encoding": "utf-8",
+    "tags_key": "blikk-html"
+  },
+  "444": {
+    "first_article_year": 0,
+    "first_article_month": 0,
+    "first_article_day": 0,
+    "article_list_url_format": "https://444.hu/archivum?page=",
+    "article_url_format": "https://444\\.hu/.*?",
+    "before_article_url": "<div class=\"card\">\\s*?<h3>\\s*?<a href=\"",
+    "after_article_url": "\">",
+    "article_list_urls_by_date": 0,
+    "article_list_urls_by_id": 1,
+    "encoding": "utf-8",
+    "tags_key": "444-html"
+  },
+  "mno": {
+    "first_article_year": 0,
+    "first_article_month": 0,
+    "first_article_day": 0,
+    "article_list_url_format": "https://mno.hu/kereses/archivum/belfold/",
+    "article_url_format": ".*?",
+    "before_article_url": "<p class=\"szerzo\">.*?<h3><a href=\"",
+    "after_article_url": "\">",
+    "article_list_urls_by_date": 0,
+    "article_list_urls_by_id": 1,
+    "encoding": "utf-8",
+    "tags_key": "mno-html"
+  }  
+}

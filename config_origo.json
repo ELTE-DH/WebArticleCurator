@@ -1,0 +1,15 @@
+{
+  "site": "origo",
+  "site_schemas": "site_schemas.json",
+  "tags": "tags.json",
+  "year_from": 1999,
+  "month_from": 12,
+  "day_from":  1,
+  "year_until": 2018,
+  "month_until": 3,
+  "day_until": 18,
+  "output_file": "origo_corpus.txt",
+  "log_file": "origo_log.txt",
+  "article_begin_flag": "##docitem##\n",
+  "article_end_flag": "##docitem-end##\n"
+}

@@ -1,0 +1,15 @@
+{
+  "site": "index",
+  "site_schemas": "site_schemas.json",
+  "tags": "tags.json",
+  "year_from": 0,
+  "month_from": 0,
+  "day_from":  0,
+  "year_until": 0,
+  "month_until": 0,
+  "day_until": 0,
+  "output_file": "index_corpus.txt",
+  "log_file": "index_log.txt",
+  "article_begin_flag": "##docitem##\n",
+  "article_end_flag": "##docitem-end##\n"
+}
