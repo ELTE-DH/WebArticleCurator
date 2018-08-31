@@ -107,6 +107,19 @@ def gen_corpus_from_id_url_list(article_list_url, converter, file_out, logger_, 
         return article_list_raw_html, article_list_only_urls
 
 
+def extract_article_urls_from_page(article_list_raw_html, settings):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    """
+    urls = []
+    for code_line in settings['ARTICLE_LINK_FORMAT_RE'].findall(article_list_raw_html):
+        code_line = settings['BEFORE_ARTICLE_URL_RE'].sub('', code_line)
+        code_line = settings['AFTER_ARTICLE_URL_RE'].sub('', code_line)
+        urls.append(code_line)
+    return urls
+
+
+# TODO: This is about downloading we want to support downloading to and reading WARC archives
 def download_page(url, logger_):
     """
         downloads and returns the raw HTML code from a given URL with given encoding
@@ -126,18 +139,7 @@ def download_page(url, logger_):
     return page_str
 
 
-def extract_article_urls_from_page(article_list_raw_html, settings):
-    """
-        extracts and returns as a list the URLs belonging to articles from an HTML code
-    """
-    urls = []
-    for code_line in settings['ARTICLE_LINK_FORMAT_RE'].findall(article_list_raw_html):
-        code_line = settings['BEFORE_ARTICLE_URL_RE'].sub('', code_line)
-        code_line = settings['AFTER_ARTICLE_URL_RE'].sub('', code_line)
-        urls.append(code_line)
-    return urls
-
-
+# TODO: This is article extraction
 def articles_to_corpus(article_list_only_urls, converter, file_out, settings, logger_):
     """
         converts the raw HTML code of an article to corpus format and saves it to the output file
