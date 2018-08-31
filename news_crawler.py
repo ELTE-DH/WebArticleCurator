@@ -11,9 +11,6 @@
 # import external libs
 import sys
 from datetime import timedelta
-import urllib.request
-import urllib.error
-from urllib import parse
 
 import articleDateExtractor
 
@@ -21,6 +18,7 @@ import articleDateExtractor
 import logger
 import corpus_converter
 import input_constants_wrapper
+from enhanced_downloader import WarcDownloader
 
 
 def main():
@@ -40,6 +38,7 @@ def main():
     file_out = open(settings['output_file'], 'a+', encoding=settings['encoding'])
     logger_ = logger.Logger(settings['log_file'])
     converter = corpus_converter.CorpusConverter(settings['site_schemas'], settings['tags'])
+    downloader = WarcDownloader('example.warc.gz', logger_)
 
     # generate URLs of lists of articles
     # extract URLs of articles from these lists
@@ -67,7 +66,8 @@ def main():
         return
 
     for article_list_url in article_list_urls:
-        gen_corpus_from_id_url_list_w_subpages(article_list_url, converter, file_out, logger_, settings, max_pagenum)
+        gen_corpus_from_id_url_list_w_subpages(article_list_url, converter, file_out, downloader, logger_, settings,
+                                               max_pagenum)
 
     file_out.close()
 
@@ -82,28 +82,29 @@ def gen_article_list_url_from_date(date_from, delta_day, settings):
     return article_list_url
 
 
-def gen_corpus_from_id_url_list_w_subpages(article_list_url, converter, file_out, logger_, settings, max_pagenum):
+def gen_corpus_from_id_url_list_w_subpages(article_list_url, converter, file_out, downloader, logger_, settings,
+                                           max_pagenum):
     """
         generates corpus from a URL regarding to a sub-pages that contains article URLs
     """
     # Download the first page
     article_list_raw_html, article_list_only_urls = \
-        gen_corpus_from_id_url_list(article_list_url, converter, file_out, logger_, settings)
+        gen_corpus_from_id_url_list(article_list_url, converter, file_out, downloader, logger_, settings)
     page_num = 0
     # if the last article list page does not contain any links to articles, go to next date
     while article_list_raw_html is not None and len(article_list_only_urls) > 0 and page_num < max_pagenum:
         page_num += 1
         article_list_url = '{0}{1}'.format(article_list_url, page_num)
         article_list_raw_html, article_list_only_urls = \
-            gen_corpus_from_id_url_list(article_list_url, converter, file_out, logger_, settings)
+            gen_corpus_from_id_url_list(article_list_url, converter, file_out, downloader, logger_, settings)
 
 
-def gen_corpus_from_id_url_list(article_list_url, converter, file_out, logger_, settings):
+def gen_corpus_from_id_url_list(article_list_url, converter, file_out, downloader, logger_, settings):
         article_list_only_urls = []
-        article_list_raw_html = download_page(article_list_url, logger_)
+        article_list_raw_html = downloader.download_url(article_list_url)
         if article_list_raw_html is not None:
             article_list_only_urls = extract_article_urls_from_page(article_list_raw_html, settings)
-            articles_to_corpus(article_list_only_urls, converter, file_out, settings, logger_)
+            articles_to_corpus(article_list_only_urls, converter, file_out, settings, downloader, logger_)
         return article_list_raw_html, article_list_only_urls
 
 
@@ -119,28 +120,8 @@ def extract_article_urls_from_page(article_list_raw_html, settings):
     return urls
 
 
-# TODO: This is about downloading we want to support downloading to and reading WARC archives
-def download_page(url, logger_):
-    """
-        downloads and returns the raw HTML code from a given URL with given encoding
-    """
-    try:
-        scheme, netloc, path, query, fragment = parse.urlsplit(url)
-        path = parse.quote(path)
-        url = parse.urlunsplit((scheme, netloc, path, query, fragment))
-        connection = urllib.request.urlopen(url)
-        page_bytes = connection.read()
-        page_str = page_bytes.decode(connection.headers.get_content_charset(), 'ignore')
-        connection.close()
-    except urllib.error.URLError:
-        logger_.log('', 'urllib.error.URLError happened during downloading this article list,'
-                        ' the program ignores it and jumps to the next one')
-        page_str = None
-    return page_str
-
-
 # TODO: This is article extraction
-def articles_to_corpus(article_list_only_urls, converter, file_out, settings, logger_):
+def articles_to_corpus(article_list_only_urls, converter, file_out, settings, downloader, logger_):
     """
         converts the raw HTML code of an article to corpus format and saves it to the output file
     """
@@ -161,7 +142,7 @@ def articles_to_corpus(article_list_only_urls, converter, file_out, settings, lo
                 date_after_interval = article_date.date() > settings['DATE_UNTIL']
 
             if not (date_before_interval or date_after_interval):
-                article_raw_html = download_page(url, logger_)  # TODO: Either way we end up download_page(...)
+                article_raw_html = downloader.download_url(url)  # TODO: Either way we end up download_page(...)
 
             elif date_before_interval:
                 print(date_before_interval)
@@ -170,7 +151,7 @@ def articles_to_corpus(article_list_only_urls, converter, file_out, settings, lo
             else:
                 continue
         else:
-            article_raw_html = download_page(url, logger_)
+            article_raw_html = downloader.download_url(url)
 
         try:
             corpus_formatted_article = converter.convert_doc_by_json(article_raw_html, url)
