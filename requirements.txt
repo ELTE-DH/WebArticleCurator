@@ -2,3 +2,4 @@ articleDateExtractor
 chardet
 requests
 warcio
+newspaper3k
