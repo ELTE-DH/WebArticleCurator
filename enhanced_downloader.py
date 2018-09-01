@@ -8,6 +8,7 @@ import sys
 from io import BytesIO
 
 from warcio.warcwriter import WARCWriter
+from warcio.archiveiterator import ArchiveIterator
 from warcio.statusandheaders import StatusAndHeaders
 
 from requests import Session
@@ -23,7 +24,7 @@ class WarcDownloader:
     """
         Download URL with HTTP GET, save to a WARC file and return the decoded text
     """
-    def __init__(self, filename, logger, program_name='corpusbuilder 1.0', user_agent=None, overwrite_warc=True):
+    def __init__(self, filename, logger, program_name='corpusbuilder 1.0', user_agent=None, overwrite_warc=True, err_threshold=10):
         if not overwrite_warc:
             num = 0
             while os.path.exists(filename):
@@ -41,6 +42,8 @@ class WarcDownloader:
         self._logger = logger
         self._req_headers = {'Accept-Encoding': 'identity', 'User-agent': user_agent}
         self._requests_get = Session().get
+        self._error_count = 0
+        self._error_threshold = err_threshold
 
         self._writer = WARCWriter(self._output_file, gzip=True)
         # INFO RECORD
@@ -65,6 +68,16 @@ class WarcDownloader:
         except RequestException as err:
             self._logger.log(url, 'RequestException happened during downloading: {0} \n\n'
                                   ' The program ignores it and jumps to the next one.'.format(err))
+            self._error_count += 1
+            if self._error_count >= self._error_threshold:
+                raise NameError('Too many error happened! Threshold exceeded! See log for details!')
+            return None
+
+        if resp.status_code != 200:
+            self._logger.log(url, 'Downloading failed with status code: {0} {1}'.format(resp.status_code, resp.reason))
+            self._error_count += 1
+            if self._error_count >= self._error_threshold:
+                raise NameError('Too many error happened! Threshold exceeded! See log for details!')
             return None
 
         # REQUEST
@@ -80,8 +93,6 @@ class WarcDownloader:
         # RESPONSE
         resp_status = '{0} {1}'.format(resp.status_code, resp.reason)
         resp_headers_list = resp.raw.headers.items()  # get raw headers from urllib3
-        resp_http_headers = StatusAndHeaders(resp_status, resp_headers_list, protocol=proto)
-
         peer_name = resp.raw._fp.fp.raw._sock.getpeername()[0]  # Must get peer_name before the content is read
 
         data = resp.raw.read()  # To be able to return decoded and also write warc
@@ -91,13 +102,54 @@ class WarcDownloader:
         text = data.decode(enc, 'ignore')
         data_stream = BytesIO(data)
 
+        resp_http_headers = StatusAndHeaders(resp_status, resp_headers_list, protocol=proto)
+
         resp_record = self._writer.create_warc_record(url, 'response', payload=data_stream,
                                                       http_headers=resp_http_headers,
-                                                      warc_headers_dict={'WARC-IP-Address': peer_name})
+                                                      warc_headers_dict={'WARC-IP-Address': peer_name,
+                                                                         'WARC-X-Detected-Encoding': enc})  # TODO: This is the best solution? http_headers.get_header('content-encoding')
         self._writer.write_record(resp_record)
 
         return text
 
+
+class WarcReader:
+    def __init__(self, filename, logger, **kwargs):
+        self._stream = open(filename, 'rb')  # TODO: error handling
+        self._url_index = {}
+        self._count = 0
+        self._logger = logger
+        self.create_index()
+
+    def __del__(self):
+        self._stream.close()
+
+    def create_index(self):
+        archive_iterator = ArchiveIterator(self._stream)
+        for record in archive_iterator:
+            if record.rec_type == 'response':
+                self._url_index[record.rec_headers.get_header('WARC-Target-URI')] = (archive_iterator.get_record_offset(), archive_iterator.get_record_length())
+                self._count += 1
+        if self._count != len(self._url_index):
+            raise KeyError('Double URL detected in WARC file!')
+        if self._count == 0:
+            raise IndexError('No index created or no response records in the WARC file!')
+        self._stream.seek(0)
+
+    def download(self, url):
+        text = None
+        d = self._url_index.get(url)
+        if d is not None:
+            offset, length = d
+            self._stream.seek(offset)
+            record = next(iter(ArchiveIterator(self._stream)))
+            data = record.content_stream().read()
+            enc = record.rec_headers.get_header('WARC-X-Detected-Encoding', 'UTF-8')
+            text = data.decode(enc, 'ignore')
+        else:
+            self._logger.log(url, 'URL not found in WARC!')
+
+        return text
 
 def main():
     filename = 'example.warc.gz'
@@ -106,6 +158,11 @@ def main():
     w = WarcDownloader(filename, Logger('WarcDownloader-test.log'))
     t = w.download_url(url)
     print(t)
+    r = WarcReader(filename, Logger('WarcReader-test.log'))
+    t2 = r.download(url)
+    print(t2)
+    print(t==t2)
+
 
 
 if __name__ == '__main__':

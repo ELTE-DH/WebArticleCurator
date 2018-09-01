@@ -9,7 +9,7 @@ from datetime import timedelta
 from logger import Logger
 from corpus_converter import CorpusConverter
 from input_constants_wrapper import wrap_input_consants
-from enhanced_downloader import WarcDownloader
+from enhanced_downloader import WarcDownloader, WarcReader
 from extractor import extract_article_urls_from_page, articles_to_corpus
 
 
@@ -30,7 +30,12 @@ def main():
     file_out = open(settings['output_file'], 'a+', encoding=settings['encoding'])
     logger_ = Logger(settings['log_file'])
     converter = CorpusConverter(settings['site_schemas'], settings['tags'])
-    downloader = WarcDownloader('example.warc.gz', logger_)
+    filename = 'example.warc.gz'
+    download == True
+    if download == True:
+        downloader = WarcDownloader('example.warc.gz', logger_)
+    else:
+        downloader = WarcReader('example.warc.gz', logger_)
 
     # generate URLs of lists of articles
     # extract URLs of articles from these lists
