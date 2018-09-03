@@ -86,8 +86,8 @@ class WarcDownloader:
         reqv_headers['Host'] = netloc
 
         proto = 'HTTP/{0}'.format(respv_str[resp.raw.version])
-        reqv_http_headers = StatusAndHeaders('GET {0} {1}'.format(path, proto), reqv_headers.items(),
-                                             is_http_request=True)
+        reqv_http_headers = StatusAndHeaders('GET {0} {1}'.format(urlunparse(('', '', path, params, query, fragment)),
+                                                                  proto), reqv_headers.items(), is_http_request=True)
         reqv_record = self._writer.create_warc_record(url, 'request', http_headers=reqv_http_headers)
         self._writer.write_record(reqv_record)
 

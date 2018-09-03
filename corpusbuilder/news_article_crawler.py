@@ -36,6 +36,8 @@ class NewsArticleCrawler:
 
     def __del__(self):
         self._file_out.close()
+        for url in self._new_urls:
+            self._logger_.log(url, 'NEW URL')
 
     def process_urls(self, it):
         for url in it:

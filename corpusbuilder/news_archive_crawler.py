@@ -30,6 +30,12 @@ class NewsArchiveCrawler:
         else:
             self._downloader = WarcReader(filename, self._logger_)
 
+    def __del__(self):
+        for url in self.good_urls:
+            self._logger_.log(url, 'GOOD ARCHIVE URL')
+        for url in self.problematic_urls:
+            self._logger_.log(url, 'PROBLEMATIC ARCHIVE URL')
+
     def url_iterator(self):
         # if URLs of current website's archive pages are generated based on an ID,
         # which is a positive integer growing one by one

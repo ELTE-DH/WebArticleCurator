@@ -25,7 +25,7 @@ if __name__ == '__main__':
     # For the article links only...
     archive_crawler = NewsArchiveCrawler(portal_settings, True, 'example-archive.warc.gz')
     for url in archive_crawler.url_iterator():  # Get the list of urls in the archive...
-        print(url)
+        print(url, flush=True)
     articles_crawler = NewsArticleCrawler('example-article.warc.gz', 'example-archive.warc.gz', True,
                                           portal_settings)
     articles_crawler.download_and_extract_all_articles()
