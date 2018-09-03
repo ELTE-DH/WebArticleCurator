@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
+
 from datetime import timedelta
 
-from enhanced_downloader import WarcDownloader, WarcReader
-from extractor import extract_article_urls_from_page
-from logger import Logger
+from corpusbuilder.enhanced_downloader import WarcDownloader, WarcReader
+from corpusbuilder.extractor import extract_article_urls_from_page
+from corpusbuilder.logger import Logger
 
 
 class NewsArchiveCrawler:

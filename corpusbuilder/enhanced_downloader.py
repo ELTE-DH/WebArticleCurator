@@ -158,7 +158,7 @@ class WarcReader:
 def main():
     filename = 'example.warc.gz'
     url = 'https://index.hu/belfold/2018/08/27/fidesz_media_helyreigazitas/'
-    from logger import Logger
+    from corpusbuilder.logger import Logger
     w = WarcDownloader(filename, Logger('WarcDownloader-test.log'))
     t = w.download_url(url)
     print(t)

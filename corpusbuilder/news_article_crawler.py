@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
+
 from articleDateExtractor import extractArticlePublishedDate
 
-from corpus_converter import CorpusConverter
-from enhanced_downloader import WarcDownloader, WarcReader
-from extractor import extract_article_urls_from_page
-from logger import Logger
-from news_archive_crawler import NewsArchiveCrawler
+from corpusbuilder.corpus_converter import CorpusConverter
+from corpusbuilder.enhanced_downloader import WarcDownloader, WarcReader
+from corpusbuilder.extractor import extract_article_urls_from_page
+from corpusbuilder.logger import Logger
+from corpusbuilder.news_archive_crawler import NewsArchiveCrawler
 
 
 class NewsArticleCrawler:
