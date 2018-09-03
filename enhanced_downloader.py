@@ -24,7 +24,8 @@ class WarcDownloader:
     """
         Download URL with HTTP GET, save to a WARC file and return the decoded text
     """
-    def __init__(self, filename, logger, program_name='corpusbuilder 1.0', user_agent=None, overwrite_warc=True, err_threshold=10):
+    def __init__(self, filename, logger, program_name='corpusbuilder 1.0', user_agent=None, overwrite_warc=True,
+                 err_threshold=10):
         if not overwrite_warc:
             num = 0
             while os.path.exists(filename):
@@ -104,17 +105,18 @@ class WarcDownloader:
 
         resp_http_headers = StatusAndHeaders(resp_status, resp_headers_list, protocol=proto)
 
+        # TODO: This is the best solution? http_headers.get_header('content-encoding')
         resp_record = self._writer.create_warc_record(url, 'response', payload=data_stream,
                                                       http_headers=resp_http_headers,
                                                       warc_headers_dict={'WARC-IP-Address': peer_name,
-                                                                         'WARC-X-Detected-Encoding': enc})  # TODO: This is the best solution? http_headers.get_header('content-encoding')
+                                                                         'WARC-X-Detected-Encoding': enc})
         self._writer.write_record(resp_record)
 
         return text
 
 
 class WarcReader:
-    def __init__(self, filename, logger, **kwargs):
+    def __init__(self, filename, logger, *_, **__):
         self._stream = open(filename, 'rb')  # TODO: error handling
         self._url_index = {}
         self._count = 0
@@ -125,10 +127,11 @@ class WarcReader:
         self._stream.close()
 
     def create_index(self):
-        archive_iterator = ArchiveIterator(self._stream)
-        for record in archive_iterator:
+        archive_it = ArchiveIterator(self._stream)
+        for record in archive_it:
             if record.rec_type == 'response':
-                self._url_index[record.rec_headers.get_header('WARC-Target-URI')] = (archive_iterator.get_record_offset(), archive_iterator.get_record_length())
+                self._url_index[record.rec_headers.get_header('WARC-Target-URI')] = (archive_it.get_record_offset(),
+                                                                                     archive_it.get_record_length())
                 self._count += 1
         if self._count != len(self._url_index):
             raise KeyError('Double URL detected in WARC file!')
@@ -136,7 +139,7 @@ class WarcReader:
             raise IndexError('No index created or no response records in the WARC file!')
         self._stream.seek(0)
 
-    def download(self, url):
+    def download_url(self, url):
         text = None
         d = self._url_index.get(url)
         if d is not None:
@@ -151,6 +154,7 @@ class WarcReader:
 
         return text
 
+
 def main():
     filename = 'example.warc.gz'
     url = 'https://index.hu/belfold/2018/08/27/fidesz_media_helyreigazitas/'
@@ -159,10 +163,9 @@ def main():
     t = w.download_url(url)
     print(t)
     r = WarcReader(filename, Logger('WarcReader-test.log'))
-    t2 = r.download(url)
+    t2 = r.download_url(url)
     print(t2)
-    print(t==t2)
-
+    print(t == t2)
 
 
 if __name__ == '__main__':

@@ -3,10 +3,7 @@
 
 """Here comes the stuff to extract more URL or the text from a specific downloaded webpage"""
 
-import sys
-
 from newspaper import Article
-from articleDateExtractor import extractArticlePublishedDate
 
 
 def extract_article_urls_from_page(article_list_raw_html, settings):
