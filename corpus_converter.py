@@ -32,15 +32,19 @@ class CorpusConverter:
         self.endl_ws_pattern = re.compile('\n ')
         self.multi_endl_pattern = re.compile('\n{2,}')
 
-    def convert_doc_by_json(self, doc_in, json_key_src):
+    def article_to_corpus(self, json_key_src, doc_in):
         """
-
+        converts the raw HTML code of an article to corpus format and saves it to the output file
         :param doc_in: the document to convert
         :param json_key_src: a URL from which the key of setting set to use can be mined, or that key itself
             tries to map the given json_key_src string to a site-spcific setting set int the JSON file by checking
             if it equals or matches to one of the keys of setting sets
         :return:
         """
+        # url_match = settings['URL_PATTERN'].match(url)
+        # url_path = url_match.group(5)
+        # print(url_path)
+
         # check if json_key_src is the same as one of the JSON keys
         if json_key_src in self.site_schemas:
             json_key = json_key_src
@@ -56,13 +60,20 @@ class CorpusConverter:
                 if possible_json_key in self.site_schemas:
                     json_key = possible_json_key
                 else:
-                    # TODO: függvénybe
-                    raise ValueError('Configuration type key ' + possible_json_key + ' can not be found in JSON file!')
+                    self._logger_.log(json_key_src, 'Configuration type key {0} can not be found in JSON file!'.
+                                      format(possible_json_key))
+                    return
             else:
-                # TODO: függvénybe
-                raise ValueError('Configuration type key ' + json_key_src + ' can not be found in JSON file!')
+                self._logger_.log(json_key_src, 'Configuration type key {0} can not be found in JSON file!'.
+                                  format(json_key_src))
+                return
         # if json_key was/contained a valid key then call the converter function
-        return self.__convert_doc(doc_in, self.tags[self.site_schemas[json_key]['tags_key']])
+        article_corpus_format = self.__convert_doc(doc_in, self.tags[self.site_schemas[json_key]['tags_key']])
+
+        print(self._settings['article_begin_flag'], article_corpus_format, self._settings['article_end_flag'],
+              sep='', end='', file=self._file_out)
+        self._logger_.log(json_key_src, 'download OK')
+        return
 
     def __convert_doc(self, doc_in, json_tags_key):
         """
@@ -95,19 +106,3 @@ class CorpusConverter:
             matched_part = re.sub(old_tag_open, '<'+new_tag+'> ', matched_part)
             matched_part = re.sub(old_tag_close, ' </'+new_tag+'>\n', matched_part)
         return matched_part
-
-    def article_to_corpus(self, url, article_raw_html):
-        """
-            converts the raw HTML code of an article to corpus format and saves it to the output file
-        """
-        # url_match = settings['URL_PATTERN'].match(url)
-        # url_path = url_match.group(5)
-        # print(url_path)
-        try:
-            article_corpus_format = self.convert_doc_by_json(article_raw_html, url)
-        except ValueError as e:
-            self._logger_.log(url, e)
-            return
-        print(self._settings['article_begin_flag'], article_corpus_format, self._settings['article_end_flag'], sep='',
-              end='', file=self._file_out)
-        self._logger_.log(url, 'download OK')

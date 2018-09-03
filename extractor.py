@@ -18,12 +18,20 @@ def extract_article_urls_from_page(article_list_raw_html, settings):
     return urls
 
 
-# TODO: something like this...
-def articles_to_corpus_newspaper(url, page_str, file_out, downloader, logger_):
-    article = Article(url, memoize_articles=False)
-    article.download(input_html=page_str)
-    article.parse()
-    print(article.title)
-    print(article.publish_date)
-    print(article.authors)
-    print(article.text)
+class CorpusConverterNewspaper:
+    def __init__(self, settings, file_out, logger_):
+        self._file_out = file_out
+        self._logger_ = logger_
+        self._settings = settings
+
+    def article_to_corpus(self, url, page_str):
+        article = Article(url, memoize_articles=False)
+        article.download(input_html=page_str)
+        article.parse()
+        # article.title
+        # article.publish_date
+        # article.authors
+        # article.text
+        print(self._settings['article_begin_flag'], '\n'.join((article.title, article.text)),
+              self._settings['article_end_flag'], sep='', end='', file=self._file_out)
+        self._logger_.log(url, 'download OK')
