@@ -18,23 +18,6 @@ def extract_article_urls_from_page(article_list_raw_html, settings):
     return urls
 
 
-def article_to_corpus(url, article_raw_html, converter, file_out, settings, logger_):
-    """
-        converts the raw HTML code of an article to corpus format and saves it to the output file
-    """
-    # url_match = settings['URL_PATTERN'].match(url)
-    # url_path = url_match.group(5)
-    # print(url_path)
-    try:
-        article_corpus_format = converter.convert_doc_by_json(article_raw_html, url)
-    except ValueError as e:
-        logger_.log(url, e)
-        return
-    print(settings['article_begin_flag'], article_corpus_format, settings['article_end_flag'], sep='', end='',
-          file=file_out)
-    logger_.log(url, 'download OK')
-
-
 # TODO: something like this...
 def articles_to_corpus_newspaper(url, page_str, file_out, downloader, logger_):
     article = Article(url, memoize_articles=False)

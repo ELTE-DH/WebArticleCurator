@@ -6,12 +6,14 @@ import json
 
 
 class CorpusConverter:
-    def __init__(self, site_schemas, tags_filename):
-        """
-        :param site_schemas: can be a raw filename or
-         a JSON data structure which was already read by the calling program
-        :param tags_filename:
-        """
+    def __init__(self, settings, file_out, logger_):
+        # can be a raw filename or a JSON data structure which was already read by the calling program
+        site_schemas = settings['site_schemas']
+        tags_filename = settings['tags']
+        self._settings = settings
+        self._file_out = file_out
+        self._logger_ = logger_
+
         if isinstance(site_schemas, str):  # if it is a filename, open that file
             self.site_schemas = json.load(open(site_schemas, encoding='UTF-8'))
         elif isinstance(site_schemas, dict):
@@ -93,3 +95,19 @@ class CorpusConverter:
             matched_part = re.sub(old_tag_open, '<'+new_tag+'> ', matched_part)
             matched_part = re.sub(old_tag_close, ' </'+new_tag+'>\n', matched_part)
         return matched_part
+
+    def article_to_corpus(self, url, article_raw_html):
+        """
+            converts the raw HTML code of an article to corpus format and saves it to the output file
+        """
+        # url_match = settings['URL_PATTERN'].match(url)
+        # url_path = url_match.group(5)
+        # print(url_path)
+        try:
+            article_corpus_format = self.convert_doc_by_json(article_raw_html, url)
+        except ValueError as e:
+            self._logger_.log(url, e)
+            return
+        print(self._settings['article_begin_flag'], article_corpus_format, self._settings['article_end_flag'], sep='',
+              end='', file=self._file_out)
+        self._logger_.log(url, 'download OK')
