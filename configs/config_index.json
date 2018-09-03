@@ -10,6 +10,7 @@
   "day_until": 0,
   "output_file": "index_corpus.txt",
   "log_file": "index_log.txt",
+  "log_file_archive": "index_archive_log.txt",
   "article_begin_flag": "##docitem##\n",
   "article_end_flag": "##docitem-end##\n"
 }

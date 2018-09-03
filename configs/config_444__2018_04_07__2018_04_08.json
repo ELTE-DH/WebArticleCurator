@@ -10,6 +10,7 @@
   "day_until": 0,
   "output_file": "444_corpus.txt",
   "log_file": "444_log.txt",
+  "log_file_archive": "444_archive_log.txt",
   "article_begin_flag": "##docitem##\n",
   "article_end_flag": "##docitem-end##\n"
 }

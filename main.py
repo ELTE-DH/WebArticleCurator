@@ -11,6 +11,7 @@ from corpusbuilder.news_article_crawler import NewsArticleCrawler
 
 # run the whole thing
 if __name__ == '__main__':
+    # TODO: CLI Parsing with argparse
     # get the command line argument it is the configuration file's name
     try:
         current_task_config_filename = sys.argv[1]
@@ -23,8 +24,8 @@ if __name__ == '__main__':
     portal_settings = wrap_input_consants(current_task_config_filename)
     # For the article links only...
     archive_crawler = NewsArchiveCrawler(portal_settings, True, 'example-archive.warc.gz')
-    archive_crawler.url_iterator()  # Get the list of urls in the archive...
-
+    for url in archive_crawler.url_iterator():  # Get the list of urls in the archive...
+        print(url)
     articles_crawler = NewsArticleCrawler('example-article.warc.gz', 'example-archive.warc.gz', True,
                                           portal_settings)
     articles_crawler.download_and_extract_all_articles()

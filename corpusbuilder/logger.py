@@ -12,6 +12,8 @@ class Logger:
         checks in log file if the current article is processed already
     """
     def __init__(self, log_filename):
+        if not os.path.exists(log_filename):
+            open(log_filename, 'w+', encoding='UTF-8').close()  # TODO: Is it a better way?
         self.file_log = open(log_filename, 'r+', encoding='UTF-8')
 
         self.processed_urls = set()

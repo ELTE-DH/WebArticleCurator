@@ -15,7 +15,7 @@ class NewsArchiveCrawler:
     """
     def __init__(self, settings, download, filename):
         self._settings = settings
-        self._logger_ = Logger(self._settings['log_file_articles'])  # TODO: Separate Logger for Archive from settings
+        self._logger_ = Logger(self._settings['log_file_archive'])  # TODO: Separate Logger for Archive from settings
 
         self._min_pagenum = 0  # TODO: MINIMAL PAGENUM FROM SETTINGS!
         self._max_pagenum = -1
@@ -39,7 +39,7 @@ class NewsArchiveCrawler:
             self._max_pagenum = 0  # No pages (may be overwritten e.g. origo.hu)
             date_from = self._settings['DATE_FROM']
             url_format = self._settings['article_list_url_format']
-            article_list_urls = [self._gen_article_list_url_from_date(date_from, timedelta(days=curr_day), url_format)
+            article_list_urls = [self._gen_article_list_url_from_date(date_from + timedelta(days=curr_day), url_format)
                                  for curr_day in range(self._settings['INTERVAL'].days + 1)]
 
         if self._settings['ARTICLE_LIST_URLS_BY_ID']:
@@ -57,12 +57,13 @@ class NewsArchiveCrawler:
             yield from self._gen_corpus_from_id_url_list_w_subpages(article_list_url)
 
     @staticmethod
-    def _gen_article_list_url_from_date(date_from, delta_day, url_format):
+    def _gen_article_list_url_from_date(curr_date, url_format):
         """
             generates and returns the URLs of a page the contains URLs of articles published that day
         """
-        curr_year, curr_month, curr_day = '{0}{1}'.format(date_from,  delta_day).split('-', maxsplit=2)
-        art_list_url = url_format.replace('#year', curr_year).replace('#month', curr_month).replace('#day', curr_day)
+        art_list_url = url_format.replace('#year', '{0:04d}'.format(curr_date.year)).\
+            replace('#month', '{0:02d}'.format(curr_date.month)).\
+            replace('#day', '{0:02d}'.format(curr_date.day))
         return art_list_url
 
     def _gen_corpus_from_id_url_list_w_subpages(self, article_list_url_base):
@@ -71,7 +72,7 @@ class NewsArchiveCrawler:
         """
         # Download the first page
         article_urls, is_last_page = self._gen_corpus_from_id_url_list(article_list_url_base)
-        yield article_urls
+        yield from article_urls
         page_num = self._min_pagenum
         max_pagenum = self._max_pagenum
         # TODO: Better way: Search for the "next page" link, if there is no such link, than it is the last page!
@@ -80,7 +81,7 @@ class NewsArchiveCrawler:
             page_num += 1
             article_list_url = '{0}{1}'.format(article_list_url_base, page_num)
             article_urls, is_last_page = self._gen_corpus_from_id_url_list(article_list_url)
-            yield article_urls
+            yield from article_urls
 
     def _gen_corpus_from_id_url_list(self, article_list_url):
             article_list_only_urls = []

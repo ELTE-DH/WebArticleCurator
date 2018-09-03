@@ -10,6 +10,7 @@
   "day_until": 18,
   "output_file": "origo_corpus.txt",
   "log_file": "origo_log.txt",
+  "log_file_archive": "origo_archive_log.txt",
   "article_begin_flag": "##docitem##\n",
   "article_end_flag": "##docitem-end##\n"
 }

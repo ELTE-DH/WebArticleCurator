@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-import json
+import os
 import re
+import json
 from datetime import date, timedelta
 
 # TODO: More simplifications: regex keys should be suffixed with _RE and compiled automatically, bools with _BOOL,
@@ -21,7 +22,9 @@ def wrap_input_consants(current_task_config_filename):
     settings = current_task_config
 
     # # technical data about the website to crawl
-    current_site_schema = json.load(open(settings['site_schemas'], encoding='UTF-8'))[settings['site']]
+    dir_name = os.path.dirname(current_task_config_filename)
+    site_schemas_filename = os.path.join(dir_name, settings['site_schemas'])
+    current_site_schema = json.load(open(site_schemas_filename, encoding='UTF-8'))[settings['site']]
     if len(settings.keys() & current_site_schema.keys()) > 0:
         raise Exception('Config file key collision!')
     settings.update(current_site_schema)
