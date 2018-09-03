@@ -1,17 +1,17 @@
 {
   "origo": {
-    "first_article_year": 1998,
-    "first_article_month": 12,
-    "first_article_day": 1,
+    "date_first_article": "1998-12-01",
     "article_list_url_format": "http://www.origo.hu/hir-archivum/#year/#year#month#day.html",
     "article_url_format": "http://www\\.origo\\.hu/.*?\\.html",
     "before_article_url": "<h3><a href=\"",
     "after_article_url": "\" title=\".*?\">.*?</a></h3>",
     "bool_article_list_urls_by_date": 1,
     "bool_article_list_urls_by_id": 0,
+    "min_pagenum': 0,
+    "max_pagenum': 0,
     "encoding": "iso-8859-2",
     "tags_key": "origo-html"
-  },	
+  },
   "index": {
     "date_first_article": "1999-06-30",
     "article_list_url_format": "https://index.hu/24ora/?s=&tol=#year-#month-#day&ig=#year-#month-#day&tarskiadvanyokbanis=1&profil=&rovat=&cimke=&word=1&pepe=1&p=",
@@ -20,9 +20,11 @@
     "after_article_url": "\">.*?</a></h2>",
     "bool_article_list_urls_by_date": 1,
     "bool_article_list_urls_by_id": 1,
+    "min_pagenum': 2,
+    "max_pagenum': -1,
     "encoding": "utf-8",
     "tags_key": "index-html"
-  },	
+  },
   "index-warc": {
     "tags_key": "index-warc"
   },
@@ -48,42 +50,42 @@
     "tags_key": "bloghu-html"
   },
   "blikk": {
-    "first_article_year": 2009,
-    "first_article_month": 1,
-    "first_article_day": 21,
+    "date_first_article": "2009-01-21",
     "article_list_url_format": "http://www.blikk.hu/archivum/online?date=#year-#month-#day&page=",
     "article_url_format": "http://www\\.blikk\\.hu/.*?",
     "before_article_url": "<span class=\"archiveText\"><a href=\"",
     "after_article_url": "\">",
     "bool_article_list_urls_by_date": 1,
     "bool_article_list_urls_by_id": 1,
+    "min_pagenum': 1,
+    "max_pagenum': -1,
     "encoding": "utf-8",
     "tags_key": "blikk-html"
   },
   "444": {
-    "first_article_year": 0,
-    "first_article_month": 0,
-    "first_article_day": 0,
+    "date_first_article": "0001-01-01",
     "article_list_url_format": "https://444.hu/archivum?page=",
     "article_url_format": "https://444\\.hu/.*?",
     "before_article_url": "<div class=\"card\">\\s*?<h3>\\s*?<a href=\"",
     "after_article_url": "\">",
     "bool_article_list_urls_by_date": 0,
     "bool_article_list_urls_by_id": 1,
+    "min_pagenum': 2,
+    "max_pagenum': -1,
     "encoding": "utf-8",
     "tags_key": "444-html"
   },
   "mno": {
-    "first_article_year": 0,
-    "first_article_month": 0,
-    "first_article_day": 0,
+    "date_first_article": "2009-01-21",
     "article_list_url_format": "https://mno.hu/kereses/archivum/belfold/",
     "article_url_format": ".*?",
     "before_article_url": "<p class=\"szerzo\">.*?<h3><a href=\"",
     "after_article_url": "\">",
     "bool_article_list_urls_by_date": 0,
     "bool_article_list_urls_by_id": 1,
+    "min_pagenum': 1,
+    "max_pagenum': -1,
     "encoding": "utf-8",
     "tags_key": "mno-html"
-  }  
+  }
 }

@@ -82,7 +82,9 @@ class NewsArticleCrawler:
         self._new_urls = {url for url in self._new_urls
                           if url not in self._archive_downloader.good_urls and
                           url not in self._archive_downloader.problematic_urls}
-        while len(self._new_urls) > 0:  # TODO: Maybe log it! Article URL-s not in the arhive... Shouldn't be any!
+        while len(self._new_urls) > 0:  # Article URL-s not in the arhive... Shouldn't be any!
+            for url in self._new_urls:
+                self._logger_.log(url, 'TRUE NEW URL')
             new_urls = self._new_urls
             self._new_urls = set()
             self.process_urls(new_urls)

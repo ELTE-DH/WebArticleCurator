@@ -4,7 +4,7 @@
   "tags": "tags.json",
   "bool_date_interval_used": 0,
   "output_file": "mno_belfold_corpus.txt",
-  "log_file": "mno_belfold_log.txt",
+  "log_file_articles": "mno_belfold_articles_log.txt",
   "log_file_archive": "mno_belfold_archive_log.txt",
   "article_begin_flag": "##docitem##\n",
   "article_end_flag": "##docitem-end##\n"

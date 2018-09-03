@@ -15,10 +15,7 @@ class NewsArchiveCrawler:
     """
     def __init__(self, settings, download, filename):
         self._settings = settings
-        self._logger_ = Logger(self._settings['log_file_archive'])  # TODO: Separate Logger for Archive from settings
-
-        self._min_pagenum = 0  # TODO: MINIMAL PAGENUM FROM SETTINGS!
-        self._max_pagenum = -1
+        self._logger_ = Logger(self._settings['log_file_archive'])
 
         # For external use
         self.good_urls = set()
@@ -42,14 +39,12 @@ class NewsArchiveCrawler:
         article_list_urls = []
 
         if self._settings['ARTICLE_LIST_URLS_BY_DATE']:  # e.g. index.hu, origo.hu
-            self._max_pagenum = 0  # No pages (may be overwritten e.g. origo.hu)
             date_from = self._settings['DATE_FROM']
             url_format = self._settings['article_list_url_format']
             article_list_urls = [self._gen_article_list_url_from_date(date_from + timedelta(days=curr_day), url_format)
                                  for curr_day in range(self._settings['INTERVAL'].days + 1)]
 
         if self._settings['ARTICLE_LIST_URLS_BY_ID']:
-            self._max_pagenum = -1  # Infinty
             # not URL_BY_DATE and URLS_BY_ID
             if len(article_list_urls) == 0:  # e.g. 444.hu
                 article_list_urls.append(self._settings['article_list_url_format'])
@@ -79,11 +74,11 @@ class NewsArchiveCrawler:
         # Download the first page
         article_urls, is_last_page = self._gen_corpus_from_id_url_list(article_list_url_base)
         yield from article_urls
-        page_num = self._min_pagenum
-        max_pagenum = self._max_pagenum
+        page_num = self._settings['min_pagenum']
+        max_pagenum = self._settings['max_pagenum']
         # TODO: Better way: Search for the "next page" link, if there is no such link, than it is the last page!
         # if the last article list page does not contain any links to articles, go to next date
-        while not is_last_page and page_num < max_pagenum:
+        while not is_last_page and (max_pagenum < 0 or page_num < max_pagenum):
             page_num += 1
             article_list_url = '{0}{1}'.format(article_list_url_base, page_num)
             article_urls, is_last_page = self._gen_corpus_from_id_url_list(article_list_url)

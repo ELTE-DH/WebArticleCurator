@@ -117,7 +117,7 @@ class WarcDownloader:
 
 class WarcReader:
     def __init__(self, filename, logger, *_, **__):
-        self._stream = open(filename, 'rb')  # TODO: error handling
+        self._stream = open(filename, 'rb')
         self._url_index = {}
         self._count = 0
         self._logger = logger
