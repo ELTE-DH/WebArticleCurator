@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
+import os
 import re
 import json
 
@@ -15,7 +16,7 @@ class CorpusConverter:
         self._logger_ = logger_
 
         if isinstance(site_schemas, str):  # if it is a filename, open that file
-            self.site_schemas = json.load(open(site_schemas, encoding='UTF-8'))
+            self.site_schemas = json.load(open(os.path.join(settings['dir_name'], site_schemas), encoding='UTF-8'))
         elif isinstance(site_schemas, dict):
             self.site_schemas = site_schemas
         else:
@@ -24,7 +25,12 @@ class CorpusConverter:
                   ' - dict (containing the read-in JSON)')
 
         self.tags_filename = tags_filename
-        self.tags = json.load(open(tags_filename, encoding='UTF-8'))
+        self.tags = json.load(open(os.path.join(settings['dir_name'], tags_filename), encoding='UTF-8'))
+        for k, v in self.tags.items():  # Site, tag
+            self.site_schemas[k][v]['open-inside-close'] = re.compile('{0}{1}{2}'.
+                                                                      format(self.site_schemas[k][v]['open'],
+                                                                             self.site_schemas[k][v]['inside'],
+                                                                             self.site_schemas[k][v]['close']))
         self.url_pattern = re.compile('(https?://)?(www.)?([^/]+\.)(\w+/|$)(.*)')
         self.script_pattern = re.compile(r'<script[\s\S]+?/script>')
         self.img_pattern = re.compile(r'<img.*?/>')
@@ -81,8 +87,8 @@ class CorpusConverter:
             executes replacement
         """
         doc_out = ''.join(self.__check_regex(json_tags_key_vals['open'],
-                                             json_tags_key_vals['inside'],
-                                             json_tags_key_vals['close'], t, doc_in)
+                                             json_tags_key_vals['close'],
+                                             json_tags_key_vals['open-inside-close'], t, doc_in)
                           for t, json_tags_key_vals in json_tags_key.items())
         doc_out = self.script_pattern.sub('', doc_out)
         doc_out = self.img_pattern.sub('', doc_out)
@@ -93,13 +99,12 @@ class CorpusConverter:
         return doc_out
 
     @staticmethod
-    def __check_regex(old_tag_open, old_tag_inside, old_tag_close, new_tag, doc_in):
+    def __check_regex(old_tag_open, old_tag_close, old_tag, new_tag, doc_in):
         """
             keeps parts of input file that match patterns specified in JSON and
             then changes their HTML/CSS tags to our corpus markup tags
         """
-        regex = re.compile(old_tag_open + old_tag_inside + old_tag_close)  # TODO: Pull out to config reading!
-        match = regex.search(doc_in)
+        match = old_tag.search(doc_in)
         matched_part = ''
         if match is not None:
             matched_part = match.group(0)

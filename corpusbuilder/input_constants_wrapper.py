@@ -4,10 +4,7 @@
 import os
 import re
 import json
-from datetime import date, timedelta
-
-# TODO: More simplifications: regex keys should be suffixed with _RE and compiled automatically, bools with _BOOL,
-#  etc. with dates to make this config wrapper more general
+from datetime import date, timedelta, datetime
 
 
 def wrap_input_consants(current_task_config_filename):
@@ -15,18 +12,19 @@ def wrap_input_consants(current_task_config_filename):
         Helper to store and process input data so that main function does not contain so many
          codelines of variable initialization
         Its fields should be handled as constants after initialization
+        CAPITALIZED KEYS are transformed (eg. to Date(), Bool(), etc.) or created runtime,
+         lowercase keys are present in the config and will be used as is
     """
-    # # instructions to the current task
-    current_task_config = json.load(open(current_task_config_filename, encoding='UTF-8'))
+    # Instructions to the current task
+    settings = json.load(open(current_task_config_filename, encoding='UTF-8'))
 
-    settings = current_task_config
-
-    # # technical data about the website to crawl
+    # Technical data about the website to crawl
     dir_name = os.path.dirname(current_task_config_filename)
     site_schemas_filename = os.path.join(dir_name, settings['site_schemas'])
+    settings['dir_name'] = dir_name
     current_site_schema = json.load(open(site_schemas_filename, encoding='UTF-8'))[settings['site']]
     if len(settings.keys() & current_site_schema.keys()) > 0:
-        raise Exception('Config file key collision!')
+        raise KeyError('Config file key collision!')
     settings.update(current_site_schema)
 
     settings['BEFORE_ARTICLE_URL_RE'] = re.compile(current_site_schema['before_article_url'])
@@ -35,31 +33,29 @@ def wrap_input_consants(current_task_config_filename):
                                                                        current_site_schema['article_url_format'],
                                                                        current_site_schema['after_article_url']))
 
-    settings['ARTICLE_LIST_URLS_BY_DATE'] = bool(current_site_schema['article_list_urls_by_date'])#############################!!!!!!!!!!!!!!!!!!!!!!!!!
-    settings['ARTICLE_LIST_URLS_BY_ID'] = bool(current_site_schema['article_list_urls_by_id'])
+    settings['ARTICLE_LIST_URLS_BY_DATE'] = bool(current_site_schema['bool_article_list_urls_by_date'])
+    settings['ARTICLE_LIST_URLS_BY_ID'] = bool(current_site_schema['bool_article_list_urls_by_id'])
+    settings['DATE_INTERVAL_USED'] = bool(settings['bool_date_interval_used'])
 
-    try:
-        settings['DATE_INTERVAL_USED'] = True
-        settings['DATE_FROM'] = date(current_task_config['year_from'], current_task_config['month_from'],
-                                     current_task_config['day_from'])
-        settings['DATE_UNTIL'] = date(current_task_config['year_until'], current_task_config['month_until'],
-                                      current_task_config['day_until'])
-        settings['INTERVAL'] = settings['DATE_UNTIL'] - settings['DATE_FROM']
+    if settings['DATE_INTERVAL_USED']:
+        # We generate all URLs FROM the past UNTIL the "not so past"
+        # Raises ValueError if there is something wrong
+        settings['DATE_FROM'] = datetime.strptime(settings['date_from'], '%Y-%m-%d')
+        settings['DATE_UNTIL'] = datetime.strptime(settings['date_until'], '%Y-%m-%d')
+
         if settings['DATE_FROM'] > settings['DATE_UNTIL']:
-            raise Exception('DateError: DATE_FROM is later than DATE UNTIL!')
-    except ValueError:
-        # if there is no time filtering
-        settings['DATE_INTERVAL_USED'] = False
-        # then we use dates only if they are needed to generate URLs
-        if settings['ARTICLE_LIST_URLS_BY_DATE']:
-            # we generate all URLs from the first day of website until yesterday
-            # date of the first article
-            settings['DATE_FROM'] = date(current_site_schema['first_article_year'],
-                                         current_site_schema['first_article_month'],
-                                         current_site_schema['first_article_day'])
-            # yesterday
-            settings['DATE_UNTIL'] = date.today() - timedelta(1)
-            settings['INTERVAL'] = settings['DATE_UNTIL'] - settings['DATE_FROM']
+            raise ValueError('DateError: DATE_FROM is later than DATE UNTIL!')
+        settings['INTERVAL'] = settings['DATE_UNTIL'] - settings['DATE_FROM']
 
-    settings['URL_PATTERN'] = re.compile('(https?://)?(www.)?([^/]+\.)(\w+/|$)(.*)')
+    # if there is no time filtering then we use dates only if they are needed to generate URLs
+    elif settings['ARTICLE_LIST_URLS_BY_DATE']:
+        # We generate all URLs from the first day of the website until yesterday
+        settings['DATE_FROM'] = datetime.strptime(settings['date_first_article'], '%Y-%m-%d')
+        settings['DATE_UNTIL'] = date.today() - timedelta(1)  # yesterday
+
+        if settings['DATE_FROM'] > settings['DATE_UNTIL']:
+            raise ValueError('DateError: DATE_FROM is later than DATE UNTIL!')
+        settings['INTERVAL'] = settings['DATE_UNTIL'] - settings['DATE_FROM']
+
+    # settings['URL_PATTERN'] = re.compile('(https?://)?(www.)?([^/]+\.)(\w+/|$)(.*)')
     return settings
