@@ -4,7 +4,7 @@
 from articleDateExtractor import extractArticlePublishedDate
 
 from corpusbuilder.corpus_converter import CorpusConverter
-from corpusbuilder.enhanced_downloader import WarcDownloader, WarcReader
+from corpusbuilder.enhanced_downloader import WarcCachingDownloader
 from corpusbuilder.extractor import extract_article_urls_from_page
 from corpusbuilder.logger import Logger
 from corpusbuilder.news_archive_crawler import NewsArchiveCrawler
@@ -17,7 +17,8 @@ class NewsArticleCrawler:
         3) Extract the text of articles from raw HTML
         4) save them in corpus format
     """
-    def __init__(self, atricles_filename, archive_filename, download, settings):
+    def __init__(self, settings, articles_existing_warc_filename, articles_new_warc_filename,
+                 archive_existing_warc_filename, archive_new_warc_filename):
         self._settings = settings
         self._logger_ = Logger(self._settings['log_file_articles'])
 
@@ -25,12 +26,11 @@ class NewsArticleCrawler:
         self._converter = CorpusConverter(self._settings,  self._file_out, self._logger_)
 
         # Create new archive while downloading, or simulate download and read the archive
-        if download:
-            self._downloader = WarcDownloader(atricles_filename, self._logger_)
-        else:
-            self._downloader = WarcReader(atricles_filename, self._logger_)
+        self._downloader = WarcCachingDownloader(articles_existing_warc_filename, articles_new_warc_filename,
+                                                 self._logger_)
 
-        self._archive_downloader = NewsArchiveCrawler(self._settings, download, archive_filename)
+        self._archive_downloader = NewsArchiveCrawler(self._settings, archive_existing_warc_filename,
+                                                      archive_new_warc_filename)
 
         self._new_urls = set()
 

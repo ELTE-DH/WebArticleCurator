@@ -3,7 +3,7 @@
 
 from datetime import timedelta
 
-from corpusbuilder.enhanced_downloader import WarcDownloader, WarcReader
+from corpusbuilder.enhanced_downloader import WarcCachingDownloader
 from corpusbuilder.extractor import extract_article_urls_from_page
 from corpusbuilder.logger import Logger
 
@@ -13,7 +13,7 @@ class NewsArchiveCrawler:
         1) Generate URLs of lists of articles
         2) Extract URLs of articles from these lists
     """
-    def __init__(self, settings, download, filename):
+    def __init__(self, settings, existing_archive_filename, new_archive_filename):
         self._settings = settings
         self._logger_ = Logger(self._settings['log_file_archive'])
 
@@ -22,10 +22,7 @@ class NewsArchiveCrawler:
         self.problematic_urls = set()
 
         # Create new archive while downloading, or simulate download and read the archive
-        if download:
-            self._downloader = WarcDownloader(filename, self._logger_)
-        else:
-            self._downloader = WarcReader(filename, self._logger_)
+        self._downloader = WarcCachingDownloader(existing_warc_filename, new_warc_filename, self._logger_)
 
     def __del__(self):
         for url in self.good_urls:

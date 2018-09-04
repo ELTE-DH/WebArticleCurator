@@ -23,9 +23,9 @@ if __name__ == '__main__':
     # read input data from the given files, initialize variables
     portal_settings = wrap_input_consants(current_task_config_filename)
     # For the article links only...
-    archive_crawler = NewsArchiveCrawler(portal_settings, True, 'example-archive.warc.gz')
+    archive_crawler = NewsArchiveCrawler(portal_settings, None, 'example-archive.warc.gz')
     for url in archive_crawler.url_iterator():  # Get the list of urls in the archive...
         print(url, flush=True)
-    articles_crawler = NewsArticleCrawler('example-article.warc.gz', 'example-archive.warc.gz', True,
-                                          portal_settings)
+    articles_crawler = NewsArticleCrawler(portal_settings, None, 'example-article.warc.gz', None,
+                                          'example-archive.warc.gz')
     articles_crawler.download_and_extract_all_articles()

@@ -20,7 +20,7 @@
     "after_article_url": "\">.*?</a></h2>",
     "bool_article_list_urls_by_date": 1,
     "bool_article_list_urls_by_id": 1,
-    "min_pagenum': 2,
+    "min_pagenum': 0,
     "max_pagenum': -1,
     "encoding": "utf-8",
     "tags_key": "index-html"
@@ -70,7 +70,7 @@
     "after_article_url": "\">",
     "bool_article_list_urls_by_date": 0,
     "bool_article_list_urls_by_id": 1,
-    "min_pagenum': 2,
+    "min_pagenum': 1,
     "max_pagenum': -1,
     "encoding": "utf-8",
     "tags_key": "444-html"
