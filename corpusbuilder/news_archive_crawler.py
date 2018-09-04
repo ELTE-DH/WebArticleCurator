@@ -22,7 +22,7 @@ class NewsArchiveCrawler:
         self.problematic_urls = set()
 
         # Create new archive while downloading, or simulate download and read the archive
-        self._downloader = WarcCachingDownloader(existing_warc_filename, new_warc_filename, self._logger_)
+        self._downloader = WarcCachingDownloader(existing_archive_filename, new_archive_filename, self._logger_)
 
     def __del__(self):
         for url in self.good_urls:

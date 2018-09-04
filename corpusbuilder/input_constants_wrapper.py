@@ -40,8 +40,8 @@ def wrap_input_consants(current_task_config_filename):
     if settings['DATE_INTERVAL_USED']:
         # We generate all URLs FROM the past UNTIL the "not so past"
         # Raises ValueError if there is something wrong
-        settings['DATE_FROM'] = datetime.strptime(settings['date_from'], '%Y-%m-%d')
-        settings['DATE_UNTIL'] = datetime.strptime(settings['date_until'], '%Y-%m-%d')
+        settings['DATE_FROM'] = datetime.strptime(settings['date_from'], '%Y-%m-%d').date()
+        settings['DATE_UNTIL'] = datetime.strptime(settings['date_until'], '%Y-%m-%d').date()
 
         if settings['DATE_FROM'] > settings['DATE_UNTIL']:
             raise ValueError('DateError: DATE_FROM is later than DATE UNTIL!')
@@ -50,7 +50,7 @@ def wrap_input_consants(current_task_config_filename):
     # if there is no time filtering then we use dates only if they are needed to generate URLs
     elif settings['ARTICLE_LIST_URLS_BY_DATE']:
         # We generate all URLs from the first day of the website until yesterday
-        settings['DATE_FROM'] = datetime.strptime(settings['date_first_article'], '%Y-%m-%d')
+        settings['DATE_FROM'] = datetime.strptime(settings['date_first_article'], '%Y-%m-%d').date()
         settings['DATE_UNTIL'] = date.today() - timedelta(1)  # yesterday
 
         if settings['DATE_FROM'] > settings['DATE_UNTIL']:

@@ -30,8 +30,8 @@ class WarcCachingDownloader:
         else:
             self._url_index = {}
             warcinfo = None
-        self._new_donwloads = WarcWriter(new_warc_filename, logger_, program_name, user_agent, overwrite_warc,
-                                         err_threshold, info_record)
+        self._new_donwloads = WarcDownloader(new_warc_filename, logger_, program_name, user_agent, overwrite_warc,
+                                             err_threshold, warcinfo)
 
     def download_url(self, url):
         if url in self._url_index:
@@ -160,7 +160,7 @@ class WarcReader:
     def create_index(self):
         archive_it = ArchiveIterator(self._stream)
         info_rec = next(archive_it)
-        assert record.rec_type == 'warcinfo'
+        assert info_rec.rec_type == 'warcinfo'
         self.info_record = info_rec
         for record in archive_it:
             if record.rec_type == 'request':
