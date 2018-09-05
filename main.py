@@ -5,9 +5,8 @@
 import sys
 
 # import own modules
-from corpusbuilder.input_constants_wrapper import wrap_input_consants
-from corpusbuilder.news_archive_crawler import NewsArchiveCrawler
-from corpusbuilder.news_article_crawler import NewsArticleCrawler
+from corpusbuilder.utils import wrap_input_consants
+from corpusbuilder.news_crawler import NewsArchiveCrawler, NewsArticleCrawler
 
 # run the whole thing
 if __name__ == '__main__':
