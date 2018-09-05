@@ -131,8 +131,7 @@ class WarcDownloader:
         data_stream = BytesIO(data)
 
         resp_http_headers = StatusAndHeaders(resp_status, resp_headers_list, protocol=proto)
-
-        # TODO: This is the best solution? http_headers.get_header('content-encoding')
+        # Add extra headers like encoding because it is not stored any other way...
         resp_record = self._writer.create_warc_record(url, 'response', payload=data_stream,
                                                       http_headers=resp_http_headers,
                                                       warc_headers_dict={'WARC-IP-Address': peer_name,
