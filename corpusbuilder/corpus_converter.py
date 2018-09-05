@@ -42,11 +42,14 @@ class CorpusConverter:
 
         self.tags_filename = tags_filename
         self.tags = json.load(open(os.path.join(settings['dir_name'], tags_filename), encoding='UTF-8'))
-        for k, v in self.tags.items():  # Site, tag
-            self.site_schemas[k][v]['open-inside-close'] = re.compile('{0}{1}{2}'.
-                                                                      format(self.site_schemas[k][v]['open'],
-                                                                             self.site_schemas[k][v]['inside'],
-                                                                             self.site_schemas[k][v]['close']))
+        for site in self.tags.keys():  # Site, tag
+            for tag in self.tags[site].keys():
+                self.tags[site][tag]['open-inside-close'] = re.compile('{0}{1}{2}'.
+                                                                       format(self.tags[site][tag]['open'],
+                                                                              self.tags[site][tag]['inside'],
+                                                                              self.tags[site][tag]['close']))
+                self.tags[site][tag]['open'] = re.compile(self.tags[site][tag]['open'])
+                self.tags[site][tag]['close'] = re.compile(self.tags[site][tag]['close'])
         self.url_pattern = re.compile('(https?://)?(www.)?([^/]+\.)(\w+/|$)(.*)')
         self.script_pattern = re.compile(r'<script[\s\S]+?/script>')
         self.img_pattern = re.compile(r'<img.*?/>')
@@ -111,6 +114,7 @@ class CorpusConverter:
         doc_out = self.multi_ws_pattern.sub(' ', doc_out)
         doc_out = self.endl_ws_pattern.sub('\n', doc_out)
         doc_out = self.multi_endl_pattern.sub('\n', doc_out)
+        doc_out = doc_out.replace('\r\n', '\n')
         # TODO: drop useless div and span tags
         return doc_out
 
@@ -124,8 +128,8 @@ class CorpusConverter:
         matched_part = ''
         if match is not None:
             matched_part = match.group(0)
-            matched_part = re.sub(old_tag_open, '<'+new_tag+'> ', matched_part)
-            matched_part = re.sub(old_tag_close, ' </'+new_tag+'>\n', matched_part)
+            matched_part = old_tag_open.sub('<'+new_tag+'> ', matched_part)
+            matched_part = old_tag_close.sub(' </'+new_tag+'>\n', matched_part)
         return matched_part
 
 

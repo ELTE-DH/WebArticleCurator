@@ -107,7 +107,7 @@ class NewsArticleCrawler:
         self._settings = settings
         self._logger_ = Logger(self._settings['log_file_articles'])
 
-        self._file_out = open(self._settings['output_file'], 'a+', encoding=self._settings['encoding'])
+        self._file_out = open(self._settings['output_file'], 'a+', encoding='UTF-8')
         self._converter = CorpusConverter(self._settings,  self._file_out, self._logger_)
 
         # Create new archive while downloading, or simulate download and read the archive
