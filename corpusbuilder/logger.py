@@ -27,5 +27,6 @@ class Logger:
         print(datetime.datetime.now(), url, msg, sep=';', file=self.file_log, flush=True)
 
     def __del__(self):
-        self.log('', 'Logging finished')
-        self.file_log.close()
+        if hasattr(self, 'file_log'):
+            self.log('', 'Logging finished')
+            self.file_log.close()

@@ -82,7 +82,8 @@ class WarcDownloader:
         self._writer.write_record(info_record)
 
     def __del__(self):
-        self._output_file.close()
+        if hasattr(self, '_output_file'):
+            self._output_file.close()
 
     def download_url(self, url):
         scheme, netloc, path, params, query, fragment = urlparse(url)
@@ -152,10 +153,12 @@ class WarcReader:
         self._count = 0
         self._logger = logger
         self.info_record = None
+        self._last_resp = (-1, None)
         self.create_index()
 
     def __del__(self):
-        self._stream.close()
+        if hasattr(self, '_stream'):
+            self._stream.close()
 
     def create_index(self):
         archive_it = ArchiveIterator(self._stream)
@@ -184,6 +187,7 @@ class WarcReader:
             reqv = next(iter(ArchiveIterator(self._stream)))
             self._stream.seek(resp_offset[0])
             resp = next(iter(ArchiveIterator(self._stream)))
+            self._last_resp = (resp_offset[0], resp)  # Cache last response to get its content easily
             return reqv, resp
         else:
             raise KeyError('The request or response is missing from the archive for URL: {0}'.format(url))
@@ -193,8 +197,11 @@ class WarcReader:
         d = self.url_index.get(url)
         if d is not None:
             offset, length = d
-            self._stream.seek(offset)
-            record = next(iter(ArchiveIterator(self._stream)))
+            if self._last_resp[0] != offset:  # If cached, no need to seek...
+                self._stream.seek(offset)
+                record = next(iter(ArchiveIterator(self._stream)))
+            else:
+                record = self._last_resp[1]
             data = record.content_stream().read()
             enc = record.rec_headers.get_header('WARC-X-Detected-Encoding', 'UTF-8')
             text = data.decode(enc, 'ignore')
