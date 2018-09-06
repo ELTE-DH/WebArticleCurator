@@ -12,28 +12,37 @@ def parse_args():
     parser = ArgumentParser()
     parser.add_argument('config', type=str, help='Portal configfile (see configs folder for examples!)')
     parser.add_argument('--old-archive-warc', type=str, help='Existing WARC archive of the portal\'s archive '
-                                                             '(Use as it cache)', default=None)
+                                                             '(Use it as cache)', default=None)
     parser.add_argument('--archive-warc', type=str, help='New WARC archive of the portal\'s archive '
                                                          '(Copy all cached pages if --old-archive-warc is specified)')
     parser.add_argument('--old-articles-warc', type=str, help='Existing WARC archive of the portal\'s archive '
-                                                              '(Use as it cache)', default=None)
+                                                              '(Use it as cache)', default=None)
     parser.add_argument('--articles-warc', type=str, help='New WARC archive of the portal\'s archive '
                                                           '(Copy all cached pages if --old-archive-warc is specified)')
+    parser.add_argument('--crawler-name', type=str, help='The name of the crawler for the WARC info record',
+                        default='corpusbuilder 1.0')
+    parser.add_argument('--user-agent', type=str, help='The User-Agent string to use in headers while downloading')
+    parser.add_argument('--no-overwrite-warc', help='Do not overwrite --{archive,articles}-warc if needed',
+                        action='store_false')
+    parser.add_argument('--comulative-error-threshold', type=int, help='Sum of download errors before giving up',
+                        default=15)
+
     # Mutually exclusive group...
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--archive', help='Crawl only the portal\'s archive', action='store_true')
     group.add_argument('--articles', help='Crawl articles (and optionally use cached WARC for the portal\'s archive),'
                                           ' DEFAULT behaviour', action='store_true')
-    args = parser.parse_args()
-    args.articles = not args.archive  # If archive is True -> articles is False, if archive is False -> articles is True
-    if args.archive and not args.archive_warc:
+    cli_args = parser.parse_args()
+    # If archive is True -> articles is False, if archive is False -> articles is True
+    cli_args.articles = not cli_args.archive
+    if cli_args.archive and not cli_args.archive_warc:
         print('Must specify at least --archive-warc as destination!', file=sys.stderr)
         exit(1)
-    if args.articles and (not args.archive_warc or not args.articles_warc):
+    if cli_args.articles and (not cli_args.archive_warc or not cli_args.articles_warc):
         print('Must specify at least --archive-warc and --articles-warc as destination!', file=sys.stderr)
         exit(1)
 
-    return args
+    return cli_args
 
 
 if __name__ == '__main__':
@@ -44,10 +53,18 @@ if __name__ == '__main__':
     portal_settings = wrap_input_consants(args.config)
     if args.archive:
         # For the article links only...
-        archive_crawler = NewsArchiveCrawler(portal_settings, args.old_archive_warc, args.archive_warc)
+        archive_crawler = NewsArchiveCrawler(portal_settings, args.old_archive_warc, args.archive_warc,
+                                             program_name=args.crawler_name,
+                                             user_agent=args.user_agent,
+                                             overwrite_warc=args.no_overwrite_warc,
+                                             err_threshold=args.comulative_error_threshold)
         for url in archive_crawler.url_iterator():  # Get the list of urls in the archive...
             print(url, flush=True)
     else:
         articles_crawler = NewsArticleCrawler(portal_settings, args.old_articles_warc, args.articles_warc,
-                                              args.old_archive_warc, args.archive_warc)
+                                              args.old_archive_warc, args.archive_warc,
+                                              program_name=args.crawler_name,
+                                              user_agent=args.user_agent,
+                                              overwrite_warc=args.no_overwrite_warc,
+                                              err_threshold=args.comulative_error_threshold)
         articles_crawler.download_and_extract_all_articles()

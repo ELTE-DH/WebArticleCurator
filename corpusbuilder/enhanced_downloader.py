@@ -47,7 +47,7 @@ class WarcDownloader:
     """
         Download URL with HTTP GET, save to a WARC file and return the decoded text
     """
-    def __init__(self, filename, logger, program_name='corpusbuilder 1.0', user_agent=None, overwrite_warc=True,
+    def __init__(self, filename, logger_, program_name='corpusbuilder 1.0', user_agent=None, overwrite_warc=True,
                  err_threshold=10, warcinfo=None):
         if not overwrite_warc:
             num = 0
@@ -60,10 +60,10 @@ class WarcDownloader:
                 filename = '-{0:05d}{1}'.format(num, ext)
                 num += 1
 
-        logger.log('', 'Creating archivefile: {0}'.format(filename))
+        logger_.log('', 'Creating archivefile: {0}'.format(filename))
 
         self._output_file = open(filename, 'wb')
-        self._logger = logger
+        self._logger_ = logger_
         self._req_headers = {'Accept-Encoding': 'identity', 'User-agent': user_agent}
         self._requests_get = Session().get
         self._error_count = 0
@@ -94,15 +94,15 @@ class WarcDownloader:
         try:
             resp = self._requests_get(url, headers=self._req_headers, stream=True)
         except RequestException as err:
-            self._logger.log(url, 'RequestException happened during downloading: {0} \n\n'
-                                  ' The program ignores it and jumps to the next one.'.format(err))
+            self._logger_.log(url, 'RequestException happened during downloading: {0} \n\n'
+                                   ' The program ignores it and jumps to the next one.'.format(err))
             self._error_count += 1
             if self._error_count >= self._error_threshold:
                 raise NameError('Too many error happened! Threshold exceeded! See log for details!')
             return None
 
         if resp.status_code != 200:
-            self._logger.log(url, 'Downloading failed with status code: {0} {1}'.format(resp.status_code, resp.reason))
+            self._logger_.log(url, 'Downloading failed with status code: {0} {1}'.format(resp.status_code, resp.reason))
             self._error_count += 1
             if self._error_count >= self._error_threshold:
                 raise NameError('Too many error happened! Threshold exceeded! See log for details!')
@@ -145,14 +145,13 @@ class WarcDownloader:
 
 
 class WarcReader:
-    def __init__(self, filename, logger, *_, **__):
+    def __init__(self, filename, logger_):
         self._stream = open(filename, 'rb')
         self.url_index = {}
         self._url_index_req = {}
         self._count = 0
-        self._logger = logger
+        self._logger_ = logger_
         self.info_record = None
-        self._last_resp = (-1, None)
         self.create_index()
 
     def __del__(self):
@@ -160,6 +159,7 @@ class WarcReader:
             self._stream.close()
 
     def create_index(self):
+        self._logger_.log('', 'Creating index...')
         archive_it = ArchiveIterator(self._stream)
         info_rec = next(archive_it)
         assert info_rec.rec_type == 'warcinfo'
@@ -177,6 +177,7 @@ class WarcReader:
         if self._count == 0:
             raise IndexError('No index created or no response records in the WARC file!')
         self._stream.seek(0)
+        self._logger_.log('', 'Index succesuflly created.')
 
     def get_record(self, url):
         reqv_offset = self._url_index_req.get(url)
@@ -186,7 +187,6 @@ class WarcReader:
             reqv = next(iter(ArchiveIterator(self._stream)))
             self._stream.seek(resp_offset[0])
             resp = next(iter(ArchiveIterator(self._stream)))
-            self._last_resp = (resp_offset[0], resp)  # Cache last response to get its content easily
             return reqv, resp
         else:
             raise KeyError('The request or response is missing from the archive for URL: {0}'.format(url))
@@ -196,16 +196,14 @@ class WarcReader:
         d = self.url_index.get(url)
         if d is not None:
             offset, length = d
-            if self._last_resp[0] != offset:  # If cached, no need to seek...
-                self._stream.seek(offset)
-                record = next(iter(ArchiveIterator(self._stream)))
-            else:
-                record = self._last_resp[1]
+            self._stream.seek(offset)  # Can not be cached as we also want to write it out to the new archive!
+            record = next(iter(ArchiveIterator(self._stream)))
             data = record.content_stream().read()
+            assert len(data) > 0
             enc = record.rec_headers.get_header('WARC-X-Detected-Encoding', 'UTF-8')
             text = data.decode(enc, 'ignore')
         else:
-            self._logger.log(url, 'URL not found in WARC!')
+            self._logger_.log(url, 'URL not found in WARC!')
 
         return text
 
@@ -214,13 +212,9 @@ def main():
     filename = 'example.warc.gz'
     url = 'https://index.hu/belfold/2018/08/27/fidesz_media_helyreigazitas/'
     from corpusbuilder.utils import Logger
-    w = WarcDownloader(filename, Logger('WarcDownloader-test.log'))
+    w = WarcCachingDownloader(None, filename, Logger('WarcCachingDownloader-test.log'))
     t = w.download_url(url)
     print(t)
-    r = WarcReader(filename, Logger('WarcReader-test.log'))
-    t2 = r.download_url(url)
-    print(t2)
-    print(t == t2)
 
 
 if __name__ == '__main__':
