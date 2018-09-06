@@ -26,6 +26,8 @@ def parse_args():
                         action='store_false')
     parser.add_argument('--comulative-error-threshold', type=int, help='Sum of download errors before giving up',
                         default=15)
+    parser.add_argument('--corpus-converter', type=str, help='The type of html->corpus class', default='rule-based',
+                        choices=['rule-based', 'newspaper'])
 
     # Mutually exclusive group...
     group = parser.add_mutually_exclusive_group()
@@ -66,5 +68,6 @@ if __name__ == '__main__':
                                               program_name=args.crawler_name,
                                               user_agent=args.user_agent,
                                               overwrite_warc=args.no_overwrite_warc,
-                                              err_threshold=args.comulative_error_threshold)
+                                              err_threshold=args.comulative_error_threshold,
+                                              corpus_converter=args.corpus_converter)
         articles_crawler.download_and_extract_all_articles()

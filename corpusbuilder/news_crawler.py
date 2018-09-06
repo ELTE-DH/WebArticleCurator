@@ -5,9 +5,11 @@ from datetime import timedelta
 
 from articleDateExtractor import extractArticlePublishedDate
 
-from corpusbuilder.corpus_converter import CorpusConverter, extract_article_urls_from_page
+from corpusbuilder.corpus_converter import CorpusConverter, CorpusConverterNewspaper, extract_article_urls_from_page
 from corpusbuilder.enhanced_downloader import WarcCachingDownloader
 from corpusbuilder.utils import Logger
+
+corpus_converter_class = {'rule-based': CorpusConverter, 'newspaper': CorpusConverterNewspaper}
 
 
 class NewsArchiveCrawler:
@@ -106,12 +108,15 @@ class NewsArticleCrawler:
     """
     def __init__(self, settings, articles_existing_warc_filename, articles_new_warc_filename,
                  archive_existing_warc_filename, archive_new_warc_filename, program_name='corpusbuilder 1.0',
-                 user_agent=None, overwrite_warc=True, err_threshold=10):
+                 user_agent=None, overwrite_warc=True, err_threshold=10, corpus_converter='rule-based'):
         self._settings = settings
         self._logger_ = Logger(self._settings['log_file_articles'])
 
         self._file_out = open(self._settings['output_file'], 'a+', encoding='UTF-8')
-        self._converter = CorpusConverter(self._settings,  self._file_out, self._logger_)
+
+        # Create new corpus converter class from the available methods...
+        converter = corpus_converter_class[corpus_converter]
+        self._converter = converter(self._settings,  self._file_out, self._logger_)
 
         # Create new archive while downloading, or simulate download and read the archive
         self._downloader = WarcCachingDownloader(articles_existing_warc_filename, articles_new_warc_filename,

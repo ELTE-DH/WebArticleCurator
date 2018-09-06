@@ -133,20 +133,32 @@ class CorpusConverter:
         return matched_part
 
 
-class CorpusConverterNewspaper:  # TODO: Implement, Test
+class CorpusConverterNewspaper:  # Mimic CorpusConverter
     def __init__(self, settings, file_out, logger_):
         self._file_out = file_out
         self._logger_ = logger_
         self._settings = settings
 
     def article_to_corpus(self, url, page_str):
-        article = Article(url, memoize_articles=False)
+        article = Article(url, memoize_articles=False, language='hu')
         article.download(input_html=page_str)
         article.parse()
-        # article.title
-        # article.publish_date
-        # article.authors
-        # article.text
-        print(self._settings['article_begin_flag'], '\n'.join((article.title, article.text)),
+        article.nlp()
+
+        html_date = '<html-date> {0} </html-date>'.format(article.publish_date.date())
+        html_description_lead = '<html-lead>\n </html-lead>'
+        html_charset = '<html-charset> utf-8 </html-charset>'
+        html_url = '<html-url> {0} </html-url>'.format(url)
+        html_keywords = '<html-keywords> {0} </html-keywords>'.format(', '.join(article.keywords))
+        html_title = '<html-title> {0} </html-title>'.format(article.title)
+        html_body = '<html-body>\n{0} </html-body>\n'.format(article.text)
+
+        print(self._settings['article_begin_flag'], '\n'.join((html_date,
+                                                               html_description_lead,
+                                                               html_charset,
+                                                               html_url,
+                                                               html_keywords,
+                                                               html_title,
+                                                               html_body)),
               self._settings['article_end_flag'], sep='', end='', file=self._file_out)
         self._logger_.log(url, 'download OK')
