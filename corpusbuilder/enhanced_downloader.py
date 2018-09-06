@@ -14,6 +14,7 @@ from warcio.statusandheaders import StatusAndHeaders
 from requests import Session
 from requests.utils import urlparse, quote, urlunparse
 from requests.exceptions import RequestException
+from requests.packages.urllib3.exceptions import HTTPError
 
 from chardet import detect
 
@@ -93,7 +94,7 @@ class WarcDownloader:
         # The actual request
         try:
             resp = self._requests_get(url, headers=self._req_headers, stream=True)
-        except RequestException as err:
+        except (RequestException, HTTPError) as err:
             self._logger_.log(url, 'RequestException happened during downloading: {0} \n\n'
                                    ' The program ignores it and jumps to the next one.'.format(err))
             self._error_count += 1
@@ -152,7 +153,10 @@ class WarcReader:
         self._count = 0
         self._logger_ = logger_
         self.info_record = None
-        self.create_index()
+        try:
+            self.create_index()
+        except KeyError as e:
+            self._logger_.log('', 'Ignoring exception: {0}'.format(e))
 
     def __del__(self):
         if hasattr(self, '_stream'):
