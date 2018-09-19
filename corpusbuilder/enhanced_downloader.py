@@ -14,7 +14,7 @@ from warcio.statusandheaders import StatusAndHeaders
 from requests import Session
 from requests.utils import urlparse, quote, urlunparse
 from requests.exceptions import RequestException
-from requests.packages.urllib3.exceptions import HTTPError, ProtocolError
+from requests.packages.urllib3.exceptions import ProtocolError
 
 from chardet import detect
 
@@ -94,7 +94,7 @@ class WarcDownloader:
         # The actual request
         try:
             resp = self._requests_get(url, headers=self._req_headers, stream=True)
-        except (RequestException, HTTPError, ProtocolError) as err:
+        except RequestException as err:
             self._logger_.log(url, 'RequestException happened during downloading: {0} \n\n'
                                    ' The program ignores it and jumps to the next one.'.format(err))
             self._error_count += 1
@@ -124,7 +124,16 @@ class WarcDownloader:
         resp_headers_list = resp.raw.headers.items()  # get raw headers from urllib3
         peer_name = resp.raw._fp.fp.raw._sock.getpeername()[0]  # Must get peer_name before the content is read
 
-        data = resp.raw.read()  # To be able to return decoded and also write warc
+        try:
+            data = resp.raw.read()  # To be able to return decoded and also write warc
+        except ProtocolError as err:
+            self._logger_.log(url, 'RequestException happened during downloading: {0} \n\n'
+                                   ' The program ignores it and jumps to the next one.'.format(err))
+            self._error_count += 1
+            if self._error_count >= self._error_threshold:
+                raise NameError('Too many error happened! Threshold exceeded! See log for details!')
+            return None
+
         enc = resp.encoding
         if enc is None:
             enc = detect(data)['encoding']
