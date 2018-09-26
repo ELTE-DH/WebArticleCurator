@@ -18,7 +18,7 @@ class NewsArchiveCrawler:
         2) Extract URLs of articles from these lists
     """
     def __init__(self, settings, existing_archive_filename, new_archive_filename, program_name='corpusbuilder 1.0',
-                 user_agent=None, overwrite_warc=True, err_threshold=10):
+                 user_agent=None, overwrite_warc=True, err_threshold=10, known_bad_urls=None):
         self._settings = settings
         self._logger_ = Logger(self._settings['log_file_archive'])
 
@@ -28,7 +28,8 @@ class NewsArchiveCrawler:
 
         # Create new archive while downloading, or simulate download and read the archive
         self._downloader = WarcCachingDownloader(existing_archive_filename, new_archive_filename, self._logger_,
-                                                 program_name, user_agent, overwrite_warc, err_threshold)
+                                                 program_name, user_agent, overwrite_warc, err_threshold,
+                                                 known_bad_urls)
 
     def __del__(self):
         for url in self.good_urls:
@@ -108,7 +109,8 @@ class NewsArticleCrawler:
     """
     def __init__(self, settings, articles_existing_warc_filename, articles_new_warc_filename,
                  archive_existing_warc_filename, archive_new_warc_filename, program_name='corpusbuilder 1.0',
-                 user_agent=None, overwrite_warc=True, err_threshold=10, corpus_converter='rule-based'):
+                 user_agent=None, overwrite_warc=True, err_threshold=10, corpus_converter='rule-based',
+                 known_bad_urls=None):
         self._settings = settings
         self._logger_ = Logger(self._settings['log_file_articles'])
 
@@ -121,11 +123,11 @@ class NewsArticleCrawler:
         # Create new archive while downloading, or simulate download and read the archive
         self._downloader = WarcCachingDownloader(articles_existing_warc_filename, articles_new_warc_filename,
                                                  self._logger_,  program_name, user_agent, overwrite_warc,
-                                                 err_threshold)
+                                                 err_threshold, known_bad_urls)
 
         self._archive_downloader = NewsArchiveCrawler(self._settings, archive_existing_warc_filename,
                                                       archive_new_warc_filename, program_name, user_agent,
-                                                      overwrite_warc, err_threshold)
+                                                      overwrite_warc, err_threshold, known_bad_urls)
 
         self.good_article_urls = set()
         self.problematic_article_urls = set()

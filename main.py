@@ -28,6 +28,8 @@ def parse_args():
                         default=15)
     parser.add_argument('--corpus-converter', type=str, help='The type of html->corpus class', default='rule-based',
                         choices=['rule-based', 'newspaper'])
+    parser.add_argument('--known-bad-urls', type=str, help='Known bad URLs to be excluded from download (filename, '
+                                                           'one URL per line)', default=None)
 
     # Mutually exclusive group...
     group = parser.add_mutually_exclusive_group()
@@ -59,7 +61,8 @@ if __name__ == '__main__':
                                              program_name=args.crawler_name,
                                              user_agent=args.user_agent,
                                              overwrite_warc=args.no_overwrite_warc,
-                                             err_threshold=args.comulative_error_threshold)
+                                             err_threshold=args.comulative_error_threshold,
+                                             known_bad_urls=args.known_bad_urls)
         for url in archive_crawler.url_iterator():  # Get the list of urls in the archive...
             print(url, flush=True)
     else:
@@ -69,5 +72,6 @@ if __name__ == '__main__':
                                               user_agent=args.user_agent,
                                               overwrite_warc=args.no_overwrite_warc,
                                               err_threshold=args.comulative_error_threshold,
-                                              corpus_converter=args.corpus_converter)
+                                              corpus_converter=args.corpus_converter,
+                                              known_bad_urls=args.known_bad_urls)
         articles_crawler.download_and_extract_all_articles()

@@ -23,7 +23,7 @@ respv_str = {10: '1.0', 11: '1.1'}
 
 class WarcCachingDownloader:
     def __init__(self, existing_warc_filename, new_warc_filename, logger_, program_name='corpusbuilder 1.0',
-                 user_agent=None, overwrite_warc=True, err_threshold=10):
+                 user_agent=None, overwrite_warc=True, err_threshold=10, known_bad_urls=None):
         if existing_warc_filename is not None:
             self._cached_downloads = WarcReader(existing_warc_filename, logger_)
             self._url_index = self._cached_downloads.url_index
@@ -32,7 +32,7 @@ class WarcCachingDownloader:
             self._url_index = {}
             warcinfo = None
         self._new_donwloads = WarcDownloader(new_warc_filename, logger_, program_name, user_agent, overwrite_warc,
-                                             err_threshold, warcinfo)
+                                             err_threshold, warcinfo, known_bad_urls)
 
     def download_url(self, url):
         if url in self._url_index:
@@ -49,7 +49,12 @@ class WarcDownloader:
         Download URL with HTTP GET, save to a WARC file and return the decoded text
     """
     def __init__(self, filename, logger_, program_name='corpusbuilder 1.0', user_agent=None, overwrite_warc=True,
-                 err_threshold=10, warcinfo=None):
+                 err_threshold=10, warcinfo=None, known_bad_urls=None):
+        if known_bad_urls is not None:
+            self._bad_urls = {line.strip() for line in open(known_bad_urls, encoding='UTF-8').readlines()}
+        else:
+            self._bad_urls = {}
+
         if not overwrite_warc:
             num = 0
             while os.path.exists(filename):
@@ -90,6 +95,10 @@ class WarcDownloader:
         scheme, netloc, path, params, query, fragment = urlparse(url)
         path = quote(path)
         url = urlunparse((scheme, netloc, path, params, query, fragment))
+
+        if url in self._bad_urls:
+            self._logger_.log(url, 'Not downloading known bad URL: {0}'.format(url))
+            return None
 
         # The actual request
         try:
