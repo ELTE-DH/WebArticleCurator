@@ -2,10 +2,23 @@
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
 import sys
-from argparse import ArgumentParser
+from argparse import ArgumentParser, ArgumentTypeError
 
 from corpusbuilder.utils import wrap_input_consants
 from corpusbuilder.news_crawler import NewsArchiveCrawler, NewsArticleCrawler
+
+
+def str2bool(v):
+    """
+    Original code from:
+     https://stackoverflow.com/questions/15008758/parsing-boolean-values-with-argparse/43357954#43357954
+    """
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise ArgumentTypeError('Boolean value expected.')
 
 
 def parse_args():
@@ -32,9 +45,13 @@ def parse_args():
                                                            'one URL per line)', default=None)
     parser.add_argument('--max-no-of-calls-in-period', type=int, help='Limit number of HTTP request per period',
                         default=2)
-    parser.add_argument('--limit_period', type=int, help='Limit (seconds) the period the number of HTTP request'
+    parser.add_argument('--limit-period', type=int, help='Limit (seconds) the period the number of HTTP request'
                                                          'see \'also max-no-of-calls-in-period\'',
                         default=1)
+    parser.add_argument('--proxy-url', type=str, help='SOCKS Proxy URL to use eg. socks5h://localhost:9050',
+                        default=None)
+    parser.add_argument('--allow-cookies', type=str2bool, nargs='?', help='Allow session cookies', const=True,
+                        default=False)
 
     # Mutually exclusive group...
     group = parser.add_mutually_exclusive_group()
@@ -69,7 +86,9 @@ if __name__ == '__main__':
                                              err_threshold=args.comulative_error_threshold,
                                              known_bad_urls=args.known_bad_urls,
                                              max_no_of_calls_in_period=args.max_no_of_calls_in_period,
-                                             limit_period=args.limit_period)
+                                             limit_period=args.limit_period,
+                                             proxy_url=args.proxy_url,
+                                             allow_cookies=args.allow_cookies)
         for url in archive_crawler.url_iterator():  # Get the list of urls in the archive...
             print(url, flush=True)
     else:
@@ -82,5 +101,7 @@ if __name__ == '__main__':
                                               corpus_converter=args.corpus_converter,
                                               known_bad_urls=args.known_bad_urls,
                                               max_no_of_calls_in_period=args.max_no_of_calls_in_period,
-                                              limit_period=args.limit_period)
+                                              limit_period=args.limit_period,
+                                              proxy_url=args.proxy_url,
+                                              allow_cookies=args.allow_cookies)
         articles_crawler.download_and_extract_all_articles()
