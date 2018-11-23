@@ -16,10 +16,22 @@ def extract_article_urls_from_page(article_list_raw_html, settings):
     """
     urls = set()
     for code_line in settings['ARTICLE_LINK_FORMAT_RE'].findall(article_list_raw_html):
-        code_line = settings['BEFORE_ARTICLE_URL_RE'].sub('', code_line)
-        code_line = settings['AFTER_ARTICLE_URL_RE'].sub('', code_line)
+        code_line = settings['BEFORE_ARTICLE_URL_RE'].sub(settings['before_article_url_repl'], code_line)
+        code_line = settings['AFTER_ARTICLE_URL_RE'].sub(settings['after_article_url_repl'], code_line)
         urls.add(code_line)
     return urls
+
+
+def extract_next_page_url(article_list_raw_html, settings, **_):
+    """
+        extracts and returns next page URL from an HTML code if there is one...
+    """
+    code_line = settings['ARCHIVE_NEXT_PAGE_FORMAT_RE'].search(article_list_raw_html)
+    if code_line is not None:
+        code_line = code_line.group(0)
+        code_line = settings['BEFORE_NEXT_PAGE_URL_RE'].sub(settings['before_next_page_url_repl'], code_line)
+        code_line = settings['AFTER_NEXT_PAGE_URL_RE'].sub(settings['after_next_page_url_repl'], code_line)
+    return code_line
 
 
 class CorpusConverter:

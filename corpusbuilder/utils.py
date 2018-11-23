@@ -34,9 +34,19 @@ def wrap_input_consants(current_task_config_filename):
                                                                        current_site_schema['article_url_format'],
                                                                        current_site_schema['after_article_url']))
 
+    settings['BEFORE_NEXT_PAGE_URL_RE'] = re.compile(current_site_schema['before_next_page_url'])
+    settings['AFTER_NEXT_PAGE_URL_RE'] = re.compile(current_site_schema['after_next_page_url'])
+    settings['ARCHIVE_NEXT_PAGE_FORMAT_RE'] = re.compile('{0}{1}{2}'.format(current_site_schema['before_next_page_url'],
+                                                                            current_site_schema['archive_next_page_'
+                                                                                                'format'],
+                                                                            current_site_schema['after_next_page_url']))
+
     settings['ARTICLE_LIST_URLS_BY_DATE'] = bool(current_site_schema['bool_article_list_urls_by_date'])
     settings['ARTICLE_LIST_URLS_BY_ID'] = bool(current_site_schema['bool_article_list_urls_by_id'])
     settings['DATE_INTERVAL_USED'] = bool(settings['bool_date_interval_used'])
+    settings['NEXT_URL_BY_REGEX'] = bool(settings['bool_next_url_by_regex'])
+    settings['GO_REVERSE_IN_ARCHIVE'] = bool(settings['bool_go_reverse_in_archive'])
+    settings['CREATE_CORPUS'] = bool(settings['bool_create_corpus'])
 
     if settings['DATE_INTERVAL_USED']:
         # We generate all URLs FROM the past UNTIL the "not so past"

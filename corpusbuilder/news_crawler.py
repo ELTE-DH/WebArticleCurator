@@ -5,7 +5,8 @@ from datetime import timedelta
 
 from articleDateExtractor import extractArticlePublishedDate
 
-from corpusbuilder.corpus_converter import CorpusConverter, CorpusConverterNewspaper, extract_article_urls_from_page
+from corpusbuilder.corpus_converter import CorpusConverter, CorpusConverterNewspaper, extract_article_urls_from_page,\
+    extract_next_page_url
 from corpusbuilder.enhanced_downloader import WarcCachingDownloader
 from corpusbuilder.utils import Logger
 
@@ -46,8 +47,11 @@ class NewsArchiveCrawler:
         if self._settings['ARTICLE_LIST_URLS_BY_DATE']:  # e.g. index.hu, origo.hu
             date_from = self._settings['DATE_FROM']
             url_format = self._settings['article_list_url_format']
-            article_list_urls = [self._gen_article_list_url_from_date(date_from + timedelta(days=curr_day), url_format)
-                                 for curr_day in range(self._settings['INTERVAL'].days + 1)]
+            article_list_urls = list(sorted(set(self._gen_article_list_url_from_date(date_from +
+                                                                                     timedelta(days=curr_day),
+                                                                                     url_format)
+                                                for curr_day in range(self._settings['INTERVAL'].days + 1)),
+                                            reverse=self._settings['GO_REVERSE_IN_ARCHIVE']))
 
         if self._settings['ARTICLE_LIST_URLS_BY_ID']:
             # not URL_BY_DATE and URLS_BY_ID
@@ -76,29 +80,36 @@ class NewsArchiveCrawler:
         """
             generates corpus from a URL regarding to a sub-pages that contains article URLs
         """
-        # Download the first page
-        article_urls, is_last_page = self._gen_corpus_from_id_url_list(article_list_url_base)
-        yield from article_urls
         page_num = self._settings['min_pagenum']
         max_pagenum = self._settings['max_pagenum']
-        # TODO: Better way: Search for the "next page" link, if there is no such link, than it is the last page!
-        # if the last article list page does not contain any links to articles, go to next date
-        while not is_last_page and (max_pagenum < 0 or page_num < max_pagenum):
+        # Download the first page
+        article_urls, article_list_next_page_url = self._gen_corpus_from_id_url_list(article_list_url_base,
+                                                                                     article_list_url_base, page_num,
+                                                                                     max_pagenum)
+        yield from article_urls
+
+        while article_list_next_page_url is not None:
             page_num += 1
-            article_list_url = '{0}{1}'.format(article_list_url_base, page_num)
-            article_urls, is_last_page = self._gen_corpus_from_id_url_list(article_list_url)
+            article_urls, article_list_next_page_url = self._gen_corpus_from_id_url_list(article_list_next_page_url,
+                                                                                         article_list_url_base,
+                                                                                         page_num, max_pagenum)
             yield from article_urls
 
-    def _gen_corpus_from_id_url_list(self, article_list_url):
+    def _gen_corpus_from_id_url_list(self, article_list_url, article_list_url_base, page_num, max_pagenum):
             article_list_only_urls = []
             article_list_raw_html = self._downloader.download_url(article_list_url)
+            next_page_url = None
             if article_list_raw_html is not None:
                 self.good_urls.add(article_list_url)
                 article_list_only_urls = extract_article_urls_from_page(article_list_raw_html, self._settings)
+                if self._settings['NEXT_URL_BY_REGEX']:
+                    next_page_url = extract_next_page_url(article_list_raw_html, self._settings)
+                elif len(article_list_only_urls) > 0 and (max_pagenum < 0 or page_num < max_pagenum):
+                    # ...must generate URL
+                    next_page_url = '{0}{1}'.format(article_list_url_base, page_num)
             else:
                 self.problematic_urls.add(article_list_url)
-            # None should only occur when the pattern is not OK  # is last page
-            return article_list_only_urls, article_list_raw_html is None or len(article_list_only_urls) == 0
+            return article_list_only_urls, next_page_url
 
 
 class NewsArticleCrawler:
@@ -142,6 +153,7 @@ class NewsArticleCrawler:
             self._logger_.log(url, 'NEW URL')
 
     def process_urls(self, it):
+        create_corpus = self._settings['CREATE_CORPUS']
         for url in it:
             # Check if it is a duplicate
             if url in self.good_article_urls or \
@@ -163,7 +175,7 @@ class NewsArticleCrawler:
             is_ok = self._filter_urls_by_date(url, article_raw_html)
 
             # Extract text to corpus
-            if is_ok:
+            if is_ok and create_corpus:
                 self._converter.article_to_corpus(url, article_raw_html)
 
             # Extract links to other articles...
