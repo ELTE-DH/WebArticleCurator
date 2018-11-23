@@ -18,12 +18,15 @@ from requests.packages.urllib3.exceptions import ProtocolError
 
 from chardet import detect
 
+from ratelimit import limits, sleep_and_retry
+
 respv_str = {10: '1.0', 11: '1.1'}
 
 
 class WarcCachingDownloader:
     def __init__(self, existing_warc_filename, new_warc_filename, logger_, program_name='corpusbuilder 1.0',
-                 user_agent=None, overwrite_warc=True, err_threshold=10, known_bad_urls=None):
+                 user_agent=None, overwrite_warc=True, err_threshold=10, known_bad_urls=None,
+                 max_no_of_calls_in_period=2, limit_period=1):
         if existing_warc_filename is not None:
             self._cached_downloads = WarcReader(existing_warc_filename, logger_)
             self._url_index = self._cached_downloads.url_index
@@ -32,7 +35,8 @@ class WarcCachingDownloader:
             self._url_index = {}
             warcinfo = None
         self._new_donwloads = WarcDownloader(new_warc_filename, logger_, program_name, user_agent, overwrite_warc,
-                                             err_threshold, warcinfo, known_bad_urls)
+                                             err_threshold, warcinfo, known_bad_urls, max_no_of_calls_in_period,
+                                             limit_period)
 
     def download_url(self, url):
         if url in self._url_index:
@@ -49,7 +53,7 @@ class WarcDownloader:
         Download URL with HTTP GET, save to a WARC file and return the decoded text
     """
     def __init__(self, filename, logger_, program_name='corpusbuilder 1.0', user_agent=None, overwrite_warc=True,
-                 err_threshold=10, warcinfo=None, known_bad_urls=None):
+                 err_threshold=10, warcinfo=None, known_bad_urls=None, max_no_of_calls_in_period=2, limit_period=1):
         if known_bad_urls is not None:
             self._bad_urls = {line.strip() for line in open(known_bad_urls, encoding='UTF-8').readlines()}
         else:
@@ -71,7 +75,8 @@ class WarcDownloader:
         self._output_file = open(filename, 'wb')
         self._logger_ = logger_
         self._req_headers = {'Accept-Encoding': 'identity', 'User-agent': user_agent}
-        self._requests_get = Session().get
+        self._requests_get = sleep_and_retry(limits(calls=max_no_of_calls_in_period,
+                                                    period=limit_period)(Session().get))
         self._error_count = 0
         self._error_threshold = err_threshold
 
