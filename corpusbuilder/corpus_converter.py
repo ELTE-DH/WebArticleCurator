@@ -4,6 +4,7 @@
 import os
 import re
 import json
+from html import unescape as html_unescape
 
 from newspaper import Article
 
@@ -18,6 +19,7 @@ def extract_article_urls_from_page(article_list_raw_html, settings):
     for code_line in settings['ARTICLE_LINK_FORMAT_RE'].findall(article_list_raw_html):
         code_line = settings['BEFORE_ARTICLE_URL_RE'].sub(settings['before_article_url_repl'], code_line)
         code_line = settings['AFTER_ARTICLE_URL_RE'].sub(settings['after_article_url_repl'], code_line)
+        code_line = html_unescape(code_line)
         urls.add(code_line)
     return urls
 
@@ -31,6 +33,7 @@ def extract_next_page_url(article_list_raw_html, settings, **_):
         code_line = code_line.group(0)
         code_line = settings['BEFORE_NEXT_PAGE_URL_RE'].sub(settings['before_next_page_url_repl'], code_line)
         code_line = settings['AFTER_NEXT_PAGE_URL_RE'].sub(settings['after_next_page_url_repl'], code_line)
+        code_line = html_unescape(code_line)
     return code_line
 
 
