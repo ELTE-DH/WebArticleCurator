@@ -50,14 +50,15 @@
     "after_next_page_url": ""
     "after_next_page_url_repl": ""
 
-    "article_date_format": ""
-    "before_article_date": ""
+    "article_date_format": "[0-9]{4}\\.[0-9]{2}\\.[0-9]{2}\\."
+    "before_article_date": "<div class=\"datum\">[ \n]*"
     "before_article_date_repl": ""
-    "after_article_date": ""
+    "after_article_date": " [0-9]{2}:[0-9]{2} *</div>"
     "after_article_date_repl": ""
+    "article_date_formatting": "%Y.%m.%d."
 
-    "next_url_by_regex": true
-    "next_url_by_pagenum": false
+    "next_url_by_regex": false
+    "next_url_by_pagenum": true
     "archive_page_urls_by_date": true
     "archive_page_urls_by_id": true
     "go_reverse_in_archive": true
@@ -90,10 +91,8 @@
 "homar.blog":
     "tags_key": "bloghu-html"
 
-
-"comment.blog": {
+"comment.blog":
     "tags_key": "bloghu-html"
-
 
 "blikk":
     "date_first_article": 2009-01-21

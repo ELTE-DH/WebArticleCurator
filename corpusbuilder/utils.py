@@ -59,8 +59,15 @@ def wrap_input_consants(current_task_config_filename):
     settings['BEFORE_NEXT_PAGE_URL_RE'] = re.compile(current_site_schema['before_next_page_url'])
     settings['AFTER_NEXT_PAGE_URL_RE'] = re.compile(current_site_schema['after_next_page_url'])
     settings['NEXT_PAGE_URL_FORMAT_RE'] = re.compile('{0}{1}{2}'.format(current_site_schema['before_next_page_url'],
-                                                                        current_site_schema['archive_next_page_format'],
+                                                                        current_site_schema['next_page_url_format'],
                                                                         current_site_schema['after_next_page_url']))
+
+    settings['BEFORE_ARTICLE_DATE_RE'] = re.compile(current_site_schema['before_article_date'])
+    settings['AFTER_ARTICLE_DATE_RE'] = re.compile(current_site_schema['after_article_date'])
+    settings['ARTICLE_DATE_FORMAT_RE'] = re.compile('{0}{1}{2}'.format(current_site_schema['before_article_date'],
+                                                                       current_site_schema['article_date_format'],
+                                                                       current_site_schema['after_article_date']),
+                                                    re.DOTALL)  # TODO: When this is needed? e.g. Index.hu
 
     if 'date_from' in settings and 'date_until' in settings:
         # We generate all URLs FROM the past UNTIL the "not so past"
@@ -97,7 +104,7 @@ class Logger:
     """
     def __init__(self, log_filename, console_level='INFO', console_stream=sys.stderr,
                  logfile_level='INFO', logfile_mode='a', logfile_encoding='UTF-8'):
-
+        # logging.basicConfig(level=logging.INFO)
         log_levels = {'DEBUG': logging.DEBUG, 'INFO': logging.INFO, 'WARNING': logging.WARNING, 'ERROR': logging.ERROR,
                       'CRITICAL': logging.CRITICAL}
 
@@ -110,6 +117,7 @@ class Logger:
 
         # Create logger
         self._logger = logging.getLogger(log_filename)  # Logger is named after the logfile
+        self._logger.propagate = False
 
         # Create handler one for console output and one for logfile and set their properties accordingly
         c_handler = logging.StreamHandler(stream=console_stream)
@@ -118,19 +126,23 @@ class Logger:
         f_handler.setLevel(logfile_level)
 
         # Create formatters and add them to handlers
-        c_format = logging.Formatter('{asctime} {levelname}: {message}')
-        f_format = logging.Formatter('{asctime} {levelname}: {message}')
+        c_format = logging.Formatter('{asctime} {levelname}: {message}', style='{')
+        f_format = logging.Formatter('{asctime} {levelname}: {message}', style='{')
         c_handler.setFormatter(c_format)
         f_handler.setFormatter(f_format)
 
         # Add handlers to the logger
         self._logger.addHandler(c_handler)
         self._logger.addHandler(f_handler)
+        if console_level < logfile_level:
+            self._logger.setLevel(console_level)
+        else:
+            self._logger.setLevel(logfile_level)
 
         self._leveled_logger = {'DEBUG': self._logger.debug, 'INFO': self._logger.info, 'WARNING': self._logger.warning,
                                 'ERROR': self._logger.error, 'CRITICAL': self._logger.critical}
 
-        self._logger.info('Logging started')
+        self.log('INFO', 'Logging started')
 
     def log(self, level, msg):
         if level in self._leveled_logger:
