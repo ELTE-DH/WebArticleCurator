@@ -65,9 +65,10 @@ class WarcDownloader:
                  err_threshold=10, warcinfo_record_data=None, known_bad_urls=None, max_no_of_calls_in_period=2,
                  limit_period=1, proxy_url=None, allow_cookies=False):
         if known_bad_urls is not None:  # Setup the list of cached bad URLs to prevent trying to download them again
-            self._bad_urls = {line.strip() for line in open(known_bad_urls, encoding='UTF-8').readlines()}
+            with open(known_bad_urls, encoding='UTF-8') as fh:
+                self._bad_urls = {line.strip() for line in fh}
         else:
-            self._bad_urls = {}
+            self._bad_urls = set()
 
         if not overwrite_warc:  # Find out next nonexisting warc filename
             num = 0
@@ -80,7 +81,7 @@ class WarcDownloader:
                 filename = '{0}-{1:05d}{2}'.format(filename2, num, ext)
                 num += 1
 
-        logger_.log('', 'Creating archivefile: {0}'.format(filename))
+        logger_.log('INFO', 'Creating archivefile: {0}'.format(filename))
 
         self._output_file = open(filename, 'wb')
         self._logger_ = logger_
@@ -129,7 +130,7 @@ class WarcDownloader:
         return self._session.get(*args, **kwargs)
 
     def _handle_request_exception(self, url, msg):
-        self._logger_.log(url, msg)
+        self._logger_.log('WARNING', ';'.join((url, msg)))
 
         self._error_count += 1
         if self._error_count >= self._error_threshold:
@@ -141,7 +142,7 @@ class WarcDownloader:
         url = urlunparse((scheme, netloc, path, params, query, fragment))
 
         if url in self._bad_urls:
-            self._logger_.log(url, 'Not downloading known bad URL: {0}'.format(url))
+            self._logger_.log('INFO', 'Not downloading known bad URL: {0}'.format(url))
             return None
 
         try:  # The actual request
@@ -208,14 +209,14 @@ class WarcReader:
         try:
             self.create_index()
         except KeyError as e:
-            self._logger_.log('', 'Ignoring exception: {0}'.format(e))
+            self._logger_.log('ERROR', 'Ignoring exception: {0}'.format(e))
 
     def __del__(self):
         if hasattr(self, '_stream'):  # If the program opened a file, then it should gracefully close it on exit!
             self._stream.close()
 
     def create_index(self):
-        self._logger_.log('', 'Creating index...')
+        self._logger_.log('INFO', 'Creating index...')
         archive_it = ArchiveIterator(self._stream)
         info_rec = next(archive_it)
         # First record should be an info record, then it should be followed by the reqvuest-response pairs
@@ -243,7 +244,7 @@ class WarcReader:
         if self._count == 0:
             raise IndexError('No index created or no response records in the WARC file!')
         self._stream.seek(0)
-        self._logger_.log('', 'Index succesuflly created.')
+        self._logger_.log('INFO', 'Index succesuflly created.')
 
     def get_record(self, url):
         reqv_resp_pair = self.url_index.get(url)
@@ -268,7 +269,7 @@ class WarcReader:
             enc = record.rec_headers.get_header('WARC-X-Detected-Encoding', 'UTF-8')
             text = data.decode(enc, 'ignore')
         else:
-            self._logger_.log(url, 'URL not found in WARC!')
+            self._logger_.log('CRITICAL', ';'.join((url, 'URL not found in WARC!')))
 
         return text
 

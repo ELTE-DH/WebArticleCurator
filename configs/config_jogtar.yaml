@@ -1,0 +1,12 @@
+"site_name": "jogtar"
+"site_schemas": "site_schemas.yaml"
+"tags": "tags.yaml"
+
+"create_corpus": false
+"output_file": "jogtar_corpus.txt"
+
+"log_file_articles": "jogtar_articles_log.txt"
+"log_file_archive": "jogtar_archive_log.txt"
+
+# "date_from": 2000-01-01
+# "date_until": 2100-01-01

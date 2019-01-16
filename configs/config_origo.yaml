@@ -1,0 +1,12 @@
+"site_name": "origo"
+"site_schemas": "site_schemas.yaml"
+"tags": "tags.yaml"
+
+"create_corpus": false
+"output_file": "origo_corpus.txt"
+
+"log_file_articles": "origo_articles_log.txt"
+"log_file_archive": "origo_archive_log.txt"
+
+# "date_from": 2000-01-01
+# "date_until": 2100-01-01

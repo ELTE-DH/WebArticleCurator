@@ -1,0 +1,12 @@
+"site_name": "blikk"
+"site_schemas": "site_schemas.yaml"
+"tags": "tags.yaml"
+
+"create_corpus": true
+"output_file": "blikk_corpus__2009_01_21__2018_03_22.txt"
+
+"log_file_articles": "blikk_log__2009_01_21__2018_03_22_articles_log.txt"
+"log_file_archive": "blikk_log__2009_01_21__2018_03_22_archive_log.txt"
+
+"date_from": 2009-01-21
+"date_until": 2018-03-22

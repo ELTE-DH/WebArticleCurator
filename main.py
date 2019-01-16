@@ -43,6 +43,8 @@ def parse_args():
                         choices=['rule-based', 'newspaper'])
     parser.add_argument('--known-bad-urls', type=str, help='Known bad URLs to be excluded from download (filename, '
                                                            'one URL per line)', default=None)
+    parser.add_argument('--known-article-urls', type=str, help='Known article URLs to mark the desired end of '
+                                                               'the archive (filename, one URL per line)', default=None)
     parser.add_argument('--max-no-of-calls-in-period', type=int, help='Limit number of HTTP request per period',
                         default=2)
     parser.add_argument('--limit-period', type=int, help='Limit (seconds) the period the number of HTTP request'
@@ -85,6 +87,7 @@ if __name__ == '__main__':
                                              overwrite_warc=args.no_overwrite_warc,
                                              err_threshold=args.comulative_error_threshold,
                                              known_bad_urls=args.known_bad_urls,
+                                             known_article_urls=args.known_article_urls,
                                              max_no_of_calls_in_period=args.max_no_of_calls_in_period,
                                              limit_period=args.limit_period,
                                              proxy_url=args.proxy_url,
@@ -100,6 +103,7 @@ if __name__ == '__main__':
                                               err_threshold=args.comulative_error_threshold,
                                               corpus_converter=args.corpus_converter,
                                               known_bad_urls=args.known_bad_urls,
+                                              known_article_urls=args.known_article_urls,
                                               max_no_of_calls_in_period=args.max_no_of_calls_in_period,
                                               limit_period=args.limit_period,
                                               proxy_url=args.proxy_url,

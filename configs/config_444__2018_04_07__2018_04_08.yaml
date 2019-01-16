@@ -1,0 +1,12 @@
+"site_name": "444"
+"site_schemas": "site_schemas.yaml"
+"tags": "tags.yaml"
+
+"create_corpus": true
+"output_file": "444_corpus.txt"
+
+"log_file_articles": "444_articles_log.txt"
+"log_file_archive": "444_archive_log.txt"
+
+'date_from': 2018-04-07
+'date_until': 2018-04-08
