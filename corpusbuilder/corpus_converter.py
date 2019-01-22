@@ -66,7 +66,6 @@ class CorpusConverter:
         self._logger_ = logger_
 
         # General cleaning rules to remove unneeded parts
-        self.url_pattern = re.compile(r'(https?://)?(www.)?([^/]+\.)(\w+/|$)(.*)')  # TODO: urldecode!!!!
         self.script_pattern = re.compile(r'<script[\s\S]+?/script>')
         self.img_pattern = re.compile(r'<img.*?/>')
         self.multi_ws_pattern = re.compile(' {2,}')

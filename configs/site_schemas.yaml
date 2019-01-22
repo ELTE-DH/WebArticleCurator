@@ -31,7 +31,6 @@
     "max_pagenum": NULL
     "same_article_url_threshold": NULL
 
-    "encoding": "ISO-8859-2"
     "tags_key": "origo-html"
 
 
@@ -68,7 +67,6 @@
     "max_pagenum": NULL
     "same_article_url_threshold": NULL
 
-    "encoding": "UTF-8"
     "tags_key": "index-html"
 
 "index-warc":
@@ -128,7 +126,6 @@
     "max_pagenum": NULL
     "same_article_url_threshold": NULL
 
-    "encoding": "UTF-8"
     "tags_key": "blikk-html"
 
 "444":
@@ -164,7 +161,6 @@
     "max_pagenum": NULL
     "same_article_url_threshold": NULL
 
-    "encoding": "UTF-8"
     "tags_key": "444-html"
 
 "mno":
@@ -200,7 +196,6 @@
     "max_pagenum": NULL
     "same_article_url_threshold": NULL
 
-    "encoding": "UTF-8"
     "tags_key": "mno-html"
 
 "jogtar":
@@ -236,5 +231,4 @@
     "max_pagenum": NULL
     "same_article_url_threshold": NULL
 
-    "encoding": "UTF-8"
     "tags_key": NULL

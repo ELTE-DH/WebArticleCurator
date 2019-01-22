@@ -100,8 +100,7 @@ Numbers regarding pagination:
 - `same_article_url_threshold`: How many already find urls on a page are allowed (e.g. the pages slided due to new articles)
 
 Misc features:
-	
-- `encoding`: The encoding of the page
+
 - `tags_key`: the key for the required tags when building a corpus
 
 # Licence
