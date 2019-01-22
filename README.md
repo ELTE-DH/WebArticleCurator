@@ -34,7 +34,7 @@ Logging information
 Crawling timespan (optional)
 
 - `date_from`: the inclusive minimal date of the required articles in ISO 8601 form YYYY-MM-DD
-- `date_until`: the exclusive maximal date of the required articles in ISO 8601 form YYYY-MM-DD
+- `date_until`: the inclusive maximal date of the required articles in ISO 8601 form YYYY-MM-DD
 
 ## Tags (fileds)
 

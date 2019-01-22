@@ -69,6 +69,7 @@ def wrap_input_consants(current_task_config_filename):
                                                                        current_site_schema['after_article_date']),
                                                     re.DOTALL)  # TODO: When this is needed? e.g. Index.hu
 
+    settings['filter_articles_by_date'] = False
     if 'date_from' in settings and 'date_until' in settings:
         # We generate all URLs FROM the past UNTIL the "not so past"
         # Raises ValueError if there is something wrong
@@ -78,6 +79,8 @@ def wrap_input_consants(current_task_config_filename):
             raise ValueError('DateError: date_until not datetime ({0})!'.format(settings['date_until']))
         if settings['date_from'] > settings['date_until']:
             raise ValueError('DateError: date_from is later than DATE UNTIL!')
+
+        settings['filter_articles_by_date'] = True  # Date filtering ON in any other cases OFF
 
     # if there is no time filtering then we use dates only if they are needed to generate URLs
     elif settings['archive_page_urls_by_date']:

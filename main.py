@@ -45,6 +45,10 @@ def parse_args():
                                                            'one URL per line)', default=None)
     parser.add_argument('--known-article-urls', type=str, help='Known article URLs to mark the desired end of '
                                                                'the archive (filename, one URL per line)', default=None)
+    parser.add_argument('--new-problematic-urls', type=str, help='New problematic URLs to be checked manually',
+                        default=None)
+    parser.add_argument('--new-good-urls', type=str, help='New good URLs downloaded and in the archive',
+                        default=None)
     parser.add_argument('--max-no-of-calls-in-period', type=int, help='Limit number of HTTP request per period',
                         default=2)
     parser.add_argument('--limit-period', type=int, help='Limit (seconds) the period the number of HTTP request'
@@ -88,6 +92,8 @@ if __name__ == '__main__':
                                              err_threshold=args.comulative_error_threshold,
                                              known_bad_urls=args.known_bad_urls,
                                              known_article_urls=args.known_article_urls,
+                                             new_problematic_urls=args.new_problematic_urls,
+                                             new_good_urls=args.new_good_urls,
                                              max_no_of_calls_in_period=args.max_no_of_calls_in_period,
                                              limit_period=args.limit_period,
                                              proxy_url=args.proxy_url,
@@ -104,6 +110,8 @@ if __name__ == '__main__':
                                               corpus_converter=args.corpus_converter,
                                               known_bad_urls=args.known_bad_urls,
                                               known_article_urls=args.known_article_urls,
+                                              new_problematic_urls=args.new_problematic_urls,
+                                              new_good_urls=args.new_good_urls,
                                               max_no_of_calls_in_period=args.max_no_of_calls_in_period,
                                               limit_period=args.limit_period,
                                               proxy_url=args.proxy_url,

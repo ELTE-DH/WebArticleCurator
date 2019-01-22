@@ -38,23 +38,31 @@ class WarcCachingDownloader:
                  max_no_of_calls_in_period=2, limit_period=1, proxy_url=None, allow_cookies=False):
         if existing_warc_filename is not None:  # Setup the supplied existing warc archive file as cache
             self._cached_downloads = WarcReader(existing_warc_filename, logger_)
-            self._url_index = self._cached_downloads.url_index
+            self.url_index = self._cached_downloads.url_index
             info_record_data = self._cached_downloads.info_record_data
         else:
-            self._url_index = {}
+            self.url_index = {}
             info_record_data = None
         self._new_donwloads = WarcDownloader(new_warc_filename, logger_, program_name, user_agent, overwrite_warc,
                                              err_threshold, info_record_data, known_bad_urls,
                                              max_no_of_calls_in_period, limit_period, proxy_url, allow_cookies)
 
     def download_url(self, url):
-        if url in self._url_index:
+        if url in self.url_index:
             reqv, resp = self._cached_downloads.get_record(url)
             self._new_donwloads.write_record(reqv)
             self._new_donwloads.write_record(resp)
             return self._cached_downloads.download_url(url)
         else:
             return self._new_donwloads.download_url(url)
+
+    @property
+    def bad_urls(self):
+        return self._new_donwloads.bad_urls
+
+    @bad_urls.setter
+    def bad_urls(self, value):
+        self._new_donwloads.bad_urls = value
 
 
 class WarcDownloader:
@@ -66,9 +74,9 @@ class WarcDownloader:
                  limit_period=1, proxy_url=None, allow_cookies=False):
         if known_bad_urls is not None:  # Setup the list of cached bad URLs to prevent trying to download them again
             with open(known_bad_urls, encoding='UTF-8') as fh:
-                self._bad_urls = {line.strip() for line in fh}
+                self.bad_urls = {line.strip() for line in fh}
         else:
-            self._bad_urls = set()
+            self.bad_urls = set()
 
         if not overwrite_warc:  # Find out next nonexisting warc filename
             num = 0
@@ -141,7 +149,7 @@ class WarcDownloader:
         path = quote(path)  # For safety urlencode the generated URL...
         url = urlunparse((scheme, netloc, path, params, query, fragment))
 
-        if url in self._bad_urls:
+        if url in self.bad_urls:
             self._logger_.log('INFO', 'Not downloading known bad URL: {0}'.format(url))
             return None
 
