@@ -19,6 +19,7 @@
     "before_article_date_repl": ""
     "after_article_date": ""
     "after_article_date_repl": ""
+    "article_date_formatting": "%Y.%m.%d."
 
     "next_url_by_regex": true
     "next_url_by_pagenum": false
@@ -51,7 +52,7 @@
     "after_next_page_url_repl": ""
 
     "article_date_format": "[0-9]{4}\\.[0-9]{2}\\.[0-9]{2}\\."
-    "before_article_date": "<div class=\"datum\">[ \n]*"
+    "before_article_date": "(s?)<div class=\"datum\">[ \n]*"
     "before_article_date_repl": ""
     "after_article_date": " [0-9]{2}:[0-9]{2} *</div>"
     "after_article_date_repl": ""
@@ -115,6 +116,7 @@
     "before_article_date_repl": ""
     "after_article_date": ""
     "after_article_date_repl": ""
+    "article_date_formatting": "%Y.%m.%d."
 
     "next_url_by_regex": true
     "next_url_by_pagenum": false
@@ -150,6 +152,7 @@
     "before_article_date_repl": ""
     "after_article_date": ""
     "after_article_date_repl": ""
+    "article_date_formatting": "%Y.%m.%d."
 
     "next_url_by_regex": true
     "next_url_by_pagenum": false
@@ -185,6 +188,7 @@
     "before_article_date_repl": ""
     "after_article_date": ""
     "after_article_date_repl": ""
+    "article_date_formatting": "%Y.%m.%d."
 
     "next_url_by_regex": true
     "next_url_by_pagenum": false
@@ -220,6 +224,7 @@
     "before_article_date_repl": ""
     "after_article_date": ""
     "after_article_date_repl": ""
+    "article_date_formatting": "%Y.%m.%d."
 
     "next_url_by_regex": true
     "next_url_by_pagenum": false

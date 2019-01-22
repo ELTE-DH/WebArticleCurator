@@ -83,6 +83,7 @@ The description of the required fields:
     - `before_article_date_repl`: the optional replacement for the left context of the arcticle URLs (e.g. domain)
     - `after_article_date`: the RE for the right context of the article URLs. Transformed to `AFTER_ARTICLE_DATE_RE`
     - `after_article_date_repl`: the optional replacement for the right context of the arcticle URLs 
+    - `article_date_formatting`: the date format specification string used for parsing the date
 
 Some bool features to describe the site:
 

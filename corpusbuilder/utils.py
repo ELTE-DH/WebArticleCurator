@@ -66,8 +66,7 @@ def wrap_input_consants(current_task_config_filename):
     settings['AFTER_ARTICLE_DATE_RE'] = re.compile(current_site_schema['after_article_date'])
     settings['ARTICLE_DATE_FORMAT_RE'] = re.compile('{0}{1}{2}'.format(current_site_schema['before_article_date'],
                                                                        current_site_schema['article_date_format'],
-                                                                       current_site_schema['after_article_date']),
-                                                    re.DOTALL)  # TODO: When this is needed? e.g. Index.hu
+                                                                       current_site_schema['after_article_date']))
 
     settings['filter_articles_by_date'] = False
     if 'date_from' in settings and 'date_until' in settings:

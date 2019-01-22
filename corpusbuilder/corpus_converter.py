@@ -47,7 +47,10 @@ def extract_article_date(article_raw_html, settings):
         code_line = code_line.group(0)
         code_line = settings['BEFORE_ARTICLE_DATE_RE'].sub(settings['before_article_date_repl'], code_line)
         code_line = settings['AFTER_ARTICLE_DATE_RE'].sub(settings['after_article_date_repl'], code_line)
-        code_line = strptime(code_line, settings['article_date_formatting']).date()  # TODO: Hack!
+        try:
+            code_line = strptime(code_line, settings['article_date_formatting']).date()
+        except (UnicodeError, ValueError, KeyError):  # In case of any error log outside of this function...
+            code_line = None
     return code_line
 
 
