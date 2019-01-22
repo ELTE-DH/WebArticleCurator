@@ -29,7 +29,7 @@
 
     "min_pagenum": 0
     "max_pagenum": NULL
-    "same_article_url_threshold": NULL
+    "new_article_url_threshold": 0
 
     "tags_key": "origo-html"
 
@@ -65,7 +65,7 @@
 
     "min_pagenum": 0
     "max_pagenum": NULL
-    "same_article_url_threshold": NULL
+    "new_article_url_threshold": 0
 
     "tags_key": "index-html"
 
@@ -124,7 +124,7 @@
 
     "min_pagenum": 1
     "max_pagenum": NULL
-    "same_article_url_threshold": NULL
+    "new_article_url_threshold": 0
 
     "tags_key": "blikk-html"
 
@@ -159,7 +159,7 @@
 
     "min_pagenum": 1
     "max_pagenum": NULL
-    "same_article_url_threshold": NULL
+    "new_article_url_threshold": 0
 
     "tags_key": "444-html"
 
@@ -194,7 +194,7 @@
 
     "min_pagenum": 1
     "max_pagenum": NULL
-    "same_article_url_threshold": NULL
+    "new_article_url_threshold": 0
 
     "tags_key": "mno-html"
 
@@ -229,6 +229,6 @@
 
     "min_pagenum": 0
     "max_pagenum": NULL
-    "same_article_url_threshold": NULL
+    "new_article_url_threshold": 0
 
     "tags_key": NULL

@@ -110,7 +110,7 @@ class NewsArchiveCrawler:
         max_pagenum = self._settings['max_pagenum']
         next_url_use_regex = self._settings['next_url_by_regex']
         next_url_use_pagenum = self._settings['next_url_by_pagenum']
-        same_article_url_threshold = self._settings['same_article_url_threshold']
+        new_article_url_threshold = self._settings['new_article_url_threshold']
 
         archive_page_next_page_url = archive_page_url_base
         while archive_page_next_page_url is not None:
@@ -123,7 +123,7 @@ class NewsArchiveCrawler:
                 archive_page_next_page_url = self._extract_next_page_url(archive_page_raw_html, archive_page_url_base,
                                                                          article_urls, page_num, max_pagenum,
                                                                          next_url_use_regex, next_url_use_pagenum,
-                                                                         same_article_url_threshold)
+                                                                         new_article_url_threshold)
             else:  # Download failed
                 if archive_page_next_page_url not in self._downloader.bad_urls:
                     self.problematic_urls.add(archive_page_next_page_url)  # New possibly bad URL
@@ -132,7 +132,7 @@ class NewsArchiveCrawler:
             yield from article_urls
 
     def _extract_next_page_url(self, archive_page_raw_html, archive_page_url_base, article_urls, page_num,
-                               max_pagenum, use_regex, use_pagenum, same_article_url_threshold):
+                               max_pagenum, use_regex, use_pagenum, new_article_url_threshold):
         """
             The next URL can be determined by various conditions (no matter how the pages are grouped):
                 1) If there is a "next page" link, find it with REs and use that
@@ -145,8 +145,7 @@ class NewsArchiveCrawler:
         elif use_pagenum and len(article_urls) > 0 and \
                 (len(self.known_article_urls) == 0 or
                  # We allow some intersecting element as the archive may have been moved
-                 # TODO: maybe better with new minus known > threshold?
-                 len(article_urls.intersection(self.known_article_urls)) > same_article_url_threshold) \
+                 len(article_urls.minus(self.known_article_urls)) > new_article_url_threshold) \
                 and (max_pagenum is None or page_num < max_pagenum):  # Method #2
             archive_page_next_page_url = '{0}{1}'.format(archive_page_url_base, page_num)  # ...must generate URL
         else:  # Method #3

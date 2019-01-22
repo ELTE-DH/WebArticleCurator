@@ -97,7 +97,7 @@ Numbers regarding pagination:
 
 - `min_pagenum`: The first page number to increment
 - `max_pagenum`: The upper bound of the number of pages for safety or for stop criteria
-- `same_article_url_threshold`: How many already find urls on a page are allowed (e.g. the pages slided due to new articles)
+- `new_article_url_threshold`: How many already new urls on a page are required at minimum (e.g. the pages slided due to new articles)
 
 Misc features:
 
