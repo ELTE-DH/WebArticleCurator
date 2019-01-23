@@ -9,7 +9,7 @@ More detailed English documentation is coming soon.
 
 # Config schema
 
-The config is divided into three parts arccording to the task to be done
+The config is divided into three parts arccording to the task to be done. The used REs can be freely configured by adding inline flags e.g. for multiline matching
 
 ## Crawl config
 

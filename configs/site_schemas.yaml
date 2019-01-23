@@ -129,19 +129,19 @@
     "tags_key": "blikk-html"
 
 "444":
-    "date_first_article": 0001-01-01
+    "date_first_article": 2013-04-10
     "archive_url_format": "https://444.hu/archivum?page="
 
-    "article_url_format": "https://444\\.hu/.*?"
-    "before_article_url": "<div class=\"card\">\\s*?<h3>\\s*?<a href=\""
+    "article_url_format": "https://444\\.hu/[^\"]*?"
+    "before_article_url": "(?s)<article class=\"card\">\\s*?<h3>\\s*?<a href=\""
     "before_article_url_repl": ""
     "after_article_url": "\">"
     "after_article_url_repl": ""
 
-    "next_page_url_format": ""
-    "before_next_page_url": ""
+    "next_page_url_format": "https://444\\.hu/archivum\\?page=[0-9]+"
+    "before_next_page_url": "<a href=\""
     "before_next_page_url_repl": ""
-    "after_next_page_url": ""
+    "after_next_page_url": "\" class=\"infinity-next button\">Tovább a múltba</a>"
     "after_next_page_url_repl": ""
 
     "article_date_format": ""
@@ -158,7 +158,7 @@
     "go_reverse_in_archive": true
 
     "min_pagenum": 1
-    "max_pagenum": NULL
+    "max_pagenum": NULL  # 2558 on 2019-01-23
     "new_article_url_threshold": 0
 
     "tags_key": "444-html"
