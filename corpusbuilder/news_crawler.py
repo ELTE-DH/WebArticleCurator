@@ -219,13 +219,13 @@ class NewsArticleCrawler:
         for url in it:
             if not self._is_new_url(url):  # Check if it is a duplicate
                 self._logger.log('WARNING',
-                                 ';'.join((url, 'Not downloading article, because it is already downloaded!')))
+                                 '\t'.join((url, 'Not downloading article, because it is already downloaded!')))
                 continue
 
             # "Download" article
             article_raw_html = self._downloader.download_url(url)
             if article_raw_html is None:
-                self._logger.log('ERROR', ';'.join((url, 'Article were not processed because download failed!')))
+                self._logger.log('ERROR', '\t'.join((url, 'Article were not processed because download failed!')))
                 if url not in self._downloader.bad_urls:
                     self.problematic_article_urls.add(url)  # New problematic URL for manual checking
                 continue
@@ -239,13 +239,13 @@ class NewsArticleCrawler:
                 # a) Retrieve the date
                 article_date = extract_article_date(article_raw_html, self._settings)
                 if article_date is None:
-                    self._logger.log('ERROR', ';'.join((url, 'DATE COULD NOT BE PARSED!')))
+                    self._logger.log('ERROR', '\t'.join((url, 'DATE COULD NOT BE PARSED!')))
                     continue
 
                 # b) Check date interval
                 if not self._settings['date_from'] <= article_date <= self._settings['date_until']:
-                    self._logger.log('WARNING', ';'.join((url, 'Date ({0}) not in the specified interval: {1}-{2} '
-                                                               'didn\'t use it in the corpus'.
+                    self._logger.log('WARNING', '\t'.join((url, 'Date ({0}) not in the specified interval: {1}-{2} '
+                                                                'didn\'t use it in the corpus'.
                                      format(article_date, self._settings['date_from'], self._settings['date_until']))))
                     continue
 
@@ -270,7 +270,7 @@ class NewsArticleCrawler:
         self._new_urls = {url for url in self._new_urls if self._is_new_url(url)}
         while len(self._new_urls) > 0:  # Article URL-s not in the archive... Shouldn't be any!
             for url in self._new_urls:
-                self._logger.log('ERROR', ';'.join((url, 'TRUE NEW URL')))
+                self._logger.log('ERROR', '\t'.join((url, 'TRUE NEW URL')))
             new_urls, self._new_urls = self._new_urls, set()
             self.process_urls(new_urls)  # Recursively get all new urls...
 

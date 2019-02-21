@@ -49,7 +49,7 @@ The `open` and `close` part is then substituted by the field name in xml form. e
 
     <field> content </field>
 
-The whole article is enclosed with the content of the `common` key currently:
+The whole article is enclosed with the content of the `common` key currently which is __REQUIRED__ to present:
 	
 - `article_begin_mark`: the begin mark of a downloaded article (should be in XML form)
 - `article_end_mark`:  the end mark of a downloaded article (should be in XML form)
@@ -62,6 +62,7 @@ Basic information:
 
 - `date_first_article`: The date of the first article on the site (aslo used for archive crawling)
 - `archive_url_format`: The RE for the archive URLs of the site
+ (supply #year, #month, #day tags to be replaced with the actual field of date during crawling)
 
 The description of the required fields:	
 

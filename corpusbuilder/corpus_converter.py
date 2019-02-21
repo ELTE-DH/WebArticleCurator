@@ -17,7 +17,8 @@ def extract_article_urls_from_page(archive_page_raw_html, settings):
         extracts and returns as a list the URLs belonging to articles from an HTML code
     """
     urls = set()
-    for code_line in settings['ARTICLE_URL_FORMAT_RE'].findall(archive_page_raw_html):
+    article_url_format_re = settings['ARTICLE_URL_FORMAT_RE']
+    for code_line in article_url_format_re.findall(archive_page_raw_html):
         code_line = settings['BEFORE_ARTICLE_URL_RE'].sub(settings['before_article_url_repl'], code_line)
         code_line = settings['AFTER_ARTICLE_URL_RE'].sub(settings['after_article_url_repl'], code_line)
         code_line = html_unescape(code_line)
@@ -29,7 +30,8 @@ def extract_next_page_url(archive_page_raw_html, settings):
     """
         extracts and returns next page URL from an HTML code if there is one...
     """
-    code_line = settings['NEXT_PAGE_URL_FORMAT_RE'].search(archive_page_raw_html)
+    next_page_url_format_re = settings['NEXT_PAGE_URL_FORMAT_RE']
+    code_line = next_page_url_format_re.search(archive_page_raw_html)
     if code_line is not None:
         code_line = code_line.group(0)
         code_line = settings['BEFORE_NEXT_PAGE_URL_RE'].sub(settings['before_next_page_url_repl'], code_line)
@@ -42,7 +44,8 @@ def extract_article_date(article_raw_html, settings):
     """
         extracts and returns next page URL from an HTML code if there is one...
     """
-    code_line = settings['ARTICLE_DATE_FORMAT_RE'].search(article_raw_html)
+    article_date_format_re = settings['ARTICLE_DATE_FORMAT_RE']
+    code_line = article_date_format_re.search(article_raw_html)
     if code_line is not None:
         code_line = code_line.group(0)
         code_line = settings['BEFORE_ARTICLE_DATE_RE'].sub(settings['before_article_date_repl'], code_line)
@@ -97,7 +100,7 @@ class CorpusConverter:
 
         # Write the result into the output file
         print(self._article_begin_mark, doc_out, self._article_end_mark, sep='', end='', file=self._file_out)
-        self._logger_.log('INFO', ';'.join((url, self._settings['tags_key'], 'Article extraction OK')))
+        self._logger_.log('INFO', '\t'.join((url, self._settings['tags_key'], 'Article extraction OK')))
         return
 
     @staticmethod
@@ -143,4 +146,4 @@ class CorpusConverterNewspaper:  # Mimic CorpusConverter
                                                                html_title,
                                                                html_body)),
               self._settings['article_end_flag'], sep='', end='', file=self._file_out)
-        self._logger_.log('INFO', ';'.join((url, 'Article extraction OK')))
+        self._logger_.log('INFO', '\t'.join((url, 'Article extraction OK')))

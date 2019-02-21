@@ -2,67 +2,6 @@
     "article_begin_mark": "<docitem>\n"
     "article_end_mark": "</docitem>"
 
-"index-warc":
-    "warc-date":
-        "open": "WARC-Date: "
-        "inside": ".*?"
-        "close": "\\n"
-
-    "html-date":
-        "open": "\\s*<meta name=\"i:publication\" content=\""
-        "inside": ".*?"
-        "close": "\" />"
-
-    "warc-url":
-        "open": "WARC-Target-URI: "
-        "inside": ".*?"
-        "close": "\\n"
-
-    "html-url":
-        "open": "\\s*<meta property=\"og:url\" content=\""
-        "inside": ".*?"
-        "close": "\" />"
-
-    "warc-status_code":
-        "open": "HTTP/1.1"
-        "inside": ".*?"
-        "close": "\\n"
-
-    "warc-charset":
-        "open": "Content-Type: .*?; charset="
-        "inside": ".*?"
-        "close": ";"
-
-    "html-charset":
-        "open": "\\s*<meta http-equiv=\"Content-type\" content=\".*?; charset="
-        "inside": ".*?"
-        "close": "\" />"
-
-    "html-description":
-        "open": "\\s*<meta property=\"og:description\" content=\""
-        "inside": ".*?"
-        "close": "\" />"
-
-    "html-keywords":
-        "open": "\\s*<meta name=\"keywords\" content=\""
-        "inside": ".*?"
-        "close": "\" />"
-
-    "html-title":
-        "open": "\\s*<meta property=\"og:title\" content=\""
-        "inside": ".*?"
-        "close": "\" />"
-
-    "html-lead":
-        "open": "<div class=\"lead\">"
-        "inside": "(.|\\n)*?"
-        "close": "</div>"
-
-    "html-body":
-        "open": "<div class=\"cikk-torzs\">"
-        "inside": "(.|\\n)*?"
-        "close": "<div class=\"social-stripe cikk-bottom-box\">"
-
 "index-html":
     "html-date":
         "open": "\\s*<meta name=\"i:publication\" content=\""
@@ -71,11 +10,6 @@
 
     "html-url":
         "open": "\\s*<meta property=\"og:url\" content=\""
-        "inside": ".*?"
-        "close": "\" />"
-
-    "html-charset":
-        "open": "\\s*<meta http-equiv=\"Content-type\" content=\".*?; charset="
         "inside": ".*?"
         "close": "\" />"
 
@@ -115,11 +49,6 @@
         "inside": ".*?"
         "close": "\" />"
 
-    "html-charset":
-        "open": "\\s*<meta http-equiv=\"Content-type\" content=\".*?; charset="
-        "inside": ".*?"
-        "close": "\" />"
-
     "html-description":
         "open": "\\s*<meta property=\"og:description\" content=\""
         "inside": ".*?"
@@ -153,11 +82,6 @@
 
     "html-url":
         "open": "\\s*<meta property=\"og:url\" content=\""
-        "inside": ".*?"
-        "close": "\" />"
-
-    "html-charset":
-        "open": "\\s*<meta http-equiv=\"Content-type\" content=\".*?; charset="
         "inside": ".*?"
         "close": "\" />"
 
@@ -197,11 +121,6 @@
         "inside": ".*?"
         "close": "\" />"
 
-    "html-charset":
-        "open": "<meta charset=\""
-        "inside": ".*?"
-        "close": "\">"
-
     "html-description":
         "open": "\\s*<meta property=\"og:description\" content=\""
         "inside": ".*?"
@@ -238,11 +157,6 @@
         "inside": ".*?"
         "close": "\" />"
 
-    "html-charset":
-        "open": "<meta charset=\""
-        "inside": ".*?"
-        "close": "\">"
-
     "html-description_lead":
         "open": "<meta property=\"og:description\" content=\""
         "inside": ".*?"
@@ -273,16 +187,6 @@
         "open": "<meta property=\"article:published_time\" itemprop=\"datePublished\" content=\""
         "inside": ".*?"
         "close": "\" />"
-
-    "html-url":
-        "open": "<meta property=\"og:url\" content=\""
-        "inside": ".*?"
-        "close": "\">"
-
-    "html-charset":
-        "open": "<meta charset=\""
-        "inside": ".*?"
-        "close": "\">"
 
     "html-description_lead":
         "open": "<meta property=\"og:description\" content=\""
@@ -317,11 +221,6 @@
 
     "html-url":
         "open": "<meta property=\"og:url\" content=\""
-        "inside": ".*?"
-        "close": "\" >"
-
-    "html-charset":
-        "open": "<meta charset=\""
         "inside": ".*?"
         "close": "\" >"
 

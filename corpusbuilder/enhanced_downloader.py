@@ -43,26 +43,26 @@ class WarcCachingDownloader:
         else:
             self.url_index = {}
             info_record_data = None
-        self._new_donwloads = WarcDownloader(new_warc_filename, logger_, program_name, user_agent, overwrite_warc,
+        self._new_downloads = WarcDownloader(new_warc_filename, logger_, program_name, user_agent, overwrite_warc,
                                              err_threshold, info_record_data, known_bad_urls,
                                              max_no_of_calls_in_period, limit_period, proxy_url, allow_cookies)
 
     def download_url(self, url):
         if url in self.url_index:
             reqv, resp = self._cached_downloads.get_record(url)
-            self._new_donwloads.write_record(reqv)
-            self._new_donwloads.write_record(resp)
+            self._new_downloads.write_record(reqv)
+            self._new_downloads.write_record(resp)
             return self._cached_downloads.download_url(url)
         else:
-            return self._new_donwloads.download_url(url)
+            return self._new_downloads.download_url(url)
 
     @property
     def bad_urls(self):
-        return self._new_donwloads.bad_urls
+        return self._new_downloads.bad_urls
 
     @bad_urls.setter
     def bad_urls(self, value):
-        self._new_donwloads.bad_urls = value
+        self._new_downloads.bad_urls = value
 
 
 class WarcDownloader:
@@ -138,7 +138,7 @@ class WarcDownloader:
         return self._session.get(*args, **kwargs)
 
     def _handle_request_exception(self, url, msg):
-        self._logger_.log('WARNING', ';'.join((url, msg)))
+        self._logger_.log('WARNING', '\t'.join((url, msg)))
 
         self._error_count += 1
         if self._error_count >= self._error_threshold:
@@ -178,7 +178,17 @@ class WarcDownloader:
         # RESPONSE
         resp_status = '{0} {1}'.format(resp.status_code, resp.reason)
         resp_headers_list = resp.raw.headers.items()  # get raw headers from urllib3
-        peer_name = resp.raw._fp.fp.raw._sock.getpeername()[0]  # Must get peer_name before the content is read
+        # Must get peer_name before the content is read
+        # It has no official API for that:
+        # https://github.com/kennethreitz/requests/issues/2158
+        # https://github.com/urllib3/urllib3/issues/1071
+        # So workaround to be compatible with windows:
+        # https://stackoverflow.com/questions/22492484/how-do-i-get-the-ip-address-from-a-http-request-using-the-\
+        # requests-library/22513161#22513161
+        try:
+            peer_name = resp.raw._connection.sock.getpeername()[0]  # Must get peer_name before the content is read
+        except AttributeError:  # On Windows there is no getpeername() Attribute of the class...
+            peer_name = resp.raw._connection.sock.socket.getpeername()[0]
 
         try:
             data = resp.raw.read()  # To be able to return decoded and also write warc
@@ -277,7 +287,7 @@ class WarcReader:
             enc = record.rec_headers.get_header('WARC-X-Detected-Encoding', 'UTF-8')
             text = data.decode(enc, 'ignore')
         else:
-            self._logger_.log('CRITICAL', ';'.join((url, 'URL not found in WARC!')))
+            self._logger_.log('CRITICAL', '\t'.join((url, 'URL not found in WARC!')))
 
         return text
 
