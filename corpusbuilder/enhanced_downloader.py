@@ -188,7 +188,10 @@ class WarcDownloader:
         try:
             peer_name = resp.raw._connection.sock.getpeername()[0]  # Must get peer_name before the content is read
         except AttributeError:  # On Windows there is no getpeername() Attribute of the class...
-            peer_name = resp.raw._connection.sock.socket.getpeername()[0]
+            try:
+                peer_name = resp.raw._connection.sock.socket.getpeername()[0]
+            except AttributeError:
+                peer_name = 'None'  # Socket closed and could not derermine peername...
 
         try:
             data = resp.raw.read()  # To be able to return decoded and also write warc
@@ -200,8 +203,12 @@ class WarcDownloader:
         enc = resp.encoding  # Get or detect encoding to decode the bytes of the text to str
         if enc is None:
             enc = detect(data)['encoding']
-        text = data.decode(enc, 'ignore')
-        data_stream = BytesIO(data)  # Need byte stream to write the payload to the warc file
+        try:
+            text = data.decode(enc)  # Normal decode process
+        except UnicodeDecodeError:
+            self._logger_.log('WARNING', '\t'.join(('DECODE ERROR RETRYING IN \'IGNORE\' MODE:', url, enc)))
+            text = data.decode(enc, 'ignore')
+        data_stream = BytesIO(data)  # Need the original byte stream to write the payload to the warc file
 
         resp_http_headers = StatusAndHeaders(resp_status, resp_headers_list, protocol=proto)
         # Add extra headers like encoding because it is not stored any other way...

@@ -112,7 +112,7 @@ class NewsArchiveCrawler:
         next_url_use_pagenum = self._settings['next_url_by_pagenum']
         new_article_url_threshold = self._settings['new_article_url_threshold']
 
-        archive_page_next_page_url = archive_page_url_base
+        archive_page_next_page_url = archive_page_url_base.replace('#pagenum', '')
         while archive_page_next_page_url is not None:
             article_urls = []
             archive_page_raw_html = self._downloader.download_url(archive_page_next_page_url)
@@ -147,7 +147,7 @@ class NewsArchiveCrawler:
                  # We allow some intersecting element as the archive may have been moved
                  len(article_urls.minus(self.known_article_urls)) > new_article_url_threshold) \
                 and (max_pagenum is None or page_num < max_pagenum):  # Method #2
-            archive_page_next_page_url = '{0}{1}'.format(archive_page_url_base, page_num)  # ...must generate URL
+            archive_page_next_page_url = archive_page_url_base.replace('#pagenum', str(page_num))  # must generate URL
         else:  # Method #3
             archive_page_next_page_url = None
 

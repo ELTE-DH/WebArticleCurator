@@ -36,7 +36,7 @@
 
 "index":
     "date_first_article": 1999-06-30
-    "archive_url_format": "https://index.hu/24ora/?s=&tol=#year-#month-#day&ig=#year-#month-#day&tarskiadvanyokbanis=1&profil=&rovat=&cimke=&word=1&pepe=1&p="
+    "archive_url_format": "https://index.hu/24ora/?s=&tol=#year-#month-#day&ig=#year-#month-#day&tarskiadvanyokbanis=1&profil=&rovat=&cimke=&word=1&pepe=1&p=#pagenum"
 
     "article_url_format": "https://.*?\\.hu/.*/"
     "before_article_url": "<h2 class=\"cim\"><a href=\""
@@ -95,7 +95,7 @@
 
 "blikk":
     "date_first_article": 2009-01-21
-    "archive_url_format": "http://www.blikk.hu/archivum/online?date=#year-#month-#day&page="
+    "archive_url_format": "http://www.blikk.hu/archivum/online?date=#year-#month-#day&page=#pagenum"
 
     "article_url_format": "http://www\\.blikk\\.hu/.*?"
     "before_article_url": "<span class=\"archiveText\"><a href=\""

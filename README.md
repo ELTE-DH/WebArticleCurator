@@ -7,6 +7,12 @@ https://docs.google.com/document/d/1-gGSFltEU1gRcdhj4zznWW9BDm4yymvehPkqILN9aDY/
 The program is being developed continously.
 More detailed English documentation is coming soon.
 
+# Requirements
+
+Before installing requirements from `requirements.txt` the following packages are needed to be installed:
+
+- For Newspaper3k: python3-dev libxml2-dev libxslt-dev libjpeg-dev zlib1g-dev libpng12-dev
+
 # Config schema
 
 The config is divided into three parts arccording to the task to be done. The used REs can be freely configured by adding inline flags e.g. for multiline matching
@@ -62,7 +68,8 @@ Basic information:
 
 - `date_first_article`: The date of the first article on the site (aslo used for archive crawling)
 - `archive_url_format`: The RE for the archive URLs of the site
- (supply #year, #month, #day tags to be replaced with the actual field of date during crawling)
+ (supply `#year`, `#month`, `#day` tags to be replaced with the actual field of date
+ and `#pagenum` is replaced with the actual page number during crawling)
 
 The description of the required fields:	
 

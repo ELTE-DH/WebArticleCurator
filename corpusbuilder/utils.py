@@ -33,6 +33,7 @@ def wrap_input_consants(current_task_config_filename):
     settings.update(current_site_schema)
 
     # If the program is to create a corpus, then it will load the required tags and compile the REs
+    settings['COMMON_SITE_TAGS'] = {'article_begin_mark': '', 'article_end_mark': ''}
     if settings['create_corpus']:
         with open(os.path.join(dir_name, settings['tags']), encoding='UTF-8') as fh:
             all_tags = yaml.load(fh)
