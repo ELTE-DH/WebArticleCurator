@@ -36,6 +36,7 @@ class WarcCachingDownloader:
     def __init__(self, existing_warc_filename, new_warc_filename, logger_, program_name='corpusbuilder 1.0',
                  user_agent=None, overwrite_warc=True, err_threshold=10, known_bad_urls=None,
                  max_no_of_calls_in_period=2, limit_period=1, proxy_url=None, allow_cookies=False):
+        self._logger_ = logger_
         if existing_warc_filename is not None:  # Setup the supplied existing warc archive file as cache
             self._cached_downloads = WarcReader(existing_warc_filename, logger_)
             self.url_index = self._cached_downloads.url_index
@@ -47,14 +48,22 @@ class WarcCachingDownloader:
                                              err_threshold, info_record_data, known_bad_urls,
                                              max_no_of_calls_in_period, limit_period, proxy_url, allow_cookies)
 
-    def download_url(self, url):
-        if url in self.url_index:
+    def download_url(self, url, ignore_cache=False):
+        if url in self.url_index:  # Check cache...
             reqv, resp = self._cached_downloads.get_record(url)
             self._new_downloads.write_record(reqv)
             self._new_downloads.write_record(resp)
-            return self._cached_downloads.download_url(url)
+            cache = self._cached_downloads.download_url(url)
         else:
-            return self._new_downloads.download_url(url)
+            cache = None
+
+        if cache is not None and not ignore_cache:
+            return cache
+
+        if cache is not None:
+            self._logger_.log('INFO', 'Ignoring cache for URL: {0}'.format(url))
+
+        return self._new_downloads.download_url(url)
 
     @property
     def bad_urls(self):

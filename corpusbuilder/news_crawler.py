@@ -111,11 +111,13 @@ class NewsArchiveCrawler:
         next_url_use_regex = self._settings['next_url_by_regex']
         next_url_use_pagenum = self._settings['next_url_by_pagenum']
         new_article_url_threshold = self._settings['new_article_url_threshold']
+        ignore_archive_cache = self._settings['ignore_archive_cache']
 
         archive_page_next_page_url = archive_page_url_base.replace('#pagenum', '')
         while archive_page_next_page_url is not None:
             article_urls = []
-            archive_page_raw_html = self._downloader.download_url(archive_page_next_page_url)
+            archive_page_raw_html = self._downloader.download_url(archive_page_next_page_url,
+                                                                  ignore_cache=ignore_archive_cache)
             if archive_page_raw_html is not None:  # Download succeeded
                 if archive_page_next_page_url not in self.known_good_urls:
                     self.good_urls.add(archive_page_next_page_url)

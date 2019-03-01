@@ -99,6 +99,7 @@ Some bool features to describe the site:
 - `next_url_by_pagenum`: Use page numbering for pagination of archive e.g. infinite scrolling (false means no pages)
 - `archive_page_urls_by_date`: Archive page URLs are grouped by their date
 - `archive_page_urls_by_id`: Archive page URLs are grouped by IDs
+- `ignore_archive_cache`: Ignore archive cache (for portals with only pagination)
 - `go_reverse_in_archive`: Go reverse in the archive by date (when the earliest article is not known)
 
 Numbers regarding pagination:
