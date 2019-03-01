@@ -69,11 +69,6 @@ class CorpusConverter:
         self._logger_ = logger_
 
         # General cleaning rules to remove unneeded parts
-        self.script_pattern = re.compile(r'<script[\s\S]+?/script>')
-        self.img_pattern = re.compile(r'<img.*?/>')
-        self.multi_ws_pattern = re.compile(' {2,}')
-        self.endl_ws_pattern = re.compile('\n ')
-        self.multi_endl_pattern = re.compile('\n{2,}')
 
     def article_to_corpus(self, url, doc_in):
         """
@@ -89,14 +84,9 @@ class CorpusConverter:
                                             json_tags_key_vals['open-inside-close'], t, doc_in)
                           for t, json_tags_key_vals in self._settings['SITE_TAGS'].items())
 
-        # General cleaning rules to remove unneeded parts
-        doc_out = self.script_pattern.sub('', doc_out)
-        doc_out = self.img_pattern.sub('', doc_out)
-        doc_out = self.multi_ws_pattern.sub(' ', doc_out)
-        doc_out = self.endl_ws_pattern.sub('\n', doc_out)
-        doc_out = self.multi_endl_pattern.sub('\n', doc_out)
-        doc_out = doc_out.replace('\r\n', '\n')
-        # TODO: drop useless div and span tags
+        # Apply general cleaning rules to remove unneeded parts
+        for rule_name, rule in self._settings['GENERAL_CLEANING_RULES'].items():
+            doc_out = rule(doc_out)
 
         # Write the result into the output file
         print(self._article_begin_mark, doc_out, self._article_end_mark, sep='', end='', file=self._file_out)

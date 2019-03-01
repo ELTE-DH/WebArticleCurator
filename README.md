@@ -50,15 +50,19 @@ In tags.yaml every required filed (title, date, author, text, keywords, etc.) is
 - `inside`: RE describes the content of the required filed in the HTML
 - `close`:  RE describes the right context of the required filed in the HTML
 
-From this three the `open-inside-close` RE is build by concatenation and used to find the field. 
-The `open` and `close` part is then substituted by the field name in xml form. e.g. 
+From this three the `open-inside-close` RE is build by concatenation and used to find the field.
+The `open` and `close` part is then substituted by the field name in xml form. e.g.
 
     <field> content </field>
 
-The whole article is enclosed with the content of the `common` key currently which is __REQUIRED__ to present:
+The whole article is enclosed with the approprpiate entries of the `common` key currently which
+ is __REQUIRED__ to present when `create_corpus` is true,
+ `common` key also stores the `general_cleaing_rules` section which is optional:
 	
 - `article_begin_mark`: the begin mark of a downloaded article (should be in XML form)
 - `article_end_mark`:  the end mark of a downloaded article (should be in XML form)
+- `general_cleaing_rules`: the dictionary of general rules applied to clean the HTML output in the form of 
+RE and REPL pairs
 
 # Site Schemas
 
@@ -78,19 +82,19 @@ The description of the required fields:
     - `before_article_url`: the RE for the left context of the article URLs. Transformed to `BEFORE_ARTICLE_URL_RE`
     - `before_article_url_repl`: the optional replacement for the left context of the arcticle URLs (e.g. domain)
     - `after_article_url`: the RE for the right context of the article URLs. Transformed to `AFTER_ARTICLE_URL_RE`
-    - `after_article_url_repl`: the optional replacement for the right context of the arcticle URLs 
+    - `after_article_url_repl`: the optional replacement for the right context of the arcticle URLs
 - Next page URL:
     - `next_page_url_format`: the RE for the article URLs. Transformed to `NEXT_PAGE_URL_FORMAT_RE`
     - `before_next_page_url`: the RE for the left context of the article URLs. Transformed to `BEFORE_NEXT_PAGE_URL_RE`
     - `before_next_page_url_repl`: the optional replacement for the left context of the arcticle URLs (e.g. domain)
     - `after_next_page_url`: the RE for the right context of the article URLs. Transformed to `AFTER_NEXT_PAGE_URL_RE`
-    - `after_next_page_url_repl`: the optional replacement for the right context of the arcticle URLs 
+    - `after_next_page_url_repl`: the optional replacement for the right context of the arcticle URLs
 - Article date:
     - `article_date_format`: the RE for the article URLs. Transformed to `ARTICLE_DATE_FORMAT_RE`
     - `before_article_date`: the RE for the left context of the article URLs. Transformed to `BEFORE_ARTICLE_DATE_RE`
     - `before_article_date_repl`: the optional replacement for the left context of the arcticle URLs (e.g. domain)
     - `after_article_date`: the RE for the right context of the article URLs. Transformed to `AFTER_ARTICLE_DATE_RE`
-    - `after_article_date_repl`: the optional replacement for the right context of the arcticle URLs 
+    - `after_article_date_repl`: the optional replacement for the right context of the arcticle URLs
     - `article_date_formatting`: the date format specification string used for parsing the date
 
 Some bool features to describe the site:

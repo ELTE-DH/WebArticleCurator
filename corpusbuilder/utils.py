@@ -34,11 +34,19 @@ def wrap_input_consants(current_task_config_filename):
 
     # If the program is to create a corpus, then it will load the required tags and compile the REs
     settings['COMMON_SITE_TAGS'] = {'article_begin_mark': '', 'article_end_mark': ''}
+    settings['GENERAL_CLEANING_RULES'] = {}
     if settings['create_corpus']:
         with open(os.path.join(dir_name, settings['tags']), encoding='UTF-8') as fh:
             all_tags = yaml.load(fh)
             common_tags = all_tags['common']
             site_tags_raw = all_tags[settings['tags_key']]
+
+        cleaning_rules = {}
+        general_cleaning_rules = common_tags.pop('general_cleaning_rules', {})  # Also remove general rules from common!
+        for rule, regex in general_cleaning_rules.items():
+            if not rule.endswith('repl'):
+                r = re.compile(regex)
+                cleaning_rules[rule] = lambda x: r.sub(general_cleaning_rules['{0}_repl'.format(rule)], x)
 
         site_tags = {}
         for tag in site_tags_raw.keys():
@@ -50,6 +58,7 @@ def wrap_input_consants(current_task_config_filename):
             site_tags[tag]['close'] = re.compile(site_tags_raw[tag]['close'])
         settings['SITE_TAGS'] = site_tags
         settings['COMMON_SITE_TAGS'] = common_tags
+        settings['GENERAL_CLEANING_RULES'] = cleaning_rules
 
     settings['BEFORE_ARTICLE_URL_RE'] = re.compile(current_site_schema['before_article_url'])
     settings['AFTER_ARTICLE_URL_RE'] = re.compile(current_site_schema['after_article_url'])

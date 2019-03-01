@@ -1,6 +1,31 @@
 "common":
-    "article_begin_mark": "<docitem>\n"
-    "article_end_mark": "</docitem>"
+    "article_begin_mark": "<docitem>\\n"
+    "article_end_mark": "</docitem>\\n"
+
+    "general_cleaning_rules":  # TODO: drop useless div and span tags
+        "script": "<script[\\s\\S]+?/script>"
+        "script_repl": ''
+
+        "img": "<img.*?/>"
+        "img_repl": ''
+
+        "multi_ws": " {2,}"
+        "multi_ws_repl": " "
+
+        "endl_ws": "\\n "
+        "endl_ws_repl": "\\n"
+
+        "multi_endl": "\\n{2,}"
+        "multi_endl_repl": "\\n"
+
+        "dos_newlines": "\\r\\n"
+        "dos_newlines_repl": "\\n"
+
+        "leading_ws": "^\\s+?"
+        "leading_ws_repl": ""
+
+        "trailing_ws": "^\\s+?"
+        "trailing_ws_repl": ""
 
 "index-html":
     "html-date":
