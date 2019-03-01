@@ -69,28 +69,13 @@
     "max_pagenum": NULL
     "new_article_url_threshold": 0
 
-    "tags_key": "index-html"
-
-"totalcar":
-    "tags_key": "index-html"
-
-"totalbike":
-    "tags_key": "index-html"
-
-"velvet":
-    "tags_key": "index-html"
-
-"divany":
-    "tags_key": "divany-html"
-
-"konyves.blog":
-    "tags_key": "bloghu-html"
-
-"homar.blog":
-    "tags_key": "bloghu-html"
-
-"comment.blog":
-    "tags_key": "bloghu-html"
+    "tags_keys":
+        "^https://index\\.hu/": "index-html"
+        "^https://totalcar\\.hu/": "index-html"
+        "^https://totalbike\\.hu/": "index-html"
+        "^https://velvet\\.hu/": "index-html"
+        "^https://divany\\.hu/": "divany-html"
+        "^https://.*?\\.blog\\.hu/": "bloghu-html"
 
 "blikk":
     "date_first_article": 2009-01-21
@@ -126,7 +111,8 @@
     "max_pagenum": NULL
     "new_article_url_threshold": 0
 
-    "tags_key": "blikk-html"
+    "tags_keys":
+        "^http://www\\.blikk\\.hu/": "blikk-html"
 
 "444":
     "date_first_article": 2013-04-10
@@ -162,7 +148,8 @@
     "max_pagenum": NULL  # 2558 on 2019-01-23
     "new_article_url_threshold": 0
 
-    "tags_key": "444-html"
+    "tags_keys":
+       "^https://444\\.hu/": "444-html"
 
 "mno":
     "date_first_article": 2009-01-21
@@ -198,7 +185,8 @@
     "max_pagenum": NULL
     "new_article_url_threshold": 0
 
-    "tags_key": "mno-html"
+    "tags_keys":
+        "^https://mno\\.hu/": "mno-html"
 
 "jogtar":
     "date_first_article": 1900-01-01
@@ -234,4 +222,5 @@
     "max_pagenum": NULL
     "new_article_url_threshold": 0
 
-    "tags_key": NULL
+    "tags_keys":
+        "^https://net\\.jogtar\\.hu/": NULL

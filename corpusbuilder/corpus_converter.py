@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-import re
 from html import unescape as html_unescape
 from datetime import datetime
 
@@ -57,6 +56,16 @@ def extract_article_date(article_raw_html, settings):
     return code_line
 
 
+def identify_site_scheme(logger_, settings, url):
+    for site_re, tag_key_readable in settings['TAGS_KEYS'].items():
+        if site_re.search(url):
+            return tag_key_readable
+
+    logger_.log('ERROR', '\t'.join((url, str([regexp.pattern for regexp in settings['TAGS_KEYS'].keys()]),
+                                    'NO MATCHING TAG_KEYS PATTERN! IGNORING ARTICLE!')))
+    return None
+
+
 class CorpusConverter:
     """
         Extract text and metadata from the downloaded raw html by using site specific REs from the config
@@ -68,29 +77,31 @@ class CorpusConverter:
         self._file_out = file_out
         self._logger_ = logger_
 
-        # General cleaning rules to remove unneeded parts
-
-    def article_to_corpus(self, url, doc_in):
+    def article_to_corpus(self, url, doc_in, site_tag_scheme):
         """
         converts the raw HTML code of an article to corpus format and saves it to the output file
         :param doc_in: the document to convert
         :param url: the URL. Not used here, just for logging
+        :param site_tag_scheme: the identified scheme of the article to load the appropriate tags
+
         :return:
         """
+        if site_tag_scheme is not None:
+            site_tags = self._settings['SITE_TAGS'][site_tag_scheme]
 
-        # Build the article in corpus format by sequentially adding elements described by open-close REs
-        doc_out = ''.join(self._check_regex(json_tags_key_vals['open'],
-                                            json_tags_key_vals['close'],
-                                            json_tags_key_vals['open-inside-close'], t, doc_in)
-                          for t, json_tags_key_vals in self._settings['SITE_TAGS'].items())
+            # Build the article in corpus format by sequentially adding elements described by open-close REs
+            doc_out = ''.join(self._check_regex(json_tags_key_vals['open'],
+                                                json_tags_key_vals['close'],
+                                                json_tags_key_vals['open-inside-close'], t, doc_in)
+                              for t, json_tags_key_vals in site_tags.items())
 
-        # Apply general cleaning rules to remove unneeded parts
-        for rule_name, rule in self._settings['GENERAL_CLEANING_RULES'].items():
-            doc_out = rule(doc_out)
+            # Apply general cleaning rules to remove unneeded parts
+            for rule_name, rule in self._settings['GENERAL_CLEANING_RULES'].items():
+                doc_out = rule(doc_out)
 
-        # Write the result into the output file
-        print(self._article_begin_mark, doc_out, self._article_end_mark, sep='', end='', file=self._file_out)
-        self._logger_.log('INFO', '\t'.join((url, self._settings['tags_key'], 'Article extraction OK')))
+            # Write the result into the output file
+            print(self._article_begin_mark, doc_out, self._article_end_mark, sep='', end='', file=self._file_out)
+            self._logger_.log('INFO', '\t'.join((url, site_tag_scheme, 'Article extraction OK')))
         return
 
     @staticmethod
@@ -114,7 +125,7 @@ class CorpusConverterNewspaper:  # Mimic CorpusConverter
         self._logger_ = logger_
         self._settings = settings
 
-    def article_to_corpus(self, url, page_str):
+    def article_to_corpus(self, url, page_str, _):
         article = Article(url, memoize_articles=False, language='hu')
         article.download(input_html=page_str)
         article.parse()

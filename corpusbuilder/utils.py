@@ -32,33 +32,40 @@ def wrap_input_consants(current_task_config_filename):
         raise KeyError('Config file key collision!')
     settings.update(current_site_schema)
 
+    settings['TAGS_KEYS'] = {re.compile(tag_key): val for tag_key, val in settings['tags_keys'].items()}
+
     # If the program is to create a corpus, then it will load the required tags and compile the REs
-    settings['COMMON_SITE_TAGS'] = {'article_begin_mark': '', 'article_end_mark': ''}
-    settings['GENERAL_CLEANING_RULES'] = {}
     if settings['create_corpus']:
         with open(os.path.join(dir_name, settings['tags']), encoding='UTF-8') as fh:
             all_tags = yaml.load(fh)
             common_tags = all_tags['common']
-            site_tags_raw = all_tags[settings['tags_key']]
 
         cleaning_rules = {}
         general_cleaning_rules = common_tags.pop('general_cleaning_rules', {})  # Also remove general rules from common!
-        for rule, regex in general_cleaning_rules.items():
-            if not rule.endswith('repl'):
-                r = re.compile(regex)
-                cleaning_rules[rule] = lambda x: r.sub(general_cleaning_rules['{0}_repl'.format(rule)], x)
+        for rule, regex in ((rule, regex) for rule, regex in general_cleaning_rules.items()
+                            if not rule.endswith('_repl')):
+            r = re.compile(regex)
+            cleaning_rules[rule] = lambda x: r.sub(general_cleaning_rules['{0}_repl'.format(rule)], x)
 
         site_tags = {}
-        for tag in site_tags_raw.keys():
-            site_tags[tag] = {}
-            site_tags[tag]['open-inside-close'] = re.compile('{0}{1}{2}'.format(site_tags_raw[tag]['open'],
-                                                                                site_tags_raw[tag]['inside'],
-                                                                                site_tags_raw[tag]['close']))
-            site_tags[tag]['open'] = re.compile(site_tags_raw[tag]['open'])
-            site_tags[tag]['close'] = re.compile(site_tags_raw[tag]['close'])
-        settings['SITE_TAGS'] = site_tags
-        settings['COMMON_SITE_TAGS'] = common_tags
-        settings['GENERAL_CLEANING_RULES'] = cleaning_rules
+        for tag_key_readable in settings['TAGS_KEYS'].values():
+            site_tags[tag_key_readable] = {}
+            for tag_name, tag_desc in all_tags[tag_key_readable].items():
+                site_tags[tag_key_readable][tag_name] = {}
+                site_tags[tag_key_readable][tag_name]['open-inside-close'] = re.compile('{0}{1}{2}'.
+                                                                                        format(tag_desc['open'],
+                                                                                               tag_desc['inside'],
+                                                                                               tag_desc['close']))
+                site_tags[tag_key_readable][tag_name]['open'] = re.compile(tag_desc['open'])
+                site_tags[tag_key_readable][tag_name]['close'] = re.compile(tag_desc['close'])
+
+    else:
+        site_tags = {}
+        common_tags = {'article_begin_mark': '', 'article_end_mark': ''}
+        cleaning_rules = {}
+    settings['SITE_TAGS'] = site_tags
+    settings['COMMON_SITE_TAGS'] = common_tags
+    settings['GENERAL_CLEANING_RULES'] = cleaning_rules
 
     settings['BEFORE_ARTICLE_URL_RE'] = re.compile(current_site_schema['before_article_url'])
     settings['AFTER_ARTICLE_URL_RE'] = re.compile(current_site_schema['after_article_url'])

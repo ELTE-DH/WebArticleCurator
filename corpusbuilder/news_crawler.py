@@ -4,7 +4,7 @@
 from datetime import timedelta
 
 from corpusbuilder.corpus_converter import CorpusConverter, CorpusConverterNewspaper, extract_article_urls_from_page,\
-    extract_next_page_url, extract_article_date
+    extract_next_page_url, extract_article_date, identify_site_scheme
 from corpusbuilder.enhanced_downloader import WarcCachingDownloader
 from corpusbuilder.utils import Logger
 
@@ -251,9 +251,12 @@ class NewsArticleCrawler:
                                      format(article_date, self._settings['date_from'], self._settings['date_until']))))
                     continue
 
+            # Identify the site scheme of the article to be able to look up the appropriate extracting method
+            sheme = identify_site_scheme(self._logger, self._settings, url)
+
             # Extract text to corpus
             if create_corpus:
-                self._converter.article_to_corpus(url, article_raw_html)
+                self._converter.article_to_corpus(url, article_raw_html, sheme)
 
             # Extract links to other articles...
             extracted_article_urls = extract_article_urls_from_page(article_raw_html, self._settings)
