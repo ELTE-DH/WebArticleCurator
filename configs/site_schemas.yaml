@@ -77,6 +77,7 @@
         "^https://velvet\\.hu/": "index-html"
         "^https://divany\\.hu/": "divany-html"
         "^https://.*?\\.blog\\.hu/": "bloghu-html"
+        "^https://galeria\\.(index|totalcar|totalbike|velvet|divany)\\.hu/": NULL
 
 "blikk":
     "date_first_article": 2009-01-21

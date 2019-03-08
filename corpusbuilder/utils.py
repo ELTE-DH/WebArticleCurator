@@ -50,14 +50,15 @@ def wrap_input_consants(current_task_config_filename):
         site_tags = {}
         for tag_key_readable in settings['TAGS_KEYS'].values():
             site_tags[tag_key_readable] = {}
-            for tag_name, tag_desc in all_tags[tag_key_readable].items():
-                site_tags[tag_key_readable][tag_name] = {}
-                site_tags[tag_key_readable][tag_name]['open-inside-close'] = re.compile('{0}{1}{2}'.
-                                                                                        format(tag_desc['open'],
-                                                                                               tag_desc['inside'],
-                                                                                               tag_desc['close']))
-                site_tags[tag_key_readable][tag_name]['open'] = re.compile(tag_desc['open'])
-                site_tags[tag_key_readable][tag_name]['close'] = re.compile(tag_desc['close'])
+            if tag_key_readable is not None:  # None == Explicitly ignored
+                for tag_name, tag_desc in all_tags[tag_key_readable].items():
+                    site_tags[tag_key_readable][tag_name] = {}
+                    site_tags[tag_key_readable][tag_name]['open-inside-close'] = re.compile('{0}{1}{2}'.
+                                                                                            format(tag_desc['open'],
+                                                                                                   tag_desc['inside'],
+                                                                                                   tag_desc['close']))
+                    site_tags[tag_key_readable][tag_name]['open'] = re.compile(tag_desc['open'])
+                    site_tags[tag_key_readable][tag_name]['close'] = re.compile(tag_desc['close'])
 
     else:
         site_tags = {}
