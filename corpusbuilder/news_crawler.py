@@ -27,7 +27,12 @@ class NewsArchiveCrawler:
         # For external use
         self.good_urls = set()
         self.problematic_urls = set()
-        self._new_urls_filenames = (new_problematic_urls, new_good_urls)
+
+        if new_problematic_urls is not None:
+            new_problematic_urls = open(new_problematic_urls, 'w', encoding='UTF-8')
+        if new_good_urls is not None:
+            new_good_urls = open(new_good_urls, 'w', encoding='UTF-8')
+        self._new_urls_file_handles = (new_problematic_urls, new_good_urls)
 
         # Setup the list of cached article URLs to stop archive crawling in time
         if known_article_urls is not None and isinstance(known_article_urls, str):
@@ -46,14 +51,14 @@ class NewsArchiveCrawler:
         self.known_good_urls = self._downloader.url_index  # All URLs in the archive are known good!
 
     def __del__(self):  # Write newly found URLs to files when output files supplied...
-        new_problematic_urls, new_good_urls = self._new_urls_filenames
+        new_problematic_urls, new_good_urls = self._new_urls_file_handles
         if new_good_urls is not None and len(self.good_urls) > 0:
-            with open(new_good_urls, 'w', encoding='UTF-8') as fh:
-                fh.writelines(good_url for good_url in self.good_urls)
+            new_good_urls.writelines(good_url for good_url in self.good_urls)
+            new_good_urls.close()
 
         if new_problematic_urls is not None and len(self.problematic_urls) > 0:
-            with open(new_problematic_urls, 'w', encoding='UTF-8') as fh:
-                fh.writelines(problematic_url for problematic_url in self.problematic_urls)
+            new_problematic_urls.writelines(problematic_url for problematic_url in self.problematic_urls)
+            new_problematic_urls.close()
 
     def url_iterator(self):
         """

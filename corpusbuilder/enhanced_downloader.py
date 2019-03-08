@@ -257,7 +257,7 @@ class WarcReader:
         assert info_rec.rec_type == 'warcinfo'
         custom_headers_raw = info_rec.content_stream().read()  # Parse custom headers
         info_rec_payload = dict(r.split(': ', maxsplit=1) for r in custom_headers_raw.decode('UTF-8')
-                                .strip().split('\r\n'))
+                                .strip().split('\r\n') if len(r) > 0)
         self.info_record_data = (info_rec.rec_headers, info_rec_payload)  # Info headers in parsed form
 
         reqv_data = (None, (None, None))  # To be able to handle the request-response pairs together

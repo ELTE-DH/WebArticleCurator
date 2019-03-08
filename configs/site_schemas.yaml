@@ -21,7 +21,7 @@
     "after_article_date_repl": ""
     "article_date_formatting": "%Y.%m.%d."
 
-    "next_url_by_regex": true
+    "next_url_by_regex": false
     "next_url_by_pagenum": false
     "archive_page_urls_by_date": true
     "archive_page_urls_by_id": false
@@ -32,7 +32,8 @@
     "max_pagenum": NULL
     "new_article_url_threshold": 0
 
-    "tags_key": "origo-html"
+    "tags_keys":
+        "^http://www.origo\\.hu/": "origo-html"
 
 
 "index":
