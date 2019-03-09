@@ -182,7 +182,6 @@ class WarcDownloader:
         reqv_http_headers = StatusAndHeaders('GET {0} {1}'.format(urlunparse(('', '', path, params, query, fragment)),
                                                                   proto), reqv_headers.items(), is_http_request=True)
         reqv_record = self._writer.create_warc_record(url, 'request', http_headers=reqv_http_headers)
-        self._writer.write_record(reqv_record)
 
         # RESPONSE
         resp_status = '{0} {1}'.format(resp.status_code, resp.reason)
@@ -209,6 +208,12 @@ class WarcDownloader:
                                                 ' The program ignores it and jumps to the next one.'.format(err))
             return None
 
+        if len(data) == 0:
+            err = 'Response data has zero length!'
+            self._handle_request_exception(url, 'RequestException happened during downloading: {0} \n\n'
+                                                ' The program ignores it and jumps to the next one.'.format(err))
+            return None
+
         enc = resp.encoding  # Get or detect encoding to decode the bytes of the text to str
         if enc is None:
             enc = detect(data)['encoding']
@@ -225,6 +230,8 @@ class WarcDownloader:
                                                       http_headers=resp_http_headers,
                                                       warc_headers_dict={'WARC-IP-Address': peer_name,
                                                                          'WARC-X-Detected-Encoding': enc})
+        # Everything is OK, write the two WARC records
+        self._writer.write_record(reqv_record)
         self._writer.write_record(resp_record)
 
         return text
