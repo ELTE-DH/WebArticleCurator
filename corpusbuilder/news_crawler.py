@@ -51,18 +51,21 @@ class NewsArchiveCrawler:
         self.known_good_urls = self._downloader.url_index  # All URLs in the archive are known good!
 
     def __del__(self):  # Write newly found URLs to files when output files supplied...
-        new_problematic_urls, new_good_urls = self._new_urls_file_handles
-        if new_good_urls is not None and len(self.good_urls) > 0:
-            new_good_urls.writelines(good_url for good_url in self.good_urls)
+        if hasattr(self, '_new_urls_filehandles') and hasattr(self, 'good_urls') and \
+                hasattr(self, 'problematic_urls'):
+            new_problematic_urls, new_good_urls = self._new_urls_file_handles
+            if new_good_urls is not None and len(self.good_urls) > 0:
+                new_good_urls.writelines('{0}\n'.format(good_url) for good_url in self.good_urls)
 
-        if new_good_urls is not None:
-            new_good_urls.close()
+            if new_good_urls is not None:
+                new_good_urls.close()
 
-        if new_problematic_urls is not None and len(self.problematic_urls) > 0:
-            new_problematic_urls.writelines(problematic_url for problematic_url in self.problematic_urls)
+            if new_problematic_urls is not None and len(self.problematic_urls) > 0:
+                new_problematic_urls.writelines('{0}\n'.format(problematic_url)
+                                                for problematic_url in self.problematic_urls)
 
-        if new_problematic_urls is not None:
-            new_problematic_urls.close()
+            if new_problematic_urls is not None:
+                new_problematic_urls.close()
 
     def url_iterator(self):
         """
@@ -185,7 +188,12 @@ class NewsArticleCrawler:
         self.problematic_article_urls = set()
         self._new_urls = set()
 
-        self._file_out = open(self._settings['output_file'], 'a+', encoding='UTF-8')  # Output file for corpus
+        self._create_corpus = self._settings['create_corpus']
+        self._file_out = None
+        if self._create_corpus:
+            self._file_out = open(self._settings['output_file'], 'a+', encoding='UTF-8')  # Output file for corpus
+
+        self._filter_by_date = self._settings['filter_articles_by_date']
 
         # Create new corpus converter class from the available methods...
         converter = corpus_converter_class[corpus_converter]
@@ -215,31 +223,37 @@ class NewsArticleCrawler:
                                                       max_no_of_calls_in_period, limit_period, proxy_url, allow_cookies)
 
     def __del__(self):
-        self._file_out.close()
-        if getattr(self, '_archive_downloader'):  # Make sure that the previous files are closed...
+        if hasattr(self, '_file_out') and self._file_out is not None:
+            self._file_out.close()
+        if hasattr(self, '_archive_downloader'):  # Make sure that the previous files are closed...
             del self._archive_downloader
 
         # Save the new urls...
-        problematic_article_urls, new_good_urls = self._new_urls_filehandles
-        if new_good_urls is not None and len(self._new_urls) > 0:
-            new_good_urls.writelines(good_url for good_url in self._new_urls)
+        if hasattr(self, '_new_urls_filehandles') and hasattr(self, '_new_urls') and \
+                hasattr(self, 'problematic_article_urls'):
+            problematic_article_urls, new_good_urls = self._new_urls_filehandles
+            if new_good_urls is not None and len(self._new_urls) > 0:
+                new_good_urls.writelines('{0}\n'.format(good_url) for good_url in self._new_urls)
 
-        if new_good_urls is not None:
-            new_good_urls.close()
+            if new_good_urls is not None:
+                new_good_urls.close()
 
-        if problematic_article_urls is not None and len(self.problematic_article_urls) > 0:
-            problematic_article_urls.writelines(problematic_url for problematic_url in self.problematic_article_urls)
+            if problematic_article_urls is not None and len(self.problematic_article_urls) > 0:
+                problematic_article_urls.writelines('{0}\n'.format(problematic_url)
+                                                    for problematic_url in self.problematic_article_urls)
 
-        if problematic_article_urls is not None:
-            problematic_article_urls.close()
+            if problematic_article_urls is not None:
+                problematic_article_urls.close()
 
     def process_urls(self, it):
-        create_corpus = self._settings['create_corpus']
-        filter_by_date = self._settings['filter_articles_by_date']
+        create_corpus = self._create_corpus
+        filter_by_date = self._filter_by_date
         for url in it:
-            if not self._is_new_url(url):  # Check if it is a duplicate
-                self._logger.log('WARNING',
-                                 '\t'.join((url, 'Not downloading article, because it is already downloaded!')))
+            # Check if it is a duplicate (we do not count those in the archive)
+            if url not in self.known_good_article_urls and url not in self._archive_downloader.known_article_urls \
+                    and not self._is_new_url(url):
+                self._logger.log('WARNING', '\t'.join((url, 'Not processing article, because it is already processed'
+                                                            ' in this session!')))
                 continue
 
             # "Download" article
@@ -250,7 +264,7 @@ class NewsArticleCrawler:
                     self.problematic_article_urls.add(url)  # New problematic URL for manual checking
                 continue
 
-            # Note downloaded url, but only when it is truly new URL
+            # Note downloaded url, but only when it is truly new URL (ie. not in the old archive)
             if url not in self.known_good_article_urls:
                 self.good_article_urls.add(url)
 
@@ -279,7 +293,7 @@ class NewsArticleCrawler:
             # Extract links to other articles...
             extracted_article_urls = extract_article_urls_from_page(article_raw_html, self._settings)
 
-            # Check for already extracted urls!
+            # Check for already extracted urls (also in the archive)!
             for extracted_url in extracted_article_urls:
                 if self._is_new_url(extracted_url):
                     self._new_urls.add(extracted_url)
@@ -289,7 +303,7 @@ class NewsArticleCrawler:
         self.download_gathered_new_urls()
 
     def download_gathered_new_urls(self):
-        # Recheck new urls
+        # Recheck new urls (also in the archive!)
         self._new_urls = {url for url in self._new_urls if self._is_new_url(url)}
         while len(self._new_urls) > 0:  # Article URL-s not in the archive... Shouldn't be any!
             for url in self._new_urls:
@@ -298,10 +312,11 @@ class NewsArticleCrawler:
             self.process_urls(new_urls)  # Recursively get all new urls...
 
     def _is_new_url(self, url):
-        return url not in self.good_article_urls and \
-               url not in self.known_good_article_urls and \
-               url not in self.problematic_article_urls and \
-               url not in self._downloader.bad_urls and \
-               url not in self._archive_downloader.good_urls and \
-               url not in self._archive_downloader.problematic_urls and \
-               url not in self._archive_downloader.known_article_urls
+        return \
+            (url not in self.good_article_urls and         # Downloaded succesfully in this session
+             url not in self.known_good_article_urls and   # Present in old archive
+             url not in self.problematic_article_urls and  # Download failed in this session (requries manual check)
+             url not in self._downloader.bad_urls and      # Explicit bad URLs (supplied as parameter)
+             url not in self._archive_downloader.good_urls and  # Archive URLs succesfully downloaded in this session
+             url not in self._archive_downloader.problematic_urls and  # Archive URLs failed to download in this session
+             url not in self._archive_downloader.known_article_urls)  # Article URLs explicitly known (as parameter)

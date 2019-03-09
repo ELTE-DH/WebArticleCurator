@@ -89,10 +89,10 @@
     "after_article_url": "\">"
     "after_article_url_repl": ""
 
-    "next_page_url_format": ""
-    "before_next_page_url": ""
+    "next_page_url_format": "http://www.blikk.hu/archivum/online?.*?"
+    "before_next_page_url": "<a href=\""
     "before_next_page_url_repl": ""
-    "after_next_page_url": ""
+    "after_next_page_url": "\">Következő oldal</a>"
     "after_next_page_url_repl": ""
 
     "article_date_format": ""
