@@ -3,12 +3,12 @@
 
 from datetime import timedelta
 
-from corpusbuilder.corpus_converter import CorpusConverter, CorpusConverterNewspaper, extract_article_urls_from_page,\
+from corpusbuilder.corpus_converter import CorpusConverter, extract_article_urls_from_page,\
     extract_next_page_url, extract_article_date, identify_site_scheme
 from corpusbuilder.enhanced_downloader import WarcCachingDownloader
 from corpusbuilder.utils import Logger
 
-corpus_converter_class = {'rule-based': CorpusConverter, 'newspaper': CorpusConverterNewspaper}
+corpus_converter_class = {'rule-based': CorpusConverter}
 
 
 class NewsArchiveCrawler:
@@ -19,8 +19,8 @@ class NewsArchiveCrawler:
     """
     def __init__(self, settings, existing_archive_filename, new_archive_filename, known_article_urls=None,
                  program_name='corpusbuilder 1.0', user_agent=None, overwrite_warc=True, err_threshold=10,
-                 known_bad_urls=None, new_problematic_urls=None, new_good_urls=None, max_no_of_calls_in_period=2,
-                 limit_period=1, proxy_url=None, allow_cookies=False):
+                 known_bad_urls=None, new_problematic_archive_urls=None, new_good_archive_urls=None,
+                 max_no_of_calls_in_period=2, limit_period=1, proxy_url=None, allow_cookies=False):
         self._settings = settings
         self._logger = Logger(self._settings['log_file_archive'])
 
@@ -28,11 +28,11 @@ class NewsArchiveCrawler:
         self.good_urls = set()
         self.problematic_urls = set()
 
-        if new_problematic_urls is not None:
-            new_problematic_urls = open(new_problematic_urls, 'w', encoding='UTF-8')
-        if new_good_urls is not None:
-            new_good_urls = open(new_good_urls, 'w', encoding='UTF-8')
-        self._new_urls_file_handles = (new_problematic_urls, new_good_urls)
+        if new_problematic_archive_urls is not None:
+            new_problematic_archive_urls = open(new_problematic_archive_urls, 'w', encoding='UTF-8')
+        if new_good_archive_urls is not None:
+            new_good_archive_urls = open(new_good_archive_urls, 'w', encoding='UTF-8')
+        self._new_urls_file_handles = (new_problematic_archive_urls, new_good_archive_urls)
 
         # Setup the list of cached article URLs to stop archive crawling in time
         if known_article_urls is not None and isinstance(known_article_urls, str):
@@ -54,10 +54,14 @@ class NewsArchiveCrawler:
         new_problematic_urls, new_good_urls = self._new_urls_file_handles
         if new_good_urls is not None and len(self.good_urls) > 0:
             new_good_urls.writelines(good_url for good_url in self.good_urls)
+
+        if new_good_urls is not None:
             new_good_urls.close()
 
         if new_problematic_urls is not None and len(self.problematic_urls) > 0:
             new_problematic_urls.writelines(problematic_url for problematic_url in self.problematic_urls)
+
+        if new_problematic_urls is not None:
             new_problematic_urls.close()
 
     def url_iterator(self):
@@ -172,7 +176,8 @@ class NewsArticleCrawler:
                  archive_existing_warc_filename, archive_new_warc_filename, known_article_urls=None,
                  program_name='corpusbuilder 1.0', user_agent=None, overwrite_warc=True, err_threshold=10,
                  corpus_converter='rule-based', known_bad_urls=None, new_problematic_urls=None, new_good_urls=None,
-                 max_no_of_calls_in_period=2, limit_period=1, proxy_url=None, allow_cookies=False):
+                 new_problematic_archive_urls=None, new_good_archive_urls=None, max_no_of_calls_in_period=2,
+                 limit_period=1, proxy_url=None, allow_cookies=False):
         self._settings = settings
         self._logger = Logger(self._settings['log_file_articles'])
 
@@ -196,29 +201,37 @@ class NewsArticleCrawler:
         if known_article_urls is None:  # If None is supplied put the ones from the article archive
             known_article_urls = self.known_good_article_urls
 
-        self._new_urls_filenames = (new_problematic_urls, new_good_urls)
+        if new_problematic_urls is not None:
+            new_problematic_urls = open(new_problematic_urls, 'a+', encoding='UTF-8')
+        if new_good_urls is not None:
+            new_good_urls = open(new_good_urls, 'a+', encoding='UTF-8')
+        self._new_urls_filehandles = (new_problematic_urls, new_good_urls)
 
         # known_bad_urls are common between the NewsArchiveCrawler and the NewsArticleCrawler
         self._archive_downloader = NewsArchiveCrawler(self._settings, archive_existing_warc_filename,
                                                       archive_new_warc_filename, known_article_urls, program_name,
                                                       user_agent, overwrite_warc, err_threshold, known_bad_urls,
-                                                      new_problematic_urls, new_good_urls, max_no_of_calls_in_period,
-                                                      limit_period, proxy_url, allow_cookies)
+                                                      new_problematic_archive_urls, new_good_archive_urls,
+                                                      max_no_of_calls_in_period, limit_period, proxy_url, allow_cookies)
 
     def __del__(self):
         self._file_out.close()
         if getattr(self, '_archive_downloader'):  # Make sure that the previous files are closed...
             del self._archive_downloader
 
-        # Save the new urls by appending...
-        problematic_article_urls, new_good_urls = self._new_urls_filenames
-        if self._new_urls is not None and len(self._new_urls) > 0:
-            with open(new_good_urls, 'a+', encoding='UTF-8') as fh:
-                fh.writelines(good_url for good_url in self._new_urls)
+        # Save the new urls...
+        problematic_article_urls, new_good_urls = self._new_urls_filehandles
+        if new_good_urls is not None and len(self._new_urls) > 0:
+            new_good_urls.writelines(good_url for good_url in self._new_urls)
+
+        if new_good_urls is not None:
+            new_good_urls.close()
 
         if problematic_article_urls is not None and len(self.problematic_article_urls) > 0:
-            with open(problematic_article_urls, 'a+', encoding='UTF-8') as fh:
-                fh.writelines(problematic_url for problematic_url in self.problematic_article_urls)
+            problematic_article_urls.writelines(problematic_url for problematic_url in self.problematic_article_urls)
+
+        if problematic_article_urls is not None:
+            problematic_article_urls.close()
 
     def process_urls(self, it):
         create_corpus = self._settings['create_corpus']
