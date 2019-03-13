@@ -118,7 +118,7 @@
 
 "444":
     "date_first_article": 2013-04-10
-    "archive_url_format": "https://444.hu/archivum?page="
+    "archive_url_format": "https://444.hu/#year/#month/#day/"
 
     "article_url_format": "https://444\\.hu/[^\"]*?"
     "before_article_url": "(?s)<article class=\"card\">\\s*?<h3>\\s*?<a href=\""
@@ -126,7 +126,7 @@
     "after_article_url": "\">"
     "after_article_url_repl": ""
 
-    "next_page_url_format": "https://444\\.hu/archivum\\?page=[0-9]+"
+    "next_page_url_format": "https://444\\.hu/.*?\\?page=[0-9]+"
     "before_next_page_url": "<a href=\""
     "before_next_page_url_repl": ""
     "after_next_page_url": "\" class=\"infinity-next button\">Tovább a múltba</a>"
@@ -141,9 +141,9 @@
 
     "next_url_by_regex": true
     "next_url_by_pagenum": false
-    "archive_page_urls_by_date": false
-    "archive_page_urls_by_id": true
-    "ignore_archive_cache": true
+    "archive_page_urls_by_date": true
+    "archive_page_urls_by_id": false
+    "ignore_archive_cache": false
     "go_reverse_in_archive": true
 
     "min_pagenum": 1

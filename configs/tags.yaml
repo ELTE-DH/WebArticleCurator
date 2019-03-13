@@ -1,6 +1,6 @@
 "common":
-    "article_begin_mark": "<docitem>\\n"
-    "article_end_mark": "</docitem>\\n"
+    "article_begin_mark": "<docitem>\n"
+    "article_end_mark": "</docitem>\n"
 
     "general_cleaning_rules":  # TODO: drop useless div and span tags
         "script": "<script[\\s\\S]+?/script>"
