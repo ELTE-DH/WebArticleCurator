@@ -35,7 +35,7 @@ class WarcCachingDownloader:
     """
     def __init__(self, existing_warc_filename, new_warc_filename, logger_, program_name='corpusbuilder 1.0',
                  user_agent=None, overwrite_warc=True, err_threshold=10, known_bad_urls=None,
-                 max_no_of_calls_in_period=2, limit_period=1, proxy_url=None, allow_cookies=False):
+                 max_no_of_calls_in_period=2, limit_period=1, proxy_url=None, allow_cookies=False, just_cache=False):
         self._logger_ = logger_
         if existing_warc_filename is not None:  # Setup the supplied existing warc archive file as cache
             self._cached_downloads = WarcReader(existing_warc_filename, logger_)
@@ -44,9 +44,13 @@ class WarcCachingDownloader:
         else:
             self.url_index = {}
             info_record_data = None
-        self._new_downloads = WarcDownloader(new_warc_filename, logger_, program_name, user_agent, overwrite_warc,
-                                             err_threshold, info_record_data, known_bad_urls,
-                                             max_no_of_calls_in_period, limit_period, proxy_url, allow_cookies)
+
+        if just_cache:
+            self._new_downloads = WarcDummyDownloader()
+        else:
+            self._new_downloads = WarcDownloader(new_warc_filename, logger_, program_name, user_agent, overwrite_warc,
+                                                 err_threshold, info_record_data, known_bad_urls,
+                                                 max_no_of_calls_in_period, limit_period, proxy_url, allow_cookies)
 
     def download_url(self, url, ignore_cache=False):
         if url in self.url_index:  # Check cache...
@@ -72,6 +76,26 @@ class WarcCachingDownloader:
     @bad_urls.setter
     def bad_urls(self, value):
         self._new_downloads.bad_urls = value
+
+    @property
+    def cached_urls(self):
+        return self._cached_downloads.url_index
+
+
+class WarcDummyDownloader:
+    """
+        I.e. When want to use only the cache...
+    """
+    def __init__(self, *_, **__):
+        self.bad_urls = set()
+
+    @staticmethod
+    def download_url(_):
+        return None
+
+    @staticmethod
+    def write_record(_):
+        return None
 
 
 class WarcDownloader:

@@ -32,6 +32,10 @@ def parse_args():
                                                               '(Use it as cache)', default=None)
     parser.add_argument('--articles-warc', type=str, help='New WARC archive of the portal\'s archive '
                                                           '(Copy all cached pages if --old-archive-warc is specified)')
+    parser.add_argument('--archive-just-cache', type=str2bool, nargs='?', const=True, default=False,
+                        help='Use only cached pages:--old-archive-warc must be specified!')
+    parser.add_argument('--articles-just-cache', type=str2bool, nargs='?', const=True, default=False,
+                        help='Use only cached pages:--old-articles-warc must be specified!')
     parser.add_argument('--crawler-name', type=str, help='The name of the crawler for the WARC info record',
                         default='corpusbuilder 1.0')
     parser.add_argument('--user-agent', type=str, help='The User-Agent string to use in headers while downloading')
@@ -68,14 +72,22 @@ def parse_args():
     group.add_argument('--archive', help='Crawl only the portal\'s archive', action='store_true')
     group.add_argument('--articles', help='Crawl articles (and optionally use cached WARC for the portal\'s archive),'
                                           ' DEFAULT behaviour', action='store_true')
+    group.add_argument('--corpus', help='Use --old-articles-warc to create corpus (no crawling)', action='store_true')
     cli_args = parser.parse_args()
     # If archive is True -> articles is False, if archive is False -> articles is True
     cli_args.articles = not cli_args.archive
-    if cli_args.archive and not cli_args.archive_warc:
+    if cli_args.corpus:
+        cli_args.archive_just_cache = True
+        cli_args.articles_just_cache = True
+    if cli_args.archive and (not cli_args.archive_warc and not cli_args.archive_just_cache):
         print('Must specify at least --archive-warc as destination!', file=sys.stderr)
         exit(1)
-    if cli_args.articles and (not cli_args.archive_warc or not cli_args.articles_warc):
+    if cli_args.articles and ((not cli_args.archive_warc and not cli_args.archive_just_cache) or
+                              (not cli_args.articles_warc and not cli_args.articles_just_cache)):
         print('Must specify at least --archive-warc and --articles-warc as destination!', file=sys.stderr)
+        exit(1)
+    if cli_args.corpus and not cli_args.old_articles_warc:
+        print('Must specify at least --old-articles-warc as source!', file=sys.stderr)
         exit(1)
 
     return cli_args
@@ -101,7 +113,8 @@ if __name__ == '__main__':
                                              max_no_of_calls_in_period=args.max_no_of_calls_in_period,
                                              limit_period=args.limit_period,
                                              proxy_url=args.proxy_url,
-                                             allow_cookies=args.allow_cookies)
+                                             allow_cookies=args.allow_cookies,
+                                             just_cache=args.archive_just_cache)
         for url in archive_crawler.url_iterator():  # Get the list of urls in the archive...
             print(url, flush=True)
     else:
@@ -121,5 +134,7 @@ if __name__ == '__main__':
                                               max_no_of_calls_in_period=args.max_no_of_calls_in_period,
                                               limit_period=args.limit_period,
                                               proxy_url=args.proxy_url,
-                                              allow_cookies=args.allow_cookies)
+                                              allow_cookies=args.allow_cookies,
+                                              archive_just_cache=args.archive_just_cache,
+                                              articles_just_cache=args.articles_just_cache)
         articles_crawler.download_and_extract_all_articles()

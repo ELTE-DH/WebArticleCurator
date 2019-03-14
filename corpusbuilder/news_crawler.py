@@ -20,7 +20,7 @@ class NewsArchiveCrawler:
     def __init__(self, settings, existing_archive_filename, new_archive_filename, known_article_urls=None,
                  program_name='corpusbuilder 1.0', user_agent=None, overwrite_warc=True, err_threshold=10,
                  known_bad_urls=None, new_problematic_archive_urls=None, new_good_archive_urls=None,
-                 max_no_of_calls_in_period=2, limit_period=1, proxy_url=None, allow_cookies=False):
+                 max_no_of_calls_in_period=2, limit_period=1, proxy_url=None, allow_cookies=False, just_cache=False):
         self._settings = settings
         self._logger = Logger(self._settings['log_file_archive'])
 
@@ -47,7 +47,7 @@ class NewsArchiveCrawler:
         self._downloader = WarcCachingDownloader(existing_archive_filename, new_archive_filename, self._logger,
                                                  program_name, user_agent, overwrite_warc, err_threshold,
                                                  known_bad_urls, max_no_of_calls_in_period, limit_period, proxy_url,
-                                                 allow_cookies)
+                                                 allow_cookies, just_cache)
         self.known_good_urls = self._downloader.url_index  # All URLs in the archive are known good!
 
     def __del__(self):  # Write newly found URLs to files when output files supplied...
@@ -168,6 +168,14 @@ class NewsArchiveCrawler:
         return archive_page_next_page_url
 
 
+class NewsArchiveDummyCrawler:
+    def __init__(self, url_index_keys, *_, **__):
+        self._url_index_keys = url_index_keys
+
+    def url_iterator(self):
+        return self._url_index_keys
+
+
 class NewsArticleCrawler:
     """
         1) Get the list of articles (eg. NewsArchiveCrawler)
@@ -180,7 +188,8 @@ class NewsArticleCrawler:
                  program_name='corpusbuilder 1.0', user_agent=None, overwrite_warc=True, err_threshold=10,
                  corpus_converter='rule-based', known_bad_urls=None, new_problematic_urls=None, new_good_urls=None,
                  new_problematic_archive_urls=None, new_good_archive_urls=None, max_no_of_calls_in_period=2,
-                 limit_period=1, proxy_url=None, allow_cookies=False):
+                 limit_period=1, proxy_url=None, allow_cookies=False, archive_just_cache=False,
+                 articles_just_cache=False):
         self._settings = settings
         self._logger = Logger(self._settings['log_file_articles'])
 
@@ -203,7 +212,7 @@ class NewsArticleCrawler:
         self._downloader = WarcCachingDownloader(articles_existing_warc_filename, articles_new_warc_filename,
                                                  self._logger, program_name, user_agent, overwrite_warc,
                                                  err_threshold, known_bad_urls, max_no_of_calls_in_period,
-                                                 limit_period, proxy_url, allow_cookies)
+                                                 limit_period, proxy_url, allow_cookies, articles_just_cache)
 
         self.known_good_article_urls = self._downloader.url_index  # All URLs in the archive are known good!
         if known_article_urls is None:  # If None is supplied put the ones from the article archive
@@ -215,12 +224,16 @@ class NewsArticleCrawler:
             new_good_urls = open(new_good_urls, 'a+', encoding='UTF-8')
         self._new_urls_filehandles = (new_problematic_urls, new_good_urls)
 
-        # known_bad_urls are common between the NewsArchiveCrawler and the NewsArticleCrawler
-        self._archive_downloader = NewsArchiveCrawler(self._settings, archive_existing_warc_filename,
-                                                      archive_new_warc_filename, known_article_urls, program_name,
-                                                      user_agent, overwrite_warc, err_threshold, known_bad_urls,
-                                                      new_problematic_archive_urls, new_good_archive_urls,
-                                                      max_no_of_calls_in_period, limit_period, proxy_url, allow_cookies)
+        if archive_just_cache and articles_just_cache:
+            self._archive_downloader = NewsArchiveDummyCrawler(self._downloader.url_index.keys())
+        else:
+            # known_bad_urls are common between the NewsArchiveCrawler and the NewsArticleCrawler
+            self._archive_downloader = NewsArchiveCrawler(self._settings, archive_existing_warc_filename,
+                                                          archive_new_warc_filename, known_article_urls, program_name,
+                                                          user_agent, overwrite_warc, err_threshold, known_bad_urls,
+                                                          new_problematic_archive_urls, new_good_archive_urls,
+                                                          max_no_of_calls_in_period, limit_period, proxy_url,
+                                                          allow_cookies, archive_just_cache)
 
     def __del__(self):
         if hasattr(self, '_file_out') and self._file_out is not None:
