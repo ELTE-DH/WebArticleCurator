@@ -119,3 +119,24 @@ Misc features:
 # Licence
 
 This project is licensed under the terms of the LGPL 3 license.
+
+# References
+
+If you use this program, please cite the following paper:
+
+* [**Crawling in Reverse – Lightweight Targeted Crawling of News Portals** Indig B.; Kákonyi T. and Novák, A. *In Proceedings of the 9th Language & Technology Conference: Human Language Technologies as a Challenge for Computer Science and Linguistics (LTC'19)*, page 81–86, Poznań, Poland, 2019.](http://ltc.amu.edu.pl/)
+
+```
+@inproceedings{indig2019b,
+  author       = {Indig, Bal\'azs and K\'akonyi, Tibor and Nov\'ak, Attila},
+  editor       = {Kubis, Marek},
+  title        = {Crawling in Reverse -- Lightweight Targeted Crawling of News Portals},
+  date         = {2019},
+  booktitle    = {Proceedings of the 9th Language \& Technology Conference: Human Language Technologies as a Challenge for Computer Science and Linguistics (LTC'19)},
+  eventdate    = {2019-05-19/2019-05-21},
+  venue        = {Pozna\'n, Poland},
+  publisher    = {Wydawnictwo Nauka I Innowacje},
+  location     = {Pozna\'n, Poland},
+  pages        = {81--86},
+}
+```
