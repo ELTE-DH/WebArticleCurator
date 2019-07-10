@@ -93,6 +93,17 @@ def parse_args():
     return cli_args
 
 
+# TODO: We do not use them anymore:
+"""
+program_name=args.crawler_name,
+user_agent=args.user_agent,
+known_article_urls=args.known_article_urls,
+new_problematic_archive_urls=args.new_problematic_archive_urls,
+new_good_archive_urls=args.new_good_archive_urls,
+archive_just_cache=args.archive_just_cache,
+"""
+
+
 if __name__ == '__main__':
     # Parse CLI args
     args = parse_args()
@@ -120,21 +131,15 @@ if __name__ == '__main__':
     else:
         articles_crawler = NewsArticleCrawler(portal_settings, args.old_articles_warc, args.articles_warc,
                                               args.old_archive_warc, args.archive_warc,
-                                              program_name=args.crawler_name,
-                                              user_agent=args.user_agent,
                                               overwrite_warc=args.no_overwrite_warc,
                                               err_threshold=args.comulative_error_threshold,
                                               corpus_converter=args.corpus_converter,
                                               known_bad_urls=args.known_bad_urls,
-                                              known_article_urls=args.known_article_urls,
                                               new_problematic_urls=args.new_problematic_urls,
                                               new_good_urls=args.new_good_urls,
-                                              new_problematic_archive_urls=args.new_problematic_archive_urls,
-                                              new_good_archive_urls=args.new_good_archive_urls,
                                               max_no_of_calls_in_period=args.max_no_of_calls_in_period,
                                               limit_period=args.limit_period,
                                               proxy_url=args.proxy_url,
                                               allow_cookies=args.allow_cookies,
-                                              archive_just_cache=args.archive_just_cache,
                                               articles_just_cache=args.articles_just_cache)
         articles_crawler.download_and_extract_all_articles()
