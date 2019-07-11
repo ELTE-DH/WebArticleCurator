@@ -3,8 +3,9 @@
 
 from datetime import timedelta
 
-from corpusbuilder.corpus_converter import CorpusConverter, extract_article_urls_from_page, \
-    extract_article_date, identify_site_scheme, find_next_page_url
+from corpusbuilder.corpus_converter import CorpusConverter
+from corpusbuilder.extractor_functions import extract_article_urls_from_page, extract_article_date, find_next_page_url, \
+    identify_site_scheme
 from corpusbuilder.enhanced_downloader import WarcCachingDownloader
 from corpusbuilder.utils import Logger
 
@@ -127,23 +128,21 @@ class NewsArchiveCrawler:
         page_num = self._settings['min_pagenum']
         ignore_archive_cache = self._settings['ignore_archive_cache']
 
-        archive_page_next_page_url = archive_page_url_base.replace('#pagenum', '')
-        while archive_page_next_page_url is not None:
-            article_urls = []
-            archive_page_raw_html = self._downloader.download_url(archive_page_next_page_url,
-                                                                  ignore_cache=ignore_archive_cache)
+        next_page_url = archive_page_url_base.replace('#pagenum', '')
+        while next_page_url is not None:
+            archive_page_raw_html = self._downloader.download_url(next_page_url, ignore_cache=ignore_archive_cache)
             if archive_page_raw_html is not None:  # Download succeeded
-                if archive_page_next_page_url not in self.known_good_urls:
-                    self.good_urls.add(archive_page_next_page_url)
+                if next_page_url not in self.known_good_urls:
+                    self.good_urls.add(next_page_url)
                 # We need article URLs here to reliably determine the end of pages
                 article_urls = extract_article_urls_from_page(archive_page_raw_html, self._settings)
-                archive_page_next_page_url = find_next_page_url(archive_page_raw_html, self._settings,
-                                                                archive_page_url_base, article_urls, page_num,
-                                                                self.known_article_urls)
+                next_page_url = find_next_page_url(archive_page_raw_html, self._settings, archive_page_url_base,
+                                                   article_urls, page_num, self.known_article_urls)
             else:  # Download failed
-                if archive_page_next_page_url not in self._downloader.bad_urls:
-                    self.problematic_urls.add(archive_page_next_page_url)  # New possibly bad URL
-                archive_page_next_page_url = None
+                if next_page_url not in self._downloader.bad_urls:
+                    self.problematic_urls.add(next_page_url)  # New possibly bad URL
+                next_page_url = None
+                article_urls = []
             page_num += 1
             yield from article_urls
 
