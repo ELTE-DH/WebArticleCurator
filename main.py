@@ -93,53 +93,39 @@ def parse_args():
     return cli_args
 
 
-# TODO: We do not use them anymore:
-"""
-program_name=args.crawler_name,
-user_agent=args.user_agent,
-known_article_urls=args.known_article_urls,
-new_problematic_archive_urls=args.new_problematic_archive_urls,
-new_good_archive_urls=args.new_good_archive_urls,
-archive_just_cache=args.archive_just_cache,
-"""
-
-
 if __name__ == '__main__':
     # Parse CLI args
     args = parse_args()
+
+    # These parameters go down directly to the downloader
+    download_params = {'program_name': args.crawler_name, 'user_agent': args.user_agent,
+                       'overwrite_warc': args.no_overwrite_warc, 'err_threshold': args.comulative_error_threshold,
+                       'known_bad_urls': args.known_bad_urls,
+                       'max_no_of_calls_in_period': args.max_no_of_calls_in_period, 'limit_period': args.limit_period,
+                       'proxy_url': args.proxy_url, 'allow_cookies': args.allow_cookies}
 
     # read input data from the given files, initialize variables
     portal_settings = wrap_input_consants(args.config)
     if args.archive:
         # For the article links only...
         archive_crawler = NewsArchiveCrawler(portal_settings, args.old_archive_warc, args.archive_warc,
-                                             program_name=args.crawler_name,
-                                             user_agent=args.user_agent,
-                                             overwrite_warc=args.no_overwrite_warc,
-                                             err_threshold=args.comulative_error_threshold,
-                                             known_bad_urls=args.known_bad_urls,
                                              known_article_urls=args.known_article_urls,
                                              new_problematic_archive_urls=args.new_problematic_archive_urls,
                                              new_good_archive_urls=args.new_good_archive_urls,
-                                             max_no_of_calls_in_period=args.max_no_of_calls_in_period,
-                                             limit_period=args.limit_period,
-                                             proxy_url=args.proxy_url,
-                                             allow_cookies=args.allow_cookies,
-                                             just_cache=args.archive_just_cache)
+                                             just_cache=args.archive_just_cache,
+                                             **download_params)
         for url in archive_crawler.url_iterator():  # Get the list of urls in the archive...
             print(url, flush=True)
     else:
         articles_crawler = NewsArticleCrawler(portal_settings, args.old_articles_warc, args.articles_warc,
                                               args.old_archive_warc, args.archive_warc,
-                                              overwrite_warc=args.no_overwrite_warc,
-                                              err_threshold=args.comulative_error_threshold,
+                                              articles_just_cache=args.articles_just_cache,
+                                              archive_just_cache=args.archive_just_cache,
                                               corpus_converter=args.corpus_converter,
-                                              known_bad_urls=args.known_bad_urls,
                                               new_problematic_urls=args.new_problematic_urls,
                                               new_good_urls=args.new_good_urls,
-                                              max_no_of_calls_in_period=args.max_no_of_calls_in_period,
-                                              limit_period=args.limit_period,
-                                              proxy_url=args.proxy_url,
-                                              allow_cookies=args.allow_cookies,
-                                              articles_just_cache=args.articles_just_cache)
+                                              known_article_urls=args.known_article_urls,
+                                              new_problematic_archive_urls=args.new_problematic_archive_urls,
+                                              new_good_archive_urls=args.new_good_archive_urls,
+                                              **download_params)
         articles_crawler.download_and_extract_all_articles()

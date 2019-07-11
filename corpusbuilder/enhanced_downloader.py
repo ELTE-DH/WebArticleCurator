@@ -33,9 +33,7 @@ class WarcCachingDownloader:
 
         All parameters are wired out to the CLI and are documented there.
     """
-    def __init__(self, existing_warc_filename, new_warc_filename, logger_, program_name='corpusbuilder 1.0',
-                 user_agent=None, overwrite_warc=True, err_threshold=10, known_bad_urls=None,
-                 max_no_of_calls_in_period=2, limit_period=1, proxy_url=None, allow_cookies=False, just_cache=False):
+    def __init__(self, existing_warc_filename, new_warc_filename, logger_, just_cache=False, **download_params):
         self._logger_ = logger_
         if existing_warc_filename is not None:  # Setup the supplied existing warc archive file as cache
             self._cached_downloads = WarcReader(existing_warc_filename, logger_)
@@ -48,9 +46,7 @@ class WarcCachingDownloader:
         if just_cache:
             self._new_downloads = WarcDummyDownloader()
         else:
-            self._new_downloads = WarcDownloader(new_warc_filename, logger_, program_name, user_agent, overwrite_warc,
-                                                 err_threshold, info_record_data, known_bad_urls,
-                                                 max_no_of_calls_in_period, limit_period, proxy_url, allow_cookies)
+            self._new_downloads = WarcDownloader(new_warc_filename, logger_, info_record_data, **download_params)
 
     def download_url(self, url, ignore_cache=False):
         if url in self.url_index:  # Check cache...
@@ -102,8 +98,8 @@ class WarcDownloader:
     """
         Download URL with HTTP GET, save to a WARC file and return the decoded text
     """
-    def __init__(self, filename, logger_, program_name='corpusbuilder 1.0', user_agent=None, overwrite_warc=True,
-                 err_threshold=10, warcinfo_record_data=None, known_bad_urls=None, max_no_of_calls_in_period=2,
+    def __init__(self, filename, logger_, warcinfo_record_data=None, program_name='corpusbuilder 1.0', user_agent=None,
+                 overwrite_warc=True, err_threshold=10, known_bad_urls=None, max_no_of_calls_in_period=2,
                  limit_period=1, proxy_url=None, allow_cookies=False):
         if known_bad_urls is not None:  # Setup the list of cached bad URLs to prevent trying to download them again
             with open(known_bad_urls, encoding='UTF-8') as fh:
