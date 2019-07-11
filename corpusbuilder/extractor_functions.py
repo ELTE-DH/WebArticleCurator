@@ -9,6 +9,7 @@ strptime = datetime.strptime
 """Here comes the stuff to extract data from a specific downloaded webpage (archive or article)"""
 
 
+# TODO: This is also used when extracting all article URL from an article (extract cross-linking between articles)
 def extract_article_urls_from_page(archive_page_raw_html, settings):
     """
         extracts and returns as a list the URLs belonging to articles from an HTML code

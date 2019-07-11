@@ -43,20 +43,10 @@ def parse_args():
                         action='store_false')
     parser.add_argument('--comulative-error-threshold', type=int, help='Sum of download errors before giving up',
                         default=15)
-    parser.add_argument('--corpus-converter', type=str, help='The type of html->corpus class', default='rule-based',
-                        choices=['rule-based', 'newspaper'])
     parser.add_argument('--known-bad-urls', type=str, help='Known bad URLs to be excluded from download (filename, '
                                                            'one URL per line)', default=None)
     parser.add_argument('--known-article-urls', type=str, help='Known article URLs to mark the desired end of '
                                                                'the archive (filename, one URL per line)', default=None)
-    parser.add_argument('--new-problematic-urls', type=str, help='New problematic article URLs to be checked manually'
-                                                                 ' (dropped by default)', default=None)
-    parser.add_argument('--new-good-urls', type=str, help='New good artilce URLs downloaded and in the archive'
-                                                          ' (dropped by default)', default=None)
-    parser.add_argument('--new-problematic-archive-urls', type=str, help='New problematic archive URLs to be checked'
-                                                                         ' manually (dropped by default)', default=None)
-    parser.add_argument('--new-good-archive-urls', type=str, help='New good archive URLs downloaded and in the archive'
-                                                                  ' (dropped by default)', default=None)
     parser.add_argument('--max-no-of-calls-in-period', type=int, help='Limit number of HTTP request per period',
                         default=2)
     parser.add_argument('--limit-period', type=int, help='Limit (seconds) the period the number of HTTP request'
@@ -110,8 +100,6 @@ if __name__ == '__main__':
         # For the article links only...
         archive_crawler = NewsArchiveCrawler(portal_settings, args.old_archive_warc, args.archive_warc,
                                              known_article_urls=args.known_article_urls,
-                                             new_problematic_archive_urls=args.new_problematic_archive_urls,
-                                             new_good_archive_urls=args.new_good_archive_urls,
                                              just_cache=args.archive_just_cache,
                                              **download_params)
         for url in archive_crawler.url_iterator():  # Get the list of urls in the archive...
@@ -121,9 +109,6 @@ if __name__ == '__main__':
                                               args.old_archive_warc, args.archive_warc,
                                               articles_just_cache=args.articles_just_cache,
                                               archive_just_cache=args.archive_just_cache,
-                                              corpus_converter=args.corpus_converter,
-                                              new_problematic_urls=args.new_problematic_urls,
-                                              new_good_urls=args.new_good_urls,
                                               known_article_urls=args.known_article_urls,
                                               new_problematic_archive_urls=args.new_problematic_archive_urls,
                                               new_good_archive_urls=args.new_good_archive_urls,

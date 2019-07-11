@@ -8,6 +8,8 @@ import yaml
 import logging
 from datetime import date, timedelta, datetime
 
+from corpusbuilder.corpus_converter import corpus_converter_class
+
 
 def wrap_input_consants(current_task_config_filename):
     """
@@ -114,6 +116,42 @@ def wrap_input_consants(current_task_config_filename):
 
         if settings['date_from'] > settings['date_until']:
             raise ValueError('DateError: date_from is later than DATE UNTIL!')
+
+    # New problematic article URLs to be checked manually (dropped by default)
+    new_problematic_urls = settings['new_problematic_urls']
+    if new_problematic_urls is not None:
+        settings['NEW_PROBLEMATIC_URLS_FH'] = open(new_problematic_urls, 'a+', encoding='UTF-8')
+    else:
+        settings['NEW_PROBLEMATIC_URLS_FH'] = None
+
+    # New good artilce URLs downloaded and in the archive (dropped by default)
+    new_good_urls = settings['new_good_urls']
+    if new_good_urls is not None:
+        settings['NEW_GOOD_URLS_FH'] = open(new_good_urls, 'a+', encoding='UTF-8')
+    else:
+        settings['NEW_PROBLEMATIC_URLS_FH'] = None
+
+    # New problematic archive URLs to be checked manually (dropped by default)
+    new_problematic_archive_urls = settings['new_problematic_archive_urls']
+    if new_problematic_archive_urls is not None:
+        settings['NEW_PROBLEMATIC_ARCHIVE_URLS_FH'] = open(new_problematic_archive_urls, 'w', encoding='UTF-8')
+    else:
+        settings['NEW_PROBLEMATIC_ARCHIVE_URLS_FH'] = None
+
+    # New good archive URLs downloaded and in the archive (dropped by default)
+    new_good_archive_urls = settings['new_good_archive_urls']
+    if new_good_archive_urls is not None:
+        settings['NEW_GOOD_ARCHIVE_URLS_FH'] = open(new_good_archive_urls, 'w', encoding='UTF-8')
+    else:
+        settings['NEW_GOOD_ARCHIVE_URLS_FH'] = None
+
+    output_corpus = settings['output_corpus']
+    if output_corpus:
+        settings['OUTPUT_CORPUS_FH'] = open(output_corpus, 'a+', encoding='UTF-8')
+    else:
+        settings['OUTPUT_CORPUS_FH'] = None
+
+    settings['CORPUS_CONVERTER'] = corpus_converter_class[settings['corpus_converter']]
 
     return settings
 

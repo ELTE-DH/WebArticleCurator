@@ -3,13 +3,10 @@
 
 from datetime import timedelta
 
-from corpusbuilder.corpus_converter import CorpusConverter
 from corpusbuilder.extractor_functions import extract_article_urls_from_page, extract_article_date, \
     find_next_page_url, identify_site_scheme
 from corpusbuilder.enhanced_downloader import WarcCachingDownloader
 from corpusbuilder.utils import Logger
-
-corpus_converter_class = {'rule-based': CorpusConverter}
 
 
 class NewsArchiveCrawler:
@@ -19,8 +16,7 @@ class NewsArchiveCrawler:
         2) Extracts URLs of articles from these lists (with helper functions and config)
     """
     def __init__(self, settings, existing_archive_filename, new_archive_filename, known_article_urls=None,
-                 new_problematic_archive_urls=None, new_good_archive_urls=None, archive_just_cache=False,
-                 **downloader_params):
+                 archive_just_cache=False, **downloader_params):
 
         self._settings = settings
         self._logger = Logger(self._settings['log_file_archive'])
@@ -28,12 +24,6 @@ class NewsArchiveCrawler:
         # For external use
         self.good_urls = set()
         self.problematic_urls = set()
-
-        if new_problematic_archive_urls is not None:
-            new_problematic_archive_urls = open(new_problematic_archive_urls, 'w', encoding='UTF-8')
-        if new_good_archive_urls is not None:
-            new_good_archive_urls = open(new_good_archive_urls, 'w', encoding='UTF-8')
-        self._new_urls_file_handles = (new_problematic_archive_urls, new_good_archive_urls)
 
         # Setup the list of cached article URLs to stop archive crawling in time
         if known_article_urls is not None and isinstance(known_article_urls, str):
@@ -53,13 +43,15 @@ class NewsArchiveCrawler:
     def __del__(self):  # Write newly found URLs to files when output files supplied...
         if hasattr(self, '_new_urls_filehandles') and hasattr(self, 'good_urls') and \
                 hasattr(self, 'problematic_urls'):
-            new_problematic_urls, new_good_urls = self._new_urls_file_handles
+
+            new_good_urls = self._settings['NEW_GOOD_ARCHIVE_URLS_FH']
             if new_good_urls is not None and len(self.good_urls) > 0:
                 new_good_urls.writelines('{0}\n'.format(good_url) for good_url in self.good_urls)
 
             if new_good_urls is not None:
                 new_good_urls.close()
 
+            new_problematic_urls = self._settings['NEW_PROBLEMATIC_ARCHIVE_URLS_FH']
             if new_problematic_urls is not None and len(self.problematic_urls) > 0:
                 new_problematic_urls.writelines('{0}\n'.format(problematic_url)
                                                 for problematic_url in self.problematic_urls)
@@ -154,6 +146,9 @@ class NewsArchiveDummyCrawler:
         return self._url_index_keys
 
 
+# TODO: NEW SETTINGS: corrpus_converter = {'rule-based', 'newspaper'}, new_good_urls = None or filename,
+#  new_problematic_urls = None or filename, new_problematic_archive_urls = None or filename,
+#  new_good_archive_urls = None or filename
 class NewsArticleCrawler:
     """
         1) Get the list of articles (eg. NewsArchiveCrawler)
@@ -163,8 +158,7 @@ class NewsArticleCrawler:
     """
     def __init__(self, settings, articles_existing_warc_filename, articles_new_warc_filename,
                  archive_existing_warc_filename, archive_new_warc_filename, articles_just_cache=False,
-                 archive_just_cache=False, corpus_converter='rule-based', new_problematic_urls=None, new_good_urls=None,
-                 known_article_urls=None, new_problematic_archive_urls=None, new_good_archive_urls=None,
+                 archive_just_cache=False, known_article_urls=None,
                  **download_params):
         self._settings = settings
         self._logger = Logger(self._settings['log_file_articles'])
@@ -173,16 +167,11 @@ class NewsArticleCrawler:
         self.problematic_article_urls = set()
         self._new_urls = set()
 
-        self._create_corpus = self._settings['create_corpus']
-        self._file_out = None
-        if self._create_corpus:
-            self._file_out = open(self._settings['output_file'], 'a+', encoding='UTF-8')  # Output file for corpus
-
         self._filter_by_date = self._settings['filter_articles_by_date']
+        self._create_corpus = self._settings['OUTPUT_CORPUS_FH'] is not None  # Store value at init-time
 
         # Create new corpus converter class from the available methods...
-        converter = corpus_converter_class[corpus_converter]
-        self._converter = converter(self._settings, self._file_out, self._logger)
+        self._converter = self._settings['CORPUS_CONVERTER'](self._settings, self._logger)
 
         # Create new archive while downloading, or simulate download and read the archive
         self._downloader = WarcCachingDownloader(articles_existing_warc_filename, articles_new_warc_filename,
@@ -192,19 +181,12 @@ class NewsArticleCrawler:
         if known_article_urls is None:  # If None is supplied put the ones from the article archive
             known_article_urls = self.known_good_article_urls
 
-        if new_problematic_urls is not None:
-            new_problematic_urls = open(new_problematic_urls, 'a+', encoding='UTF-8')
-        if new_good_urls is not None:
-            new_good_urls = open(new_good_urls, 'a+', encoding='UTF-8')
-        self._new_urls_filehandles = (new_problematic_urls, new_good_urls)
-
         if archive_just_cache and articles_just_cache:
             self._archive_downloader = NewsArchiveDummyCrawler(self._downloader.url_index.keys())
         else:
             # known_bad_urls are common between the NewsArchiveCrawler and the NewsArticleCrawler
             self._archive_downloader = NewsArchiveCrawler(self._settings, archive_existing_warc_filename,
                                                           archive_new_warc_filename, known_article_urls,
-                                                          new_problematic_archive_urls, new_good_archive_urls,
                                                           archive_just_cache, **download_params)
 
     def __del__(self):
@@ -216,13 +198,15 @@ class NewsArticleCrawler:
         # Save the new urls...
         if hasattr(self, '_new_urls_filehandles') and hasattr(self, '_new_urls') and \
                 hasattr(self, 'problematic_article_urls'):
-            problematic_article_urls, new_good_urls = self._new_urls_filehandles
+
+            new_good_urls = self._settings['NEW_GOOD_URLS_FH']
             if new_good_urls is not None and len(self._new_urls) > 0:
                 new_good_urls.writelines('{0}\n'.format(good_url) for good_url in self._new_urls)
 
             if new_good_urls is not None:
                 new_good_urls.close()
 
+            problematic_article_urls = self._settings['NEW_PROBLEMATIC_URLS_FH']
             if problematic_article_urls is not None and len(self.problematic_article_urls) > 0:
                 problematic_article_urls.writelines('{0}\n'.format(problematic_url)
                                                     for problematic_url in self.problematic_article_urls)
@@ -248,9 +232,8 @@ class NewsArticleCrawler:
                 if url not in self._downloader.bad_urls:
                     self.problematic_article_urls.add(url)  # New problematic URL for manual checking
                 continue
-
             # Note downloaded url, but only when it is truly new URL (ie. not in the old archive)
-            if url not in self.known_good_article_urls:
+            elif url not in self.known_good_article_urls:
                 self.good_article_urls.add(url)
 
             # Identify the site scheme of the article to be able to look up the appropriate extracting method
@@ -263,9 +246,8 @@ class NewsArticleCrawler:
                 if article_date is None:
                     self._logger.log('ERROR', '\t'.join((url, 'DATE COULD NOT BE PARSED!')))
                     continue
-
                 # b) Check date interval
-                if not self._settings['date_from'] <= article_date <= self._settings['date_until']:
+                elif not self._settings['date_from'] <= article_date <= self._settings['date_until']:
                     self._logger.log('WARNING', '\t'.join((url, 'Date ({0}) not in the specified interval: {1}-{2} '
                                                                 'didn\'t use it in the corpus'.
                                      format(article_date, self._settings['date_from'], self._settings['date_until']))))

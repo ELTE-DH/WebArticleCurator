@@ -11,11 +11,11 @@ class CorpusConverter:
     """
         Extract text and metadata from the downloaded raw html by using site specific REs from the config
     """
-    def __init__(self, settings, file_out, logger_):
-        self._settings = settings
+    def __init__(self, settings, logger_):
+        self._settings = settings['OUTPUT_CORPUS_FH']
         self._article_begin_mark = settings['COMMON_SITE_TAGS']['article_begin_mark']
         self._article_end_mark = settings['COMMON_SITE_TAGS']['article_end_mark']
-        self._file_out = file_out
+        self._file_out = settings['OUTPUT_CORPUS_FH']
         self._logger_ = logger_
 
     def article_to_corpus(self, url, doc_in, site_tag_scheme):
@@ -61,8 +61,8 @@ class CorpusConverter:
 
 
 class CorpusConverterNewspaper:  # Mimic CorpusConverter
-    def __init__(self, settings, file_out, logger_):
-        self._file_out = file_out
+    def __init__(self, settings, logger_):
+        self._file_out = settings['OUTPUT_CORPUS_FH']
         self._logger_ = logger_
         self._settings = settings
 
@@ -89,3 +89,6 @@ class CorpusConverterNewspaper:  # Mimic CorpusConverter
                                                                html_body)),
               self._settings['article_end_flag'], sep='', end='', file=self._file_out)
         self._logger_.log('INFO', '\t'.join((url, 'Article extraction OK')))
+
+
+corpus_converter_class = {'rule-based': CorpusConverter, 'newspaper3k': CorpusConverterNewspaper}
