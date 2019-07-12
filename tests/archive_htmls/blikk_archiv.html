@@ -1,0 +1,2197 @@
+<!DOCTYPE html>
+<html lang="hu"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><script type="text/javascript" src="blikk_archiv_files/300lo.js"></script><script type="text/javascript" src="blikk_archiv_files/_ate.js"></script>
+        <title>Blikk</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><script src="blikk_archiv_files/sdk.js" async="" crossorigin="anonymous"></script><script id="io-holdingjs" async="" src="blikk_archiv_files/a_002.html"></script><script src="blikk_archiv_files/inferredEvents.js" async=""></script><script src="blikk_archiv_files/1665632660133623" async=""></script><script async="" src="blikk_archiv_files/fbevents.js"></script><script async="async" defer="defer" src="blikk_archiv_files/xgemius.js"></script><script type="text/javascript" async="" src="blikk_archiv_files/stat.js"></script><script async="" src="blikk_archiv_files/analytics.js"></script><script src="blikk_archiv_files/cmp.js" async="" type="text/javascript"></script><script type="text/javascript">/* <![CDATA[ */
+accConf = {"rum":{"tid":"EA-6280366","boot":"disable","cookieInfo":0,"pageType":"HTML","data":{"RTYPE":"archive"}},"events":{"endpointPaths":["/a8f4d8cd95e164917035b64b867a45dd"]}};
+/* ]]> */</script>
+
+        <script type="text/javascript">
+        !function(){var r="undefined"!=typeof window&&window===this?this:"undefined"!=typeof global&&null!=global?global:this,e="function"==typeof Object.defineProperties?Object.defineProperty:function(t,e,n){t!=Array.prototype&&t!=Object.prototype&&(t[e]=n.value)};function n(){n=function(){},r.Symbol||(r.Symbol=t)}var i=0;function t(t){return"jscomp_symbol_"+(t||"")+i++}function o(){n();var t=r.Symbol.iterator;t||(t=r.Symbol.iterator=r.Symbol("iterator")),"function"!=typeof Array.prototype[t]&&e(Array.prototype,t,{configurable:!0,writable:!0,value:function(){return a(this)}}),o=function(){}}function a(t){var e,n=0;return e=function(){return n<t.length?{done:!1,value:t[n++]}:{done:!0}},o(),(e={next:e})[r.Symbol.iterator]=function(){return this},e}function l(t){o();var e=t[Symbol.iterator];return e?e.call(t):a(t)}function p(t){if(!(t instanceof Array)){t=l(t);for(var e,n=[];!(e=t.next()).done;)n.push(e.value);t=n}return t}var h=0;var m="img script iframe link audio video source".split(" ");function v(t,e){for(var n=(t=l(t)).next();!n.done;n=t.next())if(n=n.value,e.includes(n.nodeName.toLowerCase())||v(n.children,e))return!0;return!1}function w(t,e){if(2<t.length)return performance.now();for(var n=[],r=(e=l(e)).next();!r.done;r=e.next())r=r.value,n.push({timestamp:r.start,type:"requestStart"}),n.push({timestamp:r.end,type:"requestEnd"});for(r=(e=l(t)).next();!r.done;r=e.next())n.push({timestamp:r.value,type:"requestStart"});for(n.sort(function(t,e){return t.timestamp-e.timestamp}),t=t.length,e=n.length-1;0<=e;e--)switch(r=n[e],r.type){case"requestStart":t--;break;case"requestEnd":if(2<++t)return r.timestamp;break;default:throw Error("Internal Error: This should never happen")}return 0}function s(t){t=t||{},this.w=!!t.useMutationObserver,this.u=t.minValue||null,t=window.__tti&&window.__tti.e;var i,o,a,s,u,c,f,r,n,e,d=window.__tti&&window.__tti.o;this.a=t?t.map(function(t){return{start:t.startTime,end:t.startTime+t.duration}}):[],d&&d.disconnect(),this.b=[],this.f=new Map,this.j=null,this.v=-1/0,this.i=!1,this.h=this.c=this.s=null,i=this.m.bind(this),o=this.l.bind(this),a=XMLHttpRequest.prototype.send,s=h++,XMLHttpRequest.prototype.send=function(t){for(var e=[],n=0;n<arguments.length;++n)e[n-0]=arguments[n];var r=this;return i(s),this.addEventListener("readystatechange",function(){4===r.readyState&&o(s)}),a.apply(this,e)},u=this.m.bind(this),c=this.l.bind(this),f=fetch,fetch=function(t){for(var i=[],e=0;e<arguments.length;++e)i[e-0]=arguments[e];return new Promise(function(e,n){var r=h++;u(r),f.apply(null,[].concat(p(i))).then(function(t){c(r),e(t)},function(t){c(t),n(t)})})},(r=this).c=new PerformanceObserver(function(t){for(var e=(t=l(t.getEntries())).next();!e.done;e=t.next())if("resource"===(e=e.value).entryType&&(r.b.push({start:e.fetchStart,end:e.responseEnd}),y(r,w(r.g,r.b)+5e3)),"longtask"===e.entryType){var n=e.startTime+e.duration;r.a.push({start:e.startTime,end:n}),y(r,n+5e3)}}),r.c.observe({entryTypes:["longtask","resource"]}),this.w&&(this.h=(n=this.B.bind(this),(e=new MutationObserver(function(t){for(var e=(t=l(t)).next();!e.done;e=t.next())"childList"==(e=e.value).type&&v(e.addedNodes,m)?n(e):"attributes"==e.type&&m.includes(e.target.tagName.toLowerCase())&&n(e)})).observe(document,{attributes:!0,childList:!0,subtree:!0,attributeFilter:["href","src"]}),e))}function u(t){t.i=!0;var e=0<t.a.length?t.a[t.a.length-1].end:0,n=w(t.g,t.b);y(t,Math.max(n+5e3,e))}function y(o,t){!o.i||o.v>t||(clearTimeout(o.j),o.j=setTimeout(function(){var t=performance.timing.navigationStart,e=w(o.g,o.b);t=(window.a&&window.a.A?1e3*window.a.A().C-t:0)||performance.timing.domContentLoadedEventEnd-t;if(o.u)var n=o.u;else n=performance.timing.domContentLoadedEventEnd?(n=performance.timing).domContentLoadedEventEnd-n.navigationStart:null;var r=performance.now();null===n&&y(o,Math.max(e+5e3,r+1e3));var i=o.a;(e=r-e<5e3?null:r-(e=i.length?i[i.length-1].end:t)<5e3?null:Math.max(e,n))&&(o.s(e),clearTimeout(o.j),o.i=!1,o.c&&o.c.disconnect(),o.h&&o.h.disconnect()),y(o,performance.now()+1e3)},t-performance.now()),o.v=t)}s.prototype.getFirstConsistentlyInteractive=function(){var e=this;return new Promise(function(t){e.s=t,"complete"==document.readyState?u(e):window.addEventListener("load",function(){u(e)})})},s.prototype.m=function(t){this.f.set(t,performance.now())},s.prototype.l=function(t){this.f.delete(t)},s.prototype.B=function(){y(this,performance.now()+5e3)},r.Object.defineProperties(s.prototype,{g:{configurable:!0,enumerable:!0,get:function(){return[].concat(p(this.f.values()))}}});try{if(window.dlRumData=[],"PerformanceLongTaskTiming"in window&&new s({}).getFirstConsistentlyInteractive().then(function(t){t&&window.dlRumData.push({metricName:"TTI",eventValue:t})}),"PerformanceObserver"in window)new PerformanceObserver(function(t){for(var e=t.getEntries(),n=0,r=e.length;n<r;n++){var i=e[n],o="",a=Math.round(i.startTime+i.duration);if("first-contentful-paint"===i.name)o="FCP";else{if("first-paint"!==i.name)continue;o="FP"}window.dlRumData.push({metricName:o,eventValue:a})}}).observe({entryTypes:["paint"]})}catch(t){}}();
+        </script>
+        <script type="text/javascript">
+        if(accConf&&accConf.rum&&accConf.rum.data)for(var key in window.dlRumData||(window.dlRumData=[]),accConf.rum.data)window.dlRumData.push({metricName:key,eventValue:accConf.rum.data[key]});
+        </script>
+        
+
+        
+
+        
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    onetAds = {
+        'target': 'BLIKK_HU/OTHER',
+        'async': 1,
+        'sgn_cookie': 1,
+        'autoslot': 0,   
+        'adSlots': [],
+        'no_gemius': 1,
+        'cookieInfo': 0,
+        'keywords': [],
+        'tid': 'EA-6280366',
+        'old_dot': true,
+        'adsNoBanner': 1,
+        'DV': 'BLIKK_HU/archive',
+        
+        'keyvalues': {
+            
+        },
+        
+        'kropka': {
+            
+            'DO': 'ras_hu'
+        }        
+    };
+  
+ 
+ 
+  
+
+   onetAds.keywords.push('archive');
+  
+</script>
+<script src="blikk_archiv_files/init.js" type="text/javascript" async=""></script>
+
+        
+            <link href="blikk_archiv_files/desktop.css" type="text/css" rel="stylesheet">
+        
+
+        <link href="blikk_archiv_files/css.css" rel="stylesheet" type="text/css">
+        <meta property="og:title" content="Blikk">
+        <meta name="twitter:title" content="Blikk">
+        <meta property="dlp:title" content="Blikk">
+        <meta property="og:description" content="undefined">
+        <meta property="dlp:description" content="undefined">
+        <meta property="og:image" content="undefined">
+        <meta name="twitter:card" content="photo">
+        <meta name="twitter:image" content="undefined">
+        <meta property="dlp:image" content="undefined">
+        <meta property="og:image:type" content="image/png">
+        <meta property="article:published_time" content="2019-07-12T12:16:34+01:00">
+        <meta name="twitter:site" content="@blikkhu">
+        <meta property="og:site_name" content="Blikk.hu">
+        <meta property="og:type" content="article">
+        <meta property="og:locale" content="hu_HU">
+
+        
+
+<script src="blikk_archiv_files/jquery.js"></script><style type="text/css">.onet-ad{min-width:1px;margin-bottom:5px;text-align:center;margin-left:auto;margin-right:auto}#onet-ad-top{margin-bottom:10px}.ad_adInfo{color:#696969;font:9px Verdana,Arial,Helvetica,sans-serif;text-align:left}.ad_box,.ad_boxright1,.ad_halfpage,.ad_sky,.ad_spons_box,.ad_wrapper,.spons_box{display:inline-block;vertical-align:top}#onet-ad-right{margin:0 auto 5px}#onet-ad-left{margin:10px 20px 10px 0;float:left}.ad-frame{display:block;border:1px solid #cecece;overflow:hidden}.ad-frame .ad-frame-in{margin:-1px 0 0 -1px}.ad_default{text-align:center}#onet-ad-flat-belkagorna{margin-bottom:0}</style>
+<script src="blikk_archiv_files/jquery-ui.js"></script>
+<script src="blikk_archiv_files/quantcast.js" async="true"></script>
+<script src="blikk_archiv_files/swiper.js"></script>
+<script src="blikk_archiv_files/lazysizes.js"></script>
+<script data-static-amd-map="{&quot;embeddedapp&quot;:&quot;https://ocdn.eu/paas-static/template-engine/fe947b2d89bd70005959112f8b2ce046/build&quot;,&quot;dailyneeds&quot;:&quot;https://ocdn.eu/paas-static/template-engine/1012e58d1fbab2163616a7509def24b2/build&quot;,&quot;adsinit&quot;:&quot;//ty0lm9uz.onet.pl/e1BrazhqMjV9/build&quot;,&quot;galleryab&quot;:&quot;http://ocdn.eu/paas-static/template-engine/d5219d9db429610e45600d33a0ff3939/build&quot;,&quot;layerglass&quot;:&quot;https://ocdn.eu/paas-static/template-engine/05afb91f43a4cacccad6959d895ac7ed/build&quot;,&quot;multigallery&quot;:&quot;https://ocdn.eu/paas-static/template-engine/4c32e822c37f265934ab9096e180c6c6/build&quot;,&quot;gallerysimple&quot;:&quot;https://ocdn.eu/paas-static/template-engine/d0aff1c484e6f5c2504be098bf180dd4/build&quot;,&quot;newslivestream&quot;:&quot;https://ocdn.eu/paas-static/template-engine/c521d70663e169ce4f8f4960a2bf333e/build&quot;,&quot;uststd&quot;:&quot;https://ocdn.eu/paas-static/template-engine/f066ddd0af5c65555c5ff1273876e4f9/build&quot;,&quot;vendor&quot;:&quot;https://ocdn.eu/paas-static/template-engine/e664b902675175d7b4ea37dc48134f31/build&quot;,&quot;usimenu&quot;:&quot;https://ocdn.eu/paas-static/template-engine/f887ddc9bceaaf47008c9fa4cc50a451/build&quot;,&quot;uss&quot;:&quot;https://ocdn.eu/paas-static/template-engine/2feea7833706f58957aabdc92a254eab/build&quot;,&quot;unimenu&quot;:&quot;https://ocdn.eu/paas-static/moto/564f1fec911d9bbfc58e2656c39fa5d5/build&quot;,&quot;tabele&quot;:&quot;https://ocdn.eu/paas-static/template-engine/001340d03292b7999df4f390f798c045/build&quot;,&quot;portalbar&quot;:&quot;https://ocdn.eu/paas-static/template-engine/0ba1d4667be42faf9173437d64ab8d61/build&quot;,&quot;pulsembed&quot;:&quot;https://ocdn.eu/paas-static/template-engine/2663e6a997bdd4b22429eb80e4b680e8/build&quot;,&quot;onettv&quot;:&quot;https://ocdn.eu/paas-static/template-engine/50457150ba2cb027c8bedcc661549c14/build&quot;,&quot;portalnavtop&quot;:&quot;https://ocdn.eu/paas-static/template-engine/0ba1d4667be42faf9173437d64ab8d61/build&quot;,&quot;quizapp&quot;:&quot;https://ocdn.eu/paas-static/template-engine/4bf940d37e48f3548c375c519c69e1da/build&quot;,&quot;ustnavigation&quot;:&quot;https://ocdn.eu/paas-static/template-engine/2feea7833706f58957aabdc92a254eab/build&quot;,&quot;local&quot;:&quot;//ocdn.eu/ucs/static/c6678325074a9d9b82e916a9f251fd55/d670167d6b258249ef2cb08936828f3b/build&quot;}" data-amd-debug="true">
+/*
+ RequireJS 2.1.14 Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
+ Available via the MIT or new BSD license.
+ see: https://github.com/jrburke/requirejs for details
+*/
+var requirejs,require,define;
+(function(O){function y(f){return"[object Function]"===P.call(f)}function w(f){return"[object Array]"===P.call(f)}function z(f,a){if(f){var c;for(c=0;c<f.length&&(!f[c]||!a(f[c],c,f));c+=1);}}function M(f,c){if(f){var a;for(a=f.length-1;-1<a&&(!f[a]||!c(f[a],a,f));a-=1);}}function t(f,a){return ja.call(f,a)}function k(f,a){return t(f,a)&&f[a]}function A(f,a){for(var c in f)if(t(f,c)&&a(f[c],c))break}function D(a,c,g,d){c&&A(c,function(c,s){if(g||!t(a,s))!d||"object"!==typeof c||!c||w(c)||y(c)||c instanceof
+RegExp?a[s]=c:(a[s]||(a[s]={}),D(a[s],c,g,d))});return a}function u(a,c){return function(){return c.apply(a,arguments)}}function N(a){throw a;}function C(a){if(!a)return a;var c=O;z(a.split("."),function(a){c=c[a]});return c}function d(a,c,g,d){c=Error(c+"\nhttps://requirejs.org/docs/errors.html#"+a);c.requireType=a;c.requireModules=d;g&&(c.originalError=g);return c}function a(a){function g(b,a,c){var e,q,r,f,d,h,m,s;a=a&&a.split("/");var l=n.map,p=l&&l["*"];if(b){b=b.split("/");q=b.length-1;n.nodeIdCompat&&
+U.test(b[q])&&(b[q]=b[q].replace(U,""));"."===b[0].charAt(0)&&a&&(q=a.slice(0,a.length-1),b=q.concat(b));q=b;for(r=0;r<q.length;r++)(f=q[r],"."===f)?(q.splice(r,1),r-=1):".."===f&&0!==r&&(1!=r||".."!==q[2])&&".."!==q[r-1]&&0<r&&(q.splice(r-1,2),r-=2);b=b.join("/")}if(c&&l&&(a||p)){q=b.split("/");r=q.length;a:for(;0<r;r-=1){d=q.slice(0,r).join("/");if(a)for(f=a.length;0<f;f-=1)if(c=k(l,a.slice(0,f).join("/")))if(c=k(c,d)){e=c;h=r;break a}!m&&p&&k(p,d)&&(m=k(p,d),s=r)}!e&&m&&(e=m,h=s);e&&(q.splice(0,
+h,e),b=q.join("/"))}return(e=k(n.pkgs,b))?e:b}function h(b){G&&z(document.getElementsByTagName("script"),function(a){if(a.getAttribute("data-requiremodule")===b&&a.getAttribute("data-requirecontext")===p.contextName)return a.parentNode.removeChild(a),!0})}function m(b){var a=k(n.paths,b);if(a&&w(a)&&1<a.length)return a.shift(),p.require.undef(b),p.makeRequire(null,{skipMap:!0})([b]),!0}function J(b){var a,c=b?b.indexOf("!"):-1;-1<c&&(a=b.substring(0,c),b=b.substring(c+1,b.length));return[a,b]}function l(b,
+a,c,e){var q,f,d=null,h=a?a.name:null,m=b,F=!0,n="";b||(F=!1,b="_@r"+(fa+=1));b=J(b);d=b[0];b=b[1];d&&(d=g(d,h,e),f=k(x,d));b&&(d?n=f&&f.normalize?f.normalize(b,function(b){return g(b,h,e)}):-1===b.indexOf("!")?g(b,h,e):b:(n=g(b,h,e),b=J(n),d=b[0],n=b[1],c=!0,q=p.nameToUrl(n)));c=!d||f||c?"":"_unnormalized"+(ga+=1);return{prefix:d,name:n,parentMap:a,unnormalized:!!c,url:q,originalName:m,isDefine:F,id:(d?d+"!"+n:n)+c}}function I(b){var a=b.id,c=k(v,a);c||(c=v[a]=new p.Module(b));return c}function L(b,
+a,c){var e=b.id,q=k(v,e);if(!t(x,e)||q&&!q.defineEmitComplete)if(q=I(b),q.error&&"error"===a)c(q.error);else q.on(a,c);else"defined"===a&&c(x[e])}function E(b,a){var f=b.requireModules,e=!1;if(a)a(b);else if(z(f,function(a){if(a=k(v,a))a.error=b,a.events.error&&(e=!0,a.emit("error",b))}),!e)c.onError(b)}function B(){V.length&&(la.apply(H,[H.length,0].concat(V)),V=[])}function K(b){delete v[b];delete X[b]}function P(b,a,c){var e=b.map.id;b.error?b.emit("error",b.error):(a[e]=!0,z(b.depMaps,function(e,
+f){var d=e.id,g=k(v,d);g&&!b.depMatched[f]&&!c[d]&&(k(a,d)?(b.defineDep(f,x[d]),b.check()):P(g,a,c))}),c[e]=!0)}function Y(){var b,a,c=(b=1E3*n.waitSeconds)&&p.startTime+b<(new Date).getTime(),e=[],f=[],g=!1,l=!0;if(!Z){Z=!0;A(X,function(b){var d=b.map,s=d.id;if(b.enabled&&(d.isDefine||f.push(b),!b.error))if(!b.inited&&c)m(s)?g=a=!0:(e.push(s),h(s));else if(!b.inited&&b.fetched&&d.isDefine&&(g=!0,!d.prefix))return l=!1});if(c&&e.length)return b=d("timeout","Load timeout for modules: "+e,null,e),b.contextName=
+p.contextName,E(b);l&&z(f,function(b){P(b,{},{})});c&&!a||!g||!G&&!ha||$||($=setTimeout(function(){$=0;Y()},50));Z=!1}}function aa(b){t(x,b[0])||I(l(b[0],null,!0)).init(b[1],b[2])}function T(b){b=b.currentTarget||b.srcElement;var a=p.onScriptLoad;b.detachEvent&&!ba?b.detachEvent("onreadystatechange",a):b.removeEventListener("load",a,!1);a=p.onScriptError;b.detachEvent&&!ba||b.removeEventListener("error",a,!1);return{node:b,id:b&&b.getAttribute("data-requiremodule")}}function ia(){var b;for(B();H.length;){b=
+H.shift();if(null===b[0])return E(d("mismatch","Mismatched anonymous define() module: "+b[b.length-1]));aa(b)}}var Z,ca,p,Q,$,n={waitSeconds:7,baseUrl:"./",paths:{},bundles:{},pkgs:{},shim:{},config:{}},v={},X={},da={},H=[],x={},W={},ea={},fa=1,ga=1;Q={require:function(b){return b.require?b.require:b.require=p.makeRequire(b.map)},exports:function(b){b.usingExports=!0;if(b.map.isDefine)return b.exports?x[b.map.id]=b.exports:b.exports=x[b.map.id]={}},module:function(b){return b.module?b.module:b.module=
+{id:b.map.id,uri:b.map.url,config:function(){return k(n.config,b.map.id)||{}},exports:b.exports||(b.exports={})}}};ca=function(b){this.events=k(da,b.id)||{};this.map=b;this.shim=k(n.shim,b.id);this.depExports=[];this.depMaps=[];this.depMatched=[];this.pluginMaps={};this.depCount=0};ca.prototype={init:function(b,a,c,e){e=e||{};if(!this.inited){this.factory=a;if(c)this.on("error",c);else this.events.error&&(c=u(this,function(b){this.emit("error",b)}));this.depMaps=b&&b.slice(0);this.errback=c;this.inited=
+!0;this.ignore=e.ignore;e.enabled||this.enabled?this.enable():this.check()}},defineDep:function(b,a){this.depMatched[b]||(this.depMatched[b]=!0,this.depCount-=1,this.depExports[b]=a)},fetch:function(){if(!this.fetched){this.fetched=!0;p.startTime=(new Date).getTime();var b=this.map;if(this.shim)p.makeRequire(this.map,{enableBuildCallback:!0})(this.shim.deps||[],u(this,function(){return b.prefix?this.callPlugin():this.load()}));else return b.prefix?this.callPlugin():this.load()}},load:function(){var b=
+this.map.url;W[b]||(W[b]=!0,p.load(this.map.id,b))},check:function(){if(this.enabled&&!this.enabling){var b,a,f=this.map.id;a=this.depExports;var e=this.exports,q=this.factory;if(this.inited)if(this.error)this.emit("error",this.error);else{if(!this.defining){this.defining=!0;if(1>this.depCount&&!this.defined){if(y(q)){if(this.events.error&&this.map.isDefine||c.onError!==N)try{e=p.execCb(f,q,a,e)}catch(d){b=d}else e=p.execCb(f,q,a,e);this.map.isDefine&&void 0===e&&((a=this.module)?e=a.exports:this.usingExports&&
+(e=this.exports));if(b)return b.requireMap=this.map,b.requireModules=this.map.isDefine?[this.map.id]:null,b.requireType=this.map.isDefine?"define":"require",E(this.error=b)}else e=q;this.exports=e;if(this.map.isDefine&&!this.ignore&&(x[f]=e,c.onResourceLoad))c.onResourceLoad(p,this.map,this.depMaps);K(f);this.defined=!0}this.defining=!1;this.defined&&!this.defineEmitted&&(this.defineEmitted=!0,this.emit("defined",this.exports),this.defineEmitComplete=!0)}}else this.fetch()}},callPlugin:function(){var b=
+this.map,a=b.id,f=l(b.prefix);this.depMaps.push(f);L(f,"defined",u(this,function(e){var f,h;h=k(ea,this.map.id);var m=this.map.name,ka=this.map.parentMap?this.map.parentMap.name:null,F=p.makeRequire(b.parentMap,{enableBuildCallback:!0});if(this.map.unnormalized){if(e.normalize&&(m=e.normalize(m,function(b){return g(b,ka,!0)})||""),e=l(b.prefix+"!"+m,this.map.parentMap),L(e,"defined",u(this,function(b){this.init([],function(){return b},null,{enabled:!0,ignore:!0})})),h=k(v,e.id)){this.depMaps.push(e);
+if(this.events.error)h.on("error",u(this,function(b){this.emit("error",b)}));h.enable()}}else h?(this.map.url=p.nameToUrl(h),this.load()):(f=u(this,function(b){this.init([],function(){return b},null,{enabled:!0})}),f.error=u(this,function(b){this.inited=!0;this.error=b;b.requireModules=[a];A(v,function(b){0===b.map.id.indexOf(a+"_unnormalized")&&K(b.map.id)});E(b)}),f.fromText=u(this,function(e,g){var h=b.name,m=l(h),r=R;g&&(e=g);r&&(R=!1);I(m);t(n.config,a)&&(n.config[h]=n.config[a]);try{c.exec(e)}catch(s){return E(d("fromtexteval",
+"fromText eval for "+a+" failed: "+s,s,[a]))}r&&(R=!0);this.depMaps.push(m);p.completeLoad(h);F([h],f)}),e.load(b.name,F,f,n))}));p.enable(f,this);this.pluginMaps[f.id]=f},enable:function(){X[this.map.id]=this;this.enabling=this.enabled=!0;z(this.depMaps,u(this,function(b,a){var c,e;if("string"===typeof b){b=l(b,this.map.isDefine?this.map:this.map.parentMap,!1,!this.skipMap);this.depMaps[a]=b;if(c=k(Q,b.id)){this.depExports[a]=c(this);return}this.depCount+=1;L(b,"defined",u(this,function(b){this.defineDep(a,
+b);this.check()}));this.errback&&L(b,"error",u(this,this.errback))}c=b.id;e=v[c];!t(Q,c)&&e&&!e.enabled&&p.enable(b,this)}));A(this.pluginMaps,u(this,function(b){var a=k(v,b.id);a&&!a.enabled&&p.enable(b,this)}));this.enabling=!1;this.check()},on:function(b,a){var c=this.events[b];c||(c=this.events[b]=[]);c.push(a)},emit:function(b,a){z(this.events[b],function(b){b(a)});"error"===b&&delete this.events[b]}};p={config:n,contextName:a,registry:v,defined:x,urlFetched:W,defQueue:H,Module:ca,makeModuleMap:l,
+nextTick:c.nextTick,onError:E,configure:function(b){b.baseUrl&&"/"!==b.baseUrl.charAt(b.baseUrl.length-1)&&(b.baseUrl+="/");var a=n.shim,c={paths:!0,bundles:!0,config:!0,map:!0};A(b,function(b,a){c[a]?(n[a]||(n[a]={}),D(n[a],b,!0,!0)):n[a]=b});b.bundles&&A(b.bundles,function(b,a){z(b,function(b){b!==a&&(ea[b]=a)})});b.shim&&(A(b.shim,function(b,c){w(b)&&(b={deps:b});!b.exports&&!b.init||b.exportsFn||(b.exportsFn=p.makeShimExports(b));a[c]=b}),n.shim=a);b.packages&&z(b.packages,function(b){var a;b=
+"string"===typeof b?{name:b}:b;a=b.name;b.location&&(n.paths[a]=b.location);n.pkgs[a]=b.name+"/"+(b.main||"main").replace(ma,"").replace(U,"")});A(v,function(b,a){b.inited||b.map.unnormalized||(b.map=l(a))});(b.deps||b.callback)&&p.require(b.deps||[],b.callback)},makeShimExports:function(b){return function(){var a;b.init&&(a=b.init.apply(O,arguments));return a||b.exports&&C(b.exports)}},makeRequire:function(b,m){function n(e,g,h){var s,F;m.enableBuildCallback&&g&&y(g)&&(g.__requireJsBuild=!0);if("string"===
+typeof e){if(y(g))return E(d("requireargs","Invalid require call"),h);if(b&&t(Q,e))return Q[e](v[b.id]);if(c.get)return c.get(p,e,b,n);s=l(e,b,!1,!0);s=s.id;return t(x,s)?x[s]:E(d("notloaded",'Module name "'+s+'" has not been loaded yet for context: '+a+(b?"":". Use require([])")))}ia();p.nextTick(function(){ia();F=I(l(null,b));F.skipMap=m.skipMap;F.init(e,g,h,{enabled:!0});Y()});return n}m=m||{};D(n,{isBrowser:G,toUrl:function(a){var c,f=a.lastIndexOf("."),d=a.split("/")[0];-1!==f&&("."!==d&&".."!==
+d||1<f)&&(c=a.substring(f,a.length),a=a.substring(0,f));return p.nameToUrl(g(a,b&&b.id,!0),c,!0)},defined:function(a){return t(x,l(a,b,!1,!0).id)},specified:function(a){a=l(a,b,!1,!0).id;return t(x,a)||t(v,a)}});b||(n.undef=function(a){B();var c=l(a,b,!0),f=k(v,a);h(a);delete x[a];delete W[c.url];delete da[a];M(H,function(b,c){b[0]===a&&H.splice(c,1)});f&&(f.events.defined&&(da[a]=f.events),K(a))});return n},enable:function(b){k(v,b.id)&&I(b).enable()},completeLoad:function(b){var a,c,f=k(n.shim,
+b)||{},g=f.exports;for(B();H.length;){c=H.shift();if(null===c[0]){c[0]=b;if(a)break;a=!0}else c[0]===b&&(a=!0);aa(c)}c=k(v,b);if(!a&&!t(x,b)&&c&&!c.inited){if(n.enforceDefine&&(!g||!C(g)))return m(b)?void 0:E(d("nodefine","No define call for "+b,null,[b]));aa([b,f.deps||[],f.exportsFn])}Y()},nameToUrl:function(b,a,f){var e,d,g;(e=k(n.pkgs,b))&&(b=e);if(e=k(ea,b))return p.nameToUrl(e,a,f);if(c.jsExtRegExp.test(b))e=b+(a||"");else{e=n.paths;b=b.split("/");for(d=b.length;0<d;d-=1)if(g=b.slice(0,d).join("/"),
+g=k(e,g)){w(g)&&(g=g[0]);b.splice(0,d,g);break}e=b.join("/");e+=a||(/^data\:|\?/.test(e)||f?"":".js");e=("/"===e.charAt(0)||e.match(/^[\w\+\.\-]+:/)?"":n.baseUrl)+e}return n.urlArgs?e+((-1===e.indexOf("?")?"?":"&")+n.urlArgs):e},load:function(b,a){c.load(p,b,a)},execCb:function(b,a,c,f){return a.apply(f,c)},onScriptLoad:function(b){if("load"===b.type||na.test((b.currentTarget||b.srcElement).readyState))S=null,b=T(b),p.completeLoad(b.id)},onScriptError:function(b){var a=T(b);if(!m(a.id))return E(d("scripterror",
+"Script error for: "+a.id,b,[a.id]))}};p.require=p.makeRequire();return p}var c,m,h,g,I,J,S,L,l,T,oa=/(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/mg,pa=/[^.]\s*require\s*\(\s*["']([^'"\s]+)["']\s*\)/g,U=/\.js$/,ma=/^\.\//;m=Object.prototype;var P=m.toString,ja=m.hasOwnProperty,la=Array.prototype.splice,G=!("undefined"===typeof window||"undefined"===typeof navigator||!window.document),ha=!G&&"undefined"!==typeof importScripts,na=G&&"PLAYSTATION 3"===navigator.platform?/^complete$/:/^(complete|loaded)$/,
+ba="undefined"!==typeof opera&&"[object Opera]"===opera.toString(),K={},B={},V=[],R=!1;if("undefined"===typeof define){if("undefined"!==typeof requirejs){if(y(requirejs))return;B=requirejs;requirejs=void 0}"undefined"!==typeof require&&!y(require)&&(B=require,require=void 0);c=requirejs=function(a,d,g,h){var m,l="_";!w(a)&&"string"!==typeof a&&(m=a,w(d)?(a=d,d=g,g=h):a=[]);m&&m.context&&(l=m.context);(h=k(K,l))||(h=K[l]=c.s.newContext(l));m&&h.configure(m);return h.require(a,d,g)};c.config=function(a){return c(a)};
+c.nextTick="undefined"!==typeof setTimeout?function(a){setTimeout(a,4)}:function(a){a()};require||(require=c);c.version="2.1.14";c.jsExtRegExp=/^\/|:|\?|\.js$/;c.isBrowser=G;m=c.s={contexts:K,newContext:a};c({});z(["toUrl","undef","defined","specified"],function(a){c[a]=function(){var c=K._;return c.require[a].apply(c,arguments)}});G&&(h=m.head=document.getElementsByTagName("head")[0],g=document.getElementsByTagName("base")[0])&&(h=m.head=g.parentNode);c.onError=N;c.createNode=function(a){var c=a.xhtml?
+document.createElementNS("https://www.w3.org/1999/xhtml","html:script"):document.createElement("script");c.type=a.scriptType||"text/javascript";c.charset="utf-8";c.async=!0;return c};c.load=function(a,m,l){var k=a&&a.config||{};if(G)return k=c.createNode(k,m,l),k.setAttribute("data-requirecontext",a.contextName),k.setAttribute("data-requiremodule",m),!k.attachEvent||k.attachEvent.toString&&0>k.attachEvent.toString().indexOf("[native code")||ba?(k.addEventListener("load",a.onScriptLoad,!1),k.addEventListener("error",
+a.onScriptError,!1)):(R=!0,k.attachEvent("onreadystatechange",a.onScriptLoad)),k.src=l,L=k,g?h.insertBefore(k,g):h.appendChild(k),L=null,k;if(ha)try{importScripts(l),a.completeLoad(m)}catch(J){a.onError(d("importscripts","importScripts failed for "+m+" at "+l,J,[m]))}};G&&!B.skipDataMain&&M(document.getElementsByTagName("script"),function(a){h||(h=a.parentNode);if(I=a.getAttribute("data-main"))return l=I,B.baseUrl||(J=l.split("/"),l=J.pop(),T=J.length?J.join("/")+"/":"./",B.baseUrl=T),l=l.replace(U,
+""),c.jsExtRegExp.test(l)&&(l=I),B.deps=B.deps?B.deps.concat(l):[l],!0});define=function(a,c,d){var g,h;"string"!==typeof a&&(d=c,c=a,a=null);w(c)||(d=c,c=null);!c&&y(d)&&(c=[],d.length&&(d.toString().replace(oa,"").replace(pa,function(a,d){c.push(d)}),c=(1===d.length?["require"]:["require","exports","module"]).concat(c)));R&&((g=L)||(S&&"interactive"===S.readyState||M(document.getElementsByTagName("script"),function(a){if("interactive"===a.readyState)return S=a}),g=S),g&&(a||(a=g.getAttribute("data-requiremodule")),
+h=K[g.getAttribute("data-requirecontext")]));(h?h.defQueue:V).push([a,c,d])};define.amd={jQuery:!0};c.exec=function(a){return eval(a)};c(B)}})(this);
+(function(){function O(y){return"string"===typeof y&&""!==y}require.runnerBox=function(y){function w(a){d in a||(a[d]=M());return a[d]}function z(){function a(){if(!0===c)for(;0<d.length;){var a=d.shift();setTimeout(a,0)}}var c=!1,d=[];return{on:function(c){d.push(c);a()},exec:function(){!1===c&&(c=!0);a()}}}function M(){var a=!1,c=null,d=z();return{onReady:function(a){d.on(function(){a(c)})},setAsRun:function(){!1===a&&(a=!0)},setValue:function(h){!0===a&&(c=h,d.exec())},isRun:function(){return a}}}
+function t(a,c){function d(a){setTimeout(function(){c(a)},0)}for(var h=[],g=0;g<a.length;g++)h.push(a[g]);for(g=0;g<h.length;g++)d(h[g])}function k(a){function c(a){function c(a){g++;return 200<g?(d(),!0):!0===u(a)?!1:"HTML"===a.tagName?!0:a.parentNode?c(a.parentNode):!0}function d(){var a=Error("Too much recursion");setTimeout(function(){throw a;},0)}var g=0;return c(a.parentNode)}var d=A(a,"*["+C+"]",C),h=[],g=null;g="function"!==typeof a.getAttribute?!1:O(a.getAttribute("data-run-module"));g&&
+h.push(a);for(a=0;a<d.length;a++)g=d[a],!0===c(g)&&h.push(g);return h}function A(a,c,d){function h(a){a=a.childNodes;for(var c=0;c<a.length;c++){var g=a[c],l=void 0;if(l=1===g.nodeType)l=g.getAttribute(d),l="string"===typeof l&&""!==l;l?k.push(g):h(g)}}function g(a){for(var c=[],d=0;d<a.length;d++)c.push(a[d]);return c}a===document&&(a=document.documentElement);if("function"===typeof a.querySelectorAll)return g(a.querySelectorAll(c));var k=[];h(a);return k}function D(a){a=a.getAttribute(C);return"string"===
+typeof a&&""!==a}function u(a){return D(a)&&!1===w(a).isRun()}function N(a){a=a.getAttribute(C);return"string"===typeof a&&""!==a?a:null}var C="data-run-module",d="runnerBoxElementProp"+(new Date).getTime();return{runElement:function(a){a=k(a);t(a,function(a){var d=N(a),h=d.split(".");if(2!==h.length)throw Error("Nieprawid\u0142owy format uruchamianego modu\u0142u: "+d);var g=h[0],k=h[1];y([g],function(d){if(!0===u(a))if(d&&"function"===typeof d[k])w(a).setAsRun(),d=d[k](a),w(a).setValue(d),a.setAttribute(C+
+"-isrun","1");else throw Error('Brak zdefiniowanej funkcji "'+k+'" dla : '+g);})})},whenRun:function(a,c){if(D(a))w(a).onReady(c)}}}(require);(function(y,w){function z(d){function a(){var a=d.getAttribute("data-amd-preload");return O(a)?a.split(","):[]}function c(){var a=d.getAttribute("data-timeout-start");return"number"===typeof a&&!isNaN(a)&&a===(a|0)&&0<a?a:2E3}function k(){var a=d.getAttribute("data-crossorigin");return O(a)?a.split(","):[]}var h=d.getAttribute("data-static-amd-map");if("string"===
+typeof h&&""!==h)return h=u(h),M(y,h,a(),c(),k()),!0}function M(d,a,c,m,h){d({paths:a,waitSeconds:120,skipDataMain:!0});d=t(function(){0<c.length&&w(c,function(){});w.runnerBox.runElement(document)});D(window,"load",d);k(d,m)}function t(d){var a=!1;return function(){!1===a&&(a=!0,setTimeout(d,0))}}function k(d,a){function c(){!1===h&&(h=!0,setTimeout(d,a))}function k(){return"complete"===document.readyState||"loaded"===document.readyState}var h=!1;k()&&c();D(document,"DOMContentLoaded",c);D(document,
+"readystatechange",function(){k()&&c()});!1===function(){var a;a:{var c=["visibilityState","mozVisibilityState","msVisibilityState","oVisibilityState","webkitVisibilityState"],d,h;try{for(h=0;h<c.length;h++)if(d=c[h],d in document){a=document[d];break a}}catch(k){}a=void 0}return"hidden"===a||"prerender"===a?!1:!0}()&&c()}function A(d){var a=/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;return"function"===typeof d.trim?d.trim():null===d?"":(d+"").replace(a,"")}function D(d,a,c){if(d.addEventListener)d.addEventListener(a,
+c,!1);else if(d.attachEvent)d.attachEvent("on"+a,c);else throw Error("jsstarter -> addEvent -> nieprawidlowe odgalezienie");}for(var u=function(){return"undefined"!==typeof JSON&&"function"===typeof JSON.parse?function(){return JSON.parse.apply(JSON,arguments)}:function(d){var a=/(,)|(\[|{)|(}|])|"(?:[^"\\\r\n]|\\["\\\/bfnrt]|\\u[\da-fA-F]{4})*"\s*:?|true|false|null|-?(?!0\d)\d+(?:\.\d+|)(?:[eE][+-]?\d+|)/g,c,k=null;return(d=A(d+""))&&!A(d.replace(a,function(a,d,t,u){c&&d&&(k=0);if(0===k)return a;
+c=t||d;k+=!u-!t;return""}))?Function("return "+d)():null}}(),N=document.getElementsByTagName("script"),C=0;C<N.length&&!0!==z(N[C]);C++);})(require.config,require)})();
+</script>
+
+<script type="text/javascript">
+function prepareForRenderClickmap(callback) {
+    require(['uststd/controls'], function(controls) {
+        controls.layzyimage_forceAllLoad(callback);
+    });
+};
+</script>
+
+<script>
+    $( document ).ready(function() {
+    
+        var videoSwiper = new Swiper('.swiper-container', {
+          slidesPerView: 2,
+          spaceBetween: 10,
+          loop: true,
+          loopFillGroupWithBlank: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          
+          breakpoints: {
+            1200: {
+                slidesPerView: 3,
+                spaceBetween: 10
+            },
+            1024: {
+                slidesPerView: 2,
+                spaceBetween: 10
+            },
+            768: {
+                slidesPerView: 2,
+                spaceBetween: 5
+            },
+            640: {
+                slidesPerView: 1,
+                spaceBetween: 5
+            },
+            320: {
+                slidesPerView: 1,
+                spaceBetween: 5
+            }
+        },
+          
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+        var adMagazineSwiper = new Swiper('.swiper-container-c', {
+          slidesPerView: 3,
+          spaceBetween: 10,
+          loop: true,
+          loopFillGroupWithBlank: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          
+          breakpoints: {
+            1200: {
+                slidesPerView: 3,
+                spaceBetween: 10
+            },
+            1024: {
+                slidesPerView: 2,
+                spaceBetween: 10
+            },
+            768: {
+                slidesPerView: 2,
+                spaceBetween: 5
+            },
+            640: {
+                slidesPerView: 1,
+                spaceBetween: 5
+            },
+            320: {
+                slidesPerView: 1,
+                spaceBetween: 5
+            }
+        },
+          
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+    });
+</script>
+<script>
+    function mainSubMenuOpen() {
+        var x = document.getElementById("myTopnav");
+        var y = document.getElementById("hambLi");
+        if (x.className == "mainMenuSubNav") {
+        x.className += " responsive";
+        y.className += " hambLiClass";
+        } else {
+        x.className = "mainMenuSubNav";
+        y.className = "mainMenuIconLi";
+        }
+    }
+    function mainSubMenuOpenMobile() {
+        var x = document.getElementById("myTopnavMob");
+        var y = document.getElementById("blikk_hamburger");
+        if (x.className == "mainMenuSubNav") {
+        x.className += " responsive";
+        y.className = "searchOpenOn";
+        var mobileHotTopicsSwiper = new Swiper('.swiper-container-mob', {
+            spaceBetween: 5,
+            width: 300,
+            centeredSlides: true,
+            autoplay: {
+                delay: 5000,
+            },
+            scrollbar: {
+                el: '.swiper-scrollbar',
+                draggable: true,
+                hide: false
+            }
+        });
+        } else {
+        x.className = "mainMenuSubNav";
+        y.className = "blikk_hamburger";
+        }
+    }
+    function searchInputOpen() {
+        var x = document.getElementById("searchForm");
+        var y = document.getElementById("searchOpen");
+        if (x.className == "searchForm") {
+        x.className += " searchFormOpen";
+        y.className += " searchOpenOn";
+        } else {
+        x.className = "searchForm";
+        y.className = "blikk_search";
+        }
+    }
+    $(document).ready(function(){
+        var is_mobile = !!navigator.userAgent.match(/iphone|android|blackberry/ig) || false;
+        if(is_mobile){
+                var headerBar = 0;
+            } else{
+                var headerBar = 32;
+            }
+            var adfekvo1 = $("#ad-fekvo1").height();
+            var overMenuHeight = headerBar + adfekvo1;
+            var menuHeight = $('.headerStickyDiv');
+        $(window).load(function() {
+            if ($(window).scrollTop() > overMenuHeight) {
+                menuHeight.addClass('stickyMenu');
+            } else {
+                menuHeight.removeClass('stickyMenu');
+            }
+        });
+        $(window).bind('scroll', function () {
+            if ($(window).scrollTop() > overMenuHeight) {
+                menuHeight.addClass('stickyMenu');
+            } else {
+                menuHeight.removeClass('stickyMenu');
+            }
+        });
+    });
+</script>
+
+        <link rel="shortcut icon" href="https://ocdn.eu/ucs/static/c6678325074a9d9b82e916a9f251fd55/d670167d6b258249ef2cb08936828f3b/assets/ico/favicon.ico" type="image/x-icon">
+        <link rel="apple-touch-icon" href="https://ocdn.eu/ucs/static/c6678325074a9d9b82e916a9f251fd55/d670167d6b258249ef2cb08936828f3b/assets/ico/apple-touch-icon.png">
+        <link rel="apple-touch-icon" sizes="57x57" href="https://ocdn.eu/ucs/static/c6678325074a9d9b82e916a9f251fd55/d670167d6b258249ef2cb08936828f3b/assets/ico/apple-touch-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="https://ocdn.eu/ucs/static/c6678325074a9d9b82e916a9f251fd55/d670167d6b258249ef2cb08936828f3b/assets/ico/apple-touch-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="https://ocdn.eu/ucs/static/c6678325074a9d9b82e916a9f251fd55/d670167d6b258249ef2cb08936828f3b/assets/ico/apple-touch-icon-76x76.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="https://ocdn.eu/ucs/static/c6678325074a9d9b82e916a9f251fd55/d670167d6b258249ef2cb08936828f3b/assets/ico/apple-touch-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="https://ocdn.eu/ucs/static/c6678325074a9d9b82e916a9f251fd55/d670167d6b258249ef2cb08936828f3b/assets/ico/apple-touch-icon-120x120.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="https://ocdn.eu/ucs/static/c6678325074a9d9b82e916a9f251fd55/d670167d6b258249ef2cb08936828f3b/assets/ico/apple-touch-icon-144x144.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="https://ocdn.eu/ucs/static/c6678325074a9d9b82e916a9f251fd55/d670167d6b258249ef2cb08936828f3b/assets/ico/apple-touch-icon-152x152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="https://ocdn.eu/ucs/static/c6678325074a9d9b82e916a9f251fd55/d670167d6b258249ef2cb08936828f3b/assets/ico/apple-touch-icon-180x180.png">
+
+        
+        
+        
+        
+
+        
+            
+    
+        
+        
+            <script>
+var myAdoceanKeys = (typeof onetAds !== 'undefined' && typeof onetAds.keywords !== 'undefined')? onetAds.keywords.join() : "";
+</script>
+<script>
+console.log('OTHER');
+</script>
+
+<!-- REFERRER CHECK -->
+<script>
+	
+  	var referrer=document.referrer;
+  	if(referrer.search("facebook.com")!==-1){
+        myAdoceanKeys=myAdoceanKeys+",fromfacebook";
+    }
+  	
+</script>
+<!-- / REFERRER CHECK -->
+
+<script type="text/javascript">
+var myAdoceanVars = "&sitewidth="+document.documentElement.clientWidth;
+
+if ((window.innerWidth>1279) || (document.documentElement.clientWidth>1279))
+	{
+ 	myAdoceanKeys = myAdoceanKeys+ ",w_1200";
+	}
+if (((window.innerWidth<1279) && (window.innerWidth>=1024)) ||
+   ((document.documentElement.clientWidth<1279) && (document.documentElement.clientWidth>=1024)))
+	{
+	myAdoceanKeys = myAdoceanKeys+ ",w_970";
+	}
+if (((window.innerWidth<1024) && (window.innerWidth>=768)) ||
+   ((document.documentElement.clientWidth<1024) && (document.documentElement.clientWidth>=768)))
+	{
+	myAdoceanKeys = myAdoceanKeys+ ",w_728";
+	}
+if (((window.innerWidth<768) && (window.innerWidth>=480)) ||
+   ((document.documentElement.clientWidth<768) && (document.documentElement.clientWidth>=480)))
+	{
+	myAdoceanKeys = myAdoceanKeys+ ",w_468";
+	}
+if ((window.innerWidth<480) || (document.documentElement.clientWidth<480))
+	{
+	myAdoceanKeys = myAdoceanKeys+ ",w_320";
+	}
+</script> 
+
+<script type="text/javascript" src="blikk_archiv_files/ado.js"></script>
+<script type="text/javascript">
+/* (c)AdOcean 2003-2015 */
+	if(typeof ado!=="object"){ado={};ado.config=ado.preview=ado.placement=ado.master=ado.slave=function(){};} 
+	ado.config({mode: "old", xml: false, characterEncoding: true});
+	ado.preview({enabled: true, emiter: "gemhu.adocean.pl", id: "uESaTC3oo4RWFYK0Pi7N40dYf6fwGW9odHhhEhar3_7.p7"});
+</script>
+
+
+<script type="text/javascript">
+if (location.hash=='#adtest'){
+console.log('tagmanager: tag-head');
+console.log('channel: BLIKK_HU.OTHER');
+}
+</script>
+
+<script type="text/javascript">
+/* (c)AdOcean 2003-2015, MASTER: Axelspringer_hu.blikk_hu.fooldal */
+ado.master({id: 'qGbqrm3M49P1g3IAqRAYgw7p0GVpgsOggLowvXh3LVb.e7', server: 'gemhu.adocean.pl', keys: myAdoceanKeys, vars: myAdoceanVars });
+</script>
+
+
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-53710157-1', 'auto');
+  ga('create', 'UA-53710157-6', 'auto', {'name': 'fullTracker'});
+  ga('send', 'pageview');
+  ga('fullTracker.send', 'pageview');
+
+</script>
+
+
+
+<script type="text/javascript">
+	(function(){var isSecure=('https:'==document.location.protocol);var ff=document.createElement('script');ff.type='text/javascript';ff.async=true;ff.src=(isSecure?'https':'http')+'://'+(isSecure?'secure.':'lb.')+'keytiles.com/statjs/sst-379-1349854226/stat.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(ff,s);})();
+</script>
+
+
+<!-- (C)2000-2015 Gemius SA - gemiusAudience / blikk.hu / Egyeb -->
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+var pp_gemius_identifier = '0sVAq27TayylHMY0EQZ15oYh.l0RRTrkicwHGJgevMz.L7';
+// lines below shouldn't be edited
+function gemius_pending(i) { window[i] = window[i] || function() {var x = window[i+'_pdata'] = window[i+'_pdata'] || []; x[x.length]=arguments;};};
+gemius_pending('gemius_hit'); gemius_pending('gemius_event'); gemius_pending('pp_gemius_hit'); gemius_pending('pp_gemius_event');
+(function(d,t) {try {var gt=d.createElement(t),s=d.getElementsByTagName(t)[0],l='http'+((location.protocol=='https:')?'s':''); gt.setAttribute('async','async');
+gt.setAttribute('defer','defer'); gt.src=l+'://gahu.hit.gemius.pl/xgemius.js'; s.parentNode.insertBefore(gt,s);} catch (e) {}})(document,'script');
+//--><!]]>
+</script>
+
+
+
+<!-- PushEngage Code -->
+<script> window._peq = window._peq || []; window._peq.push(["init"]); </script>
+<script src="blikk_archiv_files/4340de7128cb21b6ef235323619b3562.js" async=""></script>
+<script>
+_pe.subscribe();
+</script>
+<!-- END PushEngage Code -->  
+
+
+
+<!-- Facebook Pixel Code -->
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1665632660133623');
+  fbq('track', 'PageView');
+</script>
+
+
+
+
+<noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1665632660133623&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Facebook Pixel Code -->
+
+
+
+
+<script>
+  
+var g_today = new Date();
+var g_dd = g_today.getDate();
+var g_mm = g_today.getMonth()+1;
+var g_yyyy = g_today.getFullYear();
+if(g_dd<10) {
+    g_dd = '0'+g_dd;
+} 
+if(g_mm<10) {
+    g_mm = '0'+g_mm;
+} 
+g_today = g_yyyy + g_mm + g_dd;
+  
+ var adsLink;
+if (onetAds.keywords.indexOf('gnonadult') > -1) {
+  console.log('Article is not google-sensitive');
+   adsLink = "https://adsinteractive-794b.kxcdn.com/blikk.hu_other.js?v=" + g_today;
+   adsLink_nappan  = "https://adsinteractive-794b.kxcdn.com/blikk.hu.nappan.js?v=" + g_today;
+} else {
+  console.log('Article is google-sensitive');
+  adsLink = "https://adsinteractive-794b.kxcdn.com/blikk.hu_other.18.js?v=" + g_today;
+  adsLink_nappan  = "https://adsinteractive-794b.kxcdn.com/blikk.hu.nappan.18.js?v=" + g_today;
+}
+  document.write('<scr'+'ipt type="text/javascript" src="'+adsLink+'"></sc'+'ript>');
+  document.write('<scr'+'ipt type="text/javascript" src="'+adsLink_nappan+'"></sc'+'ript>');
+console.log('JS: ' + adsLink);
+</script><script type="text/javascript" src="blikk_archiv_files/blikk_002.js"></script><script type="text/javascript" src="blikk_archiv_files/blikk.js"></script>
+
+
+
+
+
+<script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="local/main" src="blikk_archiv_files/main_002.js"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="embeddedapp/main" src="blikk_archiv_files/main.js"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="uststd/controls" src="blikk_archiv_files/controls.js"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="uststd/uststd" src="blikk_archiv_files/uststd.js"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="//connect.facebook.net/hu_HU/sdk.js" src="blikk_archiv_files/sdk_002.js"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="//platform.twitter.com/widgets.js" src="blikk_archiv_files/widgets.js"></script><style type="text/css">.fb_hidden{position:absolute;top:-10000px;z-index:10001}.fb_reposition{overflow:hidden;position:relative}.fb_invisible{display:none}.fb_reset{background:none;border:0;border-spacing:0;color:#000;cursor:auto;direction:ltr;font-family:"lucida grande", tahoma, verdana, arial, sans-serif;font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:1;margin:0;overflow:visible;padding:0;text-align:left;text-decoration:none;text-indent:0;text-shadow:none;text-transform:none;visibility:visible;white-space:normal;word-spacing:normal}.fb_reset>div{overflow:hidden}@keyframes fb_transform{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}.fb_animate{animation:fb_transform .3s forwards}
+.fb_dialog{background:rgba(82, 82, 82, .7);position:absolute;top:-10000px;z-index:10001}.fb_dialog_advanced{border-radius:8px;padding:10px}.fb_dialog_content{background:#fff;color:#373737}.fb_dialog_close_icon{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 0 transparent;cursor:pointer;display:block;height:15px;position:absolute;right:18px;top:17px;width:15px}.fb_dialog_mobile .fb_dialog_close_icon{left:5px;right:auto;top:5px}.fb_dialog_padding{background-color:transparent;position:absolute;width:1px;z-index:-1}.fb_dialog_close_icon:hover{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -15px transparent}.fb_dialog_close_icon:active{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -30px transparent}.fb_dialog_iframe{line-height:0}.fb_dialog_content .dialog_title{background:#6d84b4;border:1px solid #365899;color:#fff;font-size:14px;font-weight:bold;margin:0}.fb_dialog_content .dialog_title>span{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yd/r/Cou7n-nqK52.gif) no-repeat 5px 50%;float:left;padding:5px 0 7px 26px}body.fb_hidden{height:100%;left:0;margin:0;overflow:visible;position:absolute;top:-10000px;transform:none;width:100%}.fb_dialog.fb_dialog_mobile.loading{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/ya/r/3rhSv5V8j3o.gif) white no-repeat 50% 50%;min-height:100%;min-width:100%;overflow:hidden;position:absolute;top:0;z-index:10001}.fb_dialog.fb_dialog_mobile.loading.centered{background:none;height:auto;min-height:initial;min-width:initial;width:auto}.fb_dialog.fb_dialog_mobile.loading.centered #fb_dialog_loader_spinner{width:100%}.fb_dialog.fb_dialog_mobile.loading.centered .fb_dialog_content{background:none}.loading.centered #fb_dialog_loader_close{clear:both;color:#fff;display:block;font-size:18px;padding-top:20px}#fb-root #fb_dialog_ipad_overlay{background:rgba(0, 0, 0, .4);bottom:0;left:0;min-height:100%;position:absolute;right:0;top:0;width:100%;z-index:10000}#fb-root #fb_dialog_ipad_overlay.hidden{display:none}.fb_dialog.fb_dialog_mobile.loading iframe{visibility:hidden}.fb_dialog_mobile .fb_dialog_iframe{position:sticky;top:0}.fb_dialog_content .dialog_header{background:linear-gradient(from(#738aba), to(#2c4987));border-bottom:1px solid;border-color:#1d3c78;box-shadow:white 0 1px 1px -1px inset;color:#fff;font:bold 14px Helvetica, sans-serif;text-overflow:ellipsis;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0;vertical-align:middle;white-space:nowrap}.fb_dialog_content .dialog_header table{height:43px;width:100%}.fb_dialog_content .dialog_header td.header_left{font-size:12px;padding-left:5px;vertical-align:middle;width:60px}.fb_dialog_content .dialog_header td.header_right{font-size:12px;padding-right:5px;vertical-align:middle;width:60px}.fb_dialog_content .touchable_button{background:linear-gradient(from(#4267B2), to(#2a4887));background-clip:padding-box;border:1px solid #29487d;border-radius:3px;display:inline-block;line-height:18px;margin-top:3px;max-width:85px;padding:4px 12px;position:relative}.fb_dialog_content .dialog_header .touchable_button input{background:none;border:none;color:#fff;font:bold 12px Helvetica, sans-serif;margin:2px -12px;padding:2px 6px 3px 6px;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}.fb_dialog_content .dialog_header .header_center{color:#fff;font-size:16px;font-weight:bold;line-height:18px;text-align:center;vertical-align:middle}.fb_dialog_content .dialog_content{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/y9/r/jKEcVPZFk-2.gif) no-repeat 50% 50%;border:1px solid #4a4a4a;border-bottom:0;border-top:0;height:150px}.fb_dialog_content .dialog_footer{background:#f5f6f7;border:1px solid #4a4a4a;border-top-color:#ccc;height:40px}#fb_dialog_loader_close{float:left}.fb_dialog.fb_dialog_mobile .fb_dialog_close_button{text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}.fb_dialog.fb_dialog_mobile .fb_dialog_close_icon{visibility:hidden}#fb_dialog_loader_spinner{animation:rotateSpinner 1.2s linear infinite;background-color:transparent;background-image:url(https://static.xx.fbcdn.net/rsrc.php/v3/yD/r/t-wz8gw1xG1.png);background-position:50% 50%;background-repeat:no-repeat;height:24px;width:24px}@keyframes rotateSpinner{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+.fb_iframe_widget{display:inline-block;position:relative}.fb_iframe_widget span{display:inline-block;position:relative;text-align:justify}.fb_iframe_widget iframe{position:absolute}.fb_iframe_widget_fluid_desktop,.fb_iframe_widget_fluid_desktop span,.fb_iframe_widget_fluid_desktop iframe{max-width:100%}.fb_iframe_widget_fluid_desktop iframe{min-width:220px;position:relative}.fb_iframe_widget_lift{z-index:1}.fb_iframe_widget_fluid{display:inline}.fb_iframe_widget_fluid span{width:100%}</style><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-509c045a0fbd81cb" src="blikk_archiv_files/addthis_widget.js"></script><style type="text/css">.at-icon{fill:#fff;border:0}.at-icon-wrapper{display:inline-block;overflow:hidden}a .at-icon-wrapper{cursor:pointer}.at-rounded,.at-rounded-element .at-icon-wrapper{border-radius:12%}.at-circular,.at-circular-element .at-icon-wrapper{border-radius:50%}.addthis_32x32_style .at-icon{width:2pc;height:2pc}.addthis_24x24_style .at-icon{width:24px;height:24px}.addthis_20x20_style .at-icon{width:20px;height:20px}.addthis_16x16_style .at-icon{width:1pc;height:1pc}#at16lb{display:none;position:absolute;top:0;left:0;width:100%;height:100%;z-index:1001;background-color:#000;opacity:.001}#at_complete,#at_error,#at_share,#at_success{position:static!important}.at15dn{display:none}#at15s,#at16p,#at16p form input,#at16p label,#at16p textarea,#at_share .at_item{font-family:arial,helvetica,tahoma,verdana,sans-serif!important;font-size:9pt!important;outline-style:none;outline-width:0;line-height:1em}* html #at15s.mmborder{position:absolute!important}#at15s.mmborder{position:fixed!important;width:250px!important}#at15s{background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABtJREFUeNpiZGBgaGAgAjAxEAlGFVJHIUCAAQDcngCUgqGMqwAAAABJRU5ErkJggg==);float:none;line-height:1em;margin:0;overflow:visible;padding:5px;text-align:left;position:absolute}#at15s a,#at15s span{outline:0;direction:ltr;text-transform:none}#at15s .at-label{margin-left:5px}#at15s .at-icon-wrapper{width:1pc;height:1pc;vertical-align:middle}#at15s .at-icon{width:1pc;height:1pc}.at4-icon{display:inline-block;background-repeat:no-repeat;background-position:top left;margin:0;overflow:hidden;cursor:pointer}.addthis_16x16_style .at4-icon,.addthis_default_style .at4-icon,.at4-icon,.at-16x16{width:1pc;height:1pc;line-height:1pc;background-size:1pc!important}.addthis_32x32_style .at4-icon,.at-32x32{width:2pc;height:2pc;line-height:2pc;background-size:2pc!important}.addthis_24x24_style .at4-icon,.at-24x24{width:24px;height:24px;line-height:24px;background-size:24px!important}.addthis_20x20_style .at4-icon,.at-20x20{width:20px;height:20px;line-height:20px;background-size:20px!important}.at4-icon.circular,.circular .at4-icon,.circular.aticon{border-radius:50%}.at4-icon.rounded,.rounded .at4-icon{border-radius:4px}.at4-icon-left{float:left}#at15s .at4-icon{text-indent:20px;padding:0;overflow:visible;white-space:nowrap;background-size:1pc;width:1pc;height:1pc;background-position:top left;display:inline-block;line-height:1pc}.addthis_vertical_style .at4-icon,.at4-follow-container .at4-icon{margin-right:5px}html>body #at15s{width:250px!important}#at15s.atm{background:none!important;padding:0!important;width:10pc!important}#at15s_inner{background:#fff;border:1px solid #fff;margin:0}#at15s_head{position:relative;background:#f2f2f2;padding:4px;cursor:default;border-bottom:1px solid #e5e5e5}.at15s_head_success{background:#cafd99!important;border-bottom:1px solid #a9d582!important}.at15s_head_success a,.at15s_head_success span{color:#000!important;text-decoration:none}#at15s_brand,#at15sptx,#at16_brand{position:absolute}#at15s_brand{top:4px;right:4px}.at15s_brandx{right:20px!important}a#at15sptx{top:4px;right:4px;text-decoration:none;color:#4c4c4c;font-weight:700}#at15sptx:hover{text-decoration:underline}#at16_brand{top:5px;right:30px;cursor:default}#at_hover{padding:4px}#at_hover .at_item,#at_share .at_item{background:#fff!important;float:left!important;color:#4c4c4c!important}#at_share .at_item .at-icon-wrapper{margin-right:5px}#at_hover .at_bold{font-weight:700;color:#000!important}#at_hover .at_item{width:7pc!important;padding:2px 3px!important;margin:1px;text-decoration:none!important}#at_hover .at_item.athov,#at_hover .at_item:focus,#at_hover .at_item:hover{margin:0!important}#at_hover .at_item.athov,#at_hover .at_item:focus,#at_hover .at_item:hover,#at_share .at_item.athov,#at_share .at_item:hover{background:#f2f2f2!important;border:1px solid #e5e5e5;color:#000!important;text-decoration:none}.ipad #at_hover .at_item:focus{background:#fff!important;border:1px solid #fff}.at15t{display:block!important;height:1pc!important;line-height:1pc!important;padding-left:20px!important;background-position:0 0;text-align:left}.addthis_button,.at15t{cursor:pointer}.addthis_toolbox a.at300b,.addthis_toolbox a.at300m{width:auto}.addthis_toolbox a{margin-bottom:5px;line-height:initial}.addthis_toolbox.addthis_vertical_style{width:200px}.addthis_button_facebook_like .fb_iframe_widget{line-height:100%}.addthis_button_facebook_like iframe.fb_iframe_widget_lift{max-width:none}.addthis_toolbox a.addthis_button_counter,.addthis_toolbox a.addthis_button_facebook_like,.addthis_toolbox a.addthis_button_facebook_send,.addthis_toolbox a.addthis_button_facebook_share,.addthis_toolbox a.addthis_button_foursquare,.addthis_toolbox a.addthis_button_linkedin_counter,.addthis_toolbox a.addthis_button_pinterest_pinit,.addthis_toolbox a.addthis_button_tweet{display:inline-block}.addthis_toolbox span.addthis_follow_label{display:none}.addthis_toolbox.addthis_vertical_style span.addthis_follow_label{display:block;white-space:nowrap}.addthis_toolbox.addthis_vertical_style a{display:block}.addthis_toolbox.addthis_vertical_style.addthis_32x32_style a{line-height:2pc;height:2pc}.addthis_toolbox.addthis_vertical_style .at300bs{margin-right:4px;float:left}.addthis_toolbox.addthis_20x20_style span{line-height:20px}.addthis_toolbox.addthis_32x32_style span{line-height:2pc}.addthis_toolbox.addthis_pill_combo_style .addthis_button_compact .at15t_compact,.addthis_toolbox.addthis_pill_combo_style a{float:left}.addthis_toolbox.addthis_pill_combo_style a.addthis_button_tweet{margin-top:-2px}.addthis_toolbox.addthis_pill_combo_style .addthis_button_compact .at15t_compact{margin-right:4px}.addthis_default_style .addthis_separator{margin:0 5px;display:inline}div.atclear{clear:both}.addthis_default_style .addthis_separator,.addthis_default_style .at4-icon,.addthis_default_style .at300b,.addthis_default_style .at300bo,.addthis_default_style .at300bs,.addthis_default_style .at300m{float:left}.at300b img,.at300bo img{border:0}a.at300b .at4-icon,a.at300m .at4-icon{display:block}.addthis_default_style .at300b,.addthis_default_style .at300bo,.addthis_default_style .at300m{padding:0 2px}.at300b,.at300bo,.at300bs,.at300m{cursor:pointer}.addthis_button_facebook_like.at300b:hover,.addthis_button_facebook_like.at300bs:hover,.addthis_button_facebook_send.at300b:hover,.addthis_button_facebook_send.at300bs:hover{opacity:1}.addthis_20x20_style .at15t,.addthis_20x20_style .at300bs{overflow:hidden;display:block;height:20px!important;width:20px!important;line-height:20px!important}.addthis_32x32_style .at15t,.addthis_32x32_style .at300bs{overflow:hidden;display:block;height:2pc!important;width:2pc!important;line-height:2pc!important}.at300bs{overflow:hidden;display:block;background-position:0 0;height:1pc;width:1pc;line-height:1pc!important}.addthis_default_style .at15t_compact,.addthis_default_style .at15t_expanded{margin-right:4px}#at_share .at_item{width:123px!important;padding:4px;margin-right:2px;border:1px solid #fff}#at16p{background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABtJREFUeNpiZGBgaGAgAjAxEAlGFVJHIUCAAQDcngCUgqGMqwAAAABJRU5ErkJggg==);z-index:10000001;position:absolute;top:50%;left:50%;width:300px;padding:10px;margin:0 auto;margin-top:-185px;margin-left:-155px;font-family:arial,helvetica,tahoma,verdana,sans-serif;font-size:9pt;color:#5e5e5e}#at_share{margin:0;padding:0}#at16pt{position:relative;background:#f2f2f2;height:13px;padding:5px 10px}#at16pt a,#at16pt h4{font-weight:700}#at16pt h4{display:inline;margin:0;padding:0;font-size:9pt;color:#4c4c4c;cursor:default}#at16pt a{position:absolute;top:5px;right:10px;color:#4c4c4c;text-decoration:none;padding:2px}#at15sptx:focus,#at16pt a:focus{outline:thin dotted}#at15s #at16pf a{top:1px}#_atssh{width:1px!important;height:1px!important;border:0!important}.atm{width:10pc!important;padding:0;margin:0;line-height:9pt;letter-spacing:normal;font-family:arial,helvetica,tahoma,verdana,sans-serif;font-size:9pt;color:#444;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABtJREFUeNpiZGBgaGAgAjAxEAlGFVJHIUCAAQDcngCUgqGMqwAAAABJRU5ErkJggg==);padding:4px}.atm-f{text-align:right;border-top:1px solid #ddd;padding:5px 8px}.atm-i{background:#fff;border:1px solid #d5d6d6;padding:0;margin:0;box-shadow:1px 1px 5px rgba(0,0,0,.15)}.atm-s{margin:0!important;padding:0!important}.atm-s a:focus{border:transparent;outline:0;transition:none}#at_hover.atm-s a,.atm-s a{display:block;text-decoration:none;padding:4px 10px;color:#235dab!important;font-weight:400;font-style:normal;transition:none}#at_hover.atm-s .at_bold{color:#235dab!important}#at_hover.atm-s a:hover,.atm-s a:hover{background:#2095f0;text-decoration:none;color:#fff!important}#at_hover.atm-s .at_bold{font-weight:700}#at_hover.atm-s a:hover .at_bold{color:#fff!important}.atm-s a .at-label{vertical-align:middle;margin-left:5px;direction:ltr}.at_PinItButton{display:block;width:40px;height:20px;padding:0;margin:0;background-image:url(//s7.addthis.com/static/t00/pinit00.png);background-repeat:no-repeat}.at_PinItButton:hover{background-position:0 -20px}.addthis_toolbox .addthis_button_pinterest_pinit{position:relative}.at-share-tbx-element .fb_iframe_widget span{vertical-align:baseline!important}#at16pf{height:auto;text-align:right;padding:4px 8px}.at-privacy-info{position:absolute;left:7px;bottom:7px;cursor:pointer;text-decoration:none;font-family:helvetica,arial,sans-serif;font-size:10px;line-height:9pt;letter-spacing:.2px;color:#666}.at-privacy-info:hover{color:#000}.body .wsb-social-share .wsb-social-share-button-vert{padding-top:0;padding-bottom:0}.body .wsb-social-share.addthis_counter_style .addthis_button_tweet.wsb-social-share-button{padding-top:40px}.body .wsb-social-share.addthis_counter_style .addthis_button_facebook_like.wsb-social-share-button{padding-top:21px}@media print{#at4-follow,#at4-share,#at4-thankyou,#at4-whatsnext,#at4m-mobile,#at15s,.at4,.at4-recommended{display:none!important}}@media screen and (max-width:400px){.at4win{width:100%}}@media screen and (max-height:700px) and (max-width:400px){.at4-thankyou-inner .at4-recommended-container{height:122px;overflow:hidden}.at4-thankyou-inner .at4-recommended .at4-recommended-item:first-child{border-bottom:1px solid #c5c5c5}}</style><style type="text/css">.at-branding-logo{font-family:helvetica,arial,sans-serif;text-decoration:none;font-size:10px;display:inline-block;margin:2px 0;letter-spacing:.2px}.at-branding-logo .at-branding-icon{background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAMAAAC67D+PAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRF////+GlNUkcc1QAAAB1JREFUeNpiYIQDBjQmAwMmkwEM0JnY1WIxFyDAABGeAFEudiZsAAAAAElFTkSuQmCC")}.at-branding-logo .at-branding-icon,.at-branding-logo .at-privacy-icon{display:inline-block;height:10px;width:10px;margin-left:4px;margin-right:3px;margin-bottom:-1px;background-repeat:no-repeat}.at-branding-logo .at-privacy-icon{background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAKCAMAAABR24SMAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABhQTFRF8fr9ot/xXcfn2/P5AKva////////AKTWodjhjAAAAAd0Uk5T////////ABpLA0YAAAA6SURBVHjaJMzBDQAwCAJAQaj7b9xifV0kUKJ9ciWxlzWEWI5gMF65KUTv0VKkjVeTerqE/x7+9BVgAEXbAWI8QDcfAAAAAElFTkSuQmCC")}.at-branding-logo span{text-decoration:none}.at-branding-logo .at-branding-addthis,.at-branding-logo .at-branding-powered-by{color:#666}.at-branding-logo .at-branding-addthis:hover{color:#333}.at-cv-with-image .at-branding-addthis,.at-cv-with-image .at-branding-addthis:hover{color:#fff}a.at-branding-logo:visited{color:initial}.at-branding-info{display:inline-block;padding:0 5px;color:#666;border:1px solid #666;border-radius:50%;font-size:10px;line-height:9pt;opacity:.7;transition:all .3s ease;text-decoration:none}.at-branding-info span{border:0;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}.at-branding-info:before{content:'i';font-family:Times New Roman}.at-branding-info:hover{color:#0780df;border-color:#0780df}</style><style type="text/css"></style></head><body><div id="Blikk_nativ_page"><script type="text/javascript">activateBanner('Blikk_nativ_page');</script></div>
+
+
+
+
+<script async="" src="blikk_archiv_files/37j1l529SexQ"></script>
+        
+    
+
+
+        
+        
+
+    <script>
+pulse2EmbedConfig = {
+    pulsevideo: {
+        preset: 'inTextVideo',
+        params: {
+            autoplay: 0,
+            autoplayRelated: 0,
+            showVideoTitle: 0,
+            adEngine: 'imasdk',
+            adserverUrl: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/22652647/Blikk_preroll&description_url=http%3A%2F%2Fblikk.hu&env=vp&impl=s&correlator=&tfcd=0&npa=0&gdfp_req=1&output=vast&sz=640x360&unviewed_position_start=1'
+        }
+    }
+};
+</script>
+    
+    
+        
+    
+        <!-- adSide -->
+        <div class="adSideWrap wrapper stickyWrapper" data-run-module="local/main.adSide" style="display: block;" data-run-module-isrun="1">
+            <div class="adSide left" style="left: -180px; top: 222px;">
+                <div class="sticky_left">
+                    <div id="adside-left-inner">
+                        
+    
+        <div class="adSection" id="onet-ad-flat-natleft2">
+    
+        
+        
+            <script>
+if (location.hash=='#adtest'){
+console.log('tagmanager: fül bal');
+}
+</script>
+
+<div id="Blikk_cikk_skyscraper_left_1"><script type="text/javascript">activateBanner('Blikk_cikk_skyscraper_left_1');</script></div>
+        
+    
+        </div>
+    
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="adSideWrap wrapper" data-run-module="local/main.adSide" style="display: block;" data-run-module-isrun="1">
+            <div class="adSide right" style="right: -180px; top: 222px;">
+                <div class="sticky_right">
+                    <div id="adside-right-inner">
+                        
+    
+        <div class="adSection" id="onet-ad-flat-natright2">
+    
+        
+        
+            <script>
+if (location.hash=='#adtest'){
+console.log('tagmanager: flat natright');
+}
+</script>
+
+<div id="Blikk_cikk_skyscraper_right_1"><script type="text/javascript">activateBanner('Blikk_cikk_skyscraper_right_1');</script></div>
+        
+    
+        </div>
+    
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /adSide -->
+        <script>
+            var listElement = new createElement();
+            listElement.getCookie("blikk_hu");
+        </script>
+        
+        
+            
+    
+        <div class="adSection" id="onet-ad-tag-startbody">
+    
+        
+        
+            <script>
+if (location.hash=='#adtest'){
+console.log('tagmanager: tag-startbody');
+console.log('MainPage');
+}
+</script>
+        
+    
+        </div>
+    
+
+    
+        <div class="adSection" id="onet-ad-flat-sponsoring">
+    
+        
+        
+            <script>
+if (location.hash=='#adtest'){
+console.log('tagmanager:first');
+}
+</script>
+
+<div id="ad-fekvo1"><span>Hirdetés</span>
+
+
+  <div id="Blikk_cikk_superleaderboard_top_1"><script type="text/javascript">activateBanner('Blikk_cikk_superleaderboard_top_1');</script></div>
+  
+</div>
+        
+    
+        </div>
+    
+
+
+        
+        
+        
+
+    <div class="headerLoginBarWrapper">
+        <div class="headerLoginBar wrapper">
+            <div class="promoHeader"> 
+                
+                    
+                
+                    
+                
+                    
+                        
+                            
+                                
+                                
+                                <a href="https://www.blikk.hu/dunai-hajobaleset" style="background-color: #e3061b;" class="headerButton">
+                                    
+                                        Dunai hajóbaleset
+                                    
+                                </a>
+                            
+                        
+                            
+                                
+                                
+                                <a href="https://www.blikk.hu/provident-okos-tippek" style="color: #ffffff;background-color: #00acfa;" class="headerButton">
+                                    
+                                        Okos Tippek
+                                    
+                                </a>
+                            
+                        
+                            
+                                
+                                
+                                <a href="https://www.blikk.hu/gurul-a-garami" style="background-color: #e3061b;" class="headerButton">
+                                    
+                                        Potyautas
+                                    
+                                </a>
+                            
+                        
+                            
+                                
+                                
+                                <a href="https://www.blikk.hu/bikinivonal" style="background-color: #e3061b;" class="headerButton">
+                                    
+                                        Bikinivonal
+                                    
+                                </a>
+                            
+                        
+                            
+                                
+                                
+                                <a href="https://www.blikk.hu/nyari-lelekbuvar" style="background-color: #e3061b;" class="headerButton">
+                                    
+                                        Nyári lélekbúvár
+                                    
+                                </a>
+                            
+                        
+                            
+                                
+                                
+                                <a href="https://www.blikk.hu/akcios-katalogusok" style="background-color: #27ae60;" class="headerButton">
+                                    
+                                        Akciós katalógusok
+                                    
+                                </a>
+                            
+                        
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </div>
+            <div class="addthis fRight" data-run-module="embeddedapp/main.addthis_fblike" data-addthis-url="https://www.facebook.com/blikkhu/" data-fb-layout="button_count" data-run-module-isrun="1"><div class="facebook_like" data-type="likeDetail"><div class="facebook_like_contener"><div class="addthis_toolbox"><a class="addthis_button_facebook_like at300b" fb:like:layout="button_count" addthis:url="https://www.facebook.com/blikkhu/"><div class="fb-like fb_iframe_widget" style="height: 25px;" data-layout="button_count" data-show_faces="false" data-share="false" data-action="like" data-width="90" data-height="25" data-font="arial" data-href="https://www.facebook.com/blikkhu/" data-send="false" fb-xfbml-state="rendered" fb-iframe-plugin-query="action=like&amp;app_id=&amp;container_width=0&amp;font=arial&amp;height=25&amp;href=https%3A%2F%2Fwww.facebook.com%2Fblikkhu%2F&amp;layout=button_count&amp;locale=hu_HU&amp;sdk=joey&amp;send=false&amp;share=false&amp;show_faces=false&amp;width=90"><span style="vertical-align: bottom; width: 97px; height: 20px;"><iframe name="f127c6b46e17ae" title="fb:like Facebook Social Plugin" allowtransparency="true" allowfullscreen="true" scrolling="no" allow="encrypted-media" style="border: medium none; visibility: visible; width: 97px; height: 20px;" src="blikk_archiv_files/like.html" class="" width="90px" height="25px" frameborder="0"></iframe></span></div></a><div class="atclear"></div></div></div></div></div>
+        </div>
+    </div>
+
+        <div class="viewportMobileMenu">
+            <header>
+                <div class="heightFix">
+                    <div id="pageHeader" class="pageHeader">
+                        <div class="headerStickyDiv" id="headerStickyDiv">
+                            
+                                <nav class="mainMenuNav" id="mainMenuNav">
+                                    
+<ul id="mainMenu">
+    <li class="desktopHeaderImg">
+        <a href="https://www.blikk.hu/">
+            <img class="headerLogoImg" src="blikk_archiv_files/dfb0df974e516496b79908d0a47f1c2f.png">
+        </a>
+    </li>
+    
+        
+            
+                
+                    <li class="item-0">
+                        <a href="https://www.blikk.hu/aktualis">
+                            <div>
+                                
+                                    Aktuális
+                                
+                            </div>
+                        </a>
+                        
+                            <ul class="mainMenuSub">
+                                
+                                    
+                                        <li class="item-0">
+                                            <a href="https://www.blikk.hu/aktualis/belfold">
+                                                <div>
+                                                    
+                                                        Belföld
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li class="item-1">
+                                            <a href="https://www.blikk.hu/aktualis/kulfold">
+                                                <div>
+                                                    
+                                                        Külföld
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li class="item-2">
+                                            <a href="https://www.blikk.hu/aktualis/politika">
+                                                <div>
+                                                    
+                                                        Politika
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li class="item-3">
+                                            <a href="https://www.blikk.hu/aktualis/krimi">
+                                                <div>
+                                                    
+                                                        Krimi
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li class="item-4">
+                                            <a href="https://www.blikk.hu/aktualis/veszhelyzet">
+                                                <div>
+                                                    
+                                                        Vészhelyzet
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li class="item-5">
+                                            <a href="https://www.blikk.hu/aktualis/vilag-titkai">
+                                                <div>
+                                                    
+                                                        Világ titkai
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li class="item-6">
+                                            <a href="https://www.blikk.hu/aktualis/penz">
+                                                <div>
+                                                    
+                                                        Pénz
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li class="item-7">
+                                            <a href="https://www.blikk.hu/aktualis/velemeny">
+                                                <div>
+                                                    
+                                                        Vélemény
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        
+                    </li>
+                
+            
+                
+                    <li class="item-1">
+                        <a href="https://www.blikk.hu/legfrissebb">
+                            <div>
+                                
+                                    Legfrissebb
+                                
+                            </div>
+                        </a>
+                        
+                    </li>
+                
+            
+                
+                    <li class="item-2">
+                        <a href="https://www.blikk.hu/sztarvilag">
+                            <div>
+                                
+                                    Sztárvilág
+                                
+                            </div>
+                        </a>
+                        
+                            <ul class="mainMenuSub">
+                                
+                                    
+                                        <li class="item-0">
+                                            <a href="https://www.blikk.hu/sztarvilag/sztarsztorik">
+                                                <div>
+                                                    
+                                                        Sztársztorik
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li class="item-1">
+                                            <a href="https://www.blikk.hu/sztarvilag/zene">
+                                                <div>
+                                                    
+                                                        Zene
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li class="item-2">
+                                            <a href="https://www.blikk.hu/sztarvilag/filmklikk">
+                                                <div>
+                                                    
+                                                        Filmklikk
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li class="item-3">
+                                            <a href="https://www.blikk.hu/sztarvilag/szexi">
+                                                <div>
+                                                    
+                                                        Szexi
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li class="item-4">
+                                            <a href="https://www.blikk.hu/sztarvilag/kultura">
+                                                <div>
+                                                    
+                                                        Kultúra
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        
+                    </li>
+                
+            
+                
+                    <li class="item-3">
+                        <a href="https://www.blikk.hu/sport">
+                            <div>
+                                
+                                    Sport
+                                
+                            </div>
+                        </a>
+                        
+                            <ul class="mainMenuSub">
+                                
+                                    
+                                        <li class="item-0">
+                                            <a href="https://www.blikk.hu/sport/magyar-foci">
+                                                <div>
+                                                    
+                                                        Magyar foci
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li class="item-1">
+                                            <a href="https://www.blikk.hu/sport/kulfoldi-foci">
+                                                <div>
+                                                    
+                                                        Külföldi foci
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li class="item-2">
+                                            <a href="https://www.blikk.hu/sport/spanyol-foci">
+                                                <div>
+                                                    
+                                                        Spanyol foci
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li class="item-3">
+                                            <a href="https://www.blikk.hu/sport/forma-1">
+                                                <div>
+                                                    
+                                                        Forma-1
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li class="item-4">
+                                            <a href="https://www.blikk.hu/sport/egyeni">
+                                                <div>
+                                                    
+                                                        Egyéni
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li class="item-5">
+                                            <a href="https://www.blikk.hu/sport/csapat">
+                                                <div>
+                                                    
+                                                        Csapat
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li class="item-6">
+                                            <a href="https://www.blikk.hu/sport/mindent-bele">
+                                                <div>
+                                                    
+                                                        Mindent bele
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        
+                    </li>
+                
+            
+                
+                    <li class="item-4">
+                        <a href="https://blikkruzs.blikk.hu/">
+                            <div>
+                                
+                                    Nőknek
+                                
+                            </div>
+                        </a>
+                        
+                            <ul class="mainMenuSub">
+                                
+                                    
+                                        <li class="item-0">
+                                            <a href="https://blikkruzs.blikk.hu/">
+                                                <div>
+                                                    
+                                                        Blikk Rúzs
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li class="item-1">
+                                            <a href="https://www.blikk.hu/egeszsegkalauz">
+                                                <div>
+                                                    
+                                                        Egészség
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li class="item-2">
+                                            <a href="https://www.blikk.hu/recepttar">
+                                                <div>
+                                                    
+                                                        Recepttár
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        
+                    </li>
+                
+            
+                
+                    <li class="item-5">
+                        <a href="https://www.blikk.hu/horoszkop">
+                            <div>
+                                
+                                    Horoszkóp
+                                
+                            </div>
+                        </a>
+                        
+                            <ul class="mainMenuSub">
+                                
+                                    
+                                        <li class="item-0">
+                                            <a href="https://www.blikk.hu/horoszkop/napi-horoszkop">
+                                                <div>
+                                                    
+                                                        Napi horoszkóp
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li class="item-1">
+                                            <a href="https://www.blikk.hu/horoszkop/heti-horoszkop">
+                                                <div>
+                                                    
+                                                        Heti horoszkóp
+                                                    
+                                                </div>
+                                            </a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        
+                    </li>
+                
+            
+                
+                    <li class="item-6">
+                        <a href="https://www.blikk.hu/erotika">
+                            <div>
+                                
+                                    Erotika
+                                
+                            </div>
+                        </a>
+                        
+                    </li>
+                
+            
+                
+                    <li class="item-7">
+                        <a href="https://www.blikk.hu/auto">
+                            <div>
+                                
+                                    Autó
+                                
+                            </div>
+                        </a>
+                        
+                    </li>
+                
+            
+                
+                    <li class="item-8">
+                        <a href="https://www.blikk.hu/geo">
+                            <div>
+                                
+                                    GEO
+                                
+                            </div>
+                        </a>
+                        
+                    </li>
+                
+            
+                
+                    <li class="item-9">
+                        <a href="http://tvrhet.blikk.hu/">
+                            <div>
+                                
+                                    TV
+                                
+                            </div>
+                        </a>
+                        
+                    </li>
+                
+            
+                
+                    <li class="item-10">
+                        <a href="https://www.blikk.hu/blikk-tv">
+                            <div>
+                                
+                                    Videó
+                                
+                            </div>
+                        </a>
+                        
+                    </li>
+                
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+    <li class="mainMenuIconLi" id="hambLi">
+        <div class="mainMenuIcon">
+            <a href="javascript:void(0);" class="mainMenuHambIcon" onclick="mainSubMenuOpen()">
+                <div class="blikk_hamburger">
+                    <div class="blikk_hamburgerPart"></div>
+                    <div class="blikk_hamburgerPart"></div>
+                    <div class="blikk_hamburgerPart"></div>
+                </div>
+            </a>
+        </div>
+    </li>
+    <li class="mainMenuIconLi">
+        <div class="mainMenuIcon">
+            <a href="javascript:void(0);" onclick="searchInputOpen()" class="searchAnchor"><div class="blikk_search" id="searchOpen"></div></a>
+        </div>
+        <div id="searchForm" class="searchForm">
+            <form method="GET" action="/search" data-run-module="local/main.searchForm" data-run-module-isrun="1">
+                
+                    <input type="text" name="q" class="searchInput" placeholder="Keresés">
+                
+                <input type="submit" class="searchSubmit" value="">
+            </form>
+        </div>
+    </li>
+<li class="weatherWidget" data-run-module="local/main.weatherSwitch" style="display: block;" data-run-module-isrun="1">
+    <a href="https://www.blikk.hu/idojaras">
+        
+            <section class="Budapest weatherElement weatherShow">
+                <div class="cloudy"></div>
+                <span>19.9 °C</span>
+            </section>
+        
+            <section class="Békéscsaba weatherElement weatherHidden">
+                <div class="sunny"></div>
+                <span>22.9 °C</span>
+            </section>
+        
+            <section class="Debrecen weatherElement weatherHidden">
+                <div class="sunny"></div>
+                <span>22 °C</span>
+            </section>
+        
+            <section class="Eger weatherElement weatherHidden">
+                <div class="day-cloudy"></div>
+                <span>23.6 °C</span>
+            </section>
+        
+            <section class="Győr weatherElement weatherHidden">
+                <div class="rain-1"></div>
+                <span>18.4 °C</span>
+            </section>
+        
+            <section class="Kaposvár weatherElement weatherHidden">
+                <div class="cloudy"></div>
+                <span>20.3 °C</span>
+            </section>
+        
+            <section class="Kecskemét weatherElement weatherHidden">
+                <div class="day-cloudy-sunny"></div>
+                <span>22.7 °C</span>
+            </section>
+        
+            <section class="Miskolc weatherElement weatherHidden">
+                <div class="day-cloudy-sunny"></div>
+                <span>22.9 °C</span>
+            </section>
+        
+            <section class="Nagykanizsa weatherElement weatherHidden">
+                <div class="cloudy"></div>
+                <span>18.9 °C</span>
+            </section>
+        
+            <section class="Nyíregyháza weatherElement weatherHidden">
+                <div class="day-cloudy"></div>
+                <span>22.2 °C</span>
+            </section>
+        
+            <section class="Pécs weatherElement weatherHidden">
+                <div class="cloudy"></div>
+                <span>20.4 °C</span>
+            </section>
+        
+            <section class="Salgótarján weatherElement weatherHidden">
+                <div class="day-cloudy"></div>
+                <span>22.4 °C</span>
+            </section>
+        
+            <section class="Sopron weatherElement weatherHidden">
+                <div class="rain-2"></div>
+                <span>17.4 °C</span>
+            </section>
+        
+            <section class="Szeged weatherElement weatherHidden">
+                <div class="day-cloudy"></div>
+                <span>25.1 °C</span>
+            </section>
+        
+            <section class="Szekszárd weatherElement weatherHidden">
+                <div class="rain-2"></div>
+                <span>18.4 °C</span>
+            </section>
+        
+            <section class="Székesfehérvár weatherElement weatherHidden">
+                <div class="rain-2"></div>
+                <span>18.3 °C</span>
+            </section>
+        
+            <section class="Szolnok weatherElement weatherHidden">
+                <div class="day-cloudy-sunny"></div>
+                <span>21.8 °C</span>
+            </section>
+        
+            <section class="Szombathely weatherElement weatherHidden">
+                <div class="cloudy"></div>
+                <span>17.5 °C</span>
+            </section>
+        
+            <section class="Tatabánya weatherElement weatherHidden">
+                <div class="cloudy"></div>
+                <span>19.3 °C</span>
+            </section>
+        
+            <section class="Veszprém weatherElement weatherHidden">
+                <div class="rain-2"></div>
+                <span>16.9 °C</span>
+            </section>
+        
+            <section class="Zalaegerszeg weatherElement weatherHidden">
+                <div class="cloudy"></div>
+                <span>17.5 °C</span>
+            </section>
+        
+    </a>
+</li></ul>
+                                    <div data-run-module="local/main.weatherWidget" data-run-module-isrun="1"></div>
+                                    
+                                    
+                                </nav>
+                                <nav class="mainMenuSubNav" id="myTopnav">
+                                    
+<div class="mainSubMenu">
+    <div class="innerMainSubMenu">
+        <h4>Felkapott</h4>
+        <ul class="mainSubMenuUl">
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+                    
+                        
+                            <li>
+                                <a href="https://blikkruzs.blikk.hu/">
+                                    
+                                        Blikk Rúzs
+                                    
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="https://www.blikk.hu/recepttar">
+                                    
+                                        Recepttár
+                                    
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="https://www.blikk.hu/egeszsegkalauz">
+                                    
+                                        EgészségKalauz
+                                    
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="https://www.blikk.hu/geo">
+                                    
+                                        Geo
+                                    
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="https://tvrhet.blikk.hu/">
+                                    
+                                        TV-Műsor
+                                    
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="https://www.glamour.hu/">
+                                    
+                                        Glamour
+                                    
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="https://noizz.hu/">
+                                    
+                                        Noizz
+                                    
+                                </a>
+                            </li>
+                        
+                    
+                
+            
+                
+            
+        </ul>
+    </div>
+    <div class="innerMainSubMenu">
+        <h4>Rovatok</h4>
+        <ul class="mainSubMenuUl">
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+                    
+                        
+                            <li>
+                                <a href="https://www.blikk.hu/eletmod">
+                                    
+                                        Életmód
+                                    
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="https://www.blikk.hu/aktualis">
+                                    
+                                        Aktuális
+                                    
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="https://www.blikk.hu/aktualis/politika">
+                                    
+                                        Politika
+                                    
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="https://www.blikk.hu/aktualis/krimi">
+                                    
+                                        Krimi
+                                    
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="https://www.blikk.hu/aktualis/veszhelyzet">
+                                    
+                                        Vészhelyzet
+                                    
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="https://www.blikk.hu/sztarvilag">
+                                    
+                                        Sztárvilág
+                                    
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="https://www.blikk.hu/sztarvilag/filmklikk">
+                                    
+                                        Filmklikk
+                                    
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="https://www.blikk.hu/sport">
+                                    
+                                        Sport
+                                    
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="https://www.blikk.hu/sport/mindent-bele">
+                                    
+                                        Mindent bele
+                                    
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="https://www.blikk.hu/blikk-tv">
+                                    
+                                        Videó
+                                    
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="https://www.blikk.hu/auto">
+                                    
+                                        Autó
+                                    
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="https://www.blikk.hu/erotika">
+                                    
+                                        Erotika
+                                    
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="https://www.blikk.hu/galeria">
+                                    
+                                        Galéria
+                                    
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="https://www.blikk.hu/hoppa">
+                                    
+                                        Hoppá!
+                                    
+                                </a>
+                            </li>
+                        
+                    
+                
+            
+        </ul>
+    </div>
+    <div class="innerMainRightSubMenu">
+        <h4>LEGOLVASOTTABB</h4>
+        <ul class="mainSubMenuUl">
+            
+                
+                
+                    <li>
+                        <a href="https://www.blikk.hu/aktualis/belfold/halalos-aramutes-nyiregyhaza-75-percig-harcoltak-az-egyeves-kristof-eleteert/yjp3e2v">
+                            Tragédia Nyíregyházán: végignézte egyéves 
+gyermeke haláltusáját az édesapa – 75 percig harcoltak Kristóf életéért
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://www.blikk.hu/sztarvilag/sztarsztorik/itt-a-valovilag9-legkemenyebb-szexvideoja-cenzura-nelkul/z1yrsmn">
+                            Ezért kapott 3 milliós bírságot az RTL Klub:
+ itt a ValóVilág9 legkeményebb szexvideója, cenzúra nélkül – Íme!🔞
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://www.blikk.hu/aktualis/belfold/eso-zivatar-elsofoku-riasztas-hidegfront-idojaras/8xhsgvy">
+                            Már kiadták a riasztást: komoly hidegfront csap le az országra a hétvégén, nem sok jóra számíthatunk
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://www.blikk.hu/aktualis/veszhelyzet/csaladi-balhe-sziven-szurta-testveret-az-isaszegi-ferfi/qd0lc81">
+                            Családi vérfürdő Isaszegen: a környék összes rendőre kivonult a házhoz
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://www.blikk.hu/aktualis/belfold/hetvegi-idojaras-nincsenek-jo-hireink-zapor-zivatar/6s7yy46">
+                            Nincsenek jó híreink a hétvégi időjárásról: itt a legfrissebb előrejelzés
+                        </a>
+                    </li>
+                
+            
+        </ul>
+    </div>
+</div>
+                                </nav>
+                            
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            
+                
+    
+        <div class="adSection" id="onet-ad-top">
+    
+        
+        
+            <script type="text/javascript">
+if (location.hash=='#adtest'){
+console.log('tagmanager: wide1');
+}
+</script>
+
+<div id="ad-fekvo2"><span>Hirdetés</span>
+  
+  <div id="Blikk_cikk_leaderboard_top_1"><script type="text/javascript">activateBanner('Blikk_cikk_leaderboard_top_1');</script></div>
+
+
+</div>
+        
+    
+        </div>
+    
+
+
+            
+            
+
+            <div class="pageContent wrapper">
+
+                
+
+                
+
+                
+
+                
+                
+
+                
+                 
+    <div class="archiveBlock">
+        <h1>Archívum: 2018-11-13</h1>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">22:17</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/sztarvilag/sztarsztorik/a-legbatrabb-paros-kieso-cooky-sztarchat/7elsdbx">Cooky és párja elárulták, mit szeretnek a legjobban tündéri kisfiukban
+                  
+                    <div class="itemTypeIcon liveblogIconArchive"></div>
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">22:00</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/sztarvilag/sztarsztorik/vajna-timi-szexi-pucsit/2gslgww">Micsoda popsi: Vajna Timi úgy pucsít, mint még soha – fotó
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">21:52</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/sztarvilag/sztarsztorik/halle-berry-marokko-szahara/g9ntm4l">Hűha: lélegzetelállító képet posztolt Halle Berry
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">21:48</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/sport/magyar-foci/magyar-valogatott-ugrai-roland-bokaserules/96hfqer">Bokasérülést szenvedett a kedd esti edzésen a magyar válogatott egyik kulcsembere
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">21:41</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/sztarvilag/sztarsztorik/sokk-kritika-konyhafonok-vip-sef/x7tzj86">A fal adta a másikat: valósággal sokkolták a sztárokat a Konyhafőnök VIP séfjeinek kritikái – videó
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">21:25</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/aktualis/belfold/szkopje-nikola-gruevszki-macedon-miniszterelnok-budapest/dhdnknm">Szkopje is megerősítette, hogy Budapesten van a szökésben lévő korábbi macedón miniszterelnök
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">21:10</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/sport/kulfoldi-foci/feczesin-robert-adana-torokorszag-foci-lovoldozes/k9xj0kz">Elképesztő: három háztömbnyire lövöldöztek a magyar labdarúgótól
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">20:59</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/sport/spanyol-foci/2021-real-madrid-kispad-edzo-santaigo-solari-szerzodes/tscq598">2021-ig maradhat a Real Madrid kispadján Santaigo Solari
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">20:42</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/sport/magyar-foci/megszolalt-merkozes-kozben-elhunyt-csornai-focista-menyasszony/ffe6ejf">Megszólalt a mérkőzés közben elhunyt csornai focista menyasszonya
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">20:07</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/sztarvilag/sztarsztorik/birsag-buntetes-autosok/x4zd3xp">Durva: ezért komoly pénzbüntetést kaphatnak az autósok
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">20:00</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/sztarvilag/sztarsztorik/stan-lee-marvel-elhunyt-felesege-halala-problemak-betegseg/b76ynlf">Felesége halála után változott meg minden: problémák sokaságával kellett szembenéznie élete utolsó éveiben Stan Lee-nek
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">19:51</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/hoppa/wtf/samsung-agyhullam-iranyitas/we73y0t">Hihetetlen: agyhullámokkal lesz irányítható a jövő tévéje
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">19:46</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/sztarvilag/sztarsztorik/gaspar-evelin-torta-sutes-ruzsa-magdi/5bs2fe5">Hihetetlen: Gáspár Evelin cukrásznak állt! – A lánynak Rúzsa Magdi segített a desszertek elkészítésében
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">19:41</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/aktualis/belfold/motorost-gazolt-halalra-egy-kamion-hodmezovasarhelynel/8mh263s">Motorost gázolt halálra egy kamion Hódmezővásárhelynél
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">19:35</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/sztarvilag/sztarsztorik/ratajkowski-bikini-napfeny/zyl4gld">Micsoda forróság: falatnyi bikinikben barnult Ratajkowski
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">19:34</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/aktualis/politika/rick-perry-orban-viktor-ajandek-amerika/znw4rrw">Nem találja ki, mit kapott: egyenesen Amerikából hozták ezt az ajándékot Orbán Viktornak
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">19:30</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/sztarvilag/sztarsztorik/dobo-kata-lampalaz-szineszet/f0vdqnq">Elképesztő: Dobó Kata a mai napig küzd a lámpalázzal
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">19:11</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/sport/kulfoldi-foci/gonzalo-higuain-ac-milan-eltiltas/h79v0dp">Két meccsre szóló eltiltással büntették a Milan futballsztárját
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">18:55</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/sport/csapat/gyozelem-ferfi-vizilabda-gyozelem-oroszorszag/ewz4ql8">Férfi vízilabda világliga: újabb fölényes magyar győzelem
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">18:44</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/aktualis/belfold/diak-szex-tanarno-szekesfehervar/n3z5ljp">Kiskamasszal szexelt egy Fejér megyei tanárnő
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">18:35</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/aktualis/belfold/penzvalto-rablas-motorosok-menekules-arulas-budapest/rfh8vr0">Tudták, merre kell menekülniük: újabb részletek – Árulás állhat a budapesti pénzváltó kirablásának hátterében?
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">18:33</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/sztarvilag/sztarsztorik/szabo-gyozo-horkolas/xrp8rcd">Hihetetlen: horkolás miatt vált el Szabó Győző neje
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">18:30</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/sztarvilag/sztarsztorik/koncert-ingyenes-hosoktere/w2lfk5q">Elképesztő: világsztárokkal ünnepli a Hatoslottó a 30. születésnapját
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">18:22</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/aktualis/belfold/szorenyi-levente/cr10wsw">Legenda: a Második Idő Alapítvány gondozza Szörényi Levente szellemi hagyatékát
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">18:09</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/aktualis/kulfold/szaud-arabia-tronorokos-szaudi-ujsagiro/y9lchkn">Újabb nyom bizonyítja: a trónörökös lehet az újságíró-gyilkosság felbujtója?
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">17:56</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/aktualis/politika/poszony-cseh-andrej-babis/mnfhl9w">Imád posztolni: a reflektorfényben érzi jól magát a cseh miniszterelnök felesége
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">17:49</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/sztarvilag/filmklikk/tronok-harca-uj-evead-hbo/lhvv61q">Jó hír a Trónok Harca rajongóinak: ekkor érkezik a záró évad
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">17:43</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/aktualis/belfold/idojaras-tel-egyik-naprol-a-masikra-fagyok-magyarorszag-havazas-ho/203mly4">Ez kemény lesz: egyik napról a másikra beköszönt a tél, jönnek a fagyok, ezekre tanácsos figyelni
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">17:42</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/sztarvilag/sztarsztorik/r-karpati-peter-szinesz/6whxb0h">„A haláltól nem kell félni” – Megjelent R. Kárpáti Péter legújabb kötete
+                  
+                </a></span>
+            </div>
+        
+            <div class="archiveDayRow">
+                <span class="archiveClock">17:35</span>
+                <span class="archiveText"><a href="https://www.blikk.hu/eletmod/egeszseg/film-cukorbetegseg-diabetesz-etkezes/35z7vws">Közeleg a diabétesz világnapja: film is készült róla
+                  
+                </a></span>
+            </div>
+        
+        <div class="archiveDayRow2">
+            <div class="backToMainArchivumPage">
+                <a href="https://www.blikk.hu/archivum/online">Archívum</a>
+            </div>
+            
+                <a class="disabledArchiveNav">Előző oldal</a>
+            
+            
+                <a href="https://www.blikk.hu/archivum/online?date=2018-11-13&amp;page=1">Következő oldal</a>
+            
+        <div>
+    </div>
+
+
+                
+
+                
+                
+                
+            </div>
+
+            <footer id="pageFooter" class="wrapper pageFooter">
+                
+                
+                    <nav>
+                        
+<div id="mainMenuFooter">
+    <ul class="mainMenuFooter">
+        
+            
+                
+                    
+                        <li>
+                            <a href="https://www.blikk.hu/aktualis">
+                                Aktuális
+                            </a>
+                        </li>
+                    
+                
+                    
+                        <li>
+                            <a href="https://www.blikk.hu/legfrissebb">
+                                Legfrissebb
+                            </a>
+                        </li>
+                    
+                
+                    
+                        <li>
+                            <a href="https://www.blikk.hu/sztarvilag">
+                                Sztárvilág
+                            </a>
+                        </li>
+                    
+                
+                    
+                        <li>
+                            <a href="https://www.blikk.hu/sport">
+                                Sport
+                            </a>
+                        </li>
+                    
+                
+                    
+                        <li>
+                            <a href="https://blikkruzs.blikk.hu/">
+                                Nőknek
+                            </a>
+                        </li>
+                    
+                
+                    
+                        <li>
+                            <a href="https://www.blikk.hu/horoszkop">
+                                Horoszkóp
+                            </a>
+                        </li>
+                    
+                
+                    
+                        <li>
+                            <a href="https://www.blikk.hu/erotika">
+                                Erotika
+                            </a>
+                        </li>
+                    
+                
+                    
+                        <li>
+                            <a href="https://www.blikk.hu/auto">
+                                Autó
+                            </a>
+                        </li>
+                    
+                
+                    
+                        <li>
+                            <a href="https://www.blikk.hu/geo">
+                                GEO
+                            </a>
+                        </li>
+                    
+                
+                    
+                        <li>
+                            <a href="http://tvrhet.blikk.hu/">
+                                TV
+                            </a>
+                        </li>
+                    
+                
+                    
+                        <li>
+                            <a href="https://www.blikk.hu/blikk-tv">
+                                Videó
+                            </a>
+                        </li>
+                    
+                
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </ul>
+</div>
+                        
+
+<div id="iconMenuFooter">
+    <ul class="iconMenuFooter">
+        
+            <li>
+                <a href="https://www.blikk.hu/archivum/online">Archívum</a>
+            </li>
+        
+            <li>
+                <a href="https://www.blikk.hu/katalogus/impresszum/rj58q0w">Impresszum</a>
+            </li>
+        
+            <li>
+                <a href="https://www.blikk.hu/mediaajanlat/13624tn">Médiaajánlat</a>
+            </li>
+        
+            <li>
+                <a href="https://www.blikk.hu/katalogus/felhasznalas-es-adatvedelem/fs9cfbb">Felhasználás és adatvédelem</a>
+            </li>
+        
+    </ul>
+</div>
+                    </nav>
+                    <div class="footerLogo">
+        <a href="https://www.blikk.hu/">
+            <span data-run-module="uststd/controls.layzyimage" data-original="https://ocdn.eu/images/pulscms/NjA7MDA_/dfb0df974e516496b79908d0a47f1c2f.png" data-run-module-isrun="1">
+                <noscript>
+                    <img src="https://ocdn.eu/images/pulscms/NjA7MDA_/dfb0df974e516496b79908d0a47f1c2f.png" alt="Blikk" />
+                </noscript>
+            </span>
+        </a>
+</div>
+
+<div class="footerCopyrights">
+    
+        <span class="footerCopyrightsFirst">Tilos a Blikk bármely 
+fotóját, írott anyagát részben vagy egészében, illetve átdolgozva 
+átvenni vagy újraközölni a kiadó írásos engedélye nélkül</span>
+        <span class="footerCopyrightsSecond">Az oldalról kivezető linkeken elérhető tartalmakért a Blikk.hu semmilyen felelősséget nem vállal.</span>
+    
+</div>
+                    
+
+<div id="footerLogos">
+    <ul class="footerLogos">
+        
+            <li>
+                <a href="https://www.glamour.hu/" target="_blank">
+                    <span data-run-module="uststd/controls.layzyimage" data-original="https://ocdn.eu/images/pulscms/NGI7MDA_/7d39c5b4f274d09d0b21431a338b965b.png" data-run-module-isrun="1">
+                        <noscript>
+                            <img src="https://ocdn.eu/images/pulscms/NGI7MDA_/7d39c5b4f274d09d0b21431a338b965b.png" alt="Glamour" />
+                        </noscript>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://www.kiskegyed.hu/" target="_blank">
+                    <span data-run-module="uststd/controls.layzyimage" data-original="https://ocdn.eu/images/pulscms/NDg7MDA_/97b22706b39e6c22fd87152d299f715d.png" data-run-module-isrun="1">
+                        <noscript>
+                            <img src="https://ocdn.eu/images/pulscms/NDg7MDA_/97b22706b39e6c22fd87152d299f715d.png" alt="Kiskegyed" />
+                        </noscript>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://www.recepttar.hu/" target="_blank">
+                    <span data-run-module="uststd/controls.layzyimage" data-original="https://ocdn.eu/images/pulscms/ODQ7MDA_/8162b422b40fecec241998c6b61c9932.png" data-run-module-isrun="1">
+                        <noscript>
+                            <img src="https://ocdn.eu/images/pulscms/ODQ7MDA_/8162b422b40fecec241998c6b61c9932.png" alt="Recepttár" />
+                        </noscript>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://www.profession.hu/" target="_blank">
+                    <span data-run-module="uststd/controls.layzyimage" data-original="https://ocdn.eu/images/pulscms/NGE7MDA_/dfd7d7fa2b61db8b30ad6d2a6544cff3.png" data-run-module-isrun="1">
+                        <noscript>
+                            <img src="https://ocdn.eu/images/pulscms/NGE7MDA_/dfd7d7fa2b61db8b30ad6d2a6544cff3.png" alt="Proffesion" />
+                        </noscript>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="http://tvrhet.blikk.hu/" target="_blank">
+                    <span data-run-module="uststd/controls.layzyimage" data-original="" data-run-module-isrun="1">
+                        <noscript>
+                            <img src="" alt="tvr-hét" />
+                        </noscript>
+                    </span>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+                
+            </footer>
+        </div>
+        
+        
+        
+            
+    
+        <div class="adSection" id="onet-ad-flat-mc1">
+    
+        
+        
+            <script>
+if (location.hash=='#adtest'){
+console.log('tagmanager: extra1');
+}
+</script>
+
+<div id="Blikk_cikk_special_1"><script type="text/javascript">activateBanner('Blikk_cikk_special_1');</script></div>
+
+<div id="Blikk_cikk_special_2"><script type="text/javascript">activateBanner('Blikk_cikk_special_2');</script></div>
+        
+    
+        </div>
+    
+
+    
+        <div class="adSection" id="onet-ad-tag-endbody">
+    
+        
+        
+            <script>
+if (location.hash=='#adtest'){
+console.log('tagmanager:tag-endbody');
+}
+</script>
+        
+    
+        </div>
+    
+
+
+        
+        
+    
+
+
+</div></div><iframe id="gemius_hcconn_1562926595905_96973960" name="lsgetframe" scrolling="no" sandbox="allow-scripts allow-same-origin" style="display: none; visibility: hidden;" src="blikk_archiv_files/lsget.html" width="0" height="0"></iframe><iframe style="display: none;" name="__cmpLocator"></iframe><a class="qc-cmp-persistent-link" style="cursor: pointer; position: fixed; background-color: rgb(54, 139, 214); padding: 5px 15px; color: rgb(255, 255, 255); display: flex; align-items: center; max-height: 30px; z-index: 2147483640; bottom: 0px; right: 0px; border-top-left-radius: 3px; border-top-right-radius: 3px;"><svg width="16px" height="17px" viewBox="0 0 16 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="margin-right: 5px; height: 17px;"><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="cog" fill="#FFFFFF" fill-rule="nonzero"><path d="M15.596917,9.98326938 L14.5041079,9.33798816 C14.5728064,8.7815386 14.5728064,8.2184614 14.5041079,7.66201184 L15.596917,7.01673062 C15.9178229,6.82726259 16.0726124,6.43742732 15.9670848,6.0741546 C15.5912871,4.78033611 14.9223646,3.61573153 14.0390021,2.66061113 C13.7831755,2.38401797 13.3749053,2.32348965 13.0525249,2.51384881 L11.9613243,3.15813608 C11.5248519,2.81840117 11.0481221,2.53648663 10.542482,2.31910255 L10.542482,1.02991108 C10.542482,0.648438733 10.2860522,0.316869683 9.92305592,0.229024792 C8.66155,-0.07632446 7.33871809,-0.0763587342 6.07694408,0.229024792 C5.71398131,0.316869683 5.457518,0.648404458 5.457518,1.02991108 L5.457518,2.31910255 C4.95187406,2.53647872 4.47514334,2.81839382 4.03867572,3.15813608 L2.94747511,2.51384881 C2.62506122,2.32348965 2.21679094,2.38401797 1.96099786,2.66061113 C1.07763542,3.61573153 0.40871289,4.78037038 0.0329152236,6.0741546 C-0.072612407,6.43742732 0.0821770899,6.82722832 0.403082962,7.01673062 L1.49589212,7.66201184 C1.42719356,8.2184614 1.42719356,8.7815386 1.49589212,9.33798816 L0.403082962,9.98326938 C0.0821770899,10.1727374 -0.072612407,10.5625727 0.0329152236,10.9258454 C0.40871289,12.2196296 1.07763542,13.3842685 1.96099786,14.3393889 C2.21682445,14.615982 2.62509474,14.6765103 2.94747511,14.4861855 L4.03867572,13.8418982 C4.47514096,14.1816349 4.95187243,14.4635389 5.457518,14.6808975 L5.457518,15.9700889 C5.457518,16.3515613 5.7139478,16.6831303 6.07694408,16.7709752 C7.33848351,17.0763245 8.66128191,17.0763587 9.92305592,16.7709752 C10.2860187,16.6831303 10.542482,16.3515955 10.542482,15.9700889 L10.542482,14.6808975 C11.0481183,14.4635198 11.5248475,14.1816171 11.9613243,13.8418982 L13.0525249,14.4861855 C13.3749053,14.6765446 13.7831755,14.6160163 14.0390021,14.3393889 C14.9223646,13.3842685 15.5912871,12.2196296 15.9670848,10.9258454 C16.0726124,10.5625727 15.9178229,10.1727717 15.596917,9.98326938 Z M13.4026193,13.4264943 L11.8507364,12.510001 C10.9463288,13.3007421 10.6255905,13.4997041 9.47011484,13.9172673 L9.47011484,15.7502196 C8.50024808,15.9548373 7.49975192,15.9548373 6.52988516,15.7502196 L6.52988516,13.9172673 C5.4031959,13.5101235 5.07699522,13.3210668 4.14926358,12.510001 L2.59738075,13.4264943 C1.9368696,12.6693763 1.43490124,11.7817076 1.12525522,10.8230912 L2.67780828,9.90659789 C2.4588108,8.69270694 2.45871027,8.30790999 2.67780828,7.09340211 L1.12525522,6.17690879 C1.43490124,5.21829242 1.93690311,4.33058946 2.59738075,3.57312864 L4.14926358,4.49030745 C5.0667072,3.68712478 5.39129933,3.4941265 6.52988516,3.08269846 L6.52988516,1.24978037 C7.49971774,1.04482059 8.50028226,1.04482059 9.47011484,1.24978037 L9.47011484,3.08273274 C10.6087677,3.49419505 10.9333933,3.6872276 11.8507364,4.49034172 L13.4026193,3.57316291 C14.0630969,4.33058946 14.5650988,5.21829242 14.8747448,6.17694306 L13.3221917,7.09343638 C13.5412227,8.3076358 13.5412897,8.69212428 13.3221917,9.90663217 L14.8747448,10.8231255 C14.5650988,11.7817076 14.0631304,12.6694105 13.4026193,13.4264943 Z M8,5.20968958 C6.22607014,5.20968958 4.78289853,6.68570996 4.78289853,8.50001714 C4.78289853,10.3143243 6.22607014,11.7903447 8,11.7903447 C9.77392986,11.7903447 11.2171015,10.3143243 11.2171015,8.50001714 C11.2171015,6.68570996 9.77392986,5.20968958 8,5.20968958 Z M8,10.6935688 C6.81738009,10.6935688 5.85526568,9.70955526 5.85526568,8.50001714 C5.85526568,7.29047902 6.81738009,6.30646543 8,6.30646543 C9.18261991,6.30646543 10.1447343,7.29047902 10.1447343,8.50001714 C10.1447343,9.70955526 9.18261991,10.6935688 8,10.6935688 Z" id="Shape"></path></g></g></svg>Privacy settings</a><style>#PE-chicklet{border-radius:0;font-size:18px!important;color:#ffffff!important;background-color:#042048;cursor:pointer!important;z-index:9999999999!important;font-weight:400!important;line-height:34px!important}#PE-chicklet-content{padding:6px 15px !important}.chicklet-left-top{position:fixed;top:90px;right:unset;left:0;bottom:unset;transform:rotate(90deg) translateX(-34px);transform-origin:bottom left!important}.chicklet-left-bottom{position:fixed;top:unset;right:unset;left:0;bottom:0;transform-origin:bottom right!important}.chicklet-left-center{position:fixed;top:0;right:unset;left:0;bottom:unset;transform:rotate(90deg) translateX(-34px);transform-origin:bottom left!important}.chicklet-right-bottom,.chicklet-right-center,.chicklet-right-top{position:fixed;right:0;left:unset}.chicklet-right-top{top:90px;bottom:unset;transform-origin:top left!important}.chicklet-right-center{top:unset;transform:rotate(90deg) translateY(34px);transform-origin:bottom right!important}.chicklet-right-bottom{top:unset;bottom:0;transform:rotate(90deg) translateY(34px);transform-origin:bottom right!important}.chicklet-bottom-center,.chicklet-bottom-left{right:unset;position:fixed;top:unset;bottom:0}.chicklet-bottom-left{left:0}.chicklet-bottom-center{left:50%;transform:translateX(-50%)}.chicklet-bottom-right{position:fixed;top:unset;bottom:0;right:0;left:unset}#pe-chicklet-close-btn{position:absolute;font-size:16px;font-weight:600;width:13px;height:13px;line-height:13px;text-align:center;z-index:1;background:#ffffff;border-radius:50px;margin:2px;color:#042048;opacity:.7;left:0}#pe-chicklet-close-btn:hover{opacity:1}</style><div id="PE-chicklet" class="chicklet-right-center" style="bottom: calc(50% - 68.5px);"><span id="pe-chicklet-close-btn">×</span><span id="PE-chicklet-content">www.blikk.hu</span></div><div id="fb-root" class=" fb_reset"><div style="position: absolute; top: -10000px; width: 0px; height: 0px;"><div></div><div><iframe name="fb_xdm_frame_https" id="fb_xdm_frame_https" aria-hidden="true" title="Facebook Cross Domain Communication Frame" tabindex="-1" allowtransparency="true" allowfullscreen="true" scrolling="no" allow="encrypted-media" style="border: medium none;" src="blikk_archiv_files/xd_arbiter.html" frameborder="0"></iframe></div></div></div><iframe scrolling="no" allowtransparency="true" src="blikk_archiv_files/widget_iframe.html" title="Twitter settings iframe" style="display: none;" frameborder="0"></iframe><div style="visibility: hidden; height: 1px; width: 1px; position: absolute; top: -9999px; z-index: 100000;" id="_atssh"><iframe id="_atssh257" title="AddThis utility frame" style="height: 1px; width: 1px; position: absolute; top: 0px; z-index: 100000; border: 0px none; left: 0px;" src="blikk_archiv_files/sh.html"></iframe></div><style id="service-icons-0"></style></body></html>

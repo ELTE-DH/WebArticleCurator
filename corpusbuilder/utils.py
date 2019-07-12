@@ -161,6 +161,13 @@ def wrap_input_consants(current_task_config_filename):
         else:
             raise ValueError('extract_next_page_url_fun is unset!')
 
+    extract_article_urls_from_page_fun = getattr(site_spec_extractor_functions,
+                                                 settings['extract_article_urls_from_page_fun'], None)
+    if extract_article_urls_from_page_fun is not None:
+        settings['EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN'] = extract_article_urls_from_page_fun
+    else:
+        raise ValueError('extract_article_urls_from_page_fun is unset!')
+
     return settings
 
 
