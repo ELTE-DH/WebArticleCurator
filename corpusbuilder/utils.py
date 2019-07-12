@@ -71,18 +71,6 @@ def wrap_input_consants(current_task_config_filename):
     settings['COMMON_SITE_TAGS'] = common_tags
     settings['GENERAL_CLEANING_RULES'] = cleaning_rules
 
-    settings['BEFORE_ARTICLE_URL_RE'] = re.compile(current_site_schema['before_article_url'])
-    settings['AFTER_ARTICLE_URL_RE'] = re.compile(current_site_schema['after_article_url'])
-    settings['ARTICLE_URL_FORMAT_RE'] = re.compile('{0}{1}{2}'.format(current_site_schema['before_article_url'],
-                                                                      current_site_schema['article_url_format'],
-                                                                      current_site_schema['after_article_url']))
-
-    settings['BEFORE_NEXT_PAGE_URL_RE'] = re.compile(current_site_schema['before_next_page_url'])
-    settings['AFTER_NEXT_PAGE_URL_RE'] = re.compile(current_site_schema['after_next_page_url'])
-    settings['NEXT_PAGE_URL_FORMAT_RE'] = re.compile('{0}{1}{2}'.format(current_site_schema['before_next_page_url'],
-                                                                        current_site_schema['next_page_url_format'],
-                                                                        current_site_schema['after_next_page_url']))
-
     settings['BEFORE_ARTICLE_DATE_RE'] = re.compile(current_site_schema['before_article_date'])
     settings['AFTER_ARTICLE_DATE_RE'] = re.compile(current_site_schema['after_article_date'])
     settings['ARTICLE_DATE_FORMAT_RE'] = re.compile('{0}{1}{2}'.format(current_site_schema['before_article_date'],
@@ -147,19 +135,22 @@ def wrap_input_consants(current_task_config_filename):
         settings['NEW_GOOD_ARCHIVE_URLS_FH'] = None
 
     output_corpus = settings['output_corpus']
-    if output_corpus:
+    if output_corpus is not None:
         settings['OUTPUT_CORPUS_FH'] = open(output_corpus, 'a+', encoding='UTF-8')
     else:
         settings['OUTPUT_CORPUS_FH'] = None
 
     settings['CORPUS_CONVERTER'] = corpus_converter_class[settings['corpus_converter']]
 
-    if settings['next_url_by_regex']:
+    extract_next_page_url = settings['extract_next_page_url_fun']
+    if extract_next_page_url is not None:
         extract_next_page_url_fun = getattr(site_spec_extractor_functions, settings['extract_next_page_url_fun'], None)
         if extract_next_page_url_fun is not None:
             settings['EXTRACT_NEXT_PAGE_URL_FUN'] = extract_next_page_url_fun
         else:
             raise ValueError('extract_next_page_url_fun is unset!')
+    else:
+        settings['EXTRACT_NEXT_PAGE_URL_FUN'] = None
 
     extract_article_urls_from_page_fun = getattr(site_spec_extractor_functions,
                                                  settings['extract_article_urls_from_page_fun'], None)
@@ -167,6 +158,16 @@ def wrap_input_consants(current_task_config_filename):
         settings['EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN'] = extract_article_urls_from_page_fun
     else:
         raise ValueError('extract_article_urls_from_page_fun is unset!')
+
+    new_article_url_threshold = settings['new_article_url_threshold']
+    if new_article_url_threshold is not None:
+        if not isinstance(new_article_url_threshold, int) or new_article_url_threshold < 0:
+            raise ValueError('new_article_url_threshold should be int >= 0!')
+
+    max_pagenum = settings['max_pagenum']
+    if max_pagenum is not None:
+        if not isinstance(max_pagenum, int) or max_pagenum < 0:
+            raise ValueError('max_pagenum should be int >= 0!')
 
     return settings
 

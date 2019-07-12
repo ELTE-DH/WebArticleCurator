@@ -4,3 +4,4 @@ requests
 warcio
 newspaper3k
 ratelimit
+beautifulsoup4

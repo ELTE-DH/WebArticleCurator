@@ -2,18 +2,6 @@
     "date_first_article": 1998-12-01
     "archive_url_format": "http://www.origo.hu/hir-archivum/#year/#year#month#day.html"
 
-    "article_url_format": "http://www\\.origo\\.hu/.*?\\.html"
-    "before_article_url": "<h3><a href=\""
-    "before_article_url_repl": ""
-    "after_article_url": "\" title=\".*?\">.*?</a></h3>"
-    "after_article_url_repl": ""
-
-    "next_page_url_format": ""
-    "before_next_page_url": ""
-    "before_next_page_url_repl": ""
-    "after_next_page_url": ""
-    "after_next_page_url_repl": ""
-
     "article_date_format": ""
     "before_article_date": ""
     "before_article_date_repl": ""
@@ -39,18 +27,6 @@
 "index":
     "date_first_article": 1999-06-30
     "archive_url_format": "https://index.hu/24ora/?s=&tol=#year-#month-#day&ig=#year-#month-#day&tarskiadvanyokbanis=1&profil=&rovat=&cimke=&word=1&pepe=1&p=#pagenum"
-
-    "article_url_format": "https://.*?\\.hu/.*/"
-    "before_article_url": "<h2 class=\"cim\"><a href=\""
-    "before_article_url_repl": ""
-    "after_article_url": "\">.*?</a></h2>"
-    "after_article_url_repl": ""
-
-    "next_page_url_format": ""
-    "before_next_page_url": ""
-    "before_next_page_url_repl": ""
-    "after_next_page_url": ""
-    "after_next_page_url_repl": ""
 
     "article_date_format": "[0-9]{4}\\.[0-9]{2}\\.[0-9]{2}\\."
     "before_article_date": "(s?)<div class=\"datum\">[ \n]*"

@@ -14,8 +14,8 @@ class NewsArchiveCrawler:
         1) Generates URLs of lists of articles (archives)
         2) Extracts URLs of articles from these lists (with helper functions and config)
     """
-    def __init__(self, settings, existing_archive_filename, new_archive_filename, known_article_urls=None,
-                 archive_just_cache=False, **downloader_params):
+    def __init__(self, settings, existing_archive_filename, new_archive_filename, archive_just_cache=False,
+                 known_article_urls=None, **downloader_params):
 
         self._settings = settings
         self._logger = Logger(self._settings['log_file_archive'])
@@ -136,7 +136,7 @@ class NewsArchiveCrawler:
             page_num += 1
             yield from article_urls
 
-    @staticmethod  # TODO: Document in config!!!!
+    @staticmethod
     def _find_next_page_url(settings, archive_page_url_base, page_num, raw_html, article_urls, known_article_urls):
         """
             The next URL can be determined by various conditions (no matter how the pages are grouped):
@@ -151,10 +151,10 @@ class NewsArchiveCrawler:
         # Method #1: No pagination
         next_page_url = None
 
-        # Method #2: Use regex to follow the link to the next page
-        if settings['next_url_by_regex']:  # TODO: REGEX CHANGED TO FUNCTION! DOCUMENT, UPDATE CONFIGS!
+        # Method #2: Use special function to follow the link to the next page
+        if settings['EXTRACT_NEXT_PAGE_URL_FUN'] is not None:
             next_page_url = settings['EXTRACT_NEXT_PAGE_URL_FUN'](raw_html)
-        elif settings['next_url_by_pagenum']:
+        elif settings['next_url_by_pagenum']:  # TODO: This could be more efficient?
             # Method #3: No link, but infinite scrolling! (also good for inactive archive, without other clues)
             if settings['infinite_scrolling'] and len(article_urls) > 0:
                 next_page_url = archive_page_url_base.replace('#pagenum', str(page_num))  # must generate URL
@@ -177,9 +177,6 @@ class NewsArchiveDummyCrawler:
         return self._url_index_keys
 
 
-# TODO: NEW SETTINGS: corrpus_converter = {'rule-based', 'newspaper'}, new_good_urls = None or filename,
-#  new_problematic_urls = None or filename, new_problematic_archive_urls = None or filename,
-#  new_good_archive_urls = None or filename
 class NewsArticleCrawler:
     """
         1) Get the list of articles (eg. NewsArchiveCrawler)
@@ -216,8 +213,8 @@ class NewsArticleCrawler:
             self._archive_downloader = NewsArchiveDummyCrawler(self._downloader.url_index.keys())
         else:  # known_bad_urls are common between the NewsArchiveCrawler and the NewsArticleCrawler
             self._archive_downloader = NewsArchiveCrawler(self._settings, archive_existing_warc_filename,
-                                                          archive_new_warc_filename, known_article_urls,
-                                                          archive_just_cache, **download_params)
+                                                          archive_new_warc_filename, archive_just_cache,
+                                                          known_article_urls, **download_params)
 
     def __del__(self):
         if hasattr(self, '_file_out') and self._file_out is not None:
@@ -288,12 +285,15 @@ class NewsArticleCrawler:
                 self._converter.article_to_corpus(url, article_raw_html, scheme)
 
             # 7) Extract links to other articles...
+            # TODO: IMPLEMENT!
+            """
             extracted_article_urls = extract_article_urls_from_page(article_raw_html, self._settings)
 
             # 8) Check for already extracted urls (also in the archive)!
             for extracted_url in extracted_article_urls:
                 if self._is_new_url(extracted_url):
                     self._new_urls.add(extracted_url)
+            """
 
     def download_and_extract_all_articles(self):
         self.process_urls(self._archive_downloader.url_iterator())

@@ -72,7 +72,7 @@ def extract_next_page_url_nol(archive_page_raw_html):
 
 def extract_next_page_url_test():
     """Quick test"""
-    import requests  # TODO: SAVE THE REQUIRED HTMLs to the tests folder
+    import requests  # TODO: SAVE THE REQUIRED HTMLs to the tests folder OR BETTER: in WARC file!
 
     # Some of these are intentionally yields None
     r = requests.get('https://444.hu/2018/04/08')
