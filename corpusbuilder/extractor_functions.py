@@ -6,7 +6,8 @@ from datetime import datetime
 
 strptime = datetime.strptime
 
-"""Here comes the stuff to extract data from a specific downloaded webpage (archive or article)"""
+"""Here comes the stuff to extract data from a specific downloaded webpage (archive or article)
+    These functions are separated to allow easy debuging!"""
 
 
 # TODO: This is also used when extracting all article URL from an article (extract cross-linking between articles)
@@ -24,7 +25,7 @@ def extract_article_urls_from_page(archive_page_raw_html, settings):
     return urls
 
 
-def extract_article_date(article_raw_html, settings, scheme):
+def extract_article_date(settings, url, article_raw_html, scheme):
     """
         extracts and returns next page URL from an HTML code if there is one...
     """
@@ -55,35 +56,6 @@ def extract_next_page_url(archive_page_raw_html, settings):
         code_line = settings['AFTER_NEXT_PAGE_URL_RE'].sub(settings['after_next_page_url_repl'], code_line)
         code_line = html_unescape(code_line)
     return code_line
-
-
-# TODO: This stays here or goes to NewsArchiveCrawler as it can be perfectly parametrized? Or bettersuits
-#  the config level?
-def find_next_page_url(raw_html, settings, archive_page_url_base, article_urls, page_num, known_article_urls):
-    """
-        The next URL can be determined by various conditions (no matter how the pages are grouped):
-            1) If there is a "next page" link, find it with REs and use that
-            2) If there is "infinite scrolling" use pagenum from base to specified maximum or to infinity
-            3) If there is no pagination return None
-    """
-    max_pagenum = settings['max_pagenum']
-    next_page_url = None  # Method #1: No pagination
-
-    if settings['next_url_by_regex']:  # Method #2: Use regex to follow the link to the next page
-        next_page_url = extract_next_page_url(raw_html, settings)
-    elif settings['next_url_by_pagenum']:
-        if settings['infinite_scrolling'] and len(article_urls) > 0:  # Method #3: No link, but infinite scrolling!
-            next_page_url = archive_page_url_base.replace('#pagenum', str(page_num))  # must generate URL
-        elif max_pagenum is not None or page_num < max_pagenum:  # Method #4: Has predefined max_pagenum!
-            next_page_url = archive_page_url_base.replace('#pagenum', str(page_num))  # must generate URL
-        # Method #5: Global pages, active archive -> We allow intersecting elements as the archive may have been moved
-        # Method #6: Inactive archive, no max_pagenum, no infinite_scrolling, no next_url_by_regex -> threshold == 0
-        elif settings['new_article_url_threshold'] is not None and \
-                (len(known_article_urls) == 0 or len(article_urls.minus(known_article_urls)) >
-                 settings['new_article_url_threshold']):
-            next_page_url = archive_page_url_base.replace('#pagenum', str(page_num))  # must generate URL
-
-    return next_page_url
 
 
 def identify_site_scheme(logger_, settings, url):

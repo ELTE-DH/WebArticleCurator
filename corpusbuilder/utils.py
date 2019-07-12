@@ -8,7 +8,7 @@ import yaml
 import logging
 from datetime import date, timedelta, datetime
 
-from corpusbuilder.corpus_converter import corpus_converter_class
+from .corpus_converter import corpus_converter_class
 
 
 def wrap_input_consants(current_task_config_filename):
