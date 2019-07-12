@@ -3,8 +3,7 @@
 
 from datetime import timedelta
 
-from .extractor_functions import extract_article_urls_from_page, extract_article_date, identify_site_scheme, \
-    extract_next_page_url
+from .extractor_functions import extract_article_urls_from_page, extract_article_date, identify_site_scheme
 from .enhanced_downloader import WarcCachingDownloader
 from .utils import Logger
 
@@ -126,8 +125,8 @@ class NewsArchiveCrawler:
                 # 1) We need article URLs here to reliably determine the end of pages in some cases
                 article_urls = extract_article_urls_from_page(archive_page_raw_html, self._settings)
                 # 2) Generate next-page URL or None if there should not be any
-                next_page_url = self._find_next_page_url(archive_page_raw_html, self._settings, archive_page_url_base,
-                                                         article_urls, page_num, self.known_article_urls)
+                next_page_url = self._find_next_page_url(self._settings, archive_page_url_base, page_num,
+                                                         archive_page_raw_html, article_urls, self.known_article_urls)
             else:  # Download failed
                 if next_page_url not in self._downloader.bad_urls:
                     self.problematic_urls.add(next_page_url)  # New possibly bad URL
@@ -137,7 +136,7 @@ class NewsArchiveCrawler:
             yield from article_urls
 
     @staticmethod  # TODO: Document in config!!!!
-    def _find_next_page_url(raw_html, settings, archive_page_url_base, article_urls, page_num, known_article_urls):
+    def _find_next_page_url(settings, archive_page_url_base, page_num, raw_html, article_urls, known_article_urls):
         """
             The next URL can be determined by various conditions (no matter how the pages are grouped):
                 1) If there is no pagination we return None
@@ -152,8 +151,8 @@ class NewsArchiveCrawler:
         next_page_url = None
 
         # Method #2: Use regex to follow the link to the next page
-        if settings['next_url_by_regex']:
-            next_page_url = extract_next_page_url(raw_html, settings)
+        if settings['next_url_by_regex']:  # TODO: REGEX CHANGED TO FUNCTION! DOCUMENT, UPDATE CONFIGS!
+            next_page_url = settings['EXTRACT_NEXT_PAGE_URL_FUN'](raw_html)
         elif settings['next_url_by_pagenum']:
             # Method #3: No link, but infinite scrolling! (also good for inactive archive, without other clues)
             if settings['infinite_scrolling'] and len(article_urls) > 0:
@@ -189,8 +188,7 @@ class NewsArticleCrawler:
     """
     def __init__(self, settings, articles_existing_warc_filename, articles_new_warc_filename,
                  archive_existing_warc_filename, archive_new_warc_filename, articles_just_cache=False,
-                 archive_just_cache=False, known_article_urls=None,
-                 **download_params):
+                 archive_just_cache=False, known_article_urls=None, **download_params):
         self._settings = settings
         self._logger = Logger(self._settings['log_file_articles'])
 

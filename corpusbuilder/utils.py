@@ -9,6 +9,7 @@ import logging
 from datetime import date, timedelta, datetime
 
 from .corpus_converter import corpus_converter_class
+import corpusbuilder.site_specific_extractor_functions as site_spec_extractor_functions
 
 
 def wrap_input_consants(current_task_config_filename):
@@ -152,6 +153,13 @@ def wrap_input_consants(current_task_config_filename):
         settings['OUTPUT_CORPUS_FH'] = None
 
     settings['CORPUS_CONVERTER'] = corpus_converter_class[settings['corpus_converter']]
+
+    if settings['next_url_by_regex']:
+        extract_next_page_url_fun = getattr(site_spec_extractor_functions, settings['extract_next_page_url_fun'], None)
+        if extract_next_page_url_fun is not None:
+            settings['EXTRACT_NEXT_PAGE_URL_FUN'] = extract_next_page_url_fun
+        else:
+            raise ValueError('extract_next_page_url_fun is unset!')
 
     return settings
 

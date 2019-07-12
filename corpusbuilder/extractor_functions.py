@@ -42,22 +42,6 @@ def extract_article_date(settings, url, article_raw_html, scheme):
     return code_line
 
 
-# TODO: This is a type of find_next_page_url
-def extract_next_page_url(archive_page_raw_html, settings):
-    """
-        extracts and returns next page URL from an HTML code if there is one...
-    """
-    # WARNING: We can not tell if the RE is bad, or we are on the last page!
-    next_page_url_format_re = settings['NEXT_PAGE_URL_FORMAT_RE']
-    code_line = next_page_url_format_re.search(archive_page_raw_html)
-    if code_line is not None:
-        code_line = code_line.group(0)
-        code_line = settings['BEFORE_NEXT_PAGE_URL_RE'].sub(settings['before_next_page_url_repl'], code_line)
-        code_line = settings['AFTER_NEXT_PAGE_URL_RE'].sub(settings['after_next_page_url_repl'], code_line)
-        code_line = html_unescape(code_line)
-    return code_line
-
-
 def identify_site_scheme(logger_, settings, url):
     for site_re, tag_key_readable in settings['TAGS_KEYS'].items():
         if site_re.search(url):
