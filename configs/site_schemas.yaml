@@ -127,6 +127,7 @@
 
 "vs":
     "date_first_article": 2013-09-30
+    "date_last_article": 2019-02-13
     "archive_url_format": "https://vs.hu/ajax/archive?Data={%22QueryString%22:%22%22,%22ColumnIds%22:[],%22SubcolumnIds%22:[],%22TagIds%22:[],%22HasPublicationMinFilter%22:true,%22PublicationMin%22:%22#year-#month-#dayT00:00:00.000Z%22,%22HasPublicationMaxFilter%22:true,%22PublicationMax%22:%22#next-year-#next-month-#next-dayT00:00:00.000Z%22,%22AuthorId%22:-1,%22MaxPublished%22:%22#next-year-#next-month-#next-dayT00:00:00.000Z%22,%22IsMega%22:false,%22IsPhoto%22:false,%22IsVideo%22:false}"
 
     "article_date_format": ""
@@ -144,6 +145,8 @@
     "archive_page_urls_by_id": false
     "ignore_archive_cache": false
     "go_reverse_in_archive": true
+    "verify": false
+    "follow_links_on_page": false
 
     "min_pagenum": 1
     "max_pagenum": NULL

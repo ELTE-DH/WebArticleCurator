@@ -77,34 +77,41 @@ def wrap_input_consants(current_task_config_filename):
                                                                        current_site_schema['article_date_format'],
                                                                        current_site_schema['after_article_date']))
 
-    settings['filter_articles_by_date'] = False
-    if 'date_from' in settings and 'date_until' in settings:
-        # We generate all URLs FROM the past UNTIL the "not so past"
-        # Raises ValueError if there is something wrong
-        if isinstance(settings['date_from'], datetime):
-            raise ValueError('DateError: date_from not datetime ({0})!'.format(settings['date_from']))
-        if isinstance(settings['date_until'], datetime):
-            raise ValueError('DateError: date_until not datetime ({0})!'.format(settings['date_until']))
-        if settings['date_from'] > settings['date_until']:
-            raise ValueError('DateError: date_from is later than DATE UNTIL!')
-
-        settings['filter_articles_by_date'] = True  # Date filtering ON in any other cases OFF
+    # Date filtering ON in any other cases OFF
+    interval = 'date_from' in settings and 'date_until' in settings
+    settings['filter_articles_by_date'] = interval
 
     # if there is no time filtering then we use dates only if they are needed to generate URLs
-    elif settings['archive_page_urls_by_date']:
-        if 'date_from' in settings:
-            # We generate all URLs from the first day of the website until yesterday
-            if isinstance(settings['date_from'], datetime):
-                raise ValueError('DateError: date_from not datetime ({0})!'.format(settings['date_from']))
+    if settings['archive_page_urls_by_date']:
+        # We generate all URLs from the first day of the website to the last or until yesterday
+        if 'date_from' not in settings and ('date_first_article' not in settings or
+                                            not isinstance(current_site_schema['date_first_article'], date)):
+            raise ValueError('DateError: date_first_article not datetime ({0})!'.
+                             format(current_site_schema['date_first_article']))
         else:
             settings['date_from'] = current_site_schema['date_first_article']
-            if isinstance(current_site_schema['date_first_article'], datetime):
-                raise ValueError('DateError: date_first_article not datetime ({0})!'.
-                                 format(current_site_schema['date_first_article']))
-        settings['date_until'] = date.today() - timedelta(1)  # yesterday
 
-        if settings['date_from'] > settings['date_until']:
+        if 'date_until' not in settings:
+            if'date_last_article' in settings:
+                if not isinstance(current_site_schema['date_first_article'], date):
+                    raise ValueError('DateError: date_last_article not datetime ({0})!'.
+                                     format(current_site_schema['date_first_article']))
+                settings['date_until'] = current_site_schema['date_last_article']
+            else:
+                settings['date_until'] = date.today() - timedelta(1)  # yesterday
+
+    if 'date_from' in settings or 'date_until' in settings:
+        # We generate all URLs FROM the past UNTIL the "not so past"
+        # Raises ValueError if there is something wrong
+        if 'date_from' in settings and not isinstance(settings['date_from'], date):
+            raise ValueError('DateError: date_from not datetime ({0})!'.format(settings['date_from']))
+        if 'date_until' in settings and not isinstance(settings['date_until'], date):
+            raise ValueError('DateError: date_until not datetime ({0})!'.format(settings['date_until']))
+        if interval and settings['date_from'] > settings['date_until']:
             raise ValueError('DateError: date_from is later than DATE UNTIL!')
+        if ('date_from' in settings and settings['date_from'] > date.today()) or \
+                ('date_until' in settings and settings['date_until'] > date.today()):
+            raise ValueError('DateError: date_from or date_until are in the future!')
 
     # New problematic article URLs to be checked manually (dropped by default)
     new_problematic_urls = settings['new_problematic_urls']

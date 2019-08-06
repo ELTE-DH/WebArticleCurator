@@ -133,7 +133,7 @@ class WarcDownloader:
 
         self._allow_cookies = allow_cookies
         self._verify = verify
-        if verify:
+        if not verify:
             disable_warnings(InsecureRequestWarning)
 
         # Setup rate limiting to prevent hammering the server
