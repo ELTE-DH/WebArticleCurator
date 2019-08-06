@@ -9,8 +9,10 @@
     "after_article_date_repl": ""
     "article_date_formatting": "%Y.%m.%d."
 
-    "next_url_by_regex": false
+    "extract_next_page_url_fun": NULL
+    "extract_article_urls_from_page_fun": "extract_article_urls_from_page_origo"
     "next_url_by_pagenum": false
+    "infinite_scrolling": false
     "archive_page_urls_by_date": true
     "archive_page_urls_by_id": false
     "ignore_archive_cache": false
@@ -20,6 +22,8 @@
     "min_pagenum": 0
     "max_pagenum": NULL
     "new_article_url_threshold": 0
+
+    "corpus_converter": "rule-based"
 
     "tags_keys":
         "^http://www.origo\\.hu/": "origo-html"
@@ -36,10 +40,12 @@
     "after_article_date_repl": ""
     "article_date_formatting": "%Y.%m.%d."
 
-    "next_url_by_regex": false
+    "extract_next_page_url_fun": NULL
+    "extract_article_urls_from_page_fun": "extract_article_urls_from_page_index"
     "next_url_by_pagenum": true
+    "infinite_scrolling": true
     "archive_page_urls_by_date": true
-    "archive_page_urls_by_id": true
+    "archive_page_urls_by_id": false
     "ignore_archive_cache": false
     "go_reverse_in_archive": true
     "verify": true
@@ -47,6 +53,8 @@
     "min_pagenum": 0
     "max_pagenum": NULL
     "new_article_url_threshold": 0
+
+    "corpus_converter": "rule-based"
 
     "tags_keys":
         "^https://index\\.hu/": "index-html"
@@ -61,18 +69,6 @@
     "date_first_article": 2009-01-21
     "archive_url_format": "http://www.blikk.hu/archivum/online?date=#year-#month-#day&page=#pagenum"
 
-    "article_url_format": "http://www\\.blikk\\.hu/.*?"
-    "before_article_url": "<span class=\"archiveText\"><a href=\""
-    "before_article_url_repl": ""
-    "after_article_url": "\">"
-    "after_article_url_repl": ""
-
-    "next_page_url_format": "http://www.blikk.hu/archivum/online?.*?"
-    "before_next_page_url": "<a href=\""
-    "before_next_page_url_repl": ""
-    "after_next_page_url": "\">Következő oldal</a>"
-    "after_next_page_url_repl": ""
-
     "article_date_format": ""
     "before_article_date": ""
     "before_article_date_repl": ""
@@ -80,10 +76,12 @@
     "after_article_date_repl": ""
     "article_date_formatting": "%Y.%m.%d."
 
-    "next_url_by_regex": true
+    "extract_next_page_url_fun": "extract_next_page_url_blikk"
+    "extract_article_urls_from_page_fun": "extract_article_urls_from_page_blikk"
     "next_url_by_pagenum": false
+    "infinite_scrolling": false
     "archive_page_urls_by_date": true
-    "archive_page_urls_by_id": true
+    "archive_page_urls_by_id": false
     "ignore_archive_cache": false
     "go_reverse_in_archive": true
     "verify": true
@@ -92,24 +90,14 @@
     "max_pagenum": NULL
     "new_article_url_threshold": 0
 
+    "corpus_converter": "rule-based"
+
     "tags_keys":
         "^http://www\\.blikk\\.hu/": "blikk-html"
 
 "444":
     "date_first_article": 2013-04-10
     "archive_url_format": "https://444.hu/#year/#month/#day/"
-
-    "article_url_format": "https://444\\.hu/[^\"]*?"
-    "before_article_url": "(?s)<article class=\"card\">\\s*?<h3>\\s*?<a href=\""
-    "before_article_url_repl": ""
-    "after_article_url": "\">"
-    "after_article_url_repl": ""
-
-    "next_page_url_format": "https://444\\.hu/.*?\\?page=[0-9]+"
-    "before_next_page_url": "<a href=\""
-    "before_next_page_url_repl": ""
-    "after_next_page_url": "\" class=\"infinity-next button\">Tovább a múltba</a>"
-    "after_next_page_url_repl": ""
 
     "article_date_format": ""
     "before_article_date": ""
@@ -118,20 +106,53 @@
     "after_article_date_repl": ""
     "article_date_formatting": "%Y.%m.%d."
 
-    "next_url_by_regex": true
-    "next_url_by_pagenum": false
+    "extract_next_page_url_fun": "extract_next_page_url_444"
+    "extract_article_urls_from_page_fun": "extract_article_urls_from_page_444"
+    "next_url_by_pagenum": true
+    "infinite_scrolling": false
     "archive_page_urls_by_date": true
     "archive_page_urls_by_id": false
     "ignore_archive_cache": false
     "go_reverse_in_archive": true
     "verify": true
 
-    "min_pagenum": 1
-    "max_pagenum": NULL  # 2558 on 2019-01-23
+    "min_pagenum": 0
+    "max_pagenum": NULL
     "new_article_url_threshold": 0
+
+    "corpus_converter": "rule-based"
 
     "tags_keys":
        "^https://444\\.hu/": "444-html"
+
+"vs":
+    "date_first_article": 2013-09-30
+    "archive_url_format": "https://vs.hu/ajax/archive?Data={%22QueryString%22:%22%22,%22ColumnIds%22:[],%22SubcolumnIds%22:[],%22TagIds%22:[],%22HasPublicationMinFilter%22:true,%22PublicationMin%22:%22#year-#month-#dayT00:00:00.000Z%22,%22HasPublicationMaxFilter%22:true,%22PublicationMax%22:%22#next-year-#next-month-#next-dayT00:00:00.000Z%22,%22AuthorId%22:-1,%22MaxPublished%22:%22#next-year-#next-month-#next-dayT00:00:00.000Z%22,%22IsMega%22:false,%22IsPhoto%22:false,%22IsVideo%22:false}"
+
+    "article_date_format": ""
+    "before_article_date": ""
+    "before_article_date_repl": ""
+    "after_article_date": ""
+    "after_article_date_repl": ""
+    "article_date_formatting": "%Y.%m.%d."
+
+    "extract_next_page_url_fun": NULL
+    "extract_article_urls_from_page_fun": "extract_article_urls_from_page_vs"
+    "next_url_by_pagenum": false
+    "infinite_scrolling": false
+    "archive_page_urls_by_date": true
+    "archive_page_urls_by_id": false
+    "ignore_archive_cache": false
+    "go_reverse_in_archive": true
+
+    "min_pagenum": 1
+    "max_pagenum": NULL
+    "new_article_url_threshold": 0
+
+    "corpus_converter": "rule-based"
+
+    "tags_keys":
+        "^http://www\\.vs\\.hu/": NULL
 
 "mno":
     "date_first_article": 2009-01-21

@@ -7,6 +7,11 @@
 
 "log_file_articles": "origo_articles_log.txt"
 "log_file_archive": "origo_archive_log.txt"
+"new_problematic_urls": NULL
+"new_good_urls": NULL
+"new_problematic_archive_urls": NULL
+"new_good_archive_urls": NULL
+"output_corpus": NULL
 
 # "date_from": 2000-01-01
 # "date_until": 2100-01-01
