@@ -278,3 +278,9 @@
         "open": "<div class=\"content hircikk clearfix\">"
         "inside": "(.|\\n)*?"
         "close": "</div>\\s*?<div class=\"content-footer\">"
+
+"nol-html":
+    "html-date":
+        "open": "<p class=\"date\">"
+        "inside": ".*?"
+        "close": "</p>"

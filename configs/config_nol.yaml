@@ -1,0 +1,12 @@
+"site_name": "nol"
+"site_schemas": "site_schemas.yaml"
+"tags": "tags.yaml"
+
+"create_corpus": true
+"output_file": "nol_corpus.txt"
+
+"log_file_articles": "nol_articles_log.txt"
+"log_file_archive": "nol_archive_log.txt"
+
+# "date_from": 2000-01-01
+# "date_until": 2100-01-01
