@@ -14,7 +14,8 @@ from warcio.statusandheaders import StatusAndHeaders
 from requests import Session
 from requests.utils import urlparse, quote, urlunparse
 from requests.exceptions import RequestException
-from requests.packages.urllib3.exceptions import ProtocolError
+from requests.packages.urllib3.exceptions import ProtocolError, InsecureRequestWarning
+from requests.packages.urllib3 import disable_warnings
 
 from chardet import detect
 
@@ -100,7 +101,7 @@ class WarcDownloader:
     """
     def __init__(self, filename, logger_, warcinfo_record_data=None, program_name='corpusbuilder 1.0', user_agent=None,
                  overwrite_warc=True, err_threshold=10, known_bad_urls=None, max_no_of_calls_in_period=2,
-                 limit_period=1, proxy_url=None, allow_cookies=False):
+                 limit_period=1, proxy_url=None, allow_cookies=False, verify=True):
         if known_bad_urls is not None:  # Setup the list of cached bad URLs to prevent trying to download them again
             with open(known_bad_urls, encoding='UTF-8') as fh:
                 self.bad_urls = {line.strip() for line in fh}
@@ -131,6 +132,9 @@ class WarcDownloader:
             self._session.proxies['https'] = proxy_url
 
         self._allow_cookies = allow_cookies
+        self._verify = verify
+        if verify:
+            disable_warnings(InsecureRequestWarning)
 
         # Setup rate limiting to prevent hammering the server
         self._requests_get = sleep_and_retry(limits(calls=max_no_of_calls_in_period,
@@ -183,7 +187,7 @@ class WarcDownloader:
             return None
 
         try:  # The actual request
-            resp = self._requests_get(url, headers=self._req_headers, stream=True)
+            resp = self._requests_get(url, headers=self._req_headers, stream=True, verify=self._verify)
         except RequestException as err:
             self._handle_request_exception(url, 'RequestException happened during downloading: {0} \n\n'
                                                 ' The program ignores it and jumps to the next one.'.format(err))
