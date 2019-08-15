@@ -1,6 +1,7 @@
 pyyaml
 chardet
 requests
+urllib3
 warcio
 newspaper3k
 ratelimit

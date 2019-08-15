@@ -14,8 +14,8 @@ from warcio.statusandheaders import StatusAndHeaders
 from requests import Session
 from requests.utils import urlparse, quote, urlunparse
 from requests.exceptions import RequestException
-from requests.packages.urllib3.exceptions import ProtocolError, InsecureRequestWarning
-from requests.packages.urllib3 import disable_warnings
+from urllib3.exceptions import ProtocolError, InsecureRequestWarning
+from urllib3 import disable_warnings
 
 from chardet import detect
 
@@ -142,20 +142,16 @@ class WarcDownloader:
         self._error_count = 0
         self._error_threshold = err_threshold  # Set the error threshold which cause aborting to prevent deinal
 
-        self._writer = WARCWriter(self._output_file, gzip=True)
+        self._writer = WARCWriter(self._output_file, gzip=True, warc_version='WARC/1.1')
         if warcinfo_record_data is None:
             # INFO RECORD
             # Some custom information about the warc writer program and its settings
             info_headers = {'software': program_name, 'arguments': ' '.join(sys.argv[1:]),
-                            'format': 'WARC File Format 1.0',
-                            'conformsTo': 'http://bibnum.bnf.fr/WARC/WARC_ISO_28500_version1_latestdraft.pdf'}
+                            'format': 'WARC File Format 1.1',
+                            'conformsTo': 'http://bibnum.bnf.fr/WARC/WARC_ISO_28500_version1-1_latestdraft.pdf'}
             info_record = self._writer.create_warcinfo_record(filename, info_headers)
-        else:  # Must recreate custom headers else they will not be copied
-            custom_headers = ''.join('{0}: {1}\r\n'.format(k, v) for k, v in warcinfo_record_data[1].items()).\
-                             encode('UTF-8')
-            info_record = self._writer.create_warc_record('', 'warcinfo', warc_headers=warcinfo_record_data[0],
-                                                          payload=BytesIO(custom_headers),
-                                                          length=len(custom_headers))
+        else:
+            info_record = warcinfo_record_data[0]  # Use the untouched record else custom headers will not be copied
         self._writer.write_record(info_record)
 
     def __del__(self):
@@ -284,12 +280,19 @@ class WarcReader:
         self._logger_.log('INFO', 'Creating index...')
         archive_it = ArchiveIterator(self._stream)
         info_rec = next(archive_it)
-        # First record should be an info record, then it should be followed by the reqvuest-response pairs
+        # First record should be an info record, then it should be followed by the request-response pairs
         assert info_rec.rec_type == 'warcinfo'
+        # Read out custom headers for later use
         custom_headers_raw = info_rec.content_stream().read()  # Parse custom headers
         info_rec_payload = dict(r.split(': ', maxsplit=1) for r in custom_headers_raw.decode('UTF-8')
                                 .strip().split('\r\n') if len(r) > 0)
-        self.info_record_data = (info_rec.rec_headers, info_rec_payload)  # Info headers in parsed form
+
+        # Read the untouched form of warcinfo record for writing it back unchanged into a warc file
+        self._stream.seek(0)
+        archive_it = ArchiveIterator(self._stream)
+        untouched_info_record = next(archive_it)
+        # Info headers in parsed form
+        self.info_record_data = (untouched_info_record, (info_rec.rec_headers, info_rec_payload))
 
         reqv_data = (None, (None, None))  # To be able to handle the request-response pairs together
         for i, record in enumerate(archive_it):
