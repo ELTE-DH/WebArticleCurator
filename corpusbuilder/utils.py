@@ -37,8 +37,9 @@ def wrap_input_consants(current_task_config_filename, args):
 
     settings['TAGS_KEYS'] = {re.compile(tag_key): val for tag_key, val in settings['tags_keys'].items()}
 
+    # TODO: Curretnly disabled!
     # If the program is to create a corpus, then it will load the required tags and compile the REs
-    if settings['create_corpus']:
+    if settings.get('create_corpus', False):
         with open(os.path.join(dir_name, settings['tags']), encoding='UTF-8') as fh:
             all_tags = yaml.load(fh)
             common_tags = all_tags['common']
@@ -71,11 +72,23 @@ def wrap_input_consants(current_task_config_filename, args):
     settings['COMMON_SITE_TAGS'] = common_tags
     settings['GENERAL_CLEANING_RULES'] = cleaning_rules
 
+    # TODO: Under rearrangement!
+    """
+    site_schemas:
+
+    "article_date_format": ""
+    "before_article_date": ""
+    "before_article_date_repl": ""
+    "after_article_date": ""
+    "after_article_date_repl": ""
+    "article_date_formatting": "%Y.%m.%d."
+
     settings['BEFORE_ARTICLE_DATE_RE'] = re.compile(current_site_schema['before_article_date'])
     settings['AFTER_ARTICLE_DATE_RE'] = re.compile(current_site_schema['after_article_date'])
     settings['ARTICLE_DATE_FORMAT_RE'] = re.compile('{0}{1}{2}'.format(current_site_schema['before_article_date'],
                                                                        current_site_schema['article_date_format'],
                                                                        current_site_schema['after_article_date']))
+    """
 
     # Date filtering ON in any other cases OFF
     settings['FILTER_ARTICLES_BY_DATE'] = 'date_from' in settings and 'date_until' in settings
@@ -121,28 +134,28 @@ def wrap_input_consants(current_task_config_filename, args):
                                                                     settings['date_last_article']))
 
     # New problematic article URLs to be checked manually (dropped by default)
-    new_problematic_urls = settings['new_problematic_urls']
+    new_problematic_urls = settings.get('new_problematic_urls')
     if new_problematic_urls is not None:
         settings['NEW_PROBLEMATIC_URLS_FH'] = open(new_problematic_urls, 'a+', encoding='UTF-8')
     else:
         settings['NEW_PROBLEMATIC_URLS_FH'] = None
 
     # New good artilce URLs downloaded and in the archive (dropped by default)
-    new_good_urls = settings['new_good_urls']
+    new_good_urls = settings.get('new_good_urls')
     if new_good_urls is not None:
         settings['NEW_GOOD_URLS_FH'] = open(new_good_urls, 'a+', encoding='UTF-8')
     else:
         settings['NEW_PROBLEMATIC_URLS_FH'] = None
 
     # New problematic archive URLs to be checked manually (dropped by default)
-    new_problematic_archive_urls = settings['new_problematic_archive_urls']
+    new_problematic_archive_urls = settings.get('new_problematic_archive_urls')
     if new_problematic_archive_urls is not None:
         settings['NEW_PROBLEMATIC_ARCHIVE_URLS_FH'] = open(new_problematic_archive_urls, 'w', encoding='UTF-8')
     else:
         settings['NEW_PROBLEMATIC_ARCHIVE_URLS_FH'] = None
 
     # New good archive URLs downloaded and in the archive (dropped by default)
-    new_good_archive_urls = settings['new_good_archive_urls']
+    new_good_archive_urls = settings.get('new_good_archive_urls')
     if new_good_archive_urls is not None:
         settings['NEW_GOOD_ARCHIVE_URLS_FH'] = open(new_good_archive_urls, 'w', encoding='UTF-8')
     else:

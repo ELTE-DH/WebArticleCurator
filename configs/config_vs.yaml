@@ -1,17 +1,15 @@
 "site_name": "vs"
 "site_schemas": "site_schemas.yaml"
-"tags": "tags.yaml"
 
-"create_corpus": false
-"output_file": NULL
+# "output_corpus": "vs_corpus.txt"
+# "tags": "tags.yaml"
 
 "log_file_articles": "vs_articles_log.txt"
 "log_file_archive": "vs_archive_log.txt"
-"new_problematic_urls": NULL
-"new_good_urls": NULL
-"new_problematic_archive_urls": NULL
-"new_good_archive_urls": NULL
-"output_corpus": NULL
+# "new_problematic_urls": NULL
+# "new_good_urls": NULL
+# "new_problematic_archive_urls": NULL
+# "new_good_archive_urls": NULL
 
 # "date_from": 2013-09-30   # First article
 # "date_until": 2019-02-13  # Last article

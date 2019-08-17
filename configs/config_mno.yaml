@@ -1,17 +1,15 @@
 "site_name": "mno"
 "site_schemas": "site_schemas.yaml"
-"tags": "tags.yaml"
 
-"create_corpus": true
-"output_file": "mno_corpus.txt"
+# "output_corpus": "mno_corpus.txt"
+# "tags": "tags.yaml"
 
 "log_file_articles": "mno_articles_log.txt"
 "log_file_archive": "mno_archive_log.txt"
-"new_problematic_urls": NULL
-"new_good_urls": NULL
-"new_problematic_archive_urls": NULL
-"new_good_archive_urls": NULL
-"output_corpus": NULL
+# "new_problematic_urls": NULL
+# "new_good_urls": NULL
+# "new_problematic_archive_urls": NULL
+# "new_good_archive_urls": NULL
 
 # "date_from": 2000-01-01
 # "date_until": 2100-01-01

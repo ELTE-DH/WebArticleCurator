@@ -149,7 +149,7 @@ class NewsArchiveCrawler:
         # Method #2: Use special function to follow the link to the next page
         if settings['EXTRACT_NEXT_PAGE_URL_FUN'] is not None:
             next_page_url = settings['EXTRACT_NEXT_PAGE_URL_FUN'](raw_html)
-        elif (settings['next_url_by_pagenum'] and
+        elif (settings['next_url_by_pagenum'] and  # TODO: Simplify?
                 # Method #3: No link, but infinite scrolling! (also good for inactive archive, without other clues)
                 (settings['infinite_scrolling'] and len(article_urls) > 0) or
                 # Method #4: Has predefined max_pagenum! (also good for inactive archive, with known max_pagenum)
