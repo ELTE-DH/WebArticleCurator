@@ -16,6 +16,7 @@
 
     "ignore_archive_cache": false
     # "new_article_url_threshold": 0
+    "follow_links_on_page": false
 
     "corpus_converter": "rule-based"
 
@@ -40,6 +41,7 @@
 
     "ignore_archive_cache": false
     # "new_article_url_threshold": 0
+    "follow_links_on_page": false
 
     "corpus_converter": "rule-based"
 
@@ -70,6 +72,7 @@
 
     "ignore_archive_cache": false
     # "new_article_url_threshold": 0
+    "follow_links_on_page": false
 
     "corpus_converter": "rule-based"
 
@@ -94,6 +97,7 @@
 
     "ignore_archive_cache": false
     # "new_article_url_threshold": 0
+    "follow_links_on_page": false
 
     "corpus_converter": "rule-based"
 
@@ -118,6 +122,7 @@
 
     "ignore_archive_cache": false
     # "new_article_url_threshold": 0
+    "follow_links_on_page": false
 
     "corpus_converter": "rule-based"
 
@@ -127,22 +132,24 @@
 "mno":
     "date_first_article": 2009-01-21
     # "date_last_article": 2100-01-01
-    "archive_url_format": "https://mno.hu/kereses/archivum/belfold/"
+    "archive_url_format": "https://magyarnemzet.hu/archivum/page/#pagenum/"
 
-    "extract_next_page_url_fun": NULL
-    "extract_article_urls_from_page_fun": NULL
-    "next_url_by_regex": true
+    "extract_next_page_url_fun": "extract_next_page_url_mno"
+    "extract_article_urls_from_page_fun": "extract_article_urls_from_page_mno"
     "next_url_by_pagenum": false
+    "infinite_scrolling": false
     "archive_page_urls_by_date": false
     "go_reverse_in_archive": true
     "verify": true
 
 
-    "min_pagenum": 1
+    "initial_pagenum": 0
+    "min_pagenum": 0
     # "max_pagenum": NULL
 
     "ignore_archive_cache": false
     # "new_article_url_threshold": 0
+    "follow_links_on_page": false
 
     "corpus_converter": "rule-based"
 
@@ -156,8 +163,8 @@
 
     "extract_next_page_url_fun": NULL
     "extract_article_urls_from_page_fun": NULL
-    "next_url_by_regex": true
     "next_url_by_pagenum": false
+    "infinite_scrolling": false
     "archive_page_urls_by_date": true
     "go_reverse_in_archive": true
     "verify": true
@@ -167,6 +174,7 @@
 
     "ignore_archive_cache": false
     # "new_article_url_threshold": 0
+    "follow_links_on_page": false
 
     "corpus_converter": "rule-based"
 
@@ -174,14 +182,14 @@
         "^https://net\\.jogtar\\.hu/": NULL
 
 "nol":
-    "date_first_article": 1900-01-01
-    # "date_last_article": 2100-01-01 TODO MENNYI IS?
+    "date_first_article": 1999-08-28
+    # "date_last_article": 2016-04-15
     "archive_url_format": "http://nol.hu/archivum"
 
-    "extract_next_page_url_fun": NULL
-    "extract_article_urls_from_page_fun": NULL
-    "next_url_by_regex": true
+    "extract_next_page_url_fun": "extract_next_page_url_nol"
+    "extract_article_urls_from_page_fun": "extract_article_urls_from_page_nol"
     "next_url_by_pagenum": true
+    "infinite_scrolling": false
     "archive_page_urls_by_date": false
     "go_reverse_in_archive": true
     "verify": true
@@ -191,6 +199,7 @@
 
     "ignore_archive_cache": false
     # "new_article_url_threshold": 0
+    "follow_links_on_page": false
 
     "corpus_converter": "rule-based"
 

@@ -194,6 +194,13 @@ def wrap_input_consants(current_task_config_filename, args):
             raise ValueError('new_article_url_threshold should be int >= 0!')
     settings['NEW_ARTICLE_URL_THRESHOLD'] = new_article_url_threshold
 
+    initial_pagenum = settings.get('initial_pagenum', '')
+    if initial_pagenum != '':
+        if not isinstance(initial_pagenum, int) or initial_pagenum < 0:
+            raise ValueError('initial_pagenum should be int >= 0!')
+        initial_pagenum = str(initial_pagenum)
+    settings['INITIAL_PAGENUM'] = initial_pagenum
+
     max_pagenum = settings.get('max_pagenum')
     if max_pagenum is not None:
         if not isinstance(max_pagenum, int) or max_pagenum < 0:
@@ -207,7 +214,7 @@ class Logger:
     """
         Handle logging with Python's built-in logging facilities simplified
     """
-    def __init__(self, log_filename, console_level='INFO', console_stream=sys.stderr,
+    def __init__(self, log_filename=None, console_level='INFO', console_stream=sys.stderr,
                  logfile_level='INFO', logfile_mode='a', logfile_encoding='UTF-8'):
         # logging.basicConfig(level=logging.INFO)
         log_levels = {'DEBUG': logging.DEBUG, 'INFO': logging.INFO, 'WARNING': logging.WARNING, 'ERROR': logging.ERROR,
@@ -226,19 +233,22 @@ class Logger:
 
         # Create handler one for console output and one for logfile and set their properties accordingly
         c_handler = logging.StreamHandler(stream=console_stream)
-        f_handler = logging.FileHandler(log_filename, mode=logfile_mode, encoding=logfile_encoding)
         c_handler.setLevel(console_level)
-        f_handler.setLevel(logfile_level)
 
         # Create formatters and add them to handlers
         c_format = logging.Formatter('{asctime} {levelname}: {message}', style='{')
-        f_format = logging.Formatter('{asctime} {levelname}: {message}', style='{')
         c_handler.setFormatter(c_format)
-        f_handler.setFormatter(f_format)
 
         # Add handlers to the logger
         self._logger.addHandler(c_handler)
-        self._logger.addHandler(f_handler)
+
+        if log_filename is not None:
+            f_handler = logging.FileHandler(log_filename, mode=logfile_mode, encoding=logfile_encoding)
+            f_handler.setLevel(logfile_level)
+            f_format = logging.Formatter('{asctime} {levelname}: {message}', style='{')
+            f_handler.setFormatter(f_format)
+            self._logger.addHandler(f_handler)
+
         if console_level < logfile_level:
             self._logger.setLevel(console_level)
         else:

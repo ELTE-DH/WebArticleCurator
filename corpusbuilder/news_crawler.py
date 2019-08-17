@@ -108,11 +108,12 @@ class NewsArchiveCrawler:
         """
             Generates article URLs from a supplied URL inlcuding the on-demand sub-pages that contains article URLs
         """
+        initial_page_num = self._settings['INITIAL_PAGENUM']
         page_num = self._settings['min_pagenum']
         ignore_archive_cache = self._settings['ignore_archive_cache']
         extract_article_urls_from_page_fun = self._settings['EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN']
 
-        next_page_url = archive_page_url_base.replace('#pagenum', '')  # TODO: Empty string or explicit min_pagenum?
+        next_page_url = archive_page_url_base.replace('#pagenum', initial_page_num)
         while next_page_url is not None:
             archive_page_raw_html = self._downloader.download_url(next_page_url, ignore_cache=ignore_archive_cache)
             if archive_page_raw_html is not None:  # Download succeeded
@@ -151,13 +152,13 @@ class NewsArchiveCrawler:
             next_page_url = settings['EXTRACT_NEXT_PAGE_URL_FUN'](raw_html)
         elif (settings['next_url_by_pagenum'] and  # TODO: Simplify?
                 # Method #3: No link, but infinite scrolling! (also good for inactive archive, without other clues)
-                (settings['infinite_scrolling'] and len(article_urls) > 0) or
-                # Method #4: Has predefined max_pagenum! (also good for inactive archive, with known max_pagenum)
-                (max_pagenum is not None or page_num < max_pagenum) or
-                # Method #5: Active archive, just pages -> We allow intersecting elements
-                #  as the archive may have been moved
-                (art_url_threshold is not None and (len(known_article_urls) == 0 or
-                                                    len(article_urls.minus(known_article_urls)) > art_url_threshold))):
+                ((settings['infinite_scrolling'] and len(article_urls) > 0) or
+                 # Method #4: Has predefined max_pagenum! (also good for inactive archive, with known max_pagenum)
+                 (max_pagenum is not None and page_num < max_pagenum) or
+                 # Method #5: Active archive, just pages -> We allow intersecting elements
+                 #  as the archive may have been moved
+                 (art_url_threshold is not None and
+                  (len(known_article_urls) == 0 or len(article_urls.minus(known_article_urls)) > art_url_threshold)))):
             next_page_url = archive_page_url_base.replace('#pagenum', str(page_num))  # must generate URL
 
         return next_page_url
@@ -241,8 +242,8 @@ class NewsArticleCrawler:
     def process_urls(self, it):
         for url in it:
             # 1) Check if it is a duplicate (we do not count those in the archive)
-            if url not in self.known_good_article_urls and url not in self._archive_downloader.known_article_urls \
-                    and not self._is_new_url(url):
+            if url in self.known_good_article_urls or url in self._archive_downloader.known_article_urls \
+                    or not self._is_new_url(url):
                 self._logger.log('WARNING', '\t'.join((url, 'Not processing article, because it is already processed'
                                                             ' in this session!')))
                 continue
