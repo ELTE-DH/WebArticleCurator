@@ -6,13 +6,13 @@ import re
 import sys
 import yaml
 import logging
-from datetime import date, timedelta, datetime
+from datetime import date, timedelta
 
 from .corpus_converter import corpus_converter_class
 import corpusbuilder.site_specific_extractor_functions as site_spec_extractor_functions
 
 
-def wrap_input_consants(current_task_config_filename):
+def wrap_input_consants(current_task_config_filename, args):
     """
         Helper to store and process input data so that main function does not contain so many
          codelines of variable initialization
@@ -78,40 +78,47 @@ def wrap_input_consants(current_task_config_filename):
                                                                        current_site_schema['after_article_date']))
 
     # Date filtering ON in any other cases OFF
-    interval = 'date_from' in settings and 'date_until' in settings
-    settings['filter_articles_by_date'] = interval
+    settings['FILTER_ARTICLES_BY_DATE'] = 'date_from' in settings and 'date_until' in settings
 
-    # if there is no time filtering then we use dates only if they are needed to generate URLs
-    if settings['archive_page_urls_by_date']:
-        # We generate all URLs from the first day of the website to the last or until yesterday
-        if 'date_from' not in settings and ('date_first_article' not in settings or
-                                            not isinstance(current_site_schema['date_first_article'], date)):
-            raise ValueError('DateError: date_first_article not datetime ({0})!'.
+    # We use the supplied dates (None != date_first_article <= date_from <= date_until < today (or raise exception))
+    # to generate all URLs from the first day to the last one-by-one
+    if 'date_from' in settings:
+        settings['DATE_FROM'] = settings['date_from']
+    elif 'date_first_article' in settings:
+        settings['DATE_FROM'] = current_site_schema['date_first_article']
+
+    if 'date_until' in settings:
+        settings['DATE_UNTIL'] = settings['date_until']
+    elif'date_last_article' in settings:
+        settings['DATE_UNTIL'] = current_site_schema['date_last_article']
+    else:
+        settings['DATE_UNTIL'] = date.today() - timedelta(1)  # yesterday
+
+    # Checks go here
+    if 'date_from' in settings and not isinstance(settings['date_from'], date):
+        raise ValueError('DateError: date_from not datetime ({0})!'.format(settings['date_from']))
+    if 'date_first_article' in settings and not isinstance(current_site_schema['date_first_article'], date):
+        raise ValueError('DateError: date_first_article not datetime ({0})!'.
+                         format(current_site_schema['date_first_article']))
+
+    if 'date_until' in settings and not isinstance(settings['date_until'], date):
+        raise ValueError('DateError: date_until not datetime ({0})!'.format(settings['date_until']))
+    if 'date_last_article' in settings and not isinstance(current_site_schema['date_last_article'], date):
+        raise ValueError('DateError: date_last_article not datetime ({0})!'.
+                         format(current_site_schema['date_last_article']))
+
+    if settings['FILTER_ARTICLES_BY_DATE'] or settings['archive_page_urls_by_date']:
+        if 'DATE_FROM' not in settings:
+            raise ValueError('DateError: date_first_article and date_from is not set please set at least one of them!'.
                              format(current_site_schema['date_first_article']))
-        else:
-            settings['date_from'] = current_site_schema['date_first_article']
-
-        if 'date_until' not in settings:
-            if'date_last_article' in settings:
-                if not isinstance(current_site_schema['date_first_article'], date):
-                    raise ValueError('DateError: date_last_article not datetime ({0})!'.
-                                     format(current_site_schema['date_first_article']))
-                settings['date_until'] = current_site_schema['date_last_article']
-            else:
-                settings['date_until'] = date.today() - timedelta(1)  # yesterday
-
-    if 'date_from' in settings or 'date_until' in settings:
-        # We generate all URLs FROM the past UNTIL the "not so past"
-        # Raises ValueError if there is something wrong
-        if 'date_from' in settings and not isinstance(settings['date_from'], date):
-            raise ValueError('DateError: date_from not datetime ({0})!'.format(settings['date_from']))
-        if 'date_until' in settings and not isinstance(settings['date_until'], date):
-            raise ValueError('DateError: date_until not datetime ({0})!'.format(settings['date_until']))
-        if interval and settings['date_from'] > settings['date_until']:
-            raise ValueError('DateError: date_from is later than DATE UNTIL!')
-        if ('date_from' in settings and settings['date_from'] > date.today()) or \
-                ('date_until' in settings and settings['date_until'] > date.today()):
-            raise ValueError('DateError: date_from or date_until are in the future!')
+        if not (settings['DATE_FROM'] <= settings['DATE_UNTIL'] < date.today()):
+            raise ValueError('DateError: DATE_FROM ({0}) <= DATE UNTIL ({1}) < date.doday() ({2}) is not satisfiable!'
+                             ' Please check date_from ({3}), date_until ({4}), date_first_article ({5})'
+                             ' and date_last_article ({6})!'.format(settings['DATE_FROM'], settings['DATE_UNTIL'],
+                                                                    date.today(), settings['date_from'],
+                                                                    settings['date_until'],
+                                                                    settings['date_first_article'],
+                                                                    settings['date_last_article']))
 
     # New problematic article URLs to be checked manually (dropped by default)
     new_problematic_urls = settings['new_problematic_urls']
@@ -141,11 +148,13 @@ def wrap_input_consants(current_task_config_filename):
     else:
         settings['NEW_GOOD_ARCHIVE_URLS_FH'] = None
 
-    output_corpus = settings['output_corpus']
+    output_corpus = settings.get('output_corpus')
     if output_corpus is not None:
         settings['OUTPUT_CORPUS_FH'] = open(output_corpus, 'a+', encoding='UTF-8')
-    else:
+    elif not args.corpus:
         settings['OUTPUT_CORPUS_FH'] = None
+    else:
+        raise ValueError('output_corpus must be set for --corpus!')
 
     settings['CORPUS_CONVERTER'] = corpus_converter_class[settings['corpus_converter']]
 
@@ -166,15 +175,17 @@ def wrap_input_consants(current_task_config_filename):
     else:
         raise ValueError('extract_article_urls_from_page_fun is unset!')
 
-    new_article_url_threshold = settings['new_article_url_threshold']
+    new_article_url_threshold = settings.get('new_article_url_threshold')
     if new_article_url_threshold is not None:
         if not isinstance(new_article_url_threshold, int) or new_article_url_threshold < 0:
             raise ValueError('new_article_url_threshold should be int >= 0!')
+    settings['NEW_ARTICLE_URL_THRESHOLD'] = new_article_url_threshold
 
-    max_pagenum = settings['max_pagenum']
+    max_pagenum = settings.get('max_pagenum')
     if max_pagenum is not None:
         if not isinstance(max_pagenum, int) or max_pagenum < 0:
             raise ValueError('max_pagenum should be int >= 0!')
+    settings['MAX_PAGENUM'] = max_pagenum
 
     return settings
 

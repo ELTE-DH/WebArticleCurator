@@ -62,7 +62,8 @@ def parse_args():
     group.add_argument('--archive', help='Crawl only the portal\'s archive', action='store_true')
     group.add_argument('--articles', help='Crawl articles (and optionally use cached WARC for the portal\'s archive),'
                                           ' DEFAULT behaviour', action='store_true')
-    group.add_argument('--corpus', help='Use --old-articles-warc to create corpus (no crawling)', action='store_true')
+    group.add_argument('--corpus', help='Use --old-articles-warc to create corpus (no crawling, equals to'
+                                        ' --archive-just-cache and --articles-just-cache)', action='store_true')
     cli_args = parser.parse_args()
     # If archive is True -> articles is False, if archive is False -> articles is True
     cli_args.articles = not cli_args.archive
@@ -95,7 +96,7 @@ if __name__ == '__main__':
                        'proxy_url': args.proxy_url, 'allow_cookies': args.allow_cookies}
 
     # read input data from the given files, initialize variables
-    portal_settings = wrap_input_consants(args.config)
+    portal_settings = wrap_input_consants(args.config, args)
     download_params['verify'] = portal_settings['verify']  # TODO: Site-specific downloader parameters... Maybe more?
     if args.archive:
         # For the article links only...

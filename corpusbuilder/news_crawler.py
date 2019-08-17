@@ -67,10 +67,10 @@ class NewsArchiveCrawler:
         """
         archive_page_urls = []
 
-        # 1) By date with optional pagination
+        # 1) By date with optional pagination (that is handled separately)
         if self._settings['archive_page_urls_by_date']:
-            date_from = self._settings['date_from']
-            date_until = self._settings['date_until']
+            date_from = self._settings['DATE_FROM']
+            date_until = self._settings['DATE_UNTIL']
             url_format = self._settings['archive_url_format']
 
             # a) Unique the generated archive page URLs using every day from date_from to the end of date_until
@@ -78,14 +78,9 @@ class NewsArchiveCrawler:
                                          for curr_day in range((date_until - date_from).days + 1)))
             # b) Sort the generated archive page URLs
             archive_page_urls.sort(reverse=self._settings['go_reverse_in_archive'])
-
-        # 2) Stored in groups represented by ID only, the IDs are generated on-demand while new articles are found
-        if self._settings['archive_page_urls_by_id'] and len(archive_page_urls) == 0:  # not URL_BY_DATE and URLS_BY_ID
+        # 2) Stored in groups represented by pagination only which will be handled separately
+        else:
             archive_page_urls.append(self._settings['archive_url_format'])  # Only the base URL is added
-
-        if len(archive_page_urls) == 0:  # There should not be empty list for the archive, because it means an error.
-            raise ValueError('There is no existing case where settings[\'archive_page_urls_by_date\'] and'
-                             ' settings[\'archive_page_urls_by_id\'] are both False')
 
         # 3) Run through the list of archive URLs and process them, while generating the required page URLs on demand
         for archive_page_url in archive_page_urls:
@@ -117,7 +112,7 @@ class NewsArchiveCrawler:
         ignore_archive_cache = self._settings['ignore_archive_cache']
         extract_article_urls_from_page_fun = self._settings['EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN']
 
-        next_page_url = archive_page_url_base.replace('#pagenum', '')
+        next_page_url = archive_page_url_base.replace('#pagenum', '')  # TODO: Empty string or explicit min_pagenum?
         while next_page_url is not None:
             archive_page_raw_html = self._downloader.download_url(next_page_url, ignore_cache=ignore_archive_cache)
             if archive_page_raw_html is not None:  # Download succeeded
@@ -146,25 +141,24 @@ class NewsArchiveCrawler:
                 4) If there is only page numbering, we use pagenum from base to config-specified maximum
                 5) If there is only page numbering, we expect the archive to move during crawling (or partial crawling)
         """
-        max_pagenum = settings['max_pagenum']
-        art_url_threshold = settings['new_article_url_threshold']
-        # Method #1: No pagination
+        max_pagenum = settings['MAX_PAGENUM']
+        art_url_threshold = settings['NEW_ARTICLE_URL_THRESHOLD']
+        # Method #1: No pagination (default)
         next_page_url = None
 
         # Method #2: Use special function to follow the link to the next page
         if settings['EXTRACT_NEXT_PAGE_URL_FUN'] is not None:
             next_page_url = settings['EXTRACT_NEXT_PAGE_URL_FUN'](raw_html)
-        elif settings['next_url_by_pagenum']:  # TODO: This could be more efficient?
-            # Method #3: No link, but infinite scrolling! (also good for inactive archive, without other clues)
-            if settings['infinite_scrolling'] and len(article_urls) > 0:
-                next_page_url = archive_page_url_base.replace('#pagenum', str(page_num))  # must generate URL
-            # Method #4: Has predefined max_pagenum! (also good for inactive archive, with known max_pagenum)
-            elif max_pagenum is not None or page_num < max_pagenum:
-                next_page_url = archive_page_url_base.replace('#pagenum', str(page_num))  # must generate URL
-            # Method #5: Active archive, just pages -> We allow intersecting elements as the archive may have been moved
-            elif art_url_threshold is not None and \
-                    (len(known_article_urls) == 0 or len(article_urls.minus(known_article_urls)) > art_url_threshold):
-                next_page_url = archive_page_url_base.replace('#pagenum', str(page_num))  # must generate URL
+        elif (settings['next_url_by_pagenum'] and
+                # Method #3: No link, but infinite scrolling! (also good for inactive archive, without other clues)
+                (settings['infinite_scrolling'] and len(article_urls) > 0) or
+                # Method #4: Has predefined max_pagenum! (also good for inactive archive, with known max_pagenum)
+                (max_pagenum is not None or page_num < max_pagenum) or
+                # Method #5: Active archive, just pages -> We allow intersecting elements
+                #  as the archive may have been moved
+                (art_url_threshold is not None and (len(known_article_urls) == 0 or
+                                                    len(article_urls.minus(known_article_urls)) > art_url_threshold))):
+            next_page_url = archive_page_url_base.replace('#pagenum', str(page_num))  # must generate URL
 
         return next_page_url
 
@@ -195,14 +189,14 @@ class NewsArticleCrawler:
         self._new_urls = set()
 
         # Store values at init-time
-        self._filter_by_date = self._settings['filter_articles_by_date']
+        self._filter_by_date = self._settings['FILTER_ARTICLES_BY_DATE']
         self._create_corpus = self._settings['OUTPUT_CORPUS_FH'] is not None
 
         if self._create_corpus:
             # Create new corpus converter class from the available methods...
             self._converter = self._settings['CORPUS_CONVERTER'](self._settings, self._logger)
 
-        self._follow_links_on_page = self._settings['follow_links_on_page']  # TODO: UPDATE CONFIGS!
+        self._follow_links_on_page = self._settings['follow_links_on_page']
 
         # Create new archive while downloading, or simulate download and read the archive
         self._downloader = WarcCachingDownloader(articles_existing_warc_filename, articles_new_warc_filename,
@@ -254,15 +248,19 @@ class NewsArticleCrawler:
                 continue
 
             # 2) "Download" article
-            article_raw_html = self._downloader.download_url(url)
-            if article_raw_html is None:
-                self._logger.log('ERROR', '\t'.join((url, 'Article were not processed because download failed!')))
-                if url not in self._downloader.bad_urls:
+            if url not in self._downloader.bad_urls:
+                article_raw_html = self._downloader.download_url(url)
+                if article_raw_html is None:
+                    self._logger.log('ERROR', '\t'.join((url, 'Article was not processed because download failed!')))
                     self.problematic_article_urls.add(url)  # New problematic URL for manual checking
+                    continue
+                # 3) Note downloaded url, but only when it is truly new URL (ie. not in the old archive)
+                elif url not in self.known_good_article_urls:
+                    self.good_article_urls.add(url)
+            else:
+                self._logger.log('INFO', '\t'.join((url, 'Article was not processed '
+                                                         'because it was listed as bad url!')))
                 continue
-            # 3) Note downloaded url, but only when it is truly new URL (ie. not in the old archive)
-            elif url not in self.known_good_article_urls:
-                self.good_article_urls.add(url)
 
             # 4) Filter: time filtering when archive page URLs are not generated by date if needed
             if self._filter_by_date:
@@ -274,10 +272,10 @@ class NewsArticleCrawler:
                     self._logger.log('ERROR', '\t'.join((url, 'DATE COULD NOT BE PARSED!')))
                     continue
                 # c) Check date interval
-                elif not self._settings['date_from'] <= article_date <= self._settings['date_until']:
+                elif not self._settings['DATE_FROM'] <= article_date <= self._settings['DATE_UNTIL']:
                     self._logger.log('WARNING', '\t'.join((url, 'Date ({0}) not in the specified interval: {1}-{2} '
                                                                 'didn\'t use it in the corpus'.
-                                     format(article_date, self._settings['date_from'], self._settings['date_until']))))
+                                     format(article_date, self._settings['DATE_FROM'], self._settings['DATE_UNTIL']))))
                     continue
 
             # TODO: FULLY OPTIONAL!
