@@ -4,6 +4,51 @@
 import json
 from bs4 import BeautifulSoup
 
+
+def safe_find(target, string_to_search, find_all=False, expect_more_than_one_item=False):
+    """
+    Altered version of BS find() and find_all() so that it throws exceptions in certain cases and only returns searches
+    with valid results (NoneType and empty lists as results are excluded).
+    :param target: the BS Tag object which is looked up
+    :param string_to_search: string, the raw string that is searched
+    :param find_all: boolean, default False; False yields find(), True yields find_all()
+    :param expect_more_than_one_item: default False; set True if the expectation is a list containing more than one
+    items. Considered only if find_all is set to True!
+    :return: if used as find(), it returns the Tag object, else a list of results. Raises exception otherwise.
+    """
+    if find_all:
+        rtn = target.find_all(string_to_search)
+        if len(rtn) == 0 or (expect_more_than_one_item and len(rtn) < 2):
+            raise Exception
+        return rtn
+    elif target.find(string_to_search) is None:
+        raise Exception
+    return target.find(string_to_search)
+
+
+def safe_add(append_to, target, label, attr=None, site_prefix=''):
+    """
+        Helper function for exctract_article_urls_from_page_x functions.
+        Replaces sanity checked BeautifulSoupObject.find(x) + url_list.add(url) combinations so that instead of having
+        those lines in each/most exctractor functions, the checks are taken care of here.
+        :param append_to: list or set of urls
+        :param target: BeautifulSoup Tag object that is searched for label and/or attribute
+        :param label: string of the label to be searched, e.g. 'a', 'div' etc.
+        :param attr: string of the attribute of the object found with label search. E.g. 'href' if label is 'a' and its
+        'href' attribute contains the url to be appended
+        :param site_prefix: string --- e.g. 'https://example.com' if 'href' only contains substring of the whole url
+        ('/article/190826_blabla') and domain must be prefixed to get the full url
+        ('https://example.com/article/190826')
+        :return:
+    """
+    if label is not None and attr is not None:  # case 1: label and attribute are both present
+        if hasattr(target, 'find') and target.find(label) is not None and attr in target.find(label).attrs:
+            append_to.add(site_prefix + target.label[attr])
+    elif hasattr(target, 'find') and target.find(label) is not None:  # case 2: label is present, attribute is not
+        append_to.add(site_prefix + target.find(label))
+    else:
+        raise Exception
+
 # BEGIN SITE SPECIFIC extract_next_page_url FUNCTIONS ##################################################################
 
 
@@ -120,6 +165,8 @@ def extract_article_urls_from_page_nol(archive_page_raw_html):
     main_container = soup.find_all(class_='middleCol')
     for middle_cols in main_container:
         for a_tag in middle_cols.find_all('a'):
+            # az alábbi sanity check-ek garantálják, hogy csak cikk urlt tartalmazó 'a'-tageket szűrünk ki.
+            # az általános safe_add fv. itt nem alkalmazható
             if a_tag is not None\
               and 'class' in a_tag.attrs\
               and 'vezetoCimkeAfter' in a_tag['class']\
@@ -140,7 +187,7 @@ def extract_article_urls_from_page_origo(archive_page_raw_html):
     main_container = soup.find_all(id='archive-articles')
     for middle_cols in main_container:
         for a_tag in middle_cols.find_all(class_='archive-cikk'):
-            urls.add(a_tag.a['href'])
+            safe_add(urls, a_tag, 'a', 'href')
     return urls
 
 
@@ -154,7 +201,7 @@ def extract_article_urls_from_page_444(archive_page_raw_html):
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all(class_='card')
     for a_tag in main_container:
-        urls.add(a_tag.find('a')['href'])
+        safe_add(urls, a_tag, 'a', 'href')
     return urls
 
 
@@ -168,7 +215,7 @@ def extract_article_urls_from_page_blikk(archive_page_raw_html):
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all(class_='archiveDayRow')
     for a_tag in main_container:
-        urls.add(a_tag.find('a')['href'])
+        safe_add(urls, a_tag, 'a', 'href')
     return urls
 
 
@@ -180,9 +227,10 @@ def extract_article_urls_from_page_index(archive_page_raw_html):
     """
     urls = set()
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    main_container = soup.find_all('article')
+    main_container = safe_find(soup, 'article', find_all=True, expect_more_than_one_item=True)
+    # main_container = soup.find_all('article')
     for a_tag in main_container:
-        urls.add(a_tag.find('a')['href'])
+        safe_add(urls, a_tag, 'a', 'href')
     return urls
 
 
@@ -194,10 +242,13 @@ def extract_article_urls_from_page_mno(archive_page_raw_html):
     """
     urls = set()
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    main_container = soup.find_all('h2')
+    # ha expect_more..=True lenne, akkor _elvileg_ van esély arra, hogy ha a legutolsó oldalon csak egy cikk van,
+    # akkor errort kapunk. Ettől függetlenül érdemes lehet True-ra állítani, ugyanis 99644 oldalból EGY ilyen.
+    main_container = safe_find(soup, 'h2', find_all=True)
+    # main_container = soup.find_all('h2')  <--- eredeti sor
     for a_tag in main_container:
         if a_tag.a is not None:
-            urls.add(a_tag.a['href'])
+            safe_add(urls, a_tag, 'a', 'href')
     return urls
 
 
@@ -213,8 +264,10 @@ def extract_article_urls_from_page_vs(archive_page_raw_html):
     for html_fragment in html_list:
         for fragment in html_fragment['ContentBoxes']:
             soup = BeautifulSoup(fragment, 'lxml')
-            url = soup.a['href']
-            urls.add('https://vs.hu{0}'.format(url))
+            # Ezek az eredeti sorok, amiket kivált a safe_add:
+            # url = soup.a['href']
+            # urls.add('https://vs.hu{0}'.format(url))
+            safe_add(urls, soup, 'a', 'href', 'https://vs.hu')
     return urls
 
 
@@ -237,20 +290,11 @@ def extract_article_urls_from_page_valasz(archive_page_raw_html):
 
 
 def extract_article_urls_from_page_test(filename):
-    def extract_article_urls_from_page_test_helper(raw_html, fun):
-        i = 0
-        ret = set()
-        urls = fun(raw_html)
-        for i, url in enumerate(urls):
-            ret.add(url)
-            i += 1
-        return ret, i
-
     w = WarcCachingDownloader(filename, None, Logger(), just_cache=True)
 
     print('Testing nol')
     text = w.download_url('http://nol.hu/archivum?page=37')
-    extracted = extract_article_urls_from_page_test_helper(text, extract_article_urls_from_page_nol)
+    extracted = extract_article_urls_from_page_nol(text)
     expected = {'http://nol.hu/archivum/szemelycsere_a_malev_gh_elen-1376265',
                 'http://nol.hu/archivum/20130330-garancia-1376783',
                 'http://nol.hu/archivum/20130330-politikus_es_kora-1376681',
@@ -267,11 +311,11 @@ def extract_article_urls_from_page_test(filename):
                 'http://nol.hu/belfold/titkosszolgalat-zsarolas-sajtoszabadsag-magyarorszag-1630871',
                 'http://nol.hu/belfold/a-kuria-megvedte-a-fidesz-frakcio-titkait-1630899',
                 'http://nol.hu/belfold/zanka-tabor-fidesz-1630879'}
-    assert extracted == (expected, 14)
+    assert (extracted, len(extracted)) == (expected, 14)
 
     print('Testing origo')
     text = w.download_url('https://www.origo.hu/hir-archivum/2019/20190119.html')
-    extracted = extract_article_urls_from_page_test_helper(text, extract_article_urls_from_page_origo)
+    extracted = extract_article_urls_from_page_origo(text)
     expected = {'https://www.origo.hu/sport/csapat/20190119-kezilabda-vilagbajnoksag-a-magyarok-vbcsoportjaban-hozta-a-'
                 'kotelezot-a-sved-kezicsapat.html',
                 'https://www.origo.hu/sport/csapat/20190119-noi-kosarlabda-nb-i-magabiztosan-nyert-a-'
@@ -415,11 +459,11 @@ def extract_article_urls_from_page_test(filename):
                 'https://www.origo.hu/itthon/20190119-tavaly-augusztusba-egy-vaskuti-ferfi-eletveszelyesen-megkeselt-'
                 'egy-soltvadkerti-ferfit.html',
                 }
-    assert extracted == (expected, 89)
+    assert (extracted, len(extracted)) == (expected, 89)
 
     print('Testing 444')
     text = w.download_url('https://444.hu/2019/07/06')
-    extracted = extract_article_urls_from_page_test_helper(text, extract_article_urls_from_page_444)
+    extracted = extract_article_urls_from_page_444(text)
     expected = {'https://444.hu/2019/07/06/azt-hiszed-szar-iroasztalod-van-nezd-meg-hova-ultettek-ursula-von-der-'
                 'leyent',
                 'https://444.hu/2019/07/06/kendernay-janos-lett-az-lmp-tars-nelkul-tarselnoke',
@@ -476,11 +520,11 @@ def extract_article_urls_from_page_test(filename):
                 'https://444.hu/2019/07/06/a-fidesz-frakciovezeto-helyettese-meg-kell-vedeni-a-gyerekeket-a-szexualis-'
                 'aberraciotol-a-pride-ot-be-kell-tiltani4'
                 }
-    assert extracted == (expected, 37)
+    assert (extracted, len(extracted)) == (expected, 37)
 
     print('Testing blikk')
     text = w.download_url('https://www.blikk.hu/archivum/online?date=2018-11-13&page=0')
-    extracted = extract_article_urls_from_page_test_helper(text, extract_article_urls_from_page_blikk)
+    extracted = extract_article_urls_from_page_blikk(text)
     expected = {'https://www.blikk.hu/aktualis/belfold/szorenyi-levente/cr10wsw',
                 'https://www.blikk.hu/sztarvilag/sztarsztorik/sokk-kritika-konyhafonok-vip-sef/x7tzj86',
                 'https://www.blikk.hu/sport/magyar-foci/megszolalt-merkozes-kozben-elhunyt-csornai-focista-menyasszony/'
@@ -517,12 +561,12 @@ def extract_article_urls_from_page_test(filename):
                 'https://www.blikk.hu/hoppa/wtf/samsung-agyhullam-iranyitas/we73y0t',
                 'https://www.blikk.hu/eletmod/egeszseg/film-cukorbetegseg-diabetesz-etkezes/35z7vws'
                 }
-    assert extracted == (expected, 30)
+    assert (extracted, len(extracted)) == (expected, 30)
 
     print('Testing index')
     text = w.download_url('https://index.hu/24ora?s=&tol=2019-07-12&ig=2019-07-12&tarskiadvanyokbanis=1&profil=&rovat='
                           '&cimke=&word=1&pepe=1&page=')
-    extracted = extract_article_urls_from_page_test_helper(text, extract_article_urls_from_page_index)
+    extracted = extract_article_urls_from_page_index(text)
     expected = {'https://index.hu/mindekozben/poszt/2019/07/12/mav_korhaz_vece_vakolat_csernobil/',
                 'https://index.hu/mindekozben/poszt/2019/07/12/szornyszulotteket_keszitenek_a_ketezres_evek_kedvenc_'
                 'gyerekjatekabol/',
@@ -625,11 +669,36 @@ def extract_article_urls_from_page_test(filename):
                 'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/mindkettot_haritotta_'
                 'federer/'
                 }
-    assert extracted == (expected, 60)
+    assert (extracted, len(extracted)) == (expected, 60)
+
+    print('Testing velvet')
+    text = w.download_url('https://velvet.hu/24ora?s=&tol=2019-08-03&ig=2019-08-04&profil=&rovat=&cimke=&word=1&pepe=1')
+    extracted = extract_article_urls_from_page_index(text)
+    expected = {'https://velvet.hu/nyar/2019/08/04/sziget_nagyszinpad_fellepok_heti_trend/',
+                'https://velvet.hu/randi/2019/08/04/randiblog_inbox_a_felesegem_mellett_van_2_szeretom/',
+                'https://velvet.hu/nyar/2019/08/04/palvin_mihalik_bikini_trend_nyar/',
+                'https://velvet.hu/gumicukor/2019/08/04/megszuletett_curtisek_kisfia/',
+                'https://velvet.hu/elet/2019/08/04/hawaii_kokuszposta_galeria/',
+                'https://velvet.hu/gumicukor/2019/08/04/lista_nepszeru_celeb/',
+                'https://velvet.hu/nyar/2019/08/04/kiegeszitok_amelyek_feldobjak_a_fesztivalszettet/',
+                'https://velvet.hu/gumicukor/2019/08/04/sztarok_akik_elarultak_latvanyos_fogyasuk_titkat/',
+                'https://velvet.hu/gumicukor/2019/08/03/ha_vege_a_hagyateki_'
+                'targyalasnak_vajna_timea_orokre_el_akarja_hagyni_magyarorszagot/',
+                'https://velvet.hu/randi/2019/08/03/randiblog_inbox_munkahelyi_szerelem/',
+                'https://velvet.hu/elet/2019/08/03/megteveszto_anya-lanya_paros_galeria/',
+                'https://velvet.hu/gumicukor/2019/08/03/igy_elnek_a_palyboy_villa_lanyai/',
+                'https://velvet.hu/gumicukor/2019/08/03/czutor_zoltan_tapasztalatai_alapjan_'
+                'tobb_a_szexista_no_mint_ferfi/',
+                'https://velvet.hu/gumicukor/2019/08/03/extrem_titkos_projekt_miatt_hagyta_ott_'
+                'a_radiot_sebestyen_balazs/',
+                'https://velvet.hu/elet/2019/08/03/hiressegek_akik_nem_kernek_az_anyasagbol_galeria/',
+                'https://velvet.hu/gumicukor/2019/08/03/mick_jagger_kisfianak_minden_rezduleseben_ott_van_az_apja/',
+                'https://velvet.hu/elet/2019/08/03/27_ev_van_kozottuk_megis_boldogok_galeria/'}
+    assert (extracted, len(extracted)) == (expected, 17)
 
     print('Testing mno')
     text = w.download_url('https://magyarnemzet.hu/archivum/page/99000/')
-    extracted = extract_article_urls_from_page_test_helper(text, extract_article_urls_from_page_mno)
+    extracted = extract_article_urls_from_page_mno(text)
     expected = {'https://magyarnemzet.hu/archivum/archivum-archivum/a-szuverenitas-hatarai-4473980/',
                 'https://magyarnemzet.hu/archivum/archivum-archivum/tajvan-ujra-teritekre-kerult-4473983/',
                 'https://magyarnemzet.hu/archivum/archivum-archivum/kie-legyen-az-iparuzesi-ado-4473989/',
@@ -642,7 +711,7 @@ def extract_article_urls_from_page_test(filename):
                 'https://magyarnemzet.hu/archivum/archivum-archivum/kozelit-a-vilag-zagrabhoz-4473977/',
                 'https://magyarnemzet.hu/archivum/archivum-archivum/tanitjak-az-onallo-eletvitelt-4474001/',
                 'https://magyarnemzet.hu/archivum/archivum-archivum/veszelyforrasok-4473995/'}
-    assert extracted == (expected, 10)
+    assert (extracted, len(extracted)) == (expected, 10)
 
     print('Testing vs')
     text = w.download_url('https://vs.hu/ajax/archive?Data={%22QueryString%22:%22%22,%22ColumnIds%22:[],'
@@ -651,7 +720,7 @@ def extract_article_urls_from_page_test(filename):
                           '%22PublicationMax%22:%222018-04-05T00:00:00.000Z%22,%22AuthorId%22:-1,'
                           '%22MaxPublished%22:%222018-04-05T00:00:00.000Z%22,%22IsMega%22:false,%22IsPhoto%22:false,'
                           '%22IsVideo%22:false}')
-    extracted = extract_article_urls_from_page_test_helper(text, extract_article_urls_from_page_vs)
+    extracted = extract_article_urls_from_page_vs(text)
     expected = {'https://vs.hu/kozelet/osszes/az-lmp-is-visszalep-csepelen-0404',
                 'https://vs.hu/kozelet/osszes/visszalepesek-nehany-fontos-valasztokeruletben-0404',
                 'https://vs.hu/magazin/osszes/fel-evszazada-startolt-az-urodusszeia-0404',
@@ -672,11 +741,11 @@ def extract_article_urls_from_page_test(filename):
                 'https://vs.hu/kozelet/osszes/nezopont-orban-nepszerusege-folyamatosan-no-0404',
                 'https://vs.hu/magazin/osszes/komaromba-koltoztetik-a-szepmuveszeti-egy-reszet-0404'
                 }
-    assert extracted == (expected, 19)
+    assert (extracted, len(extracted)) == (expected, 19)
 
     print('Testing valasz')
     text = w.download_url('http://valasz.hu/itthon/?page=1')
-    extracted = extract_article_urls_from_page_test_helper(text, extract_article_urls_from_page_valasz)
+    extracted = extract_article_urls_from_page_valasz(text)
     expected = {'http://valasz.hu/itthon/ez-nem-autopalya-epites-nagyinterju-palinkas-jozseffel-a-tudomany-penzeirol-'
                 '129168',
                 'http://valasz.hu/itthon/itt-a-madaras-adidas-eletkepes-lehet-e-egy-nemzeti-sportmarka-129214',
@@ -694,7 +763,7 @@ def extract_article_urls_from_page_test(filename):
                 'http://valasz.hu/itthon/ha-tetszik-ha-nem-ez-lehet-2019-sztorija-orban-vagy-macron-129201',
                 'http://valasz.hu/itthon/abszurdra-sikerult-az-uj-gyulekezesi-torveny-borton-jarhat-gyurcsany-'
                 'kifutyuleseert-129207'}
-    assert extracted == (expected, 15)
+    assert (extracted, len(extracted)) == (expected, 15)
     print('Test OK!')
 
 # END SITE SPECIFIC extract_article_urls_from_page FUNCTIONS ###########################################################

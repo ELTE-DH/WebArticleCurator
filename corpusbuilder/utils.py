@@ -31,9 +31,11 @@ def wrap_input_consants(current_task_config_filename, args):
     with open(os.path.join(dir_name, settings['site_schemas']), encoding='UTF-8') as fh:
         current_site_schema = yaml.load(fh)[settings['site_name']]
 
-    if len(settings.keys() & current_site_schema.keys()) > 0:
-        raise KeyError('Config file key collision!')
-    settings.update(current_site_schema)
+    # TODO: How to avoid key errors?
+    # if len(settings.keys() & current_site_schema.keys()) > 0:
+    #    raise KeyError('Config file key collision!')
+    current_site_schema.update(settings)
+    settings = current_site_schema  # Settings have higher priority over current_site_schema!
 
     settings['TAGS_KEYS'] = {re.compile(tag_key): val for tag_key, val in settings['tags_keys'].items()}
 
