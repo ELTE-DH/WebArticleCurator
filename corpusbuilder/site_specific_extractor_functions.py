@@ -70,12 +70,9 @@ def extract_next_page_url_nol(archive_page_raw_html):
     return ret
 
 
-def extract_next_page_url_test():
+def extract_next_page_url_test(filename):
     """Quick test"""
-    from corpusbuilder.utils import Logger
-    from corpusbuilder.enhanced_downloader import WarcCachingDownloader
 
-    filename = '../tests/next_page_url.warc.gz'
     w = WarcCachingDownloader(filename, None, Logger(), just_cache=True)
 
     # Some of these are intentionally yields None
@@ -221,7 +218,25 @@ def extract_article_urls_from_page_vs(archive_page_raw_html):
     return urls
 
 
-def extract_article_urls_from_page_test():
+def extract_article_urls_from_page_valasz(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    urls = set()
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find(class_='cont')
+    articles = main_container.find_all('article')
+    for article in articles:
+        try:
+            urls.add('http://valasz.hu' + article.h2.a['href'])
+        except AttributeError:
+            pass
+    return urls
+
+
+def extract_article_urls_from_page_test(filename):
     def extract_article_urls_from_page_test_helper(raw_html, fun):
         i = 0
         ret = set()
@@ -231,10 +246,6 @@ def extract_article_urls_from_page_test():
             i += 1
         return ret, i
 
-    from corpusbuilder.utils import Logger
-    from corpusbuilder.enhanced_downloader import WarcCachingDownloader
-
-    filename = '../tests/extract_article_urls_from_page.warc.gz'
     w = WarcCachingDownloader(filename, None, Logger(), just_cache=True)
 
     print('Testing nol')
@@ -662,11 +673,68 @@ def extract_article_urls_from_page_test():
                 'https://vs.hu/magazin/osszes/komaromba-koltoztetik-a-szepmuveszeti-egy-reszet-0404'
                 }
     assert extracted == (expected, 19)
+
+    print('Testing valasz')
+    text = w.download_url('http://valasz.hu/itthon/?page=1')
+    extracted = extract_article_urls_from_page_test_helper(text, extract_article_urls_from_page_valasz)
+    expected = {'http://valasz.hu/itthon/ez-nem-autopalya-epites-nagyinterju-palinkas-jozseffel-a-tudomany-penzeirol-'
+                '129168',
+                'http://valasz.hu/itthon/itt-a-madaras-adidas-eletkepes-lehet-e-egy-nemzeti-sportmarka-129214',
+                'http://valasz.hu/itthon/halapenzt-reszletre-129174',
+                'http://valasz.hu/itthon/buda-gardens-ugy-lazar-verengzest-rendezett-a-miniszterelnoksegen-129175',
+                'http://valasz.hu/itthon/minden-szinvonalat-alulmul-palinkas-jozsef-a-kormanymedia-tamadasarol-129173',
+                'http://valasz.hu/itthon/szeressuk-a-szarkakat-129223',
+                'http://valasz.hu/itthon/borokai-gabor-a-2rule-rol-129172',
+                'http://valasz.hu/itthon/megsem-tiltottak-ki-a-belvarosbol-a-segwayeket-ez-tortent-valojaban-129222',
+                'http://valasz.hu/itthon/a-heti-valasz-lap-es-konyvkiado-szolgaltato-kft-kozlemenye-129225',
+                'http://valasz.hu/itthon/az-megvan-hogy-meleghazassag-es-migracioellenes-az-lmp-uj-elnoke-129211',
+                'http://valasz.hu/itthon/a-nehezfiuknak-is-van-szive-129179',
+                'http://valasz.hu/itthon/humboldt-dijas-kvantumfizikus-alapkutatas-nelkul-nincs-fejlodes-129197',
+                'http://valasz.hu/itthon/hogyan-zajlik-egy-kereszteny-hetvege-a-fegyintezetekben-129165',
+                'http://valasz.hu/itthon/ha-tetszik-ha-nem-ez-lehet-2019-sztorija-orban-vagy-macron-129201',
+                'http://valasz.hu/itthon/abszurdra-sikerult-az-uj-gyulekezesi-torveny-borton-jarhat-gyurcsany-'
+                'kifutyuleseert-129207'}
+    assert extracted == (expected, 15)
     print('Test OK!')
 
 # END SITE SPECIFIC extract_article_urls_from_page FUNCTIONS ###########################################################
 
 
+def extend_warc_archive_with_urls(old_warc_filename, new_warc_fineame, new_urls):
+    w = WarcCachingDownloader(old_warc_filename, new_warc_fineame, Logger())
+    for url in w.url_index:  # Copy all old URLs
+        w.download_url(url)
+    for url in new_urls:
+        print('Adding url {0}'.format(url))
+        w.download_url(url)
+
+
 if __name__ == '__main__':
-    extract_next_page_url_test()
-    extract_article_urls_from_page_test()
+    import sys
+    from os.path import dirname, join as os_path_join, abspath
+
+    # To be able to run it standalone from anywhere!
+    project_dir = abspath(os_path_join(dirname(__file__), '..'))
+    sys.path.append(project_dir)
+    from corpusbuilder.utils import Logger
+    from corpusbuilder.enhanced_downloader import WarcCachingDownloader
+
+    choices = {'nextpage': os_path_join(project_dir, 'tests/next_page_url.warc.gz'),
+               'archive': os_path_join(project_dir, 'tests/extract_article_urls_from_page.warc.gz')}
+
+    if len(sys.argv) > 1:
+        # Usage: [echo URL|cat urls.txt] | __file__ [archive|nextpage] new.warc.gz
+        warc = sys.argv[1]
+        warc_filename = sys.argv[2]
+        if warc not in choices.keys():
+            print('ERROR: Argument must be in {0} instead of {1} and filename must supplied !'.
+                  format(str(set(choices.keys())), warc))
+            exit(1)
+        print('Addig URLs to {0} :'.format(warc))
+        input_urls = (url.strip() for url in sys.stdin)
+        extend_warc_archive_with_urls(choices[warc], warc_filename, input_urls)
+        print('Done!')
+        print('Do not forget to mv {0} {1} before commit!'.format(warc_filename, choices[warc]))
+    else:
+        extract_next_page_url_test(choices['nextpage'])
+        extract_article_urls_from_page_test(choices['archive'])

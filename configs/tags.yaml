@@ -284,3 +284,9 @@
         "open": "<p class=\"date\">"
         "inside": ".*?"
         "close": "</p>"
+
+"valasz-html":
+    "html-date":
+        "open": "<p class=\"date\">"
+        "inside": ".*?"
+        "close": "</p>"

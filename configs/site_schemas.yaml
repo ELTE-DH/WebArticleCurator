@@ -205,3 +205,30 @@
 
     "tags_keys":
         "^https://nol\\.hu/": "nol-html"
+
+"valasz":
+    # "date_first_article": 2009-01-21
+    # "date_last_article": 2100-01-01
+    "archive_url_format": "http://valasz.hu/itthon/?page=#pagenum"
+
+    "extract_next_page_url_fun": NULL
+    "extract_article_urls_from_page_fun": "extract_article_urls_from_page_valasz"
+    "next_url_by_pagenum": true
+    "infinite_scrolling": false
+    "archive_page_urls_by_date": false
+    "go_reverse_in_archive": true
+    "verify": true
+
+
+    "initial_pagenum": 1
+    "min_pagenum": 1
+    "max_pagenum": 2341
+
+    "ignore_archive_cache": false
+    # "new_article_url_threshold": 0
+    "follow_links_on_page": false
+
+    "corpus_converter": "rule-based"
+
+    "tags_keys":
+        "^http://valasz\\.hu/": "valasz-html"
