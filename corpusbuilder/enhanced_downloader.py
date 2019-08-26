@@ -282,17 +282,23 @@ class WarcReader:
         info_rec = next(archive_it)
         # First record should be an info record, then it should be followed by the request-response pairs
         assert info_rec.rec_type == 'warcinfo'
-        # Read out custom headers for later use
-        custom_headers_raw = info_rec.content_stream().read()  # Parse custom headers
-        info_rec_payload = dict(r.split(': ', maxsplit=1) for r in custom_headers_raw.decode('UTF-8')
-                                .strip().split('\r\n') if len(r) > 0)
+        try:
+            # Read out custom headers for later use
+            custom_headers_raw = info_rec.content_stream().read()  # Parse custom headers
+            info_rec_payload = dict(r.split(': ', maxsplit=1) for r in custom_headers_raw.decode('UTF-8')
+                                    .strip().split('\r\n') if len(r) > 0)
 
-        # Read the untouched form of warcinfo record for writing it back unchanged into a warc file
-        self._stream.seek(0)
-        archive_it = ArchiveIterator(self._stream)
-        untouched_info_record = next(archive_it)
-        # Info headers in parsed form
-        self.info_record_data = (untouched_info_record, (info_rec.rec_headers, info_rec_payload))
+            # Read the untouched form of warcinfo record for writing it back unchanged into a warc file
+            self._stream.seek(0)
+            archive_it = ArchiveIterator(self._stream)
+            untouched_info_record = next(archive_it)
+
+            # Info headers in parsed form
+            self.info_record_data = (untouched_info_record, (info_rec.rec_headers, info_rec_payload))
+        except UnicodeDecodeError:
+            self._logger_.log('WARNING', 'WARCINFO record in {0} is corrupt! Continuing with a fresh one!'.
+                              format(self._stream.name))
+            self.info_record_data = None
 
         reqv_data = (None, (None, None))  # To be able to handle the request-response pairs together
         for i, record in enumerate(archive_it):
