@@ -1,0 +1,18 @@
+"site_name": "valasz"
+"site_schemas": "site_schemas.yaml"
+
+# "output_corpus": "valasz_corpus.txt"
+# "tags": "tags.yaml"
+
+"log_file_articles": "logs/valasz_kult_tura_articles_log.txt"
+"log_file_archive": "logs/valasz_kult_tura_archive_log.txt"
+# "new_problematic_urls": NULL
+# "new_good_urls": NULL
+# "new_problematic_archive_urls": NULL
+# "new_good_archive_urls": NULL
+
+# "date_from": 2013-09-30   # First article
+# "date_until": 2019-02-13  # Last article
+
+"archive_url_format": "http://valasz.hu/kult_tura/?page=#pagenum"
+"max_pagenum": 1

@@ -17,13 +17,13 @@ def safe_find(target, string_to_search, find_all=False, expect_more_than_one_ite
     :return: if used as find(), it returns the Tag object, else a list of results. Raises exception otherwise.
     """
     if find_all:
-        rtn = target.find_all(string_to_search)
+        rtn = target.find_all(**string_to_search)
         if len(rtn) == 0 or (expect_more_than_one_item and len(rtn) < 2):
             raise Exception
         return rtn
-    elif target.find(string_to_search) is None:
+    elif target.find(**string_to_search) is None:
         raise Exception
-    return target.find(string_to_search)
+    return target.find(**string_to_search)
 
 
 def safe_add(append_to, target, label, attr=None, site_prefix=''):
@@ -62,7 +62,7 @@ def extract_next_page_url_444(archive_page_raw_html):
     ret = None
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     next_page = soup.find(class_='infinity-next button')
-    if next_page is not None:
+    if next_page is not None and 'href' in next_page.attrs:
         ret = next_page['href']
     return ret
 
@@ -76,11 +76,11 @@ def extract_next_page_url_blikk(archive_page_raw_html):
     """
     ret = None
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    div = soup.find(class_='archiveDayRow2')
-    a_tags = div.find_all('a')
-    for a_tag in a_tags:
-        if a_tag.text == 'Következő oldal' and 'href' in a_tag.attrs:
-            ret = 'https:{0}'.format(a_tag['href'])
+    next_page = soup.find(class_='archiveDayRow2')
+    if next_page is not None:
+        next_page_a = next_page.find('a', text='Következő oldal')
+        if next_page_a is not None and 'href' in next_page_a.attrs:
+            ret = 'https:{0}'.format(next_page_a['href'])
     return ret
 
 
@@ -94,7 +94,7 @@ def extract_next_page_url_mno(archive_page_raw_html):
     ret = None
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     next_page = soup.find(class_='en-navigation-line-right-arrow')
-    if next_page is not None:
+    if next_page is not None and 'href' in next_page.attrs:
         ret = next_page['href']
     return ret
 
@@ -109,9 +109,12 @@ def extract_next_page_url_nol(archive_page_raw_html):
     ret = None
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     next_page = soup.find(class_='next')
-    # .a is a must, because on the last page there is only the div and no a (pl. nol.hu/archivum?page=14670 )
-    if next_page.a is not None:
-        ret = 'http://nol.hu{0}'.format(next_page.a['href'])
+    if next_page is not None:
+        next_page_a = next_page.find('a')
+        # find('a') is a must, because on the last page there is only the div and no 'a'
+        # (eg. nol.hu/archivum?page=14670 )
+        if next_page_a is not None and 'href' in next_page_a.attrs:
+            ret = 'http://nol.hu{0}'.format(next_page_a['href'])
     return ret
 
 
@@ -164,14 +167,12 @@ def extract_article_urls_from_page_nol(archive_page_raw_html):
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all(class_='middleCol')
     for middle_cols in main_container:
-        for a_tag in middle_cols.find_all('a'):
+        for a_tag in middle_cols.find_all('a', class_='vezetoCimkeAfter'):
             # az alábbi sanity check-ek garantálják, hogy csak cikk urlt tartalmazó 'a'-tageket szűrünk ki.
             # az általános safe_add fv. itt nem alkalmazható
-            if a_tag is not None\
-              and 'class' in a_tag.attrs\
-              and 'vezetoCimkeAfter' in a_tag['class']\
-              and len(a_tag['class']) == 1\
-              and 'href' in a_tag.attrs:
+            if a_tag is not None \
+              and len(a_tag['class']) == 1 \
+              and 'href' in a_tag.attrs:  # TODO: EZt valahogy bele lehet építeni a find_all-ba...
                 urls.add(a_tag['href'])
     return urls
 
@@ -187,7 +188,8 @@ def extract_article_urls_from_page_origo(archive_page_raw_html):
     main_container = soup.find_all(id='archive-articles')
     for middle_cols in main_container:
         for a_tag in middle_cols.find_all(class_='archive-cikk'):
-            safe_add(urls, a_tag, 'a', 'href')
+            # safe_add(urls, a_tag, 'a', 'href')
+            urls.add(a_tag.a['href'])
     return urls
 
 
@@ -201,7 +203,8 @@ def extract_article_urls_from_page_444(archive_page_raw_html):
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all(class_='card')
     for a_tag in main_container:
-        safe_add(urls, a_tag, 'a', 'href')
+        # safe_add(urls, a_tag, 'a', 'href')
+        urls.add(a_tag.a['href'])
     return urls
 
 
@@ -215,7 +218,8 @@ def extract_article_urls_from_page_blikk(archive_page_raw_html):
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all(class_='archiveDayRow')
     for a_tag in main_container:
-        safe_add(urls, a_tag, 'a', 'href')
+        urls.add(a_tag.a['href'])
+        # safe_add(urls, a_tag, 'a', 'href')
     return urls
 
 
@@ -227,10 +231,11 @@ def extract_article_urls_from_page_index(archive_page_raw_html):
     """
     urls = set()
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    main_container = safe_find(soup, 'article', find_all=True, expect_more_than_one_item=True)
-    # main_container = soup.find_all('article')
+    # main_container = safe_find(soup, 'article', find_all=True, expect_more_than_one_item=True)
+    main_container = soup.find_all('article')
     for a_tag in main_container:
-        safe_add(urls, a_tag, 'a', 'href')
+        urls.add(a_tag.a['href'])
+        # safe_add(urls, a_tag, 'a', 'href')
     return urls
 
 
@@ -244,11 +249,12 @@ def extract_article_urls_from_page_mno(archive_page_raw_html):
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     # ha expect_more..=True lenne, akkor _elvileg_ van esély arra, hogy ha a legutolsó oldalon csak egy cikk van,
     # akkor errort kapunk. Ettől függetlenül érdemes lehet True-ra állítani, ugyanis 99644 oldalból EGY ilyen.
-    main_container = safe_find(soup, 'h2', find_all=True)
-    # main_container = soup.find_all('h2')  <--- eredeti sor
+    # main_container = safe_find(soup, 'h2', find_all=True)
+    main_container = soup.find_all('h2')
     for a_tag in main_container:
         if a_tag.a is not None:
-            safe_add(urls, a_tag, 'a', 'href')
+            urls.add(a_tag.a['href'])
+            # safe_add(urls, a_tag, 'a', 'href')
     return urls
 
 
@@ -264,10 +270,10 @@ def extract_article_urls_from_page_vs(archive_page_raw_html):
     for html_fragment in html_list:
         for fragment in html_fragment['ContentBoxes']:
             soup = BeautifulSoup(fragment, 'lxml')
-            # Ezek az eredeti sorok, amiket kivált a safe_add:
-            # url = soup.a['href']
-            # urls.add('https://vs.hu{0}'.format(url))
-            safe_add(urls, soup, 'a', 'href', 'https://vs.hu')
+            # Ezek az eredeti sorok, amiket kivált(ana) a safe_add:
+            url = soup.a['href']
+            urls.add('https://vs.hu{0}'.format(url))
+            # safe_add(urls, soup, 'a', 'href', 'https://vs.hu')
     return urls
 
 

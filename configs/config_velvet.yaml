@@ -1,0 +1,23 @@
+"site_name": "index"
+"site_schemas": "site_schemas.yaml"
+
+# "output_corpus": "velvet_corpus.txt"
+# "tags": "tags.yaml"
+
+"log_file_articles": "velvet_articles_log.txt"
+"log_file_archive": "velvet_archive_log.txt"
+# "new_problematic_urls": NULL
+# "new_good_urls": NULL
+# "new_problematic_archive_urls": NULL
+# "new_good_archive_urls": NULL
+
+# "date_from": 2005-01-03
+# "date_until": 2100-01-01
+
+# Site-Shemas overlay:
+
+"date_first_article": 2005-01-03
+"archive_url_format": "https://velvet.hu/24ora/?s=&tol=#year-#month-#day&ig=#year-#month-#day&tarskiadvanyokbanis=1&profil=&rovat=&cimke=&word=1&pepe=1&p=#pagenum"
+
+"tags_keys":
+    "^http://www\\.velvet\\.hu/": NULL
