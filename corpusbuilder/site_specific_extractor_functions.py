@@ -164,16 +164,17 @@ def extract_article_urls_from_page_nol(archive_page_raw_html):
     :return: list that contains URLs
     """
     urls = set()
-    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    main_container = soup.find_all(class_='middleCol')
-    for middle_cols in main_container:
-        for a_tag in middle_cols.find_all('a', class_='vezetoCimkeAfter'):
-            # az alábbi sanity check-ek garantálják, hogy csak cikk urlt tartalmazó 'a'-tageket szűrünk ki.
-            # az általános safe_add fv. itt nem alkalmazható
-            if a_tag is not None \
-              and len(a_tag['class']) == 1 \
-              and 'href' in a_tag.attrs:  # TODO: EZt valahogy bele lehet építeni a find_all-ba...
-                urls.add(a_tag['href'])
+    # multi_valued_attributes=None in the Soup constructor garantees that multi-value attributes are not splitted!
+    # Therefore 'vezetoCimkeAfter' is the only class element!
+    # TODO: Ide kellene egy olyan, ahol tényleg probléma ez, mert szerintem nincs a middleCol-ban ilyen...
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml', multi_valued_attributes=None)
+    main_container = soup.find_all(class_='middleCol')  # There are two of them!
+    for a_tag in main_container:
+        if a_tag is not None:
+            a_tag_as = a_tag.find_all('a', class_='vezetoCimkeAfter')  # Here find_all()!
+            for a_tag_a in a_tag_as:
+                if a_tag_a is not None and 'href' in a_tag_a.attrs:
+                    urls.add(a_tag_a['href'])
     return urls
 
 
@@ -185,11 +186,11 @@ def extract_article_urls_from_page_origo(archive_page_raw_html):
     """
     urls = set()
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    main_container = soup.find_all(id='archive-articles')
-    for middle_cols in main_container:
-        for a_tag in middle_cols.find_all(class_='archive-cikk'):
-            # safe_add(urls, a_tag, 'a', 'href')
-            urls.add(a_tag.a['href'])
+    main_container = soup.find_all(class_='archive-cikk')
+    for a_tag in main_container:
+        a_tag_a = a_tag.find('a')
+        if a_tag_a is not None and 'href' in a_tag_a.attrs:
+            urls.add(a_tag_a['href'])
     return urls
 
 
@@ -203,8 +204,9 @@ def extract_article_urls_from_page_444(archive_page_raw_html):
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all(class_='card')
     for a_tag in main_container:
-        # safe_add(urls, a_tag, 'a', 'href')
-        urls.add(a_tag.a['href'])
+        a_tag_a = a_tag.find('a')
+        if a_tag_a is not None and 'href' in a_tag_a.attrs:
+            urls.add(a_tag_a['href'])
     return urls
 
 
@@ -218,8 +220,9 @@ def extract_article_urls_from_page_blikk(archive_page_raw_html):
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all(class_='archiveDayRow')
     for a_tag in main_container:
-        urls.add(a_tag.a['href'])
-        # safe_add(urls, a_tag, 'a', 'href')
+        a_tag_a = a_tag.find('a')
+        if a_tag_a is not None and 'href' in a_tag_a.attrs:
+            urls.add(a_tag_a['href'])
     return urls
 
 
@@ -231,11 +234,11 @@ def extract_article_urls_from_page_index(archive_page_raw_html):
     """
     urls = set()
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    # main_container = safe_find(soup, 'article', find_all=True, expect_more_than_one_item=True)
     main_container = soup.find_all('article')
     for a_tag in main_container:
-        urls.add(a_tag.a['href'])
-        # safe_add(urls, a_tag, 'a', 'href')
+        a_tag_a = a_tag.find('a')
+        if a_tag_a is not None and 'href' in a_tag_a.attrs:
+            urls.add(a_tag_a['href'])
     return urls
 
 
@@ -247,14 +250,28 @@ def extract_article_urls_from_page_mno(archive_page_raw_html):
     """
     urls = set()
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    # ha expect_more..=True lenne, akkor _elvileg_ van esély arra, hogy ha a legutolsó oldalon csak egy cikk van,
-    # akkor errort kapunk. Ettől függetlenül érdemes lehet True-ra állítani, ugyanis 99644 oldalból EGY ilyen.
-    # main_container = safe_find(soup, 'h2', find_all=True)
     main_container = soup.find_all('h2')
     for a_tag in main_container:
-        if a_tag.a is not None:
-            urls.add(a_tag.a['href'])
-            # safe_add(urls, a_tag, 'a', 'href')
+        a_tag_a = a_tag.find('a')
+        if a_tag_a is not None and 'href' in a_tag_a.attrs:
+            urls.add(a_tag_a['href'])
+    return urls
+
+
+def extract_article_urls_from_page_valasz(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    urls = set()
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    container = soup.find(class_='cont')
+    main_container = container.find_all('article')
+    for a_tag in main_container:
+        a_tag_a = a_tag.find('a')
+        if a_tag_a is not None and 'href' in a_tag_a.attrs:
+            urls.add('http://valasz.hu{0}'.format(a_tag_a['href']))
     return urls
 
 
@@ -270,28 +287,9 @@ def extract_article_urls_from_page_vs(archive_page_raw_html):
     for html_fragment in html_list:
         for fragment in html_fragment['ContentBoxes']:
             soup = BeautifulSoup(fragment, 'lxml')
-            # Ezek az eredeti sorok, amiket kivált(ana) a safe_add:
-            url = soup.a['href']
-            urls.add('https://vs.hu{0}'.format(url))
-            # safe_add(urls, soup, 'a', 'href', 'https://vs.hu')
-    return urls
-
-
-def extract_article_urls_from_page_valasz(archive_page_raw_html):
-    """
-        extracts and returns as a list the URLs belonging to articles from an HTML code
-    :param archive_page_raw_html: archive page containing list of articles with their URLs
-    :return: list that contains URLs
-    """
-    urls = set()
-    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    main_container = soup.find(class_='cont')
-    articles = main_container.find_all('article')
-    for article in articles:
-        try:
-            urls.add('http://valasz.hu' + article.h2.a['href'])
-        except AttributeError:
-            pass
+            a_tag = soup.find('a')
+            if a_tag is not None and 'href' in a_tag.attrs:
+                urls.add('https://vs.hu{0}'.format(a_tag['href']))
     return urls
 
 
