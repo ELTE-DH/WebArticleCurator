@@ -200,8 +200,10 @@ def wrap_input_consants(current_task_config_filename, args):
     if initial_pagenum != '':
         if not isinstance(initial_pagenum, int) or initial_pagenum < 0:
             raise ValueError('initial_pagenum should be int >= 0!')
-        initial_pagenum = str(initial_pagenum)
-    settings['INITIAL_PAGENUM'] = initial_pagenum
+        min_pagenum = settings.get('min_pagenum')
+        if min_pagenum is not None and min_pagenum != initial_pagenum + 1:
+            raise ValueError('If initial_pagenum is an integer min_pagenum must have value initial_pagenum+1!')
+    settings['INITIAL_PAGENUM'] = str(initial_pagenum)
 
     max_pagenum = settings.get('max_pagenum')
     if max_pagenum is not None:

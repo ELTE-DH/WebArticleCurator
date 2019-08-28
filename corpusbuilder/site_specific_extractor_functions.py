@@ -5,52 +5,7 @@ import json
 from bs4 import BeautifulSoup
 
 
-def safe_find(target, string_to_search, find_all=False, expect_more_than_one_item=False):
-    """
-    Altered version of BS find() and find_all() so that it throws exceptions in certain cases and only returns searches
-    with valid results (NoneType and empty lists as results are excluded).
-    :param target: the BS Tag object which is looked up
-    :param string_to_search: string, the raw string that is searched
-    :param find_all: boolean, default False; False yields find(), True yields find_all()
-    :param expect_more_than_one_item: default False; set True if the expectation is a list containing more than one
-    items. Considered only if find_all is set to True!
-    :return: if used as find(), it returns the Tag object, else a list of results. Raises exception otherwise.
-    """
-    if find_all:
-        rtn = target.find_all(**string_to_search)
-        if len(rtn) == 0 or (expect_more_than_one_item and len(rtn) < 2):
-            raise Exception
-        return rtn
-    elif target.find(**string_to_search) is None:
-        raise Exception
-    return target.find(**string_to_search)
-
-
-def safe_add(append_to, target, label, attr=None, site_prefix=''):
-    """
-        Helper function for exctract_article_urls_from_page_x functions.
-        Replaces sanity checked BeautifulSoupObject.find(x) + url_list.add(url) combinations so that instead of having
-        those lines in each/most exctractor functions, the checks are taken care of here.
-        :param append_to: list or set of urls
-        :param target: BeautifulSoup Tag object that is searched for label and/or attribute
-        :param label: string of the label to be searched, e.g. 'a', 'div' etc.
-        :param attr: string of the attribute of the object found with label search. E.g. 'href' if label is 'a' and its
-        'href' attribute contains the url to be appended
-        :param site_prefix: string --- e.g. 'https://example.com' if 'href' only contains substring of the whole url
-        ('/article/190826_blabla') and domain must be prefixed to get the full url
-        ('https://example.com/article/190826')
-        :return:
-    """
-    if label is not None and attr is not None:  # case 1: label and attribute are both present
-        if hasattr(target, 'find') and target.find(label) is not None and attr in target.find(label).attrs:
-            append_to.add(site_prefix + target.label[attr])
-    elif hasattr(target, 'find') and target.find(label) is not None:  # case 2: label is present, attribute is not
-        append_to.add(site_prefix + target.find(label))
-    else:
-        raise Exception
-
 # BEGIN SITE SPECIFIC extract_next_page_url FUNCTIONS ##################################################################
-
 
 def extract_next_page_url_444(archive_page_raw_html):
     """
@@ -110,9 +65,9 @@ def extract_next_page_url_nol(archive_page_raw_html):
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     next_page = soup.find(class_='next')
     if next_page is not None:
-        next_page_a = next_page.find('a')
         # find('a') is a must, because on the last page there is only the div and no 'a'
         # (eg. nol.hu/archivum?page=14670 )
+        next_page_a = next_page.find('a')
         if next_page_a is not None and 'href' in next_page_a.attrs:
             ret = 'http://nol.hu{0}'.format(next_page_a['href'])
     return ret
@@ -152,9 +107,21 @@ def extract_next_page_url_test(filename):
 
     print('Test OK!')
 
+
 # END SITE SPECIFIC extract_next_page_url FUNCTIONS ####################################################################
 
 # BEGIN SITE SPECIFIC extract_article_urls_from_page FUNCTIONS #########################################################
+
+def safe_extract_hrefs_from_a_tags(main_container):
+    """
+    Helper function to extract href from a tags
+    :param main_container: An iterator over Tag()-s
+    :return: Generator over the extracted links
+    """
+    for a_tag in main_container:
+        a_tag_a = a_tag.find('a')
+        if a_tag_a is not None and 'href' in a_tag_a.attrs:
+            yield a_tag_a['href']
 
 
 def extract_article_urls_from_page_nol(archive_page_raw_html):
@@ -184,13 +151,9 @@ def extract_article_urls_from_page_origo(archive_page_raw_html):
     :param archive_page_raw_html: archive page containing list of articles with their URLs
     :return: list that contains URLs
     """
-    urls = set()
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all(class_='archive-cikk')
-    for a_tag in main_container:
-        a_tag_a = a_tag.find('a')
-        if a_tag_a is not None and 'href' in a_tag_a.attrs:
-            urls.add(a_tag_a['href'])
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
     return urls
 
 
@@ -200,13 +163,9 @@ def extract_article_urls_from_page_444(archive_page_raw_html):
     :param archive_page_raw_html: archive page containing list of articles with their URLs
     :return: list that contains URLs
     """
-    urls = set()
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all(class_='card')
-    for a_tag in main_container:
-        a_tag_a = a_tag.find('a')
-        if a_tag_a is not None and 'href' in a_tag_a.attrs:
-            urls.add(a_tag_a['href'])
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
     return urls
 
 
@@ -216,13 +175,9 @@ def extract_article_urls_from_page_blikk(archive_page_raw_html):
     :param archive_page_raw_html: archive page containing list of articles with their URLs
     :return: list that contains URLs
     """
-    urls = set()
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all(class_='archiveDayRow')
-    for a_tag in main_container:
-        a_tag_a = a_tag.find('a')
-        if a_tag_a is not None and 'href' in a_tag_a.attrs:
-            urls.add(a_tag_a['href'])
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
     return urls
 
 
@@ -232,13 +187,9 @@ def extract_article_urls_from_page_index(archive_page_raw_html):
     :param archive_page_raw_html: archive page containing list of articles with their URLs
     :return: list that contains URLs
     """
-    urls = set()
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all('article')
-    for a_tag in main_container:
-        a_tag_a = a_tag.find('a')
-        if a_tag_a is not None and 'href' in a_tag_a.attrs:
-            urls.add(a_tag_a['href'])
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
     return urls
 
 
@@ -248,13 +199,9 @@ def extract_article_urls_from_page_mno(archive_page_raw_html):
     :param archive_page_raw_html: archive page containing list of articles with their URLs
     :return: list that contains URLs
     """
-    urls = set()
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all('h2')
-    for a_tag in main_container:
-        a_tag_a = a_tag.find('a')
-        if a_tag_a is not None and 'href' in a_tag_a.attrs:
-            urls.add(a_tag_a['href'])
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
     return urls
 
 
@@ -264,14 +211,13 @@ def extract_article_urls_from_page_valasz(archive_page_raw_html):
     :param archive_page_raw_html: archive page containing list of articles with their URLs
     :return: list that contains URLs
     """
-    urls = set()
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     container = soup.find(class_='cont')
-    main_container = container.find_all('article')
-    for a_tag in main_container:
-        a_tag_a = a_tag.find('a')
-        if a_tag_a is not None and 'href' in a_tag_a.attrs:
-            urls.add('http://valasz.hu{0}'.format(a_tag_a['href']))
+    if container is not None:
+        main_container = container.find_all('article')
+        urls = {'http://valasz.hu{0}'.format(link) for link in safe_extract_hrefs_from_a_tags(main_container)}
+    else:
+        urls = None
     return urls
 
 
@@ -287,9 +233,7 @@ def extract_article_urls_from_page_vs(archive_page_raw_html):
     for html_fragment in html_list:
         for fragment in html_fragment['ContentBoxes']:
             soup = BeautifulSoup(fragment, 'lxml')
-            a_tag = soup.find('a')
-            if a_tag is not None and 'href' in a_tag.attrs:
-                urls.add('https://vs.hu{0}'.format(a_tag['href']))
+            urls.update('https://vs.hu{0}'.format(link) for link in safe_extract_hrefs_from_a_tags([soup]))
     return urls
 
 

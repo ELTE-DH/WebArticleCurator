@@ -144,7 +144,7 @@
 
 
     "initial_pagenum": 0
-    "min_pagenum": 0
+    "min_pagenum": 1
     # "max_pagenum": NULL
 
     "ignore_archive_cache": false
@@ -220,7 +220,7 @@
     "verify": true
 
     "initial_pagenum": 1
-    "min_pagenum": 1
+    "min_pagenum": 2
     "max_pagenum": 86
 
     "ignore_archive_cache": false

@@ -154,7 +154,7 @@ class NewsArchiveCrawler:
                 # Method #3: No link, but infinite scrolling! (also good for inactive archive, without other clues)
                 ((settings['infinite_scrolling'] and len(article_urls) > 0) or
                  # Method #4: Has predefined max_pagenum! (also good for inactive archive, with known max_pagenum)
-                 (max_pagenum is not None and page_num < max_pagenum) or
+                 (max_pagenum is not None and page_num <= max_pagenum) or
                  # Method #5: Active archive, just pages -> We allow intersecting elements
                  #  as the archive may have been moved
                  (art_url_threshold is not None and
