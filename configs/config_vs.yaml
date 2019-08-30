@@ -4,12 +4,12 @@
 # "output_corpus": "vs_corpus.txt"
 # "tags": "tags.yaml"
 
-"log_file_articles": "vs_articles_log.txt"
-"log_file_archive": "vs_archive_log.txt"
-# "new_problematic_urls": NULL
-# "new_good_urls": NULL
-# "new_problematic_archive_urls": NULL
-# "new_good_archive_urls": NULL
+"log_file_articles": "logs/vs_articles_log.txt"
+"log_file_archive": "logs/vs_archive_log.txt"
+"new_problematic_urls": "logs/vs_new_problematic_urls.txt"
+"new_good_urls": "logs/vs_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/vs_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/vs_new_good_archive_urls.txt"
 
 # "date_from": 2013-09-30   # First article
 # "date_until": 2019-02-13  # Last article

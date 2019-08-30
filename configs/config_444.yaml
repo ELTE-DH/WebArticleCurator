@@ -4,12 +4,12 @@
 # "output_corpus": "444_corpus.txt"
 # "tags": "tags.yaml"
 
-"log_file_articles": "444_articles_log.txt"
-"log_file_archive": "444_archive_log.txt"
-# "new_problematic_urls": NULL
-# "new_good_urls": NULL
-# "new_problematic_archive_urls": NULL
-# "new_good_archive_urls": NULL
+"log_file_articles": "logs/444_articles_log.txt"
+"log_file_archive": "logs/444_archive_log.txt"
+"new_problematic_urls": "logs/444_new_problematic_urls.txt"
+"new_good_urls": "logs/444_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/444_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/444_new_good_archive_urls.txt"
 
 # "date_from": 2000-01-01
 # "date_until": 2100-01-01

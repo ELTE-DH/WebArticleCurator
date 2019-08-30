@@ -242,10 +242,12 @@ class NewsArticleCrawler:
     def process_urls(self, it):
         for url in it:
             # 1) Check if it is a duplicate (we do not count those in the archive)
-            if url in self.known_good_article_urls or url in self._archive_downloader.known_article_urls \
-                    or not self._is_new_url(url):
+            is_not_new_url = not self._is_new_url(url)
+            if is_not_new_url or self._is_known_bad_url(url):
                 self._logger.log('WARNING', '\t'.join((url, 'Not processing article, because it is already processed'
                                                             ' in this session!')))
+                if is_not_new_url:                      # If good but not new URL,
+                    self._downloader.download_url(url)  # copy it into the new WARC archive
                 continue
 
             # 2) "Download" article
@@ -303,7 +305,7 @@ class NewsArticleCrawler:
 
     def download_gathered_new_urls(self):
         # Recheck new urls (also in the archive!)
-        self._new_urls = {url for url in self._new_urls if self._is_new_url(url)}
+        self._new_urls = {url for url in self._new_urls if self._is_new_url(url) and not self._is_known_bad_url(url)}
         while len(self._new_urls) > 0:  # Article URL-s not in the archive... Shouldn't be any!
             for url in self._new_urls:
                 self._logger.log('ERROR', '\t'.join((url, 'TRUE NEW URL')))
@@ -314,8 +316,11 @@ class NewsArticleCrawler:
         return \
             (url not in self.good_article_urls and         # Downloaded succesfully in this session
              url not in self.known_good_article_urls and   # Present in old archive
-             url not in self.problematic_article_urls and  # Download failed in this session (requries manual check)
-             url not in self._downloader.bad_urls and      # Explicit bad URLs (supplied as parameter)
              url not in self._archive_downloader.good_urls and  # Archive URLs succesfully downloaded in this session
-             url not in self._archive_downloader.problematic_urls and  # Archive URLs failed to download in this session
              url not in self._archive_downloader.known_article_urls)  # Article URLs explicitly known (as parameter)
+
+    def _is_known_bad_url(self, url):
+        return \
+            (url in self.problematic_article_urls or  # Download failed in this session (requries manual check)
+             url in self._downloader.bad_urls or      # Explicit bad URLs (supplied as parameter)
+             url in self._archive_downloader.problematic_urls)  # Archive URLs failed to download in this session
