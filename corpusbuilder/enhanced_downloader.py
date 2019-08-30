@@ -52,8 +52,8 @@ class WarcCachingDownloader:
     def download_url(self, url, ignore_cache=False):
         if url in self.url_index:  # Check cache...
             reqv, resp = self._cached_downloads.get_record(url)
-            self._new_downloads.write_record(reqv)
-            self._new_downloads.write_record(resp)
+            self._new_downloads.write_record(reqv, url)
+            self._new_downloads.write_record(resp, url)
             cache = self._cached_downloads.download_url(url)
         else:
             cache = None
@@ -66,6 +66,15 @@ class WarcCachingDownloader:
 
         return self._new_downloads.download_url(url)
 
+    def copy_url(self, url):
+        if url in self.url_index and url not in self._new_downloads.good_urls:  # Check cache if the URL is truly new!
+            reqv, resp = self._cached_downloads.get_record(url)
+            self._new_downloads.write_record(reqv, url)
+            self._new_downloads.write_record(resp, url)
+            return True
+        else:
+            return False
+
     @property
     def bad_urls(self):
         return self._new_downloads.bad_urls
@@ -73,6 +82,14 @@ class WarcCachingDownloader:
     @bad_urls.setter
     def bad_urls(self, value):
         self._new_downloads.bad_urls = value
+
+    @property
+    def good_urls(self):
+        return self._new_downloads.good_urls
+
+    @good_urls.setter
+    def good_urls(self, value):
+        self._new_downloads.good_urls = value
 
     @property
     def cached_urls(self):
@@ -85,13 +102,14 @@ class WarcDummyDownloader:
     """
     def __init__(self, *_, **__):
         self.bad_urls = set()
+        self.good_urls = set()
 
     @staticmethod
     def download_url(_):
         return None
 
     @staticmethod
-    def write_record(_):
+    def write_record(*_):
         return None
 
 
@@ -107,6 +125,8 @@ class WarcDownloader:
                 self.bad_urls = {line.strip() for line in fh}
         else:
             self.bad_urls = set()
+
+        self.good_urls = set()
 
         if not overwrite_warc:  # Find out next nonexisting warc filename
             num = 0
@@ -251,12 +271,13 @@ class WarcDownloader:
                                                       warc_headers_dict={'WARC-IP-Address': peer_name,
                                                                          'WARC-X-Detected-Encoding': enc})
         # Everything is OK, write the two WARC records
-        self._writer.write_record(reqv_record)
-        self._writer.write_record(resp_record)
+        self.write_record(reqv_record, url)
+        self.write_record(resp_record, url)
 
         return text
 
-    def write_record(self, record):
+    def write_record(self, record, url):
+        self.good_urls.add(url)
         self._writer.write_record(record)
 
 

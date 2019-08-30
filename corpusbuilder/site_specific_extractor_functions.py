@@ -134,7 +134,7 @@ def extract_article_urls_from_page_nol(archive_page_raw_html):
     # multi_valued_attributes=None in the Soup constructor garantees that multi-value attributes are not splitted!
     # Therefore 'vezetoCimkeAfter' is the only class element!
     # TODO: Ide kellene egy olyan, ahol tényleg probléma ez, mert szerintem nincs a middleCol-ban ilyen...
-    soup = BeautifulSoup(archive_page_raw_html, 'lxml', multi_valued_attributes=None)
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all(class_='middleCol')  # There are two of them!
     for a_tag in main_container:
         if a_tag is not None:
