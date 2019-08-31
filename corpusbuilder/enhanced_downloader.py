@@ -34,10 +34,10 @@ class WarcCachingDownloader:
 
         All parameters are wired out to the CLI and are documented there.
     """
-    def __init__(self, existing_warc_filename, new_warc_filename, logger_, just_cache=False, **download_params):
-        self._logger_ = logger_
+    def __init__(self, existing_warc_filename, new_warc_filename, _logger, just_cache=False, **download_params):
+        self._logger = _logger
         if existing_warc_filename is not None:  # Setup the supplied existing warc archive file as cache
-            self._cached_downloads = WarcReader(existing_warc_filename, logger_)
+            self._cached_downloads = WarcReader(existing_warc_filename, _logger)
             self.url_index = self._cached_downloads.url_index
             info_record_data = self._cached_downloads.info_record_data
         else:
@@ -47,7 +47,7 @@ class WarcCachingDownloader:
         if just_cache:
             self._new_downloads = WarcDummyDownloader()
         else:
-            self._new_downloads = WarcDownloader(new_warc_filename, logger_, info_record_data, **download_params)
+            self._new_downloads = WarcDownloader(new_warc_filename, _logger, info_record_data, **download_params)
 
     def download_url(self, url, ignore_cache=False):
         if url in self.url_index:  # Check cache...
@@ -62,7 +62,7 @@ class WarcCachingDownloader:
             return cache
 
         if cache is not None:
-            self._logger_.log('INFO', 'Ignoring cache for URL: {0}'.format(url))
+            self._logger.log('INFO', 'Ignoring cache for URL: {0}'.format(url))
 
         return self._new_downloads.download_url(url)
 
@@ -117,7 +117,7 @@ class WarcDownloader:
     """
         Download URL with HTTP GET, save to a WARC file and return the decoded text
     """
-    def __init__(self, filename, logger_, warcinfo_record_data=None, program_name='corpusbuilder 1.0', user_agent=None,
+    def __init__(self, filename, _logger, warcinfo_record_data=None, program_name='corpusbuilder 1.0', user_agent=None,
                  overwrite_warc=True, err_threshold=10, known_bad_urls=None, max_no_of_calls_in_period=2,
                  limit_period=1, proxy_url=None, allow_cookies=False, verify=True):
         if known_bad_urls is not None:  # Setup the list of cached bad URLs to prevent trying to download them again
@@ -139,10 +139,10 @@ class WarcDownloader:
                 filename = '{0}-{1:05d}{2}'.format(filename2, num, ext)
                 num += 1
 
-        logger_.log('INFO', 'Creating archivefile: {0}'.format(filename))
+        _logger.log('INFO', 'Creating archivefile: {0}'.format(filename))
 
         self._output_file = open(filename, 'wb')
-        self._logger_ = logger_
+        self._logger = _logger
         self._req_headers = {'Accept-Encoding': 'identity', 'User-agent': user_agent}
 
         self._session = Session()  # Setup session for speeding up downloads
@@ -187,7 +187,7 @@ class WarcDownloader:
         return self._session.get(*args, **kwargs)
 
     def _handle_request_exception(self, url, msg):
-        self._logger_.log('WARNING', '\t'.join((url, msg)))
+        self._logger.log('WARNING', '\t'.join((url, msg)))
 
         self._error_count += 1
         if self._error_count >= self._error_threshold:
@@ -199,7 +199,7 @@ class WarcDownloader:
         url = urlunparse((scheme, netloc, path, params, query, fragment))
 
         if url in self.bad_urls:
-            self._logger_.log('INFO', 'Not downloading known bad URL: {0}'.format(url))
+            self._logger.log('INFO', 'Not downloading known bad URL: {0}'.format(url))
             return None
 
         try:  # The actual request
@@ -260,7 +260,7 @@ class WarcDownloader:
         try:
             text = data.decode(enc)  # Normal decode process
         except UnicodeDecodeError:
-            self._logger_.log('WARNING', '\t'.join(('DECODE ERROR RETRYING IN \'IGNORE\' MODE:', url, enc)))
+            self._logger.log('WARNING', '\t'.join(('DECODE ERROR RETRYING IN \'IGNORE\' MODE:', url, enc)))
             text = data.decode(enc, 'ignore')
         data_stream = BytesIO(data)  # Need the original byte stream to write the payload to the warc file
 
@@ -282,23 +282,22 @@ class WarcDownloader:
 
 
 class WarcReader:
-    def __init__(self, filename, logger_):
+    def __init__(self, filename, _logger):
         self._stream = open(filename, 'rb')
         self.url_index = {}
-        self._count = 0
-        self._logger_ = logger_
+        self._logger = _logger
         self.info_record_data = None
         try:
             self.create_index()
         except KeyError as e:
-            self._logger_.log('ERROR', 'Ignoring exception: {0}'.format(e))
+            self._logger.log('ERROR', 'Ignoring exception: {0}'.format(e))
 
     def __del__(self):
         if hasattr(self, '_stream'):  # If the program opened a file, then it should gracefully close it on exit!
             self._stream.close()
 
     def create_index(self):
-        self._logger_.log('INFO', 'Creating index...')
+        self._logger.log('INFO', 'Creating index...')
         archive_it = ArchiveIterator(self._stream)
         info_rec = next(archive_it)
         # First record should be an info record, then it should be followed by the request-response pairs
@@ -317,10 +316,12 @@ class WarcReader:
             # Info headers in parsed form
             self.info_record_data = (untouched_info_record, (info_rec.rec_headers, info_rec_payload))
         except UnicodeDecodeError:
-            self._logger_.log('WARNING', 'WARCINFO record in {0} is corrupt! Continuing with a fresh one!'.
-                              format(self._stream.name))
+            self._logger.log('WARNING', 'WARCINFO record in {0} is corrupt! Continuing with a fresh one!'.
+                             format(self._stream.name))
             self.info_record_data = None
 
+        count = 0
+        double_urls = set()
         reqv_data = (None, (None, None))  # To be able to handle the request-response pairs together
         for i, record in enumerate(archive_it):
             if record.rec_type == 'request':
@@ -331,15 +332,17 @@ class WarcReader:
                 assert i % 2 == 1
                 resp_url = record.rec_headers.get_header('WARC-Target-URI')
                 assert resp_url == reqv_data[0]
+                if resp_url in self.url_index:
+                    double_urls.add(resp_url)
                 self.url_index[resp_url] = (reqv_data[1],  # Request-response pair
                                             (archive_it.get_record_offset(), archive_it.get_record_length()))
-                self._count += 1
-        if self._count != len(self.url_index):
-            raise KeyError('Double URL detected in WARC file!')
-        if self._count == 0:
+                count += 1
+        if count != len(self.url_index):
+            raise KeyError('The following double URLs detected in the WARC file:\n{0}'.format('\n'.join(double_urls)))
+        if count == 0:
             raise IndexError('No index created or no response records in the WARC file!')
         self._stream.seek(0)
-        self._logger_.log('INFO', 'Index succesuflly created.')
+        self._logger.log('INFO', 'Index succesuflly created.')
 
     def get_record(self, url):
         reqv_resp_pair = self.url_index.get(url)
@@ -364,7 +367,7 @@ class WarcReader:
             enc = record.rec_headers.get_header('WARC-X-Detected-Encoding', 'UTF-8')
             text = data.decode(enc, 'ignore')
         else:
-            self._logger_.log('CRITICAL', '\t'.join((url, 'URL not found in WARC!')))
+            self._logger.log('CRITICAL', '\t'.join((url, 'URL not found in WARC!')))
 
         return text
 

@@ -36,7 +36,8 @@
     "go_reverse_in_archive": true
     "verify": true
 
-    "min_pagenum": 0
+    "initial_pagenum": 0
+    "min_pagenum": 1
     # "max_pagenum": NULL
 
     "ignore_archive_cache": false
@@ -212,7 +213,7 @@
     "archive_url_format": "http://valasz.hu/reflektor/?page=#pagenum"
 
     "extract_next_page_url_fun": NULL
-    "extract_article_urls_from_page_fun": "extract_article_urls_from_page_valasz"
+    "extract_article_urls_from_page_fun": "extract_article_urls_from_page_valasz_normal"
     "next_url_by_pagenum": true
     "infinite_scrolling": false
     "archive_page_urls_by_date": false

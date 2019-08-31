@@ -16,3 +16,5 @@
 
 "archive_url_format": "http://valasz.hu/publi?page=#pagenum"
 "max_pagenum": 360
+# Publi column is special!
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_valasz_publi"

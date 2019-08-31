@@ -110,9 +110,11 @@ class NewsArchiveCrawler:
         """
         initial_page_num = self._settings['INITIAL_PAGENUM']
         page_num = self._settings['min_pagenum']
+        infinite_scrolling = self._settings['infinite_scrolling']
         ignore_archive_cache = self._settings['ignore_archive_cache']
         extract_article_urls_from_page_fun = self._settings['EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN']
 
+        first_page = True
         next_page_url = archive_page_url_base.replace('#pagenum', initial_page_num)
         while next_page_url is not None:
             archive_page_raw_html = self._downloader.download_url(next_page_url, ignore_cache=ignore_archive_cache)
@@ -121,6 +123,8 @@ class NewsArchiveCrawler:
                     self.good_urls.add(next_page_url)
                 # 1) We need article URLs here to reliably determine the end of pages in some cases
                 article_urls = extract_article_urls_from_page_fun(archive_page_raw_html)
+                if len(article_urls) == 0 and (not infinite_scrolling or first_page):
+                    self._logger.log('WARNING', '\t'.join((next_page_url, 'Could not extract URLs from the archive!')))
                 # 2) Generate next-page URL or None if there should not be any
                 next_page_url = self._find_next_page_url(self._settings, archive_page_url_base, page_num,
                                                          archive_page_raw_html, article_urls, self.known_article_urls)
@@ -131,6 +135,7 @@ class NewsArchiveCrawler:
                 article_urls = []
             page_num += 1
             yield from article_urls
+            first_page = False
 
     @staticmethod
     def _find_next_page_url(settings, archive_page_url_base, page_num, raw_html, article_urls, known_article_urls):
@@ -242,11 +247,11 @@ class NewsArticleCrawler:
         for url in it:
             # 1) Check if it is a duplicate (we do not count those in the archive)
             is_not_new_url = not self._is_new_url(url)
-            if is_not_new_url or self._is_known_bad_url(url):
+            if is_not_new_url or self._is_known_bad_url(url):  # TODO: Simplify?
                 if is_not_new_url and url not in self._copied_urls:
                     self._downloader.copy_url(url)  # If good but not new URL, copy it into the new WARC archive
                     self._copied_urls.add(url)      # to suppress the warning for the first time!
-                else:
+                elif not self._is_known_bad_url(url):  # Siently skip known-bad-urls...
                     self._logger.log('WARNING', '\t'.join((url, 'Not processing article, because it is already'
                                                                 ' processed in this session!')))
                 continue

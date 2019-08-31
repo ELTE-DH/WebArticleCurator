@@ -205,16 +205,32 @@ def extract_article_urls_from_page_mno(archive_page_raw_html):
     return urls
 
 
-def extract_article_urls_from_page_valasz(archive_page_raw_html):
+def extract_article_urls_from_page_valasz_normal(archive_page_raw_html):
     """
         extracts and returns as a list the URLs belonging to articles from an HTML code
     :param archive_page_raw_html: archive page containing list of articles with their URLs
     :return: list that contains URLs
     """
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    container = soup.find(class_='cont')
+    container = soup.find('section', class_="normal cikk lista")
     if container is not None:
-        main_container = container.find_all('article')
+        main_container = container.find_all('article', itemscope="")
+        urls = {'http://valasz.hu{0}'.format(link) for link in safe_extract_hrefs_from_a_tags(main_container)}
+    else:
+        urls = None
+    return urls
+
+
+def extract_article_urls_from_page_valasz_publi(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    container = soup.find('section', class_="publi cikk lista")
+    if container is not None:
+        main_container = container.find_all('article', itemscope="")
         urls = {'http://valasz.hu{0}'.format(link) for link in safe_extract_hrefs_from_a_tags(main_container)}
     else:
         urls = None
@@ -258,7 +274,8 @@ def extract_article_urls_from_page_test(filename):
                 'http://nol.hu/belfold/megy-a-mazsolazas-botka-meg-a-raszorulokon-is-gunyolodott-egy-kicsit-1630861',
                 'http://nol.hu/belfold/titkosszolgalat-zsarolas-sajtoszabadsag-magyarorszag-1630871',
                 'http://nol.hu/belfold/a-kuria-megvedte-a-fidesz-frakcio-titkait-1630899',
-                'http://nol.hu/belfold/zanka-tabor-fidesz-1630879'}
+                'http://nol.hu/belfold/zanka-tabor-fidesz-1630879'
+                }
     assert (extracted, len(extracted)) == (expected, 14)
 
     print('Testing origo')
@@ -641,7 +658,8 @@ def extract_article_urls_from_page_test(filename):
                 'a_radiot_sebestyen_balazs/',
                 'https://velvet.hu/elet/2019/08/03/hiressegek_akik_nem_kernek_az_anyasagbol_galeria/',
                 'https://velvet.hu/gumicukor/2019/08/03/mick_jagger_kisfianak_minden_rezduleseben_ott_van_az_apja/',
-                'https://velvet.hu/elet/2019/08/03/27_ev_van_kozottuk_megis_boldogok_galeria/'}
+                'https://velvet.hu/elet/2019/08/03/27_ev_van_kozottuk_megis_boldogok_galeria/'
+                }
     assert (extracted, len(extracted)) == (expected, 17)
 
     print('Testing mno')
@@ -658,7 +676,8 @@ def extract_article_urls_from_page_test(filename):
                 'https://magyarnemzet.hu/archivum/archivum-archivum/csak-a-turelem-segithet-4473986/',
                 'https://magyarnemzet.hu/archivum/archivum-archivum/kozelit-a-vilag-zagrabhoz-4473977/',
                 'https://magyarnemzet.hu/archivum/archivum-archivum/tanitjak-az-onallo-eletvitelt-4474001/',
-                'https://magyarnemzet.hu/archivum/archivum-archivum/veszelyforrasok-4473995/'}
+                'https://magyarnemzet.hu/archivum/archivum-archivum/veszelyforrasok-4473995/'
+                }
     assert (extracted, len(extracted)) == (expected, 10)
 
     print('Testing vs')
@@ -691,9 +710,9 @@ def extract_article_urls_from_page_test(filename):
                 }
     assert (extracted, len(extracted)) == (expected, 19)
 
-    print('Testing valasz')
+    print('Testing valasz (normal)')
     text = w.download_url('http://valasz.hu/itthon/?page=1')
-    extracted = extract_article_urls_from_page_valasz(text)
+    extracted = extract_article_urls_from_page_valasz_normal(text)
     expected = {'http://valasz.hu/itthon/ez-nem-autopalya-epites-nagyinterju-palinkas-jozseffel-a-tudomany-penzeirol-'
                 '129168',
                 'http://valasz.hu/itthon/itt-a-madaras-adidas-eletkepes-lehet-e-egy-nemzeti-sportmarka-129214',
@@ -710,7 +729,30 @@ def extract_article_urls_from_page_test(filename):
                 'http://valasz.hu/itthon/hogyan-zajlik-egy-kereszteny-hetvege-a-fegyintezetekben-129165',
                 'http://valasz.hu/itthon/ha-tetszik-ha-nem-ez-lehet-2019-sztorija-orban-vagy-macron-129201',
                 'http://valasz.hu/itthon/abszurdra-sikerult-az-uj-gyulekezesi-torveny-borton-jarhat-gyurcsany-'
-                'kifutyuleseert-129207'}
+                'kifutyuleseert-129207'
+                }
+    assert (extracted, len(extracted)) == (expected, 15)
+
+    print('Testing valasz (publi)')
+    text = w.download_url('http://valasz.hu/publi?page=2')
+    extracted = extract_article_urls_from_page_valasz_publi(text)
+    expected = {'http://valasz.hu/publi/szelektiven-nemzeti-kormany-127741',
+                'http://valasz.hu/publi/ha-orban-ezert-rasszista-en-is-az-vagyok-127737',
+                'http://valasz.hu/publi/hat-allitas-a-fidesz-ujabb-ketharmados-gyozelmerol-128083',
+                'http://valasz.hu/publi/egy-biztos-a-fidesz-nyeri-a-valasztast-128062',
+                'http://valasz.hu/publi/remalom-lesz-az-aprilis-8-i-valasztas-127918',
+                'http://valasz.hu/publi/az-ellenzeki-media-miatt-nyert-marki-zay-orban-sulyos-tevedese-127642',
+                'http://valasz.hu/publi/ezert-hasalt-el-az-ellenzek-osszes-temaja-128099',
+                'http://valasz.hu/publi/a-magyar-jobboldal-hat-halalos-ellensege-128048',
+                'http://valasz.hu/publi/donald-trump-uj-energiafegyvere-127780',
+                'http://valasz.hu/publi/ebbol-meg-baj-lesz-nem-mindenhol-gyoztunk-a-politikai-korrektseg-felett-127499',
+                'http://valasz.hu/publi/edes-savanyu-kinai-puspokfalat-127614',
+                'http://valasz.hu/publi/fidesz-vagy-nem-fidesz-egy-konzervativ-honpolgar-vallomasa-a-szavazasrol-'
+                '128050',
+                'http://valasz.hu/publi/valasztas-egy-ket-dolgot-felreertettunk-128150',
+                'http://valasz.hu/publi/mi-a-kozos-lazar-becsi-filmjeben-es-a-kosa-fele-oroksegmilliardokban-127805',
+                'http://valasz.hu/publi/a-nyugati-hanyatlas-uj-szimboluma-127602'
+                }
     assert (extracted, len(extracted)) == (expected, 15)
     print('Test OK!')
 
