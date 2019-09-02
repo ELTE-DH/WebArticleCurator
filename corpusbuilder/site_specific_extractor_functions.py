@@ -253,8 +253,8 @@ def extract_article_urls_from_page_vs(archive_page_raw_html):
     return urls
 
 
-def extract_article_urls_from_page_test(filename):
-    w = WarcCachingDownloader(filename, None, Logger(), just_cache=True)
+def extract_article_urls_from_page_test(filename, logger):
+    w = WarcCachingDownloader(filename, None, logger, just_cache=True)
 
     print('Testing nol')
     text = w.download_url('http://nol.hu/archivum?page=37')
@@ -771,15 +771,6 @@ def extract_article_urls_from_page_test(filename):
 # END SITE SPECIFIC extract_article_urls_from_page FUNCTIONS ###########################################################
 
 
-def extend_warc_archive_with_urls(old_warc_filename, new_warc_fineame, new_urls):
-    w = WarcCachingDownloader(old_warc_filename, new_warc_fineame, Logger())
-    for url in w.url_index:  # Copy all old URLs
-        w.download_url(url)
-    for url in new_urls:
-        print('Adding url {0}'.format(url))
-        w.download_url(url)
-
-
 if __name__ == '__main__':
     import sys
     from os.path import dirname, join as os_path_join, abspath
@@ -788,7 +779,9 @@ if __name__ == '__main__':
     project_dir = abspath(os_path_join(dirname(__file__), '..'))
     sys.path.append(project_dir)
     from corpusbuilder.utils import Logger
-    from corpusbuilder.enhanced_downloader import WarcCachingDownloader
+    from corpusbuilder.enhanced_downloader import WarcCachingDownloader, sample_warc_by_urls
+
+    main_logger = Logger()
 
     choices = {'nextpage': os_path_join(project_dir, 'tests/next_page_url.warc.gz'),
                'archive': os_path_join(project_dir, 'tests/extract_article_urls_from_page.warc.gz')}
@@ -803,9 +796,9 @@ if __name__ == '__main__':
             exit(1)
         print('Addig URLs to {0} :'.format(warc))
         input_urls = (url.strip() for url in sys.stdin)
-        extend_warc_archive_with_urls(choices[warc], warc_filename, input_urls)
+        sample_warc_by_urls(choices[warc], input_urls, main_logger, warc_filename)
         print('Done!')
         print('Do not forget to mv {0} {1} before commit!'.format(warc_filename, choices[warc]))
     else:
         extract_next_page_url_test(choices['nextpage'])
-        extract_article_urls_from_page_test(choices['archive'])
+        extract_article_urls_from_page_test(choices['archive'], main_logger)

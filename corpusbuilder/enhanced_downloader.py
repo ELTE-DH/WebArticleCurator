@@ -387,16 +387,29 @@ class WarcReader:
         return text
 
 
-def main():  # Test
+def sample_warc_by_urls(old_warc_filename, new_urls, logger, new_warc_fineame=None):
+    w = WarcCachingDownloader(old_warc_filename, new_warc_fineame, logger, just_cache=True)
+    for url in new_urls:
+        logger.log('INFO', 'Adding url {0}'.format(url))
+        w.download_url(url)
+
+
+def validate_warc_file(filename, logger):
+    reader = WarcReader(filename, logger, strict_mode=True)
+    logger.log('INFO', 'OK! {0} records read!'.format(len(reader.url_index)))
+
+
+def test():
     filename = 'example.warc.gz'
     url = 'https://index.hu/belfold/2018/08/27/fidesz_media_helyreigazitas/'
     from corpusbuilder.utils import Logger
-    w = WarcCachingDownloader(None, filename, Logger('WarcCachingDownloader-test.log'))
+    test_logger = Logger('WarcCachingDownloader-test.log')
+    w = WarcCachingDownloader(None, filename, test_logger)
     t = w.download_url(url)
-    print(t)
+    test_logger.log('INFO', t)
 
 
-def validate_warc_file(filename):
+if __name__ == '__main__':
     import sys
     from os.path import dirname, join as os_path_join, abspath
 
@@ -405,12 +418,18 @@ def validate_warc_file(filename):
     sys.path.append(project_dir)
 
     from corpusbuilder.utils import Logger
-    reader = WarcReader(filename, Logger(), strict_mode=True)
-    print('OK! {0} records read!'.format(len(reader.url_index)))
-
-
-if __name__ == '__main__':
+    main_logger = Logger()
     if len(sys.argv) == 1:
-        main()
-    else:
-        validate_warc_file(sys.argv[1])
+        test()
+    elif sys.argv[1] == 'validate':
+        validate_warc_file(sys.argv[2], main_logger)
+    elif sys.argv[1] == 'sample':
+        urls = sys.argv[3]
+        if not urls.startswith('http'):
+            with open(urls, encoding='UTF-8') as fhandle:
+                urls = {url.strip() for url in fhandle}
+        if len(sys.argv) == 5:
+            new_warc_file = sys.argv[4]
+        else:
+            new_warc_file = None
+        sample_warc_by_urls(sys.argv[2], urls, main_logger, new_warc_file)
