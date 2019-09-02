@@ -36,6 +36,10 @@ def parse_args():
                         help='Use only cached pages:--old-archive-warc must be specified!')
     parser.add_argument('--articles-just-cache', type=str2bool, nargs='?', const=True, default=False,
                         help='Use only cached pages:--old-articles-warc must be specified!')
+    parser.add_argument('--debug-news-archive', type=str2bool, nargs='?', const=True, default=False,
+                        help='Set DEBUG logging on NewsArchiveCrawler and print the number of extracted URLs per page')
+    parser.add_argument('--strict', type=str2bool, nargs='?', const=True, default=False,
+                        help='Set strict-mode in WARCReader')
     parser.add_argument('--crawler-name', type=str, help='The name of the crawler for the WARC info record',
                         default='corpusbuilder 1.0')
     parser.add_argument('--user-agent', type=str, help='The User-Agent string to use in headers while downloading')
@@ -81,6 +85,10 @@ def parse_args():
         print('Must specify at least --old-articles-warc as source!', file=sys.stderr)
         exit(1)
 
+    if cli_args.debug_news_archive:
+        cli_args.debug_params = {'console_level': 'DEBUG', 'logfile_level': 'DEBUG'}
+    else:
+        cli_args.debug_params = None
     return cli_args
 
 
@@ -91,7 +99,7 @@ if __name__ == '__main__':
     # These parameters go down directly to the downloader
     download_params = {'program_name': args.crawler_name, 'user_agent': args.user_agent,
                        'overwrite_warc': args.no_overwrite_warc, 'err_threshold': args.comulative_error_threshold,
-                       'known_bad_urls': args.known_bad_urls,
+                       'known_bad_urls': args.known_bad_urls, 'strict_mode': args.strict,
                        'max_no_of_calls_in_period': args.max_no_of_calls_in_period, 'limit_period': args.limit_period,
                        'proxy_url': args.proxy_url, 'allow_cookies': args.allow_cookies}
 
@@ -101,7 +109,7 @@ if __name__ == '__main__':
     if args.archive:
         # For the article links only...
         archive_crawler = NewsArchiveCrawler(portal_settings, args.old_archive_warc, args.archive_warc,
-                                             args.archive_just_cache, args.known_article_urls,
+                                             args.archive_just_cache, args.known_article_urls, args.debug_params,
                                              **download_params)
         for url in archive_crawler.url_iterator():  # Get the list of urls in the archive...
             print(url, flush=True)
@@ -109,6 +117,6 @@ if __name__ == '__main__':
         articles_crawler = NewsArticleCrawler(portal_settings, args.old_articles_warc, args.articles_warc,
                                               args.old_archive_warc, args.archive_warc,
                                               args.articles_just_cache, args.archive_just_cache,
-                                              args.known_article_urls,
+                                              args.known_article_urls, args.debug_params,
                                               **download_params)
         articles_crawler.download_and_extract_all_articles()

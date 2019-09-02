@@ -35,10 +35,12 @@ class WarcCachingDownloader:
 
         All parameters are wired out to the CLI and are documented there.
     """
-    def __init__(self, existing_warc_filename, new_warc_filename, _logger, just_cache=False, **download_params):
+    def __init__(self, existing_warc_filename, new_warc_filename, _logger, just_cache=False,
+                 **download_params):
         self._logger = _logger
         if existing_warc_filename is not None:  # Setup the supplied existing warc archive file as cache
-            self._cached_downloads = WarcReader(existing_warc_filename, _logger)
+            strict_mode = download_params.pop('strict_mode', False)
+            self._cached_downloads = WarcReader(existing_warc_filename, _logger, strict_mode=strict_mode)
             self.url_index = self._cached_downloads.url_index
             info_record_data = self._cached_downloads.info_record_data
         else:
@@ -290,7 +292,7 @@ class WarcDownloader:
 
 
 class WarcReader:
-    def __init__(self, filename, _logger, strict_mode=False):  # TODO: Wire-out strict_mode!
+    def __init__(self, filename, _logger, strict_mode=False):
         self._stream = open(filename, 'rb')
         self.url_index = {}
         self._logger = _logger

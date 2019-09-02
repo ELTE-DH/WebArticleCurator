@@ -15,10 +15,12 @@ class NewsArchiveCrawler:
         2) Extracts URLs of articles from these lists (with helper functions and config)
     """
     def __init__(self, settings, existing_archive_filename, new_archive_filename, archive_just_cache=False,
-                 known_article_urls=None, **downloader_params):
+                 known_article_urls=None, debug_params=None, **downloader_params):
 
         self._settings = settings
-        self._logger = Logger(self._settings['log_file_archive'], console_level='DEBUG')  # TODO: Wire this out!
+        if debug_params is None:
+            debug_params = {}
+        self._logger = Logger(self._settings['log_file_archive'], **debug_params)
 
         # For external use
         self.good_urls = set()
@@ -189,7 +191,7 @@ class NewsArticleCrawler:
     """
     def __init__(self, settings, articles_existing_warc_filename, articles_new_warc_filename,
                  archive_existing_warc_filename, archive_new_warc_filename, articles_just_cache=False,
-                 archive_just_cache=False, known_article_urls=None, **download_params):
+                 archive_just_cache=False, known_article_urls=None, debug_params=None, **download_params):
         self._settings = settings
         self._logger = Logger(self._settings['log_file_articles'])
 
@@ -219,7 +221,7 @@ class NewsArticleCrawler:
         else:  # known_bad_urls are common between the NewsArchiveCrawler and the NewsArticleCrawler
             self._archive_downloader = NewsArchiveCrawler(self._settings, archive_existing_warc_filename,
                                                           archive_new_warc_filename, archive_just_cache,
-                                                          known_article_urls, **download_params)
+                                                          known_article_urls, debug_params, **download_params)
 
     def __del__(self):
         if hasattr(self, '_file_out') and self._file_out is not None:
