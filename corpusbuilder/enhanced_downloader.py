@@ -6,6 +6,7 @@
 import os
 import sys
 from io import BytesIO
+from collections import Counter
 
 from warcio.warcwriter import WARCWriter
 from warcio.archiveiterator import ArchiveIterator
@@ -50,30 +51,34 @@ class WarcCachingDownloader:
             self._new_downloads = WarcDownloader(new_warc_filename, _logger, info_record_data, **download_params)
 
     def download_url(self, url, ignore_cache=False):
-        if url in self.url_index:  # Check cache...
-            reqv, resp = self._cached_downloads.get_record(url)
-            self._new_downloads.write_record(reqv, url)
-            self._new_downloads.write_record(resp, url)
+        # 1) Check if the URL presents in the cache...
+        if url in self.url_index:
+            # 2) If the URL does not present in the newly created WARC file...
+            if url not in self._new_downloads.good_urls:
+                # 2a) ...copy it!
+                reqv, resp = self._cached_downloads.get_record(url)
+                self._new_downloads.write_record(reqv, url)
+                self._new_downloads.write_record(resp, url)
+            else:
+                # 2b) ...or throw error and return None!
+                self._logger.log('ERROR', 'Not processing URL because it is already present in the WARC archive:'
+                                          ' {0}'.format(url))
+                return None
             cache = self._cached_downloads.download_url(url)
         else:
             cache = None
 
-        if cache is not None and not ignore_cache:
-            return cache
-
+        # 3) If we have the URL cached...
         if cache is not None:
-            self._logger.log('INFO', 'Ignoring cache for URL: {0}'.format(url))
+            if not ignore_cache:
+                return cache  # 3a) and we do not expliticly ignore cache, return the content!
 
-        return self._new_downloads.download_url(url)
+            else:
+                # 3b) Log that we ignored the cache and do noting!
+                self._logger.log('INFO', 'Ignoring cache for URL: {0}'.format(url))
 
-    def copy_url(self, url):
-        if url in self.url_index and url not in self._new_downloads.good_urls:  # Check cache if the URL is truly new!
-            reqv, resp = self._cached_downloads.get_record(url)
-            self._new_downloads.write_record(reqv, url)
-            self._new_downloads.write_record(resp, url)
-            return True
-        else:
-            return False
+        # 4) Really download the URL! (url not in cache or cache is ignored)
+        return self._new_downloads.download_url(url)  # Still check if the URL is already downloaded!
 
     @property
     def bad_urls(self):
@@ -163,15 +168,13 @@ class WarcDownloader:
         self._error_threshold = err_threshold  # Set the error threshold which cause aborting to prevent deinal
 
         self._writer = WARCWriter(self._output_file, gzip=True, warc_version='WARC/1.1')
-        if warcinfo_record_data is None:
+        if warcinfo_record_data is None:  # Or use the parsed else custom headers will not be copied
             # INFO RECORD
             # Some custom information about the warc writer program and its settings
-            info_headers = {'software': program_name, 'arguments': ' '.join(sys.argv[1:]),
-                            'format': 'WARC File Format 1.1',
-                            'conformsTo': 'http://bibnum.bnf.fr/WARC/WARC_ISO_28500_version1-1_latestdraft.pdf'}
-            info_record = self._writer.create_warcinfo_record(filename, info_headers)
-        else:
-            info_record = warcinfo_record_data[0]  # Use the untouched record else custom headers will not be copied
+            warcinfo_record_data = {'software': program_name, 'arguments': ' '.join(sys.argv[1:]),
+                                    'format': 'WARC File Format 1.1',
+                                    'conformsTo': 'http://bibnum.bnf.fr/WARC/WARC_ISO_28500_version1-1_latestdraft.pdf'}
+        info_record = self._writer.create_warcinfo_record(filename, warcinfo_record_data)
         self._writer.write_record(info_record)
 
     def __del__(self):
@@ -194,13 +197,18 @@ class WarcDownloader:
             raise NameError('Too many error happened! Threshold exceeded! See log for details!')
 
     def download_url(self, url):
+        if url in self.bad_urls:
+            self._logger.log('DEBUG', 'Not downloading known bad URL: {0}'.format(url))
+            return None
+
+        if url in self.good_urls:  # This should not happen!
+            self._logger.log('ERROR', 'Not downloading URL because it is already downloaded in this session:'
+                                      ' {0}'.format(url))
+            return None
+
         scheme, netloc, path, params, query, fragment = urlparse(url)
         path = quote(path)  # For safety urlencode the generated URL...
         url = urlunparse((scheme, netloc, path, params, query, fragment))
-
-        if url in self.bad_urls:
-            self._logger.log('INFO', 'Not downloading known bad URL: {0}'.format(url))
-            return None
 
         try:  # The actual request
             resp = self._requests_get(url, headers=self._req_headers, stream=True, verify=self._verify)
@@ -282,14 +290,17 @@ class WarcDownloader:
 
 
 class WarcReader:
-    def __init__(self, filename, _logger):
+    def __init__(self, filename, _logger, strict_mode=False):  # TODO: Wire-out strict_mode!
         self._stream = open(filename, 'rb')
         self.url_index = {}
         self._logger = _logger
         self.info_record_data = None
+        self._strict_mode = strict_mode
         try:
             self.create_index()
         except KeyError as e:
+            if self._strict_mode:
+                raise e
             self._logger.log('ERROR', 'Ignoring exception: {0}'.format(e))
 
     def __del__(self):
@@ -305,23 +316,23 @@ class WarcReader:
         try:
             # Read out custom headers for later use
             custom_headers_raw = info_rec.content_stream().read()  # Parse custom headers
-            info_rec_payload = dict(r.split(': ', maxsplit=1) for r in custom_headers_raw.decode('UTF-8')
-                                    .strip().split('\r\n') if len(r) > 0)
-
-            # Read the untouched form of warcinfo record for writing it back unchanged into a warc file
-            self._stream.seek(0)
-            archive_it = ArchiveIterator(self._stream)
-            untouched_info_record = next(archive_it)
-
-            # Info headers in parsed form
-            self.info_record_data = (untouched_info_record, (info_rec.rec_headers, info_rec_payload))
-        except UnicodeDecodeError:
+            if len(custom_headers_raw) == 0:
+                raise ValueError('WARCINFO record payload length is 0!')
+            # Read and parse the warcinfo record for writing it back unchanged into a warc file
+            # else due to warcio problems it will not be copied properly!
+            # See: https://github.com/webrecorder/warcio/issues/90
+            # and https://github.com/webrecorder/warcio/issues/91
+            self.info_record_data = dict(r.split(': ', maxsplit=1) for r in custom_headers_raw.decode('UTF-8')
+                                         .strip().split('\r\n') if len(r) > 0)
+        except (UnicodeDecodeError, ValueError) as e:
+            if self._strict_mode:
+                raise e
             self._logger.log('WARNING', 'WARCINFO record in {0} is corrupt! Continuing with a fresh one!'.
                              format(self._stream.name))
             self.info_record_data = None
 
         count = 0
-        double_urls = set()
+        double_urls = Counter()
         reqv_data = (None, (None, None))  # To be able to handle the request-response pairs together
         for i, record in enumerate(archive_it):
             if record.rec_type == 'request':
@@ -332,13 +343,14 @@ class WarcReader:
                 assert i % 2 == 1
                 resp_url = record.rec_headers.get_header('WARC-Target-URI')
                 assert resp_url == reqv_data[0]
-                if resp_url in self.url_index:
-                    double_urls.add(resp_url)
+                double_urls[resp_url] += 1
                 self.url_index[resp_url] = (reqv_data[1],  # Request-response pair
                                             (archive_it.get_record_offset(), archive_it.get_record_length()))
                 count += 1
         if count != len(self.url_index):
-            raise KeyError('The following double URLs detected in the WARC file:\n{0}'.format('\n'.join(double_urls)))
+            double_urls_str = '\n'.join('{0}\t{1}'.format(url, freq) for url, freq in double_urls.most_common()
+                                        if freq > 1)
+            raise KeyError('The following double URLs detected in the WARC file:{0}'.format(double_urls_str))
         if count == 0:
             raise IndexError('No index created or no response records in the WARC file!')
         self._stream.seek(0)
@@ -361,7 +373,7 @@ class WarcReader:
         if d is not None:
             offset = d[1][0]  # Only need the offset of the response part
             self._stream.seek(offset)  # Can not be cached as we also want to write it out to the new archive!
-            record = next(iter(ArchiveIterator(self._stream)))
+            record = next(iter(ArchiveIterator(self._stream, check_digests='raise')))
             data = record.content_stream().read()
             assert len(data) > 0
             enc = record.rec_headers.get_header('WARC-X-Detected-Encoding', 'UTF-8')
@@ -381,5 +393,21 @@ def main():  # Test
     print(t)
 
 
+def validate_warc_file(filename):
+    import sys
+    from os.path import dirname, join as os_path_join, abspath
+
+    # To be able to run it standalone from anywhere!
+    project_dir = abspath(os_path_join(dirname(__file__), '..'))
+    sys.path.append(project_dir)
+
+    from corpusbuilder.utils import Logger
+    reader = WarcReader(filename, Logger(), strict_mode=True)
+    print('OK! {0} records read!'.format(len(reader.url_index)))
+
+
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) == 1:
+        main()
+    else:
+        validate_warc_file(sys.argv[1])
