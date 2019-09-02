@@ -298,6 +298,7 @@ class WarcReader:
         self._logger = _logger
         self.info_record_data = None
         self._strict_mode = strict_mode
+        self._check_digest = None  # TODO 'log' or 'raise'
         try:
             self.create_index()
         except KeyError as e:
@@ -311,7 +312,7 @@ class WarcReader:
 
     def create_index(self):
         self._logger.log('INFO', 'Creating index...')
-        archive_it = ArchiveIterator(self._stream)
+        archive_it = ArchiveIterator(self._stream, check_digests=self._check_digest)
         info_rec = next(archive_it)
         # First record should be an info record, then it should be followed by the request-response pairs
         assert info_rec.rec_type == 'warcinfo'
@@ -362,9 +363,9 @@ class WarcReader:
         reqv_resp_pair = self.url_index.get(url)
         if reqv_resp_pair is not None:
             self._stream.seek(reqv_resp_pair[0][0])
-            reqv = next(iter(ArchiveIterator(self._stream)))
+            reqv = next(iter(ArchiveIterator(self._stream, check_digests=self._check_digest)))
             self._stream.seek(reqv_resp_pair[1][0])
-            resp = next(iter(ArchiveIterator(self._stream)))
+            resp = next(iter(ArchiveIterator(self._stream, check_digests=self._check_digest)))
             return reqv, resp
         else:
             raise KeyError('The request or response is missing from the archive for URL: {0}'.format(url))
@@ -375,7 +376,7 @@ class WarcReader:
         if d is not None:
             offset = d[1][0]  # Only need the offset of the response part
             self._stream.seek(offset)  # Can not be cached as we also want to write it out to the new archive!
-            record = next(iter(ArchiveIterator(self._stream, check_digests='raise')))
+            record = next(iter(ArchiveIterator(self._stream, check_digests=self._check_digest)))
             data = record.content_stream().read()
             assert len(data) > 0
             enc = record.rec_headers.get_header('WARC-X-Detected-Encoding', 'UTF-8')

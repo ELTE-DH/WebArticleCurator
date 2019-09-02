@@ -1,7 +1,7 @@
 "origo":
     "date_first_article": 1998-12-01
     # "date_last_article":  2100-01-01
-    "archive_url_format": "http://www.origo.hu/hir-archivum/#year/#year#month#day.html"
+    "archive_url_format": "https://www.origo.hu/hir-archivum/#year/#year#month#day.html"
 
     "extract_next_page_url_fun": NULL
     "extract_article_urls_from_page_fun": "extract_article_urls_from_page_origo"
@@ -58,7 +58,7 @@
 "blikk":
     "date_first_article": 2009-01-21
     # "date_last_article":  2100-01-01
-    "archive_url_format": "http://www.blikk.hu/archivum/online?date=#year-#month-#day&page=#pagenum"
+    "archive_url_format": "https://www.blikk.hu/archivum/online?date=#year-#month-#day&page=#pagenum"
 
     "extract_next_page_url_fun": "extract_next_page_url_blikk"
     "extract_article_urls_from_page_fun": "extract_article_urls_from_page_blikk"

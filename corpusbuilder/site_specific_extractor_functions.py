@@ -278,6 +278,18 @@ def extract_article_urls_from_page_test(filename):
                 }
     assert (extracted, len(extracted)) == (expected, 14)
 
+    text = w.download_url('http://nol.hu/archivum?page=3000')
+    extracted = extract_article_urls_from_page_nol(text)
+    expected = {'http://nol.hu/archivum/archiv-442261-250322',
+                'http://nol.hu/archivum/archiv-442355-250404',
+                'http://nol.hu/archivum/archiv-442300-250351',
+                'http://nol.hu/archivum/archiv-442364-250413',
+                'http://nol.hu/archivum/archiv-442359-250408',
+                'http://nol.hu/archivum/archiv-442316-250366',
+                'http://nol.hu/archivum/archiv-442362-250411'
+                }
+    assert (extracted, len(extracted)) == (expected, 7)
+
     print('Testing origo')
     text = w.download_url('https://www.origo.hu/hir-archivum/2019/20190119.html')
     extracted = extract_article_urls_from_page_origo(text)
