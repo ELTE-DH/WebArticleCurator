@@ -4,7 +4,6 @@
 # Good for downloading archive index and also the actual articles in two separate row
 
 import os
-import sys
 from io import BytesIO
 from collections import Counter
 
@@ -126,7 +125,12 @@ class WarcDownloader:
     """
     def __init__(self, filename, _logger, warcinfo_record_data=None, program_name='corpusbuilder 1.0', user_agent=None,
                  overwrite_warc=True, err_threshold=10, known_bad_urls=None, max_no_of_calls_in_period=2,
-                 limit_period=1, proxy_url=None, allow_cookies=False, verify=True):
+                 limit_period=1, proxy_url=None, allow_cookies=False, verify=True, stay_offline=False):
+        if stay_offline:
+            self.download_url = self._download_url
+        else:
+            self.download_url = self._dummy_download_url
+
         if known_bad_urls is not None:  # Setup the list of cached bad URLs to prevent trying to download them again
             with open(known_bad_urls, encoding='UTF-8') as fh:
                 self.bad_urls = {line.strip() for line in fh}
@@ -198,7 +202,10 @@ class WarcDownloader:
         if self._error_count >= self._error_threshold:
             raise NameError('Too many error happened! Threshold exceeded! See log for details!')
 
-    def download_url(self, url):
+    def _dummy_download_url(self, _):
+        raise NotImplementedError
+
+    def _download_url(self, url):
         if url in self.bad_urls:
             self._logger.log('DEBUG', 'Not downloading known bad URL: {0}'.format(url))
             return None
@@ -388,7 +395,7 @@ class WarcReader:
 
 
 def sample_warc_by_urls(old_warc_filename, new_urls, logger, new_warc_fineame=None):
-    w = WarcCachingDownloader(old_warc_filename, new_warc_fineame, logger, just_cache=True)
+    w = WarcCachingDownloader(old_warc_filename, new_warc_fineame, logger, stay_offline=True)
     for url in new_urls:
         logger.log('INFO', 'Adding url {0}'.format(url))
         w.download_url(url)

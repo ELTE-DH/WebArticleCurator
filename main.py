@@ -60,6 +60,9 @@ def parse_args():
                         default=None)
     parser.add_argument('--allow-cookies', type=str2bool, nargs='?', help='Allow session cookies', const=True,
                         default=False)
+    parser.add_argument('--stay-offline', type=str2bool, nargs='?', help='Do not download, but write output WARC'
+                                                                         ' (see --just-cache)', const=True,
+                        default=False)
 
     # Mutually exclusive group...
     group = parser.add_mutually_exclusive_group()
@@ -101,7 +104,8 @@ if __name__ == '__main__':
                        'overwrite_warc': args.no_overwrite_warc, 'err_threshold': args.comulative_error_threshold,
                        'known_bad_urls': args.known_bad_urls, 'strict_mode': args.strict,
                        'max_no_of_calls_in_period': args.max_no_of_calls_in_period, 'limit_period': args.limit_period,
-                       'proxy_url': args.proxy_url, 'allow_cookies': args.allow_cookies}
+                       'proxy_url': args.proxy_url, 'allow_cookies': args.allow_cookies,
+                       'stay_offline': args.stay_offline}
 
     # read input data from the given files, initialize variables
     portal_settings = wrap_input_consants(args.config, args)

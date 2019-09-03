@@ -54,29 +54,10 @@ def extract_next_page_url_mno(archive_page_raw_html):
     return ret
 
 
-def extract_next_page_url_nol(archive_page_raw_html):
-    """
-        extracts and returns next page URL from an HTML code if there is one...
-        Specific for nol.hu
-
-        :returns string of url if there is one, None otherwise
-    """
-    ret = None
-    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    next_page = soup.find(class_='next')
-    if next_page is not None:
-        # find('a') is a must, because on the last page there is only the div and no 'a'
-        # (eg. nol.hu/archivum?page=14670 )
-        next_page_a = next_page.find('a')
-        if next_page_a is not None and 'href' in next_page_a.attrs:
-            ret = 'http://nol.hu{0}'.format(next_page_a['href'])
-    return ret
-
-
 def extract_next_page_url_test(filename):
     """Quick test"""
 
-    w = WarcCachingDownloader(filename, None, Logger(), just_cache=True)
+    w = WarcCachingDownloader(filename, None, Logger(), just_cache=True, stay_offline=True)
 
     # Some of these are intentionally yields None
     print('Testing 444')
@@ -86,12 +67,6 @@ def extract_next_page_url_test(filename):
     assert extract_next_page_url_444(text) is None
     text = w.download_url('https://444.hu/2013/04/13')
     assert extract_next_page_url_444(text) is None
-
-    print('Testing nol')
-    text = w.download_url('http://nol.hu/archivum?page=14668')
-    assert extract_next_page_url_nol(text) == 'http://nol.hu/archivum?page=14669'
-    text = w.download_url('http://nol.hu/archivum?page=14669')
-    assert extract_next_page_url_nol(text) is None
 
     print('Testing magyarnemzet')
     text = w.download_url('https://magyarnemzet.hu/archivum/page/99643')
@@ -131,9 +106,6 @@ def extract_article_urls_from_page_nol(archive_page_raw_html):
     :return: list that contains URLs
     """
     urls = set()
-    # multi_valued_attributes=None in the Soup constructor garantees that multi-value attributes are not splitted!
-    # Therefore 'vezetoCimkeAfter' is the only class element!
-    # TODO: Ide kellene egy olyan, ahol tényleg probléma ez, mert szerintem nincs a middleCol-ban ilyen...
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all(class_='middleCol')  # There are two of them!
     for a_tag in main_container:
@@ -254,7 +226,7 @@ def extract_article_urls_from_page_vs(archive_page_raw_html):
 
 
 def extract_article_urls_from_page_test(filename, logger):
-    w = WarcCachingDownloader(filename, None, logger, just_cache=True)
+    w = WarcCachingDownloader(filename, None, logger, just_cache=True, stay_offline=True)
 
     print('Testing nol')
     text = w.download_url('http://nol.hu/archivum?page=37')
