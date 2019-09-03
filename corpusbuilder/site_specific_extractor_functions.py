@@ -768,7 +768,7 @@ if __name__ == '__main__':
             exit(1)
         print('Addig URLs to {0} :'.format(warc))
         input_urls = (url.strip() for url in sys.stdin)
-        sample_warc_by_urls(choices[warc], input_urls, main_logger, warc_filename)
+        sample_warc_by_urls(choices[warc], input_urls, main_logger, warc_filename, stay_offline=False)
         print('Done!')
         print('Do not forget to mv {0} {1} before commit!'.format(warc_filename, choices[warc]))
     else:

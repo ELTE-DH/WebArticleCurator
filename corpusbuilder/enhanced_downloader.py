@@ -4,12 +4,14 @@
 # Good for downloading archive index and also the actual articles in two separate row
 
 import os
+import sys
 from io import BytesIO
 from collections import Counter
 
 from warcio.warcwriter import WARCWriter
 from warcio.archiveiterator import ArchiveIterator
 from warcio.statusandheaders import StatusAndHeaders
+from warcio.exceptions import ArchiveLoadFailed
 
 from requests import Session
 from requests.utils import urlparse, quote, urlunparse
@@ -37,8 +39,8 @@ class WarcCachingDownloader:
     def __init__(self, existing_warc_filename, new_warc_filename, _logger, just_cache=False,
                  **download_params):
         self._logger = _logger
+        strict_mode = download_params.pop('strict_mode', False)
         if existing_warc_filename is not None:  # Setup the supplied existing warc archive file as cache
-            strict_mode = download_params.pop('strict_mode', False)
             self._cached_downloads = WarcReader(existing_warc_filename, _logger, strict_mode=strict_mode)
             self.url_index = self._cached_downloads.url_index
             info_record_data = self._cached_downloads.info_record_data
@@ -99,7 +101,7 @@ class WarcCachingDownloader:
 
     @property
     def cached_urls(self):
-        return self._cached_downloads.url_index
+        return self.url_index
 
 
 class WarcDummyDownloader:
@@ -126,7 +128,7 @@ class WarcDownloader:
     def __init__(self, filename, _logger, warcinfo_record_data=None, program_name='corpusbuilder 1.0', user_agent=None,
                  overwrite_warc=True, err_threshold=10, known_bad_urls=None, max_no_of_calls_in_period=2,
                  limit_period=1, proxy_url=None, allow_cookies=False, verify=True, stay_offline=False):
-        if stay_offline:
+        if not stay_offline:
             self.download_url = self._download_url
         else:
             self.download_url = self._dummy_download_url
@@ -299,13 +301,15 @@ class WarcDownloader:
 
 
 class WarcReader:
-    def __init__(self, filename, _logger, strict_mode=False):
+    def __init__(self, filename, _logger, strict_mode=False, check_digest=False):
         self._stream = open(filename, 'rb')
         self.url_index = {}
         self._logger = _logger
         self.info_record_data = None
         self._strict_mode = strict_mode
-        self._check_digest = None  # TODO 'log' or 'raise'
+        if check_digest:
+            check_digest = 'raise'
+        self._check_digest = check_digest  # TODO 'log' or 'raise'
         try:
             self.create_index()
         except KeyError as e:
@@ -341,21 +345,30 @@ class WarcReader:
                              format(self._stream.name))
             self.info_record_data = None
 
+        archive_load_failed = False
         count = 0
         double_urls = Counter()
         reqv_data = (None, (None, None))  # To be able to handle the request-response pairs together
         for i, record in enumerate(archive_it):
             if record.rec_type == 'request':
                 assert i % 2 == 0
-                reqv_data = (record.rec_headers.get_header('WARC-Target-URI'),
-                             (archive_it.get_record_offset(), archive_it.get_record_length()))
+                try:
+                    reqv_data = (record.rec_headers.get_header('WARC-Target-URI'),
+                                 (archive_it.get_record_offset(), archive_it.get_record_length()))
+                except ArchiveLoadFailed as e:
+                    self._logger.log('ERROR', '{0} for {1}'.format(e.msg, reqv_data[0]))
+                    archive_load_failed = True
             if record.rec_type == 'response':
                 assert i % 2 == 1
                 resp_url = record.rec_headers.get_header('WARC-Target-URI')
                 assert resp_url == reqv_data[0]
                 double_urls[resp_url] += 1
-                self.url_index[resp_url] = (reqv_data[1],  # Request-response pair
-                                            (archive_it.get_record_offset(), archive_it.get_record_length()))
+                try:
+                    self.url_index[resp_url] = (reqv_data[1],  # Request-response pair
+                                                (archive_it.get_record_offset(), archive_it.get_record_length()))
+                except ArchiveLoadFailed as e:
+                    self._logger.log('ERROR', '{0} for {1}'.format(e.msg, resp_url))
+                    archive_load_failed = True
                 count += 1
         if count != len(self.url_index):
             double_urls_str = '\n'.join('{0}\t{1}'.format(url, freq) for url, freq in double_urls.most_common()
@@ -363,6 +376,8 @@ class WarcReader:
             raise KeyError('The following double URLs detected in the WARC file:{0}'.format(double_urls_str))
         if count == 0:
             raise IndexError('No index created or no response records in the WARC file!')
+        if archive_load_failed and self._strict_mode:
+            raise ArchiveLoadFailed('Archive loading failed! See logs for details!')
         self._stream.seek(0)
         self._logger.log('INFO', 'Index succesuflly created.')
 
@@ -394,15 +409,15 @@ class WarcReader:
         return text
 
 
-def sample_warc_by_urls(old_warc_filename, new_urls, logger, new_warc_fineame=None):
-    w = WarcCachingDownloader(old_warc_filename, new_warc_fineame, logger, stay_offline=True)
+def sample_warc_by_urls(old_warc_filename, new_urls, logger, new_warc_fineame=None, stay_offline=True):
+    w = WarcCachingDownloader(old_warc_filename, new_warc_fineame, logger, stay_offline=stay_offline)
     for url in new_urls:
         logger.log('INFO', 'Adding url {0}'.format(url))
         w.download_url(url)
 
 
 def validate_warc_file(filename, logger):
-    reader = WarcReader(filename, logger, strict_mode=True)
+    reader = WarcReader(filename, logger, strict_mode=True, check_digest=True)
     logger.log('INFO', 'OK! {0} records read!'.format(len(reader.url_index)))
 
 
@@ -417,7 +432,7 @@ def test():
 
 
 if __name__ == '__main__':
-    import sys
+    # import sys
     from os.path import dirname, join as os_path_join, abspath
 
     # To be able to run it standalone from anywhere!
