@@ -356,7 +356,7 @@ class WarcReader:
                     reqv_data = (record.rec_headers.get_header('WARC-Target-URI'),
                                  (archive_it.get_record_offset(), archive_it.get_record_length()))
                 except ArchiveLoadFailed as e:
-                    self._logger.log('ERROR', '{0} for {1}'.format(e.msg, reqv_data[0]))
+                    self._logger.log('ERROR', 'REQUEST: {0} for {1}'.format(e.msg, reqv_data[0]))
                     archive_load_failed = True
             if record.rec_type == 'response':
                 assert i % 2 == 1
@@ -367,7 +367,7 @@ class WarcReader:
                     self.url_index[resp_url] = (reqv_data[1],  # Request-response pair
                                                 (archive_it.get_record_offset(), archive_it.get_record_length()))
                 except ArchiveLoadFailed as e:
-                    self._logger.log('ERROR', '{0} for {1}'.format(e.msg, resp_url))
+                    self._logger.log('ERROR', 'RESPONSE: {0} for {1}'.format(e.msg, resp_url))
                     archive_load_failed = True
                 count += 1
         if count != len(self.url_index):
