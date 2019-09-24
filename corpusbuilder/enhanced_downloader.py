@@ -243,7 +243,8 @@ class WarcDownloader:
         reqv_record = self._writer.create_warc_record(url, 'request', http_headers=reqv_http_headers)
 
         # RESPONSE
-        resp_status = '{0} {1}'.format(resp.status_code, resp.reason)
+        # resp_status need to be stripped else warcio strips the spaces and digest verification will fail!
+        resp_status = '{0} {1}'.format(resp.status_code, resp.reason).strip()
         resp_headers_list = resp.raw.headers.items()  # get raw headers from urllib3
         # Must get peer_name before the content is read
         # It has no official API for that:
@@ -272,6 +273,10 @@ class WarcDownloader:
             self._handle_request_exception(url, 'RequestException happened during downloading: {0} \n\n'
                                                 ' The program ignores it and jumps to the next one.'.format(err))
             return None
+
+        # warcio hack as \r\n is the record separator and trailing ones will be split and digest will eventually fail!
+        if data.endswith(b'\r\n'):
+            data = data.rstrip()
 
         enc = resp.encoding  # Get or detect encoding to decode the bytes of the text to str
         if enc is None:
