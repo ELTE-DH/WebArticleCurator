@@ -1,5 +1,5 @@
 "site_name": "mno"
-"site_schemas": "site_schemas.yaml"
+"site_schemas": "../site_schemas.yaml"
 
 # "output_corpus": "mno_corpus.txt"
 # "tags": "tags.yaml"

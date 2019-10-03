@@ -1,0 +1,15 @@
+"site_name": "magyaridok"
+"site_schemas": "site_schemas.yaml"
+
+# "output_corpus": "magyaridok_corpus.txt"
+# "tags": "tags.yaml"
+
+"log_file_articles": "logs/magyaridok_articles_log.txt"
+"log_file_archive": "logs/magyaridok_archive_log.txt"
+"new_problematic_urls": "logs/magyaridok_new_problematic_urls.txt"
+"new_good_urls": "logs/magyaridok_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/magyaridok_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/magyaridok_new_good_archive_urls.txt"
+
+# "date_from": 2015-04-21
+# "date_until": 2019-05-15

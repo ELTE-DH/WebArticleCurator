@@ -1,0 +1,15 @@
+"site_name": "abcug"
+"site_schemas": "site_schemas.yaml"
+
+# "output_corpus": "abcug_corpus.txt"
+# "tags": "tags.yaml"
+
+"log_file_articles": "logs/abcug_articles_log.txt"
+"log_file_archive": "logs/abcug_archive_log.txt"
+"new_problematic_urls": "logs/abcug_new_problematic_urls.txt"
+"new_good_urls": "logs/abcug_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/abcug_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/abcug_new_good_archive_urls.txt"
+
+# "date_from": 2014-09-17
+# "date_until": 2019-12-31

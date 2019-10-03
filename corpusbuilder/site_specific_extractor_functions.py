@@ -54,6 +54,21 @@ def extract_next_page_url_mno(archive_page_raw_html):
     return ret
 
 
+def extract_next_page_url_abcug(archive_page_raw_html):
+    """
+        extracts and returns next page URL from an HTML code if there is one...
+        Specific for abcug.hu
+
+        :returns string of url if there is one, None otherwise
+    """
+    ret = None
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    next_page = soup.find('a', class_="next")
+    if next_page is not None and 'href' in next_page.attrs:
+        ret = next_page['href']
+    return ret
+
+
 def extract_next_page_url_test(filename):
     """Quick test"""
 
@@ -222,6 +237,30 @@ def extract_article_urls_from_page_vs(archive_page_raw_html):
         for fragment in html_fragment['ContentBoxes']:
             soup = BeautifulSoup(fragment, 'lxml')
             urls.update('https://vs.hu{0}'.format(link) for link in safe_extract_hrefs_from_a_tags([soup]))
+    return urls
+
+
+def extract_article_urls_from_page_abcug(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all('h2', class_='post-lead')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_magyaridok(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all('h2')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
     return urls
 
 
