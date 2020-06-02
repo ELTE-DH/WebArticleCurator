@@ -57,7 +57,7 @@ class WarcCachingDownloader:
             self._new_downloads = WarcDownloader(new_warc_filename, _logger, info_record_data, **download_params)
 
     def download_url(self, url, ignore_cache=False):
-        # 1) Check if the URL presents in the cache...
+        # 1) Check if the URL presents in the cached_content...
         if url in self.url_index:
             # 2) If the URL does not present in the newly created WARC file...
             if url not in self._new_downloads.good_urls:
@@ -70,22 +70,23 @@ class WarcCachingDownloader:
                 self._logger.log('ERROR', 'Not processing URL because it is already present in the WARC archive:'
                                           ' {0}'.format(url))
                 return None
-            cache = self._cached_downloads.download_url(url)
+            # Get content even if the URL is a duplicate, because ignore_cache knows better what to do with it
+            cached_content = self._cached_downloads.download_url(url)
         else:
-            cache = None
+            cached_content = None
 
         # 3) If we have the URL cached...
-        if cache is not None:
+        if cached_content is not None:
             if not ignore_cache:
-                return cache  # 3a) and we do not expliticly ignore cache, return the content!
-
+                return cached_content  # 3a) and we do not expliticly ignore the cache, return the cached content!
             else:
-                # 3b) Log that we ignored the cache and do noting!
-                self._logger.log('INFO', 'Ignoring cache for URL: {0}'.format(url))
+                # 3b) Log that we ignored the cached_content and do noting!
+                self._logger.log('INFO', 'Ignoring cached_content for URL: {0}'.format(url))
 
-        # 4) Really download the URL! (url not in cache or cache is ignored)
+        # 4) Really download the URL! (url not in cached_content or cached_content is ignored)
         return self._new_downloads.download_url(url)  # Still check if the URL is already downloaded!
 
+    # TODO: Revise these
     @property
     def bad_urls(self):
         return self._new_downloads.bad_urls
@@ -128,9 +129,17 @@ class WarcDownloader:
     """
         Download URL with HTTP GET, save to a WARC file and return the decoded text
     """
-    def __init__(self, filename, _logger, warcinfo_record_data=None, program_name='corpusbuilder 1.0', user_agent=None,
-                 overwrite_warc=True, err_threshold=10, known_bad_urls=None, max_no_of_calls_in_period=2,
-                 limit_period=1, proxy_url=None, allow_cookies=False, verify=True, stay_offline=False):
+    def __init__(self, expected_filename, _logger, warcinfo_record_data=None, program_name='corpusbuilder 1.0',
+                 user_agent=None, overwrite_warc=True, err_threshold=10, known_bad_urls=None,
+                 max_no_of_calls_in_period=2, limit_period=1, proxy_url=None, allow_cookies=False, verify_request=True,
+                 stay_offline=False):
+        # Store variables
+        self._logger = _logger
+        self._req_headers = {'Accept-Encoding': 'identity', 'User-agent': user_agent}
+        self._error_count = 0
+        self._error_threshold = err_threshold  # Set the error threshold which cause aborting to prevent deinal
+
+        # Setup download function
         if not stay_offline:
             self.download_url = self._download_url
         else:
@@ -144,39 +153,24 @@ class WarcDownloader:
 
         self.good_urls = set()
 
-        if not overwrite_warc:  # Find out next nonexisting warc filename
-            num = 0
-            while os.path.exists(filename):
-                filename2, ext = os.path.splitext(filename)  # Should be filename.warc.gz
-                if ext == '.gz' and filename2.endswith('.warc'):
-                    filename2, ext2 = os.path.splitext(filename2)  # Should be filename.warc
-                    ext = ext2 + ext  # Should be .warc.gz
-
-                filename = '{0}-{1:05d}{2}'.format(filename2, num, ext)
-                num += 1
-
-        _logger.log('INFO', 'Creating archivefile: {0}'.format(filename))
-
+        # Setup target file handle
+        filename = self._set_target_filename(expected_filename, overwrite_warc)
+        self._logger.log('INFO', 'Creating archivefile: {0}'.format(filename))
         self._output_file = open(filename, 'wb')
-        self._logger = _logger
-        self._req_headers = {'Accept-Encoding': 'identity', 'User-agent': user_agent}
 
         self._session = Session()  # Setup session for speeding up downloads
-
         if proxy_url is not None:  # Set socks proxy if provided
             self._session.proxies['http'] = proxy_url
             self._session.proxies['https'] = proxy_url
 
         self._allow_cookies = allow_cookies
-        self._verify = verify
-        if not verify:
+        self._verify_request = verify_request
+        if not self._verify_request:
             disable_warnings(InsecureRequestWarning)
 
         # Setup rate limiting to prevent hammering the server
         self._requests_get = sleep_and_retry(limits(calls=max_no_of_calls_in_period,
                                                     period=limit_period)(self._http_get_w_cookie_handling))
-        self._error_count = 0
-        self._error_threshold = err_threshold  # Set the error threshold which cause aborting to prevent deinal
 
         self._writer = WARCWriter(self._output_file, gzip=True, warc_version='WARC/1.1')
         if warcinfo_record_data is None:  # Or use the parsed else custom headers will not be copied
@@ -187,6 +181,20 @@ class WarcDownloader:
                                     'conformsTo': 'http://bibnum.bnf.fr/WARC/WARC_ISO_28500_version1-1_latestdraft.pdf'}
         info_record = self._writer.create_warcinfo_record(filename, warcinfo_record_data)
         self._writer.write_record(info_record)
+
+    @staticmethod
+    def _set_target_filename(filename, overwrite_warc):
+        if not overwrite_warc:  # Find out next nonexisting warc filename
+            num = 0
+            while os.path.exists(filename):
+                filename2, ext = os.path.splitext(filename)  # Should be filename.warc.gz
+                if ext == '.gz' and filename2.endswith('.warc'):
+                    filename2, ext2 = os.path.splitext(filename2)  # Should be filename.warc
+                    ext = ext2 + ext  # Should be .warc.gz
+
+                filename = '{0}-{1:05d}{2}'.format(filename2, num, ext)
+                num += 1
+        return filename
 
     def __del__(self):
         if hasattr(self, '_output_file'):  # If the program opened a file, then it should gracefully close it on exit!
@@ -201,11 +209,29 @@ class WarcDownloader:
         return self._session.get(*args, **kwargs)
 
     def _handle_request_exception(self, url, msg):
-        self._logger.log('WARNING', '\t'.join((url, msg)))
+        self._logger.log('WARNING', '{0}\t{1}'.format(url, msg))
 
         self._error_count += 1
         if self._error_count >= self._error_threshold:
             raise NameError('Too many error happened! Threshold exceeded! See log for details!')
+
+    @staticmethod
+    def _get_peer_name(resp):
+        # Must get peer_name before the content is read
+        # It has no official API for that:
+        # https://github.com/kennethreitz/requests/issues/2158
+        # https://github.com/urllib3/urllib3/issues/1071
+        # So workaround to be compatible with windows:
+        # https://stackoverflow.com/questions/22492484/how-do-i-get-the-ip-address-from-a-http-request-using-the-\
+        # requests-library/22513161#22513161
+        try:
+            peer_name = resp.raw._connection.sock.getpeername()[0]  # Must get peer_name before the content is read
+        except AttributeError:  # On Windows there is no getpeername() Attribute of the class...
+            try:
+                peer_name = resp.raw._connection.sock.socket.getpeername()[0]
+            except AttributeError:
+                peer_name = 'None'  # Socket closed and could not derermine peername...
+        return peer_name
 
     def _dummy_download_url(self, _):
         raise NotImplementedError
@@ -225,7 +251,7 @@ class WarcDownloader:
         url = urlunparse((scheme, netloc, path, params, query, fragment))
 
         try:  # The actual request
-            resp = self._requests_get(url, headers=self._req_headers, stream=True, verify=self._verify)
+            resp = self._requests_get(url, headers=self._req_headers, stream=True, verify=self._verify_request)
         except RequestException as err:
             self._handle_request_exception(url, 'RequestException happened during downloading: {0} \n\n'
                                                 ' The program ignores it and jumps to the next one.'.format(err))
@@ -236,7 +262,7 @@ class WarcDownloader:
                                                                                                       resp.reason))
             return None
 
-        # REQUEST
+        # REQUEST (build headers for warc)
         reqv_headers = resp.request.headers
         reqv_headers['Host'] = netloc
 
@@ -250,19 +276,7 @@ class WarcDownloader:
         resp_status = '{0} {1}'.format(resp.status_code, resp.reason).strip()
         resp_headers_list = resp.raw.headers.items()  # get raw headers from urllib3
         # Must get peer_name before the content is read
-        # It has no official API for that:
-        # https://github.com/kennethreitz/requests/issues/2158
-        # https://github.com/urllib3/urllib3/issues/1071
-        # So workaround to be compatible with windows:
-        # https://stackoverflow.com/questions/22492484/how-do-i-get-the-ip-address-from-a-http-request-using-the-\
-        # requests-library/22513161#22513161
-        try:
-            peer_name = resp.raw._connection.sock.getpeername()[0]  # Must get peer_name before the content is read
-        except AttributeError:  # On Windows there is no getpeername() Attribute of the class...
-            try:
-                peer_name = resp.raw._connection.sock.socket.getpeername()[0]
-            except AttributeError:
-                peer_name = 'None'  # Socket closed and could not derermine peername...
+        peer_name = self._get_peer_name(resp)
 
         try:
             data = resp.raw.read()  # To be able to return decoded and also write warc
@@ -278,7 +292,7 @@ class WarcDownloader:
             return None
 
         # warcio hack as \r\n is the record separator and trailing ones will be split and digest will eventually fail!
-        if data.endswith(b'\r\n'):
+        if data.endswith(b'\r\n'):  # TODO: Warcio bugreport!
             data = data.rstrip()
 
         enc = resp.encoding  # Get or detect encoding to decode the bytes of the text to str
@@ -319,7 +333,7 @@ class WarcReader:
             check_digest = 'raise'
         self._check_digest = check_digest  # TODO 'log' or 'raise'
         try:
-            self.create_index()
+            self._create_index()
         except KeyError as e:
             if self._strict_mode:
                 raise e
@@ -329,7 +343,7 @@ class WarcReader:
         if hasattr(self, '_stream'):  # If the program opened a file, then it should gracefully close it on exit!
             self._stream.close()
 
-    def create_index(self):
+    def _create_index(self):
         self._logger.log('INFO', 'Creating index...')
         archive_it = ArchiveIterator(self._stream, check_digests=self._check_digest)
         info_rec = next(archive_it)
@@ -402,9 +416,9 @@ class WarcReader:
 
     def download_url(self, url):
         text = None
-        d = self.url_index.get(url)
-        if d is not None:
-            offset = d[1][0]  # Only need the offset of the response part
+        reqv_resp_pair = self.url_index.get(url)
+        if reqv_resp_pair is not None:
+            offset = reqv_resp_pair[1][0]  # Only need the offset of the response part
             self._stream.seek(offset)  # Can not be cached as we also want to write it out to the new archive!
             record = next(iter(ArchiveIterator(self._stream, check_digests=self._check_digest)))
             data = record.content_stream().read()
@@ -417,11 +431,12 @@ class WarcReader:
         return text
 
 
-def sample_warc_by_urls(old_warc_filename, new_urls, logger, new_warc_fineame=None, stay_offline=True):
-    w = WarcCachingDownloader(old_warc_filename, new_warc_fineame, logger,
+def sample_warc_by_urls(old_warc_filename, new_urls, _logger, new_warc_fineame=None, stay_offline=True):
+    """ Create new warc file for the supplied list of URLs from an existing warc file """
+    w = WarcCachingDownloader(old_warc_filename, new_warc_fineame, _logger,
                               download_params={'stay_offline': stay_offline})
     for url in new_urls:
-        logger.log('INFO', 'Adding url {0}'.format(url))
+        _logger.log('INFO', 'Adding url {0}'.format(url))
         w.download_url(url)
 
 
@@ -430,7 +445,7 @@ def validate_warc_file(filename, logger):
     logger.log('INFO', 'OK! {0} records read!'.format(len(reader.url_index)))
 
 
-def test():
+def online_test():
     filename = 'example.warc.gz'
     url = 'https://index.hu/belfold/2018/08/27/fidesz_media_helyreigazitas/'
     from corpusbuilder.utils import Logger
@@ -444,14 +459,14 @@ if __name__ == '__main__':
     # import sys
     from os.path import dirname, join as os_path_join, abspath
 
-    # To be able to run it standalone from anywhere!
+    # To be able to run it standalone from anywhere!  # TODO create a python module for it!
     project_dir = abspath(os_path_join(dirname(__file__), '..'))
     sys.path.append(project_dir)
 
-    from corpusbuilder.utils import Logger
+    from corpusbuilder.utils import Logger  # TODO: Create an ArgParser for it...
     main_logger = Logger()
     if len(sys.argv) == 1:
-        test()
+        online_test()
     elif sys.argv[1] == 'validate':
         validate_warc_file(sys.argv[2], main_logger)
     elif sys.argv[1] == 'sample':

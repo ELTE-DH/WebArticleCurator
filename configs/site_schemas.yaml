@@ -9,7 +9,7 @@
     "infinite_scrolling": false
     "archive_page_urls_by_date": true
     "go_reverse_in_archive": true
-    "verify": true
+    "verify_request": true
 
     "min_pagenum": 0
     # "max_pagenum": NULL
@@ -34,7 +34,7 @@
     "infinite_scrolling": true
     "archive_page_urls_by_date": true
     "go_reverse_in_archive": true
-    "verify": true
+    "verify_request": true
 
     "initial_pagenum": 0
     "min_pagenum": 1
@@ -66,7 +66,7 @@
     "infinite_scrolling": false
     "archive_page_urls_by_date": true
     "go_reverse_in_archive": true
-    "verify": true
+    "verify_request": true
 
     "min_pagenum": 1
     # "max_pagenum": NULL
@@ -91,7 +91,7 @@
     "infinite_scrolling": false
     "archive_page_urls_by_date": true
     "go_reverse_in_archive": true
-    "verify": true
+    "verify_request": true
 
     "min_pagenum": 0
     # "max_pagenum": NULL
@@ -116,7 +116,7 @@
     "infinite_scrolling": false
     "archive_page_urls_by_date": true
     "go_reverse_in_archive": true
-    "verify": false
+    "verify_request": false
 
     "min_pagenum": 1
     # "max_pagenum": NULL
@@ -141,7 +141,7 @@
     "infinite_scrolling": false
     "archive_page_urls_by_date": false
     "go_reverse_in_archive": true
-    "verify": true
+    "verify_request": true
 
 
     "initial_pagenum": 0
@@ -168,7 +168,7 @@
     "infinite_scrolling": false
     "archive_page_urls_by_date": true
     "go_reverse_in_archive": true
-    "verify": true
+    "verify_request": true
 
     "min_pagenum": 0
     # "max_pagenum": NULL
@@ -193,7 +193,7 @@
     "infinite_scrolling": false
     "archive_page_urls_by_date": false
     "go_reverse_in_archive": true
-    "verify": true
+    "verify_request": true
 
     "initial_pagenum": 1
     "min_pagenum": 2
@@ -219,7 +219,7 @@
     "infinite_scrolling": false
     "archive_page_urls_by_date": false
     "go_reverse_in_archive": true
-    "verify": true
+    "verify_request": true
 
     "initial_pagenum": 1
     "min_pagenum": 2
@@ -246,7 +246,7 @@
     "infinite_scrolling": false
     "archive_page_urls_by_date": true
     "go_reverse_in_archive": true
-    "verify": false
+    "verify_request": false
 
     "min_pagenum": 1
     # "max_pagenum": NULL
@@ -271,7 +271,7 @@
     "infinite_scrolling": false
     "archive_page_urls_by_date": false
     "go_reverse_in_archive": true
-    "verify": false
+    "verify_request": false
 
     "initial_pagenum": 1
     "min_pagenum": 2
