@@ -72,7 +72,7 @@ def extract_next_page_url_abcug(archive_page_raw_html):
 def extract_next_page_url_test(filename):
     """Quick test"""
 
-    w = WarcCachingDownloader(filename, None, Logger(), just_cache=True, stay_offline=True)
+    w = WarcCachingDownloader(filename, None, Logger(), just_cache=True, download_params={'stay_offline': True})
 
     # Some of these are intentionally yields None
     print('Testing 444')
@@ -265,7 +265,7 @@ def extract_article_urls_from_page_magyaridok(archive_page_raw_html):
 
 
 def extract_article_urls_from_page_test(filename, logger):
-    w = WarcCachingDownloader(filename, None, logger, just_cache=True, stay_offline=True)
+    w = WarcCachingDownloader(filename, None, logger, just_cache=True, download_params={'stay_offline': True})
 
     print('Testing nol')
     text = w.download_url('http://nol.hu/archivum?page=37')
@@ -803,7 +803,7 @@ if __name__ == '__main__':
         warc_filename = sys.argv[2]
         if warc not in choices.keys():
             print('ERROR: Argument must be in {0} instead of {1} and filename must supplied !'.
-                  format(str(set(choices.keys())), warc))
+                  format(set(choices.keys()), warc))
             exit(1)
         print('Addig URLs to {0} :'.format(warc))
         input_urls = (url.strip() for url in sys.stdin)

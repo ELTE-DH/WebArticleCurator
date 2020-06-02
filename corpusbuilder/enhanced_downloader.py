@@ -14,7 +14,7 @@ from warcio.statusandheaders import StatusAndHeaders
 from warcio.exceptions import ArchiveLoadFailed
 
 from requests import Session
-from requests.utils import urlparse, quote, urlunparse
+from urllib.parse import urlparse, quote, urlunparse
 from requests.exceptions import RequestException
 from urllib3.exceptions import ProtocolError, InsecureRequestWarning
 from urllib3 import disable_warnings
@@ -36,10 +36,13 @@ class WarcCachingDownloader:
 
         All parameters are wired out to the CLI and are documented there.
     """
-    def __init__(self, existing_warc_filename, new_warc_filename, _logger, just_cache=False,
-                 **download_params):
+    def __init__(self, existing_warc_filename, new_warc_filename, _logger, just_cache=False, download_params=None):
         self._logger = _logger
-        strict_mode = download_params.pop('strict_mode', False)
+        if download_params is not None:
+            strict_mode = download_params.pop('strict_mode', False)
+        else:
+            strict_mode = False
+            download_params = {}
         if existing_warc_filename is not None:  # Setup the supplied existing warc archive file as cache
             self._cached_downloads = WarcReader(existing_warc_filename, _logger, strict_mode=strict_mode)
             self.url_index = self._cached_downloads.url_index
@@ -415,7 +418,8 @@ class WarcReader:
 
 
 def sample_warc_by_urls(old_warc_filename, new_urls, logger, new_warc_fineame=None, stay_offline=True):
-    w = WarcCachingDownloader(old_warc_filename, new_warc_fineame, logger, stay_offline=stay_offline)
+    w = WarcCachingDownloader(old_warc_filename, new_warc_fineame, logger,
+                              download_params={'stay_offline': stay_offline})
     for url in new_urls:
         logger.log('INFO', 'Adding url {0}'.format(url))
         w.download_url(url)

@@ -114,7 +114,7 @@ if __name__ == '__main__':
         # For the article links only...
         archive_crawler = NewsArchiveCrawler(portal_settings, args.old_archive_warc, args.archive_warc,
                                              args.archive_just_cache, args.known_article_urls, args.debug_params,
-                                             **download_params)
+                                             download_params)
         for url in archive_crawler.url_iterator():  # Get the list of urls in the archive...
             print(url, flush=True)
     else:
@@ -122,5 +122,5 @@ if __name__ == '__main__':
                                               args.old_archive_warc, args.archive_warc,
                                               args.articles_just_cache, args.archive_just_cache,
                                               args.known_article_urls, args.debug_params,
-                                              **download_params)
+                                              download_params)
         articles_crawler.download_and_extract_all_articles()
