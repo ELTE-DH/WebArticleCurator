@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
+from datetime import datetime
+
 from newspaper import Article
 
+strptime = datetime.strptime
 
 """Here comes the stuff to extract data from a specific downloaded webpage (article)"""
 
@@ -11,12 +14,41 @@ class CorpusConverter:
     """
         Extract text and metadata from the downloaded raw html by using site specific REs from the config
     """
-    def __init__(self, settings, logger_):
-        self._settings = settings['OUTPUT_CORPUS_FH']
-        self._article_begin_mark = settings['COMMON_SITE_TAGS']['article_begin_mark']
-        self._article_end_mark = settings['COMMON_SITE_TAGS']['article_end_mark']
-        self._file_out = settings['OUTPUT_CORPUS_FH']
-        self._logger_ = logger_
+    def __init__(self, settings, _logger):
+        self._settings = settings
+        self._logger = _logger
+
+        self._article_begin_mark = self._settings['COMMON_SITE_TAGS']['article_begin_mark']
+        self._article_end_mark = self._settings['COMMON_SITE_TAGS']['article_end_mark']
+        self._file_out = self._settings['OUTPUT_CORPUS_FH']
+        self._tags_keys = self._settings['TAGS_KEYS']
+
+    def identify_site_scheme(self, url):
+        for site_re, tag_key_readable in self._tags_keys.items():
+            if site_re.search(url):
+                return tag_key_readable
+
+        self._logger.log('ERROR', '{0}\t{1}\tNO MATCHING TAG_KEYS PATTERN! IGNORING ARTICLE!'.
+                         format(url, {regexp.pattern for regexp in self._tags_keys.keys()}))
+        return None
+
+    def extract_article_date(self, url, article_raw_html, scheme):
+        """
+            extracts and returns next page URL from an HTML code if there is one...
+        """
+        _ = url, scheme  # Silence dummy IDE
+        code_line = self._settings['ARTICLE_DATE_FORMAT_RE'].search(article_raw_html)
+        if code_line is not None:
+            code_line = code_line.group(0)
+            code_line = self._settings['BEFORE_ARTICLE_DATE_RE']. \
+                sub(self._settings['before_article_date_repl'], code_line)
+            code_line = self._settings['AFTER_ARTICLE_DATE_RE']. \
+                sub(self._settings['after_article_date_repl'], code_line)
+            try:
+                code_line = strptime(code_line, self._settings['article_date_formatting']).date()
+            except (UnicodeError, ValueError, KeyError):  # In case of any error log outside of this function...
+                code_line = None
+        return code_line
 
     def article_to_corpus(self, url, doc_in, site_tag_scheme):
         """
@@ -42,7 +74,7 @@ class CorpusConverter:
 
             # Write the result into the output file
             print(self._article_begin_mark, doc_out, self._article_end_mark, sep='', end='', file=self._file_out)
-            self._logger_.log('INFO', '\t'.join((url, site_tag_scheme, 'Article extraction OK')))
+            self._logger.log('INFO', '\t'.join((url, site_tag_scheme, 'Article extraction OK')))
         return
 
     @staticmethod
@@ -59,16 +91,45 @@ class CorpusConverter:
             matched_part = old_tag_close.sub(' </'+new_tag+'>\n', matched_part)
         return matched_part
 
+    def __del__(self):
+        if hasattr(self, '_file_out') and self._file_out is not None:
+            self._file_out.close()
+
 
 class CorpusConverterNewspaper:  # Mimic CorpusConverter
-    def __init__(self, settings, logger_):
-        self._file_out = settings['OUTPUT_CORPUS_FH']
-        self._logger_ = logger_
+    def __init__(self, settings, _logger):
         self._settings = settings
+        self._logger = _logger
 
-    def article_to_corpus(self, url, page_str, _):
+        self._file_out = settings['OUTPUT_CORPUS_FH']
+        self._tags_keys = self._settings['TAGS_KEYS']
+
+    def identify_site_scheme(self, url):
+        for site_re, tag_key_readable in self._tags_keys.items():
+            if site_re.search(url):
+                return tag_key_readable
+
+        self._logger.log('ERROR', '{0}\t{1}\tNO MATCHING TAG_KEYS PATTERN! IGNORING ARTICLE!'.
+                         format(url, {regexp.pattern for regexp in self._tags_keys.keys()}))
+        return None
+
+    @staticmethod
+    def extract_article_date(url, article_raw_html, scheme):
+        """
+            extracts and returns next page URL from an HTML code if there is one...
+        """
+        _ = url, scheme  # Silence dummy IDE
         article = Article(url, memoize_articles=False, language='hu')
-        article.download(input_html=page_str)
+        article.download(input_html=article_raw_html)
+        article.parse()
+        article.nlp()
+
+        return article.publish_date.date()
+
+    def article_to_corpus(self, url, article_raw_html, scheme):
+        _ = scheme  # Silence dummy IDE
+        article = Article(url, memoize_articles=False, language='hu')
+        article.download(input_html=article_raw_html)
         article.parse()
         article.nlp()
 
@@ -88,7 +149,11 @@ class CorpusConverterNewspaper:  # Mimic CorpusConverter
                                                                html_title,
                                                                html_body)),
               self._settings['article_end_flag'], sep='', end='', file=self._file_out)
-        self._logger_.log('INFO', '\t'.join((url, 'Article extraction OK')))
+        self._logger.log('INFO', '\t'.join((url, 'Article extraction OK')))
+
+    def __del__(self):
+        if hasattr(self, '_file_out') and self._file_out is not None:
+            self._file_out.close()
 
 
 corpus_converter_class = {'rule-based': CorpusConverter, 'newspaper3k': CorpusConverterNewspaper}

@@ -86,25 +86,16 @@ class WarcCachingDownloader:
         # 4) Really download the URL! (url not in cached_content or cached_content is ignored)
         return self._new_downloads.download_url(url)  # Still check if the URL is already downloaded!
 
-    # TODO: Revise these
     @property
-    def bad_urls(self):
+    def bad_urls(self):  # Ready-only property for shortcut
         return self._new_downloads.bad_urls
 
-    @bad_urls.setter
-    def bad_urls(self, value):
-        self._new_downloads.bad_urls = value
-
     @property
-    def good_urls(self):
+    def good_urls(self):  # Ready-only property for shortcut
         return self._new_downloads.good_urls
 
-    @good_urls.setter
-    def good_urls(self, value):
-        self._new_downloads.good_urls = value
-
     @property
-    def cached_urls(self):
+    def cached_urls(self):  # Ready-only property for shortcut
         return self.url_index
 
 

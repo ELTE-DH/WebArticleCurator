@@ -277,3 +277,11 @@ class Logger:
             h.flush()
             if isinstance(h, logging.FileHandler):
                 h.close()
+
+
+def write_on_exit(cls, attr_name, handle, attr):
+    if hasattr(cls, attr_name):
+        if handle is not None:
+            if len(attr) > 0:
+                handle.writelines('{0}\n'.format(elem) for elem in attr)
+            handle.close()
