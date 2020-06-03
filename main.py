@@ -109,7 +109,8 @@ if __name__ == '__main__':
 
     # read input data from the given files, initialize variables
     portal_settings = wrap_input_consants(args.config, args)
-    download_params['verify_request'] = portal_settings['verify_request']  # TODO: Site-specific downloader parameters... Maybe more?
+    # TODO: Site-specific downloader parameters... Maybe more?
+    download_params['verify_request'] = portal_settings['verify_request']
     if args.archive:
         # For the article links only...
         archive_crawler = NewsArchiveCrawler(portal_settings, args.old_archive_warc, args.archive_warc,

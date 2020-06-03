@@ -63,7 +63,7 @@ def extract_next_page_url_abcug(archive_page_raw_html):
     """
     ret = None
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    next_page = soup.find('a', class_="next")
+    next_page = soup.find('a', class_='next')
     if next_page is not None and 'href' in next_page.attrs:
         ret = next_page['href']
     return ret
@@ -192,35 +192,18 @@ def extract_article_urls_from_page_mno(archive_page_raw_html):
     return urls
 
 
-def extract_article_urls_from_page_valasz_normal(archive_page_raw_html):
+def extract_article_urls_from_page_valasz(archive_page_raw_html):
     """
         extracts and returns as a list the URLs belonging to articles from an HTML code
     :param archive_page_raw_html: archive page containing list of articles with their URLs
     :return: list that contains URLs
     """
-    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    container = soup.find('section', class_="normal cikk lista")
+    urls = None
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')  # The column 'publi' has diferent name!
+    container = soup.find('section', class_={'normal cikk lista', 'publi cikk lista'})
     if container is not None:
-        main_container = container.find_all('article', itemscope="")
+        main_container = container.find_all('article', itemscope='')
         urls = {'http://valasz.hu{0}'.format(link) for link in safe_extract_hrefs_from_a_tags(main_container)}
-    else:
-        urls = None
-    return urls
-
-
-def extract_article_urls_from_page_valasz_publi(archive_page_raw_html):
-    """
-        extracts and returns as a list the URLs belonging to articles from an HTML code
-    :param archive_page_raw_html: archive page containing list of articles with their URLs
-    :return: list that contains URLs
-    """
-    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    container = soup.find('section', class_="publi cikk lista")
-    if container is not None:
-        main_container = container.find_all('article', itemscope="")
-        urls = {'http://valasz.hu{0}'.format(link) for link in safe_extract_hrefs_from_a_tags(main_container)}
-    else:
-        urls = None
     return urls
 
 
@@ -236,7 +219,8 @@ def extract_article_urls_from_page_vs(archive_page_raw_html):
     for html_fragment in html_list:
         for fragment in html_fragment['ContentBoxes']:
             soup = BeautifulSoup(fragment, 'lxml')
-            urls.update('https://vs.hu{0}'.format(link) for link in safe_extract_hrefs_from_a_tags([soup]))
+            for link in safe_extract_hrefs_from_a_tags([soup]):
+                urls.add('https://vs.hu{0}'.format(link))
     return urls
 
 
@@ -735,7 +719,7 @@ def extract_article_urls_from_page_test(filename, logger):
 
     print('Testing valasz (normal)')
     text = w.download_url('http://valasz.hu/itthon/?page=1')
-    extracted = extract_article_urls_from_page_valasz_normal(text)
+    extracted = extract_article_urls_from_page_valasz(text)
     expected = {'http://valasz.hu/itthon/ez-nem-autopalya-epites-nagyinterju-palinkas-jozseffel-a-tudomany-penzeirol-'
                 '129168',
                 'http://valasz.hu/itthon/itt-a-madaras-adidas-eletkepes-lehet-e-egy-nemzeti-sportmarka-129214',
@@ -758,7 +742,7 @@ def extract_article_urls_from_page_test(filename, logger):
 
     print('Testing valasz (publi)')
     text = w.download_url('http://valasz.hu/publi?page=2')
-    extracted = extract_article_urls_from_page_valasz_publi(text)
+    extracted = extract_article_urls_from_page_valasz(text)
     expected = {'http://valasz.hu/publi/szelektiven-nemzeti-kormany-127741',
                 'http://valasz.hu/publi/ha-orban-ezert-rasszista-en-is-az-vagyok-127737',
                 'http://valasz.hu/publi/hat-allitas-a-fidesz-ujabb-ketharmados-gyozelmerol-128083',
@@ -786,7 +770,7 @@ if __name__ == '__main__':
     import sys
     from os.path import dirname, join as os_path_join, abspath
 
-    # To be able to run it standalone from anywhere!
+    # TODO: Module! To be able to run it standalone from anywhere!
     project_dir = abspath(os_path_join(dirname(__file__), '..'))
     sys.path.append(project_dir)
     from corpusbuilder.utils import Logger
@@ -797,7 +781,7 @@ if __name__ == '__main__':
     choices = {'nextpage': os_path_join(project_dir, 'tests/next_page_url.warc.gz'),
                'archive': os_path_join(project_dir, 'tests/extract_article_urls_from_page.warc.gz')}
 
-    if len(sys.argv) > 1:
+    if len(sys.argv) > 1:  # TODO: ArgParse!
         # Usage: [echo URL|cat urls.txt] | __file__ [archive|nextpage] new.warc.gz
         warc = sys.argv[1]
         warc_filename = sys.argv[2]

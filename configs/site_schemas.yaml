@@ -214,7 +214,7 @@
     "archive_url_format": "http://valasz.hu/reflektor/?page=#pagenum"
 
     "extract_next_page_url_fun": NULL
-    "extract_article_urls_from_page_fun": "extract_article_urls_from_page_valasz_normal"
+    "extract_article_urls_from_page_fun": "extract_article_urls_from_page_valasz"
     "next_url_by_pagenum": true
     "infinite_scrolling": false
     "archive_page_urls_by_date": false
