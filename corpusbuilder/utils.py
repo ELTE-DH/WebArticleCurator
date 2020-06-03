@@ -8,7 +8,7 @@ import yaml
 import logging
 from datetime import date, timedelta
 
-from .corpus_converter import corpus_converter_class
+from corpusbuilder.corpus_converter import corpus_converter_class
 import corpusbuilder.site_specific_extractor_functions as site_spec_extractor_functions
 
 
@@ -95,32 +95,25 @@ def wrap_input_consants(current_task_config_filename, args):
     # Date filtering ON in any other cases OFF
     settings['FILTER_ARTICLES_BY_DATE'] = 'date_from' in settings and 'date_until' in settings
 
+    # Check for date type
+    for attr_name, settings_dict in (('date_from', settings), ('date_first_article', current_site_schema),
+                                     ('date_until', settings), ('date_last_article', current_site_schema)):
+        if attr_name in settings_dict and not isinstance(settings_dict[attr_name], date):
+            raise ValueError('DateError: {0} not datetime ({1})!'.format(attr_name, settings_dict[attr_name]))
+
     # We use the supplied dates (None != date_first_article <= date_from <= date_until < today (or raise exception))
     # to generate all URLs from the first day to the last one-by-one
     if 'date_from' in settings:
         settings['DATE_FROM'] = settings['date_from']
-    elif 'date_first_article' in settings:
+    elif 'date_first_article' in current_site_schema:
         settings['DATE_FROM'] = current_site_schema['date_first_article']
 
     if 'date_until' in settings:
         settings['DATE_UNTIL'] = settings['date_until']
-    elif'date_last_article' in settings:
+    elif'date_last_article' in current_site_schema:
         settings['DATE_UNTIL'] = current_site_schema['date_last_article']
     else:
         settings['DATE_UNTIL'] = date.today() - timedelta(1)  # yesterday
-
-    # Checks go here
-    if 'date_from' in settings and not isinstance(settings['date_from'], date):
-        raise ValueError('DateError: date_from not datetime ({0})!'.format(settings['date_from']))
-    if 'date_first_article' in settings and not isinstance(current_site_schema['date_first_article'], date):
-        raise ValueError('DateError: date_first_article not datetime ({0})!'.
-                         format(current_site_schema['date_first_article']))
-
-    if 'date_until' in settings and not isinstance(settings['date_until'], date):
-        raise ValueError('DateError: date_until not datetime ({0})!'.format(settings['date_until']))
-    if 'date_last_article' in settings and not isinstance(current_site_schema['date_last_article'], date):
-        raise ValueError('DateError: date_last_article not datetime ({0})!'.
-                         format(current_site_schema['date_last_article']))
 
     if settings['FILTER_ARTICLES_BY_DATE'] or settings['archive_page_urls_by_date']:
         if 'DATE_FROM' not in settings:
@@ -135,81 +128,57 @@ def wrap_input_consants(current_task_config_filename, args):
                                                                     settings['date_first_article'],
                                                                     settings['date_last_article']))
 
-    # New problematic article URLs to be checked manually (dropped by default)
-    new_problematic_urls = settings.get('new_problematic_urls')
-    if new_problematic_urls is not None:
-        settings['NEW_PROBLEMATIC_URLS_FH'] = open(new_problematic_urls, 'a+', encoding='UTF-8')
-    else:
-        settings['NEW_PROBLEMATIC_URLS_FH'] = None
+    # None or file handle
+    # 1. New good archive URLs downloaded and in the archive (dropped by default)
+    # 2. New good article URLs downloaded and in the archive (dropped by default)
+    # 3. New problematic archive URLs to be checked manually (dropped by default)
+    # 4. New problematic article URLs to be checked manually (dropped by default)
+    # 5. Corpus output (dropped by default)
+    for attr_name, attr_name_fh, mode in (('new_good_archive_urls', 'NEW_GOOD_ARCHIVE_URLS_FH', 'w'),
+                                          ('new_good_urls', 'NEW_GOOD_URLS_FH', 'a+'),
+                                          ('new_problematic_archive_urls', 'NEW_PROBLEMATIC_ARCHIVE_URLS_FH', 'w'),
+                                          ('new_problematic_urls', 'NEW_PROBLEMATIC_URLS_FH', 'a+'),
+                                          ('output_corpus', 'OUTPUT_CORPUS_FH', 'a+')):
+        attr = settings.get(attr_name)
+        settings[attr_name_fh] = None
+        if attr is not None:
+            settings[attr_name_fh] = open(attr, mode, encoding='UTF-8')
 
-    # New good artilce URLs downloaded and in the archive (dropped by default)
-    new_good_urls = settings.get('new_good_urls')
-    if new_good_urls is not None:
-        settings['NEW_GOOD_URLS_FH'] = open(new_good_urls, 'a+', encoding='UTF-8')
-    else:
-        settings['NEW_PROBLEMATIC_URLS_FH'] = None
-
-    # New problematic archive URLs to be checked manually (dropped by default)
-    new_problematic_archive_urls = settings.get('new_problematic_archive_urls')
-    if new_problematic_archive_urls is not None:
-        settings['NEW_PROBLEMATIC_ARCHIVE_URLS_FH'] = open(new_problematic_archive_urls, 'w', encoding='UTF-8')
-    else:
-        settings['NEW_PROBLEMATIC_ARCHIVE_URLS_FH'] = None
-
-    # New good archive URLs downloaded and in the archive (dropped by default)
-    new_good_archive_urls = settings.get('new_good_archive_urls')
-    if new_good_archive_urls is not None:
-        settings['NEW_GOOD_ARCHIVE_URLS_FH'] = open(new_good_archive_urls, 'w', encoding='UTF-8')
-    else:
-        settings['NEW_GOOD_ARCHIVE_URLS_FH'] = None
-
-    output_corpus = settings.get('output_corpus')
-    if output_corpus is not None:
-        settings['OUTPUT_CORPUS_FH'] = open(output_corpus, 'a+', encoding='UTF-8')
-    elif not args.corpus:
-        settings['OUTPUT_CORPUS_FH'] = None
-    else:
+    # Extra check on output corpus generation
+    if args.corpus and settings['OUTPUT_CORPUS_FH'] is None:
         raise ValueError('output_corpus must be set for --corpus!')
 
+    # Set converter class
     settings['CORPUS_CONVERTER'] = corpus_converter_class[settings['corpus_converter']]
 
-    extract_next_page_url = settings['extract_next_page_url_fun']
-    if extract_next_page_url is not None:
-        extract_next_page_url_fun = getattr(site_spec_extractor_functions, settings['extract_next_page_url_fun'], None)
-        if extract_next_page_url_fun is not None:
-            settings['EXTRACT_NEXT_PAGE_URL_FUN'] = extract_next_page_url_fun
-        else:
-            raise ValueError('extract_next_page_url_fun is unset!')
-    else:
-        settings['EXTRACT_NEXT_PAGE_URL_FUN'] = None
+    # Portal specific functions
+    for attr_name, attr_name_dest, mandatory in \
+            (('extract_next_page_url_fun', 'EXTRACT_NEXT_PAGE_URL_FUN', False),
+             ('extract_article_urls_from_page_fun', 'EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN', True),):
+        settings[attr_name_dest] = getattr(site_spec_extractor_functions, settings.get(attr_name, ''), None)
+        if mandatory and settings[attr_name_dest] is None:
+            raise ValueError('{0} is unset!'.format(attr_name))
 
-    extract_article_urls_from_page_fun = getattr(site_spec_extractor_functions,
-                                                 settings['extract_article_urls_from_page_fun'], None)
-    if extract_article_urls_from_page_fun is not None:
-        settings['EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN'] = extract_article_urls_from_page_fun
-    else:
-        raise ValueError('extract_article_urls_from_page_fun is unset!')
+    # Non-mandatory integer thresholds: int > 0
+    for attr_name, attr_name_dest in (('initial_pagenum', 'INITIAL_PAGENUM'),
+                                      ('min_pagenum', 'MIN_PAGENUM'),
+                                      ('max_pagenum', 'MAX_PAGENUM'),
+                                      ('new_article_url_threshold', 'NEW_ARTICLE_URL_THRESHOLD')):
+        threshold_value = settings.get(attr_name)
+        if threshold_value is not None:
+            if not isinstance(threshold_value, int) or threshold_value < 0:
+                raise ValueError('{0} should be int >= 0!'.format(attr_name))
+        settings[attr_name_dest] = threshold_value
 
-    new_article_url_threshold = settings.get('new_article_url_threshold')
-    if new_article_url_threshold is not None:
-        if not isinstance(new_article_url_threshold, int) or new_article_url_threshold < 0:
-            raise ValueError('new_article_url_threshold should be int >= 0!')
-    settings['NEW_ARTICLE_URL_THRESHOLD'] = new_article_url_threshold
+    # If initial_pagenum is explicit it should immediately preceed min_pagenum
+    if settings['INITIAL_PAGENUM'] is not None and settings['MIN_PAGENUM'] is not None \
+            and settings['MIN_PAGENUM'] != settings['INITIAL_PAGENUM'] + 1:
+        raise ValueError('If initial_pagenum is an integer min_pagenum must have value initial_pagenum+1!')
 
-    initial_pagenum = settings.get('initial_pagenum', '')
-    if initial_pagenum != '':
-        if not isinstance(initial_pagenum, int) or initial_pagenum < 0:
-            raise ValueError('initial_pagenum should be int >= 0!')
-        min_pagenum = settings.get('min_pagenum')
-        if min_pagenum is not None and min_pagenum != initial_pagenum + 1:
-            raise ValueError('If initial_pagenum is an integer min_pagenum must have value initial_pagenum+1!')
-    settings['INITIAL_PAGENUM'] = str(initial_pagenum)
-
-    max_pagenum = settings.get('max_pagenum')
-    if max_pagenum is not None:
-        if not isinstance(max_pagenum, int) or max_pagenum < 0:
-            raise ValueError('max_pagenum should be int >= 0!')
-    settings['MAX_PAGENUM'] = max_pagenum
+    # If initial_pagenum is implicit, then it will be substituted with empty string. e.g. in &page=
+    if settings['INITIAL_PAGENUM'] is None:
+        settings['INITIAL_PAGENUM'] = ''
+    settings['INITIAL_PAGENUM'] = str(settings['INITIAL_PAGENUM'])
 
     return settings
 
@@ -218,24 +187,27 @@ class Logger:
     """
         Handle logging with Python's built-in logging facilities simplified
     """
-    def __init__(self, log_filename=None, console_level='INFO', console_stream=sys.stderr,
-                 logfile_level='INFO', logfile_mode='a', logfile_encoding='UTF-8'):
-        # logging.basicConfig(level=logging.INFO)
+    def __init__(self, log_filename=None, logfile_mode='a', logfile_encoding='UTF-8', logfile_level='INFO',
+                 console_stream=sys.stderr, console_level='INFO'):
+        # logging.basicConfig(level=logging.INFO)  # For debugging requests
         log_levels = {'DEBUG': logging.DEBUG, 'INFO': logging.INFO, 'WARNING': logging.WARNING, 'ERROR': logging.ERROR,
                       'CRITICAL': logging.CRITICAL}
 
         if console_level not in log_levels:
             raise KeyError('Console loglevel is not valid ({0}): {1}'.format(', '.join(log_levels.keys()),
                                                                              console_level))
+        console_level = log_levels[console_level]
+
         if logfile_level not in log_levels:
             raise KeyError('Logfile loglevel is not valid ({0}): {1}'.format(', '.join(log_levels.keys()),
                                                                              logfile_level))
+        logfile_level = log_levels[logfile_level]
 
         # Create logger
         self._logger = logging.getLogger(log_filename)  # Logger is named after the logfile
         self._logger.propagate = False
 
-        # Create handler one for console output and one for logfile and set their properties accordingly
+        # Create one handler for console output and set its properties accordingly
         c_handler = logging.StreamHandler(stream=console_stream)
         c_handler.setLevel(console_level)
 
@@ -246,6 +218,7 @@ class Logger:
         # Add handlers to the logger
         self._logger.addHandler(c_handler)
 
+        # Create another handler for the logfile and set its properties accordingly
         if log_filename is not None:
             f_handler = logging.FileHandler(log_filename, mode=logfile_mode, encoding=logfile_encoding)
             f_handler.setLevel(logfile_level)
@@ -253,25 +226,24 @@ class Logger:
             f_handler.setFormatter(f_format)
             self._logger.addHandler(f_handler)
 
-        if console_level < logfile_level:
-            self._logger.setLevel(console_level)
-        else:
-            self._logger.setLevel(logfile_level)
+        self._logger.setLevel(min(console_level, logfile_level))
 
         self._leveled_logger = {'DEBUG': self._logger.debug, 'INFO': self._logger.info, 'WARNING': self._logger.warning,
                                 'ERROR': self._logger.error, 'CRITICAL': self._logger.critical}
 
         self.log('INFO', 'Logging started')
 
-    def log(self, level, msg):
-        if level in self._leveled_logger:
-            self._leveled_logger[level](msg)
-        else:
+    def log(self, level, *message, sep=' ', end='\n'):
+        """  A print()-like logging function """
+        for handler in self._logger.handlers:
+            handler.terminator = end
+        if level not in self._leveled_logger:
             self._leveled_logger['CRITICAL']('UNKNOWN LOGGING LEVEL SPECIFIED FOR THE NEXT ENTRY: {0}'.format(level))
-            self._leveled_logger['CRITICAL'](msg)
+            level = 'CRITICAL'
+        self._leveled_logger[level](sep.join(str(msg) for msg in message))
 
     def __del__(self):
-        handlers = list(self._logger.handlers)
+        handlers = list(self._logger.handlers)  # Copy, because we write the same variable in the loop!
         for h in handlers:
             self._logger.removeHandler(h)
             h.flush()
@@ -279,7 +251,8 @@ class Logger:
                 h.close()
 
 
-def write_on_exit(cls, attr_name, handle, attr):
+def write_in_del(cls, attr_name, handle, attr):
+    """ Write an iterable attribute of a class to one-elem-per-line format in __del__() """
     if hasattr(cls, attr_name):
         if handle is not None:
             if len(attr) > 0:

@@ -67,8 +67,7 @@ class WarcCachingDownloader:
                 self._new_downloads.write_record(resp, url)
             else:
                 # 2b) ...or throw error and return None!
-                self._logger.log('ERROR', 'Not processing URL because it is already present in the WARC archive:'
-                                          ' {0}'.format(url))
+                self._logger.log('ERROR', 'Not processing URL because it is already present in the WARC archive:', url)
                 return None
             # Get content even if the URL is a duplicate, because ignore_cache knows better what to do with it
             cached_content = self._cached_downloads.download_url(url)
@@ -81,7 +80,7 @@ class WarcCachingDownloader:
                 return cached_content  # 3a) and we do not expliticly ignore the cache, return the cached content!
             else:
                 # 3b) Log that we ignored the cached_content and do noting!
-                self._logger.log('INFO', 'Ignoring cached_content for URL: {0}'.format(url))
+                self._logger.log('INFO', 'Ignoring cached_content for URL:', url)
 
         # 4) Really download the URL! (url not in cached_content or cached_content is ignored)
         return self._new_downloads.download_url(url)  # Still check if the URL is already downloaded!
@@ -146,7 +145,7 @@ class WarcDownloader:
 
         # Setup target file handle
         filename = self._set_target_filename(expected_filename, overwrite_warc)
-        self._logger.log('INFO', 'Creating archivefile: {0}'.format(filename))
+        self._logger.log('INFO', 'Creating archivefile:', filename)
         self._output_file = open(filename, 'wb')
 
         self._session = Session()  # Setup session for speeding up downloads
@@ -200,7 +199,7 @@ class WarcDownloader:
         return self._session.get(*args, **kwargs)
 
     def _handle_request_exception(self, url, msg):
-        self._logger.log('WARNING', '{0}\t{1}'.format(url, msg))
+        self._logger.log('WARNING', url, msg, sep='\t')
 
         self._error_count += 1
         if self._error_count >= self._error_threshold:
@@ -229,12 +228,11 @@ class WarcDownloader:
 
     def _download_url(self, url):
         if url in self.bad_urls:
-            self._logger.log('DEBUG', 'Not downloading known bad URL: {0}'.format(url))
+            self._logger.log('DEBUG', 'Not downloading known bad URL:', url)
             return None
 
         if url in self.good_urls:  # This should not happen!
-            self._logger.log('ERROR', 'Not downloading URL because it is already downloaded in this session:'
-                                      ' {0}'.format(url))
+            self._logger.log('ERROR', 'Not downloading URL because it is already downloaded in this session:', url)
             return None
 
         scheme, netloc, path, params, query, fragment = urlparse(url)
@@ -292,7 +290,7 @@ class WarcDownloader:
         try:
             text = data.decode(enc)  # Normal decode process
         except UnicodeDecodeError:
-            self._logger.log('WARNING', '\t'.join(('DECODE ERROR RETRYING IN \'IGNORE\' MODE:', url, enc)))
+            self._logger.log('WARNING', 'DECODE ERROR RETRYING IN \'IGNORE\' MODE:', url, enc, sep='\t')
             text = data.decode(enc, 'ignore')
         data_stream = BytesIO(data)  # Need the original byte stream to write the payload to the warc file
 
@@ -328,7 +326,7 @@ class WarcReader:
         except KeyError as e:
             if self._strict_mode:
                 raise e
-            self._logger.log('ERROR', 'Ignoring exception: {0}'.format(e))
+            self._logger.log('ERROR', 'Ignoring exception:', e)
 
     def __del__(self):
         if hasattr(self, '_stream'):  # If the program opened a file, then it should gracefully close it on exit!
@@ -354,8 +352,8 @@ class WarcReader:
         except (UnicodeDecodeError, ValueError) as e:
             if self._strict_mode:
                 raise e
-            self._logger.log('WARNING', 'WARCINFO record in {0} is corrupt! Continuing with a fresh one!'.
-                             format(self._stream.name))
+            self._logger.log('WARNING', 'WARCINFO record in', self._stream.name,
+                             'is corrupt! Continuing with a fresh one!')
             self.info_record_data = None
 
         archive_load_failed = False
@@ -369,7 +367,7 @@ class WarcReader:
                     reqv_data = (record.rec_headers.get_header('WARC-Target-URI'),
                                  (archive_it.get_record_offset(), archive_it.get_record_length()))
                 except ArchiveLoadFailed as e:
-                    self._logger.log('ERROR', 'REQUEST: {0} for {1}'.format(e.msg, reqv_data[0]))
+                    self._logger.log('ERROR', 'REQUEST:', e.msg, 'for', reqv_data[0])
                     archive_load_failed = True
             if record.rec_type == 'response':
                 assert i % 2 == 1
@@ -380,7 +378,7 @@ class WarcReader:
                     self.url_index[resp_url] = (reqv_data[1],  # Request-response pair
                                                 (archive_it.get_record_offset(), archive_it.get_record_length()))
                 except ArchiveLoadFailed as e:
-                    self._logger.log('ERROR', 'RESPONSE: {0} for {1}'.format(e.msg, resp_url))
+                    self._logger.log('ERROR', 'RESPONSE:', e.msg, 'for', resp_url)
                     archive_load_failed = True
                 count += 1
         if count != len(self.url_index):
@@ -417,7 +415,7 @@ class WarcReader:
             enc = record.rec_headers.get_header('WARC-X-Detected-Encoding', 'UTF-8')
             text = data.decode(enc, 'ignore')
         else:
-            self._logger.log('CRITICAL', '\t'.join((url, 'URL not found in WARC!')))
+            self._logger.log('CRITICAL', url, 'URL not found in WARC!', sep='\t')
 
         return text
 
@@ -427,13 +425,13 @@ def sample_warc_by_urls(old_warc_filename, new_urls, _logger, new_warc_fineame=N
     w = WarcCachingDownloader(old_warc_filename, new_warc_fineame, _logger,
                               download_params={'stay_offline': stay_offline})
     for url in new_urls:
-        _logger.log('INFO', 'Adding url {0}'.format(url))
+        _logger.log('INFO', 'Adding url', url)
         w.download_url(url)
 
 
 def validate_warc_file(filename, logger):
     reader = WarcReader(filename, logger, strict_mode=True, check_digest=True)
-    logger.log('INFO', 'OK! {0} records read!'.format(len(reader.url_index)))
+    logger.log('INFO', 'OK!', len(reader.url_index), 'records read!')
 
 
 def online_test():

@@ -28,8 +28,8 @@ class CorpusConverter:
             if site_re.search(url):
                 return tag_key_readable
 
-        self._logger.log('ERROR', '{0}\t{1}\tNO MATCHING TAG_KEYS PATTERN! IGNORING ARTICLE!'.
-                         format(url, {regexp.pattern for regexp in self._tags_keys.keys()}))
+        self._logger.log('ERROR', url, {regexp.pattern for regexp in self._tags_keys.keys()},
+                         'NO MATCHING TAG_KEYS PATTERN! IGNORING ARTICLE!', sep='\t')
         return None
 
     def extract_article_date(self, url, article_raw_html, scheme):
@@ -74,7 +74,7 @@ class CorpusConverter:
 
             # Write the result into the output file
             print(self._article_begin_mark, doc_out, self._article_end_mark, sep='', end='', file=self._file_out)
-            self._logger.log('INFO', '\t'.join((url, site_tag_scheme, 'Article extraction OK')))
+            self._logger.log('INFO', url, site_tag_scheme, 'Article extraction OK', sep='\t')
         return
 
     @staticmethod
@@ -109,8 +109,8 @@ class CorpusConverterNewspaper:  # Mimic CorpusConverter
             if site_re.search(url):
                 return tag_key_readable
 
-        self._logger.log('ERROR', '{0}\t{1}\tNO MATCHING TAG_KEYS PATTERN! IGNORING ARTICLE!'.
-                         format(url, {regexp.pattern for regexp in self._tags_keys.keys()}))
+        self._logger.log('ERROR', url, {regexp.pattern for regexp in self._tags_keys.keys()},
+                         'NO MATCHING TAG_KEYS PATTERN! IGNORING ARTICLE!', sep='\t')
         return None
 
     @staticmethod
@@ -149,7 +149,7 @@ class CorpusConverterNewspaper:  # Mimic CorpusConverter
                                                                html_title,
                                                                html_body)),
               self._settings['article_end_flag'], sep='', end='', file=self._file_out)
-        self._logger.log('INFO', '\t'.join((url, 'Article extraction OK')))
+        self._logger.log('INFO', url, 'Article extraction OK', sep='\t')
 
     def __del__(self):
         if hasattr(self, '_file_out') and self._file_out is not None:

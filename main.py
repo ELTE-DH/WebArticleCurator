@@ -91,7 +91,7 @@ def parse_args():
     if cli_args.debug_news_archive:
         cli_args.debug_params = {'console_level': 'DEBUG', 'logfile_level': 'DEBUG'}
     else:
-        cli_args.debug_params = None
+        cli_args.debug_params = {}
     return cli_args
 
 
@@ -99,18 +99,17 @@ if __name__ == '__main__':
     # Parse CLI args
     args = parse_args()
 
+    # read input data from the given files, initialize variables
+    portal_settings = wrap_input_consants(args.config, args)
+
     # These parameters go down directly to the downloader
     download_params = {'program_name': args.crawler_name, 'user_agent': args.user_agent,
                        'overwrite_warc': args.no_overwrite_warc, 'err_threshold': args.comulative_error_threshold,
                        'known_bad_urls': args.known_bad_urls, 'strict_mode': args.strict,
                        'max_no_of_calls_in_period': args.max_no_of_calls_in_period, 'limit_period': args.limit_period,
                        'proxy_url': args.proxy_url, 'allow_cookies': args.allow_cookies,
-                       'stay_offline': args.stay_offline}
+                       'stay_offline': args.stay_offline, 'verify_request': portal_settings['verify_request']}
 
-    # read input data from the given files, initialize variables
-    portal_settings = wrap_input_consants(args.config, args)
-    # TODO: Site-specific downloader parameters... Maybe more?
-    download_params['verify_request'] = portal_settings['verify_request']
     if args.archive:
         # For the article links only...
         archive_crawler = NewsArchiveCrawler(portal_settings, args.old_archive_warc, args.archive_warc,

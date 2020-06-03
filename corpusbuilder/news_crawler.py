@@ -4,7 +4,7 @@
 from datetime import timedelta
 
 from .enhanced_downloader import WarcCachingDownloader
-from .utils import Logger, write_on_exit
+from .utils import Logger, write_in_del
 
 
 class NewsArchiveCrawler:
@@ -55,10 +55,10 @@ class NewsArchiveCrawler:
 
     def __del__(self):  # Write newly found URLs to files when output files supplied...
         # Save the good URLs...
-        write_on_exit(self, 'good_urls', self._settings['NEW_GOOD_ARCHIVE_URLS_FH'], self.good_urls)
+        write_in_del(self, 'good_urls', self._settings['NEW_GOOD_ARCHIVE_URLS_FH'], self.good_urls)
         # Save the problematic URLs...
-        write_on_exit(self, 'problematic_urls', self._settings['NEW_PROBLEMATIC_ARCHIVE_URLS_FH'],
-                      self.problematic_urls)
+        write_in_del(self, 'problematic_urls', self._settings['NEW_PROBLEMATIC_ARCHIVE_URLS_FH'],
+                     self.problematic_urls)
 
     def url_iterator(self):
         """
@@ -125,8 +125,7 @@ class NewsArchiveCrawler:
                 # 1) We need article URLs here to reliably determine the end of pages in some cases
                 article_urls = self._extract_article_urls_from_page_fun(archive_page_raw_html)
                 if len(article_urls) == 0 and (not self._infinite_scrolling or first_page):
-                    self._logger.log('WARNING', '{0}\t{1}'.format(next_page_url,
-                                                                  'Could not extract URLs from the archive!'))
+                    self._logger.log('WARNING', next_page_url, 'Could not extract URLs from the archive!', sep='\t')
                 # 2) Generate next-page URL or None if there should not be any
                 next_page_url = self._find_next_page_url(archive_page_url_base, page_num, archive_page_raw_html,
                                                          article_urls)
@@ -136,7 +135,7 @@ class NewsArchiveCrawler:
                 next_page_url = None
                 article_urls = []
             page_num += 1
-            self._logger.log('DEBUG', 'URLs/ARCHIVE PAGE\t{0}\t{1}'.format(curr_page_url, len(article_urls)))
+            self._logger.log('DEBUG', 'URLs/ARCHIVE PAGE', curr_page_url, len(article_urls), sep='\t')
             yield from article_urls
             first_page = False
 
@@ -230,10 +229,10 @@ class NewsArticleCrawler:
             del self._archive_downloader
 
         # Save the new URLs...
-        write_on_exit(self, '_new_urls', self._settings['NEW_GOOD_URLS_FH'], self._new_urls)
+        write_in_del(self, '_new_urls', self._settings['NEW_GOOD_URLS_FH'], self._new_urls)
         # Save the problematic URLs...
-        write_on_exit(self, 'problematic_article_urls', self._settings['NEW_PROBLEMATIC_URLS_FH'],
-                      self.problematic_article_urls)
+        write_in_del(self, 'problematic_article_urls', self._settings['NEW_PROBLEMATIC_URLS_FH'],
+                     self.problematic_article_urls)
 
     def _is_problematic_url(self, url):
         return \
@@ -244,9 +243,9 @@ class NewsArticleCrawler:
         for url in it:
             # 1) Check if the URL is a duplicate (archive URL or problematic)
             if url in self._archive_downloader.good_urls or self._is_problematic_url(url):
-                self._logger.log('WARNING', '{0}\tNot processing URL, because it is a problematic URL already'
-                                            ' encountered in this session or it points to the portal\'s archive!'.
-                                            format(url))
+                self._logger.log('WARNING', url, 'Not processing URL, because it is a problematic URL already'
+                                                 ' encountered in this session or it points to the portal\'s archive!',
+                                 sep='\t')
                 continue
 
             # 2) "Download" article
@@ -256,7 +255,7 @@ class NewsArticleCrawler:
                 # (=duplicate), then there is a download error to be logged!
                 if url not in self._downloader.cached_urls and \
                         url not in self._downloader.bad_urls and url not in self._downloader.good_urls:
-                    self._logger.log('ERROR', '{0}\tArticle was not processed because download failed!'.format(url))
+                    self._logger.log('ERROR', url, 'Article was not processed because download failed!', sep='\t')
                     self.problematic_article_urls.add(url)  # New problematic URL for manual checking
                 continue
 
@@ -268,14 +267,14 @@ class NewsArticleCrawler:
                 # a) Retrieve the date
                 article_date = self._converter.extract_article_date(url, article_raw_html, scheme)
                 if article_date is None:
-                    self._logger.log('ERROR', '{0}\tDATE COULD NOT BE PARSED!'.format(url))
+                    self._logger.log('ERROR', url, 'DATE COULD NOT BE PARSED!', sep='\t')
                     continue
                 # b) Check date interval
                 elif not self._settings['DATE_FROM'] <= article_date <= self._settings['DATE_UNTIL']:
-                    self._logger.log('WARNING',
-                                     '{0}\tDate ({1}) is not in the specified interval: {2}-{3} didn\'t use it'
-                                     ' in the corpus'.format(url, article_date, self._settings['DATE_FROM'],
-                                                             self._settings['DATE_UNTIL']))
+                    self._logger.log('WARNING', url, 'Date ({0}) is not in the specified interval: {1}-{2}'
+                                                     ' didn\'t use it in the corpus'.
+                                     format(article_date, self._settings['DATE_FROM'], self._settings['DATE_UNTIL']),
+                                     sep='\t')
                     continue
 
             # 5) Extract text to corpus
