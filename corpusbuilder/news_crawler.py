@@ -16,19 +16,23 @@ class NewsArchiveCrawler:
     def __init__(self, settings, existing_archive_filename, new_archive_filename, archive_just_cache=False,
                  known_article_urls=None, debug_params=None, downloader_params=None):
 
-        # Settings for URL iterator
-        self._archive_page_urls_by_date = settings['archive_page_urls_by_date']
-        self._archive_url_format = settings['archive_url_format']
-        self._date_from = settings['DATE_FROM']
-        self._date_until = settings['DATE_UNTIL']
-        self._go_reverse_in_archive = settings['go_reverse_in_archive']
+        # List the used properties
+        self._archive_page_urls_by_date = None
+        self._archive_url_format = None
+        self._date_from = None
+        self._date_until = None
+        self._go_reverse_in_archive = None
+        self._min_pagenum = None
+        self._initial_page_num = None
+        self._ignore_archive_cache = None
+        self._infinite_scrolling = None
+        self._extract_article_urls_from_page_fun = None
+        self._find_next_page_url = None
 
-        # Settings for gen_article_urls_including_subpages()
-        self._min_pagenum = settings['min_pagenum']
-        self._initial_page_num = settings['INITIAL_PAGENUM']
-        self._ignore_archive_cache = settings['ignore_archive_cache']
-        self._infinite_scrolling = settings['infinite_scrolling']
-        self._extract_article_urls_from_page_fun = settings['EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN']
+        # Save the original settings for using it with all columns
+        self._settings = settings
+        # Get columns, if there is only one we use None to keep default settings
+        self._columns = settings.get('columns', {'main-column': None})
 
         # Initialise the logger
         if debug_params is None:
@@ -55,18 +59,38 @@ class NewsArchiveCrawler:
             elif isinstance(known_article_urls, set):
                 self.known_article_urls = known_article_urls
 
-        # Store the constant parameters for the actual function used later
-        self._find_next_page_url = \
-            self._find_next_page_url_factory(settings['EXTRACT_NEXT_PAGE_URL_FUN'],
-                                             settings['next_url_by_pagenum'],
-                                             settings['infinite_scrolling'], settings['MAX_PAGENUM'],
-                                             settings['NEW_ARTICLE_URL_THRESHOLD'], self.known_article_urls)
-
         # Create new archive while downloading, or simulate download and read the archive
         self._downloader = WarcCachingDownloader(existing_archive_filename, new_archive_filename, self._logger,
                                                  archive_just_cache, downloader_params)
 
-        self.known_good_urls = self._downloader.url_index  # All URLs in the archive are known good!
+    def _store_settings(self, overlay_settings=None):
+        if overlay_settings is None:
+            overlay_settings = {}
+        # Copy and add overlay
+        settings = self._settings.copy()
+        settings.update(overlay_settings)
+
+        # Store values
+
+        # Settings for URL iterator
+        self._archive_page_urls_by_date = settings['archive_page_urls_by_date']
+        self._archive_url_format = settings['archive_url_format']
+        self._date_from = settings['DATE_FROM']
+        self._date_until = settings['DATE_UNTIL']
+        self._go_reverse_in_archive = settings['go_reverse_in_archive']
+
+        # Settings for gen_article_urls_including_subpages()
+        self._min_pagenum = settings['min_pagenum']
+        self._initial_page_num = settings['INITIAL_PAGENUM']
+        self._ignore_archive_cache = settings['ignore_archive_cache']
+        self._infinite_scrolling = settings['infinite_scrolling']
+        self._extract_article_urls_from_page_fun = settings['EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN']
+
+        # Store the constant parameters for the actual function used later
+        self._find_next_page_url = \
+            self._find_next_page_url_factory(settings['EXTRACT_NEXT_PAGE_URL_FUN'], settings['next_url_by_pagenum'],
+                                             settings['infinite_scrolling'], settings['MAX_PAGENUM'],
+                                             settings['NEW_ARTICLE_URL_THRESHOLD'], self.known_article_urls)
 
     def __del__(self):  # Write newly found URLs to files when output files supplied...
         # Save the good URLs...
@@ -87,30 +111,33 @@ class NewsArchiveCrawler:
 
     def url_iterator(self):
         """
-            The URL generation logic. We have a base URL to the archive and it is complete with portal-specific ending.
+            The URL generation logic. We have one or more base URL to the archive (or column archives if there is more)
+                and it is complete with portal-specific ending.
             The archive can be stored in groups (mostly the creation date) or ordered in a flat list paginated.
             This two main method can also be mixed.
             Pagination can be implemented in various vays see the appropriate function for details
         :return: Every page of the archive contain multiple URL to the actual articles, which are extrated and
          then returned as an iterator based on URLs.
         """
-        archive_page_urls = []
+        for column_name, params in self._columns:
+            self._logger.log('INFO', 'Starting column:', column_name)
+            # 1) Set params for the actual column
+            self._store_settings(params)
+            # 2) By date with optional pagination (that is handled separately)
+            if self._archive_page_urls_by_date:
+                # a) Unique the generated archive page URLs using every day from date_from to the end of date_until
+                archive_page_urls = list(set(self._gen_url_from_date(self._date_from + timedelta(days=curr_day),
+                                                                     self._archive_url_format)
+                                             for curr_day in range((self._date_until - self._date_from).days + 1)))
+                # b) Sort the generated archive page URLs
+                archive_page_urls.sort(reverse=self._go_reverse_in_archive)
+            # 3) Stored in groups represented by pagination only which will be handled separately
+            else:
+                archive_page_urls = [self._archive_url_format]  # Only the base URL is added
 
-        # 1) By date with optional pagination (that is handled separately)
-        if self._archive_page_urls_by_date:
-            # a) Unique the generated archive page URLs using every day from date_from to the end of date_until
-            archive_page_urls = list(set(self._gen_url_from_date(self._date_from + timedelta(days=curr_day),
-                                                                 self._archive_url_format)
-                                         for curr_day in range((self._date_until - self._date_from).days + 1)))
-            # b) Sort the generated archive page URLs
-            archive_page_urls.sort(reverse=self._go_reverse_in_archive)
-        # 2) Stored in groups represented by pagination only which will be handled separately
-        else:
-            archive_page_urls.append(self._archive_url_format)  # Only the base URL is added
-
-        # 3) Run through the list of archive URLs and process them, while generating the required page URLs on demand
-        for archive_page_url in archive_page_urls:
-            yield from self._gen_article_urls_including_subpages(archive_page_url)
+            # 4) Iterate the archive URLs and process them, while generating the required page URLs on demand
+            for archive_page_url in archive_page_urls:
+                yield from self._gen_article_urls_including_subpages(archive_page_url)
 
     @staticmethod
     def _gen_url_from_date(curr_date, url_format):
