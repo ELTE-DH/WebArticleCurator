@@ -1,5 +1,4 @@
-"site_name": "magyaridok"
-"site_schemas": "site_schemas.yaml"
+"schema": "site_schemas/magyaridok_schema.yaml"
 
 # "output_corpus": "magyaridok_corpus.txt"
 # "tags": "tags.yaml"

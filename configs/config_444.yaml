@@ -1,5 +1,4 @@
-"site_name": "444"
-"site_schemas": "site_schemas.yaml"
+"schema": "site_schemas/444_schema.yaml"
 
 # "output_corpus": "444_corpus.txt"
 # "tags": "tags.yaml"

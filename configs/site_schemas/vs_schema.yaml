@@ -1,0 +1,24 @@
+"site_name": "vs"
+"date_first_article": 2013-09-30
+"date_last_article": 2019-02-13
+"archive_url_format": "https://vs.hu/ajax/archive?Data={%22QueryString%22:%22%22,%22ColumnIds%22:[],%22SubcolumnIds%22:[],%22TagIds%22:[],%22HasPublicationMinFilter%22:true,%22PublicationMin%22:%22#year-#month-#dayT00:00:00.000Z%22,%22HasPublicationMaxFilter%22:true,%22PublicationMax%22:%22#next-year-#next-month-#next-dayT00:00:00.000Z%22,%22AuthorId%22:-1,%22MaxPublished%22:%22#next-year-#next-month-#next-dayT00:00:00.000Z%22,%22IsMega%22:false,%22IsPhoto%22:false,%22IsVideo%22:false}"
+
+"extract_next_page_url_fun": NULL
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_vs"
+"next_url_by_pagenum": false
+"infinite_scrolling": false
+"archive_page_urls_by_date": true
+"go_reverse_in_archive": true
+"verify_request": false
+
+"min_pagenum": 1
+# "max_pagenum": NULL
+
+"ignore_archive_cache": false
+# "new_article_url_threshold": 0
+"follow_links_on_page": false
+
+"corpus_converter": "dummy-converter"
+
+# "tags_keys":
+#     "^http://www\\.vs\\.hu/": NULL

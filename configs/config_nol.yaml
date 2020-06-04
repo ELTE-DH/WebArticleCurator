@@ -1,5 +1,4 @@
-"site_name": "nol"
-"site_schemas": "../site_schemas.yaml"
+"schema": "site_schemas/nol_schema.yaml"
 
 # "output_corpus": "nol_corpus.txt"
 # "tags": "tags.yaml"

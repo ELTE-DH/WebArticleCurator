@@ -1,5 +1,4 @@
-"site_name": "origo"
-"site_schemas": "site_schemas.yaml"
+"schema": "site_schemas/origo_schema.yaml"
 
 # "output_corpus": "origo_corpus.txt"
 # "tags": "tags.yaml"

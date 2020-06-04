@@ -1,3 +1,4 @@
+# Settings for regex-based corpus converter
 "common":
     "article_begin_mark": "<docitem>\n"
     "article_end_mark": "</docitem>\n"

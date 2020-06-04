@@ -1,5 +1,4 @@
-"site_name": "index"
-"site_schemas": "site_schemas.yaml"
+"schema": "site_schemas/index_schema.yaml"
 
 # "output_corpus": "index_corpus.txt"
 # "tags": "tags.yaml"

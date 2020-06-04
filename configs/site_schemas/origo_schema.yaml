@@ -1,0 +1,24 @@
+"site_name": "origo"
+"date_first_article": 1998-12-01
+# "date_last_article":  2100-01-01
+"archive_url_format": "https://www.origo.hu/hir-archivum/#year/#year#month#day.html"
+
+"extract_next_page_url_fun": NULL
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_origo"
+"next_url_by_pagenum": false
+"infinite_scrolling": false
+"archive_page_urls_by_date": true
+"go_reverse_in_archive": true
+"verify_request": true
+
+"min_pagenum": 0
+# "max_pagenum": NULL
+
+"ignore_archive_cache": false
+# "new_article_url_threshold": 0
+"follow_links_on_page": false
+
+"corpus_converter": "dummy-converter"
+
+# "tags_keys":
+#     "^http://www.origo\\.hu/": "origo-html"

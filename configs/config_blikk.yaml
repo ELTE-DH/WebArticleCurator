@@ -1,5 +1,4 @@
-"site_name": "blikk"
-"site_schemas": "site_schemas.yaml"
+"schema": "site_schemas/blikk_schema.yaml"
 
 # "output_corpus": "blikk_corpus.txt"
 # "tags": "tags.yaml"

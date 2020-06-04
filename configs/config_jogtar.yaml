@@ -1,5 +1,4 @@
-"site_name": "jogtar"
-"site_schemas": "site_schemas.yaml"
+"schema": "site_schemas/jogtar_schema.yaml"
 
 # "output_corpus": "jogtar_corpus.txt"
 # "tags": "tags.yaml"

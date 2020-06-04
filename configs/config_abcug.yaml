@@ -1,5 +1,4 @@
-"site_name": "abcug"
-"site_schemas": "site_schemas.yaml"
+"schema": "site_schemas/abcug_schema.yaml"
 
 # "output_corpus": "abcug_corpus.txt"
 # "tags": "tags.yaml"

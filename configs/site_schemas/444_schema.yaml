@@ -1,0 +1,24 @@
+"site_name": "444"
+"date_first_article": 2013-04-10
+# "date_last_article":  2100-01-01
+"archive_url_format": "https://444.hu/#year/#month/#day/"
+
+"extract_next_page_url_fun": "extract_next_page_url_444"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_444"
+"next_url_by_pagenum": true
+"infinite_scrolling": false
+"archive_page_urls_by_date": true
+"go_reverse_in_archive": true
+"verify_request": true
+
+"min_pagenum": 0
+# "max_pagenum": NULL
+
+"ignore_archive_cache": false
+# "new_article_url_threshold": 0
+"follow_links_on_page": false
+
+"corpus_converter": "dummy-converter"
+
+# "tags_keys":
+#    "^https://444\\.hu/": "444-html"

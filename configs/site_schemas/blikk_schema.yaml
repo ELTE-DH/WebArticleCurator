@@ -1,0 +1,24 @@
+"site_name": "blikk"
+"date_first_article": 2009-01-21
+# "date_last_article":  2100-01-01
+"archive_url_format": "https://www.blikk.hu/archivum/online?date=#year-#month-#day&page=#pagenum"
+
+"extract_next_page_url_fun": "extract_next_page_url_blikk"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_blikk"
+"next_url_by_pagenum": false
+"infinite_scrolling": false
+"archive_page_urls_by_date": true
+"go_reverse_in_archive": true
+"verify_request": true
+
+"min_pagenum": 1
+# "max_pagenum": NULL
+
+"ignore_archive_cache": false
+# "new_article_url_threshold": 0
+"follow_links_on_page": false
+
+"corpus_converter": "dummy-converter"
+
+# "tags_keys":
+#     "^http://www\\.blikk\\.hu/": "blikk-html"
