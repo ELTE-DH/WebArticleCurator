@@ -100,7 +100,7 @@ if __name__ == '__main__':
     args = parse_args()
 
     # read input data from the given files, initialize variables
-    portal_settings = wrap_input_consants(args.config, args)
+    portal_settings = wrap_input_consants(args.config)
 
     # These parameters go down directly to the downloader
     download_params = {'program_name': args.crawler_name, 'user_agent': args.user_agent,

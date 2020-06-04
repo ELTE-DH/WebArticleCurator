@@ -2,17 +2,16 @@
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
 import os
-import re
 import sys
 import yaml
 import logging
 from datetime import date, timedelta
 
-from corpusbuilder.corpus_converter import corpus_converter_class
+import corpusbuilder.corpus_converter as corpus_converters
 import corpusbuilder.site_specific_extractor_functions as site_spec_extractor_functions
 
 
-def wrap_input_consants(current_task_config_filename, args):
+def wrap_input_consants(current_task_config_filename):
     """
         Helper to store and process input data so that main function does not contain so many
          codelines of variable initialization
@@ -25,10 +24,10 @@ def wrap_input_consants(current_task_config_filename, args):
         settings = yaml.load(fh)
 
     # The directory name of the configs
-    dir_name = os.path.dirname(os.path.abspath(current_task_config_filename))
+    settings['DIR_NAME'] = os.path.dirname(os.path.abspath(current_task_config_filename))
 
     # Technical data about the website to crawl
-    with open(os.path.join(dir_name, settings['site_schemas']), encoding='UTF-8') as fh:
+    with open(os.path.join(settings['DIR_NAME'], settings['site_schemas']), encoding='UTF-8') as fh:
         current_site_schema = yaml.load(fh)[settings['site_name']]
 
     # TODO: How to avoid key errors?
@@ -36,61 +35,6 @@ def wrap_input_consants(current_task_config_filename, args):
     #    raise KeyError('Config file key collision!')
     current_site_schema.update(settings)
     settings = current_site_schema  # Settings have higher priority over current_site_schema!
-
-    settings['TAGS_KEYS'] = {re.compile(tag_key): val for tag_key, val in settings['tags_keys'].items()}
-
-    # TODO: Curretnly disabled!
-    # If the program is to create a corpus, then it will load the required tags and compile the REs
-    if settings.get('create_corpus', False):
-        with open(os.path.join(dir_name, settings['tags']), encoding='UTF-8') as fh:
-            all_tags = yaml.load(fh)
-            common_tags = all_tags['common']
-
-        cleaning_rules = {}
-        general_cleaning_rules = common_tags.pop('general_cleaning_rules', {})  # Also remove general rules from common!
-        for rule, regex in ((rule, regex) for rule, regex in general_cleaning_rules.items()
-                            if not rule.endswith('_repl')):
-            r = re.compile(regex)
-            cleaning_rules[rule] = lambda x: r.sub(general_cleaning_rules['{0}_repl'.format(rule)], x)
-
-        site_tags = {}
-        for tag_key_readable in settings['TAGS_KEYS'].values():
-            site_tags[tag_key_readable] = {}
-            if tag_key_readable is not None:  # None == Explicitly ignored
-                for tag_name, tag_desc in all_tags[tag_key_readable].items():
-                    site_tags[tag_key_readable][tag_name] = {}
-                    site_tags[tag_key_readable][tag_name]['open-inside-close'] = re.compile('{0}{1}{2}'.
-                                                                                            format(tag_desc['open'],
-                                                                                                   tag_desc['inside'],
-                                                                                                   tag_desc['close']))
-                    site_tags[tag_key_readable][tag_name]['open'] = re.compile(tag_desc['open'])
-                    site_tags[tag_key_readable][tag_name]['close'] = re.compile(tag_desc['close'])
-
-    else:
-        site_tags = {}
-        common_tags = {'article_begin_mark': '', 'article_end_mark': ''}
-        cleaning_rules = {}
-    settings['SITE_TAGS'] = site_tags
-    settings['COMMON_SITE_TAGS'] = common_tags
-    settings['GENERAL_CLEANING_RULES'] = cleaning_rules
-
-    # TODO: Under rearrangement!
-    """
-    site_schemas:
-
-    "article_date_format": ""
-    "before_article_date": ""
-    "before_article_date_repl": ""
-    "after_article_date": ""
-    "after_article_date_repl": ""
-    "article_date_formatting": "%Y.%m.%d."
-
-    settings['BEFORE_ARTICLE_DATE_RE'] = re.compile(current_site_schema['before_article_date'])
-    settings['AFTER_ARTICLE_DATE_RE'] = re.compile(current_site_schema['after_article_date'])
-    settings['ARTICLE_DATE_FORMAT_RE'] = re.compile('{0}{1}{2}'.format(current_site_schema['before_article_date'],
-                                                                       current_site_schema['article_date_format'],
-                                                                       current_site_schema['after_article_date']))
-    """
 
     # Date filtering ON in any other cases OFF
     settings['FILTER_ARTICLES_BY_DATE'] = 'date_from' in settings and 'date_until' in settings
@@ -137,19 +81,15 @@ def wrap_input_consants(current_task_config_filename, args):
     for attr_name, attr_name_fh, mode in (('new_good_archive_urls', 'NEW_GOOD_ARCHIVE_URLS_FH', 'w'),
                                           ('new_good_urls', 'NEW_GOOD_URLS_FH', 'a+'),
                                           ('new_problematic_archive_urls', 'NEW_PROBLEMATIC_ARCHIVE_URLS_FH', 'w'),
-                                          ('new_problematic_urls', 'NEW_PROBLEMATIC_URLS_FH', 'a+'),
-                                          ('output_corpus', 'OUTPUT_CORPUS_FH', 'a+')):
+                                          ('new_problematic_urls', 'NEW_PROBLEMATIC_URLS_FH', 'a+')):
         attr = settings.get(attr_name)
         settings[attr_name_fh] = None
         if attr is not None:
             settings[attr_name_fh] = open(attr, mode, encoding='UTF-8')
 
-    # Extra check on output corpus generation
-    if args.corpus and settings['OUTPUT_CORPUS_FH'] is None:
-        raise ValueError('output_corpus must be set for --corpus!')
-
-    # Set converter class
-    settings['CORPUS_CONVERTER'] = corpus_converter_class[settings['corpus_converter']]
+    # Set and init converter class which is dummy-converter by default
+    settings['CORPUS_CONVERTER'] = getattr(corpus_converters,
+                                           settings.get('corpus_converter', 'dummy-converter'))(settings)
 
     # Portal specific functions
     for attr_name, attr_name_dest, mandatory in \
@@ -233,8 +173,17 @@ class Logger:
 
         self.log('INFO', 'Logging started')
 
-    def log(self, level, *message, sep=' ', end='\n'):
-        """  A print()-like logging function """
+    def log(self, level, *message, sep=' ', end='\n', file=None):
+        """
+            A print()-like logging function
+                :param level: (str) Levels from the standard set: 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'
+                :param message: One or more elems as for print()
+                :param sep: Separator element as for print()
+                :param end: Ending element as for print()
+                :param file: Ignored as handlers are set in __init__()
+                :return: None
+        """
+        _ = file  # Silence IDE
         for handler in self._logger.handlers:
             handler.terminator = end
         if level not in self._leveled_logger:
