@@ -4,7 +4,7 @@
 from datetime import timedelta
 
 from .enhanced_downloader import WarcCachingDownloader
-from .utils import Logger, write_in_del
+from .utils import Logger
 
 
 class NewsArchiveCrawler:
@@ -16,20 +16,35 @@ class NewsArchiveCrawler:
     def __init__(self, settings, existing_archive_filename, new_archive_filename, archive_just_cache=False,
                  known_article_urls=None, debug_params=None, downloader_params=None):
 
-        self._settings = settings
+        # Settings for URL iterator
+        self._archive_page_urls_by_date = settings['archive_page_urls_by_date']
+        self._archive_url_format = settings['archive_url_format']
+        self._date_from = settings['DATE_FROM']
+        self._date_until = settings['DATE_UNTIL']
+        self._go_reverse_in_archive = settings['go_reverse_in_archive']
 
-        self._initial_page_num = self._settings['INITIAL_PAGENUM']
-        self._infinite_scrolling = self._settings['infinite_scrolling']
-        self._ignore_archive_cache = self._settings['ignore_archive_cache']
-        self._extract_article_urls_from_page_fun = self._settings['EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN']
+        # Settings for gen_article_urls_including_subpages()
+        self._min_pagenum = settings['min_pagenum']
+        self._initial_page_num = settings['INITIAL_PAGENUM']
+        self._ignore_archive_cache = settings['ignore_archive_cache']
+        self._infinite_scrolling = settings['infinite_scrolling']
+        self._extract_article_urls_from_page_fun = settings['EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN']
 
+        # Initialise the logger
         if debug_params is None:
             debug_params = {}
-        self._logger = Logger(self._settings['log_file_archive'], **debug_params)
+        self._logger = Logger(settings['log_file_archive'], **debug_params)
 
-        # For external use
+        # Open files for writing gathered URLs on exit if needed
         self.good_urls = set()
+        self._new_good_archive_urls_fh = settings.get('new_good_archive_urls')
+        if self._new_good_archive_urls_fh is not None:
+            self._new_good_archive_urls_fh = open(self._new_good_archive_urls_fh, 'w', encoding='UTF-8')
+
         self.problematic_urls = set()
+        self._new_problematic_archive_urls_fh = settings.get('new_problematic_archive_urls')
+        if self._new_problematic_archive_urls_fh is not None:
+            self._new_problematic_archive_urls_fh = open(self._new_problematic_archive_urls_fh, 'w', encoding='UTF-8')
 
         # Setup the list of cached article URLs to stop archive crawling in time
         self.known_article_urls = set()
@@ -42,10 +57,10 @@ class NewsArchiveCrawler:
 
         # Store the constant parameters for the actual function used later
         self._find_next_page_url = \
-            self._find_next_page_url_factory(self._settings['EXTRACT_NEXT_PAGE_URL_FUN'],
-                                             self._settings['next_url_by_pagenum'],
-                                             self._settings['infinite_scrolling'], self._settings['MAX_PAGENUM'],
-                                             self._settings['NEW_ARTICLE_URL_THRESHOLD'], self.known_article_urls)
+            self._find_next_page_url_factory(settings['EXTRACT_NEXT_PAGE_URL_FUN'],
+                                             settings['next_url_by_pagenum'],
+                                             settings['infinite_scrolling'], settings['MAX_PAGENUM'],
+                                             settings['NEW_ARTICLE_URL_THRESHOLD'], self.known_article_urls)
 
         # Create new archive while downloading, or simulate download and read the archive
         self._downloader = WarcCachingDownloader(existing_archive_filename, new_archive_filename, self._logger,
@@ -55,10 +70,20 @@ class NewsArchiveCrawler:
 
     def __del__(self):  # Write newly found URLs to files when output files supplied...
         # Save the good URLs...
-        write_in_del(self, 'good_urls', self._settings['NEW_GOOD_ARCHIVE_URLS_FH'], self.good_urls)
+        attr = getattr(self, 'good_urls', {})
+        new_good_archive_urls_fh = getattr(self, '_new_good_archive_urls_fh', None)
+        if new_good_archive_urls_fh is not None:
+            if len(attr) > 0:
+                new_good_archive_urls_fh.writelines('{0}\n'.format(elem) for elem in attr)
+            new_good_archive_urls_fh.close()
+
         # Save the problematic URLs...
-        write_in_del(self, 'problematic_urls', self._settings['NEW_PROBLEMATIC_ARCHIVE_URLS_FH'],
-                     self.problematic_urls)
+        attr = getattr(self, 'problematic_urls', {})
+        new_good_archive_urls_fh = getattr(self, '_new_good_archive_urls_fh', None)
+        if new_good_archive_urls_fh is not None:
+            if len(attr) > 0:
+                new_good_archive_urls_fh.writelines('{0}\n'.format(elem) for elem in attr)
+            new_good_archive_urls_fh.close()
 
     def url_iterator(self):
         """
@@ -72,19 +97,16 @@ class NewsArchiveCrawler:
         archive_page_urls = []
 
         # 1) By date with optional pagination (that is handled separately)
-        if self._settings['archive_page_urls_by_date']:
-            date_from = self._settings['DATE_FROM']
-            date_until = self._settings['DATE_UNTIL']
-            url_format = self._settings['archive_url_format']
-
+        if self._archive_page_urls_by_date:
             # a) Unique the generated archive page URLs using every day from date_from to the end of date_until
-            archive_page_urls = list(set(self._gen_url_from_date(date_from + timedelta(days=curr_day), url_format)
-                                         for curr_day in range((date_until - date_from).days + 1)))
+            archive_page_urls = list(set(self._gen_url_from_date(self._date_from + timedelta(days=curr_day),
+                                                                 self._archive_url_format)
+                                         for curr_day in range((self._date_until - self._date_from).days + 1)))
             # b) Sort the generated archive page URLs
-            archive_page_urls.sort(reverse=self._settings['go_reverse_in_archive'])
+            archive_page_urls.sort(reverse=self._go_reverse_in_archive)
         # 2) Stored in groups represented by pagination only which will be handled separately
         else:
-            archive_page_urls.append(self._settings['archive_url_format'])  # Only the base URL is added
+            archive_page_urls.append(self._archive_url_format)  # Only the base URL is added
 
         # 3) Run through the list of archive URLs and process them, while generating the required page URLs on demand
         for archive_page_url in archive_page_urls:
@@ -113,12 +135,11 @@ class NewsArchiveCrawler:
         """
             Generates article URLs from a supplied URL inlcuding the on-demand sub-pages that contains article URLs
         """
-        page_num = self._settings['min_pagenum']
+        page_num = self._min_pagenum
         first_page = True
         next_page_url = archive_page_url_base.replace('#pagenum', self._initial_page_num)
         while next_page_url is not None:
-            archive_page_raw_html = self._downloader.download_url(next_page_url,
-                                                                  ignore_cache=self._ignore_archive_cache)
+            archive_page_raw_html = self._downloader.download_url(next_page_url, self._ignore_archive_cache)
             curr_page_url = next_page_url
             if archive_page_raw_html is not None:  # Download succeeded
                 self.good_urls.add(next_page_url)
@@ -186,32 +207,43 @@ class NewsArticleCrawler:
         1) Get the list of articles (eg. NewsArchiveCrawler)
         2) Download article pages
         3) Extract the text of articles from raw HTML
-        4) save them in corpus format (optional)
+        4) Filter articles by date (depends on corpus converter)
+        5) Save them in corpus format (depends on corpus converter)
+        6) Follow the links on page (depends on corpus converter)
     """
+
     def __init__(self, settings, articles_existing_warc_filename, articles_new_warc_filename,
                  archive_existing_warc_filename, archive_new_warc_filename, articles_just_cache=False,
                  archive_just_cache=False, known_article_urls=None, debug_params=None, download_params=None):
-        self._settings = settings
-        self._logger = Logger(self._settings['log_file_articles'])
 
-        self._copied_urls = set()
-        self.problematic_article_urls = set()
+        # Initialise the logger
+        self._logger = Logger(settings['log_file_articles'])
+
+        # Open files for writing gathered URLs on exit if needed
         self._new_urls = set()
+        self._new_good_urls_fh = settings.get('new_good_urls')
+        if self._new_good_urls_fh is not None:
+            self._new_good_urls_fh = open(self._new_good_urls_fh, 'a+', encoding='UTF-8')
+
+        self.problematic_article_urls = set()
+        self._new_problematic_urls_fh = settings.get('new_problematic_urls')
+        if self._new_problematic_urls_fh is not None:
+            self._new_problematic_urls_fh = open(self._new_problematic_urls_fh, 'a+', encoding='UTF-8')
 
         # Store values at init-time
-        self._filter_by_date = self._settings['FILTER_ARTICLES_BY_DATE']
+        self._filter_by_date = settings['FILTER_ARTICLES_BY_DATE']
+        self._date_from = settings['DATE_FROM']
+        self._date_until = settings['DATE_UNTIL']
 
         # Get the initialised corpus converter (can be dummy) and set the apropriate logger
-        self._converter = self._settings['CORPUS_CONVERTER']
+        self._converter = settings['CORPUS_CONVERTER']
         self._converter.logger = self._logger
-
-        self._follow_links_on_page = self._settings['follow_links_on_page']
 
         # Create new archive while downloading, or simulate download and read the archive
         self._downloader = WarcCachingDownloader(articles_existing_warc_filename, articles_new_warc_filename,
                                                  self._logger, articles_just_cache, download_params)
 
-        if known_article_urls is None:  # If None is supplied put the ones from the article archive
+        if known_article_urls is None:  # If None is supplied copy the ones from the article archive
             known_article_urls = set(self._downloader.url_index.keys())  # All URLs in the archive are known good!
 
         if archive_just_cache and articles_just_cache:
@@ -219,7 +251,7 @@ class NewsArticleCrawler:
             self._archive_downloader = NewsArchiveDummyCrawler(self._downloader.url_index.keys())
         else:  # known_bad_urls are common between the NewsArchiveCrawler and the NewsArticleCrawler
             # For downloading the articles from a (possibly read-only) archive
-            self._archive_downloader = NewsArchiveCrawler(self._settings, archive_existing_warc_filename,
+            self._archive_downloader = NewsArchiveCrawler(settings, archive_existing_warc_filename,
                                                           archive_new_warc_filename, archive_just_cache,
                                                           known_article_urls, debug_params, download_params)
 
@@ -228,15 +260,27 @@ class NewsArticleCrawler:
             del self._archive_downloader
 
         # Save the new URLs...
-        write_in_del(self, '_new_urls', self._settings['NEW_GOOD_URLS_FH'], self._new_urls)
+        attr = getattr(self, '_new_urls', {})
+        new_good_urls_fh = getattr(self, '_new_good_urls_fh', None)
+        if new_good_urls_fh is not None:
+            if len(attr) > 0:
+                new_good_urls_fh.writelines('{0}\n'.format(elem) for elem in attr)
+            new_good_urls_fh.close()
+
         # Save the problematic URLs...
-        write_in_del(self, 'problematic_article_urls', self._settings['NEW_PROBLEMATIC_URLS_FH'],
-                     self.problematic_article_urls)
+        attr = getattr(self, 'problematic_article_urls', {})
+        new_problematic_urls_fh = getattr(self, '_new_problematic_urls_fh', None)
+        if self._new_problematic_urls_fh is not None:
+            if len(attr) > 0:
+                new_problematic_urls_fh.writelines('{0}\n'.format(elem) for elem in attr)
+            new_problematic_urls_fh.close()
 
     def _is_problematic_url(self, url):
-        return \
-            (url in self.problematic_article_urls or  # Download failed in this session (requries manual check)
-             url in self._archive_downloader.problematic_urls)  # Archive URLs failed to download in this session
+        # Download failed in this session (requries manual check) or Archive URLs failed to download in this session
+        return url in self.problematic_article_urls or url in self._archive_downloader.problematic_urls
+
+    def download_and_extract_all_articles(self):
+        self.process_urls(self._archive_downloader.url_iterator())
 
     def process_urls(self, it):
         for url in it:
@@ -269,11 +313,10 @@ class NewsArticleCrawler:
                     self._logger.log('ERROR', url, 'DATE COULD NOT BE PARSED!', sep='\t')
                     continue
                 # b) Check date interval
-                elif not self._settings['DATE_FROM'] <= article_date <= self._settings['DATE_UNTIL']:
+                elif not self._date_from <= article_date <= self._date_until:
                     self._logger.log('WARNING', url, 'Date ({0}) is not in the specified interval: {1}-{2}'
                                                      ' didn\'t use it in the corpus'.
-                                     format(article_date, self._settings['DATE_FROM'], self._settings['DATE_UNTIL']),
-                                     sep='\t')
+                                     format(article_date, self._date_from, self._date_until), sep='\t')
                     continue
 
             # 5) Extract text to corpus
@@ -281,6 +324,4 @@ class NewsArticleCrawler:
 
             # 6) Extract links to other articles and check for already extracted urls (also in the archive)?
             # TODO: This could be used for multipage articles...
-
-    def download_and_extract_all_articles(self):
-        self.process_urls(self._archive_downloader.url_iterator())
+            self._converter.follow_links_on_page(url, article_raw_html, scheme)

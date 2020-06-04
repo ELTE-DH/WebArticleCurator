@@ -72,21 +72,6 @@ def wrap_input_consants(current_task_config_filename):
                                                                     settings['date_first_article'],
                                                                     settings['date_last_article']))
 
-    # None or file handle
-    # 1. New good archive URLs downloaded and in the archive (dropped by default)
-    # 2. New good article URLs downloaded and in the archive (dropped by default)
-    # 3. New problematic archive URLs to be checked manually (dropped by default)
-    # 4. New problematic article URLs to be checked manually (dropped by default)
-    # 5. Corpus output (dropped by default)
-    for attr_name, attr_name_fh, mode in (('new_good_archive_urls', 'NEW_GOOD_ARCHIVE_URLS_FH', 'w'),
-                                          ('new_good_urls', 'NEW_GOOD_URLS_FH', 'a+'),
-                                          ('new_problematic_archive_urls', 'NEW_PROBLEMATIC_ARCHIVE_URLS_FH', 'w'),
-                                          ('new_problematic_urls', 'NEW_PROBLEMATIC_URLS_FH', 'a+')):
-        attr = settings.get(attr_name)
-        settings[attr_name_fh] = None
-        if attr is not None:
-            settings[attr_name_fh] = open(attr, mode, encoding='UTF-8')
-
     # Set and init converter class which is dummy-converter by default
     settings['CORPUS_CONVERTER'] = getattr(corpus_converters,
                                            settings.get('corpus_converter', 'dummy-converter'))(settings)
@@ -198,12 +183,3 @@ class Logger:
             h.flush()
             if isinstance(h, logging.FileHandler):
                 h.close()
-
-
-def write_in_del(cls, attr_name, handle, attr):
-    """ Write an iterable attribute of a class to one-elem-per-line format in __del__() """
-    if hasattr(cls, attr_name):
-        if handle is not None:
-            if len(attr) > 0:
-                handle.writelines('{0}\n'.format(elem) for elem in attr)
-            handle.close()
