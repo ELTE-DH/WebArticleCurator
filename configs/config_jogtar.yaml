@@ -1,7 +1,6 @@
 "schema": "site_schemas/jogtar_schema.yaml"
 
 # "output_corpus": "jogtar_corpus.txt"
-# "tags": "tags.yaml"
 
 "log_file_articles": "logs/jogtar_articles_log.txt"
 "log_file_archive": "logs/jogtar_archive_log.txt"

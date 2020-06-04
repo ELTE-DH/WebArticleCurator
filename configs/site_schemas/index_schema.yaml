@@ -27,12 +27,3 @@
 "follow_links_on_page": false
 
 "corpus_converter": "dummy-converter"
-
-# "tags_keys":
-#     "^https://index\\.hu/": "index-html"
-#     "^https://totalcar\\.hu/": "index-html"
-#     "^https://totalbike\\.hu/": "index-html"
-#     "^https://www\\.velvet\\.hu/": NULL
-#     "^https://divany\\.hu/": "divany-html"
-#     "^https://.*?\\.blog\\.hu/": "bloghu-html"
-#     "^https://galeria\\.(index|totalcar|totalbike|velvet|divany)\\.hu/": NULL

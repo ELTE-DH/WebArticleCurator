@@ -1,7 +1,6 @@
 "schema": "site_schemas/mno_schema.yaml"
 
 # "output_corpus": "mno_corpus.txt"
-# "tags": "tags.yaml"
 
 "log_file_articles": "logs/mno_articles_log.txt"
 "log_file_archive": "logs/mno_archive_log.txt"

@@ -1,7 +1,6 @@
 "schema": "site_schemas/origo_schema.yaml"
 
 # "output_corpus": "origo_corpus.txt"
-# "tags": "tags.yaml"
 
 "log_file_articles": "logs/origo_articles_log.txt"
 "log_file_archive": "logs/origo_archive_log.txt"

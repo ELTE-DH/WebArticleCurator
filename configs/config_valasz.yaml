@@ -1,7 +1,6 @@
 "schema": "site_schemas/valasz_schema.yaml"
 
 # "output_corpus": "valasz_corpus.txt"
-# "tags": "tags.yaml"
 
 "log_file_articles": "logs/valasz_articles_log.txt"
 "log_file_archive": "logs/valasz_archive_log.txt"

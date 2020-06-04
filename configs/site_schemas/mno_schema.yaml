@@ -67,6 +67,3 @@
 "follow_links_on_page": false
 
 "corpus_converter": "dummy-converter"
-
-# "tags_keys":
-#     "^https://mno\\.hu/": "mno-html"

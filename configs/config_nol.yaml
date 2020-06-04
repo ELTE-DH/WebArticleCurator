@@ -1,7 +1,6 @@
 "schema": "site_schemas/nol_schema.yaml"
 
 # "output_corpus": "nol_corpus.txt"
-# "tags": "tags.yaml"
 
 "log_file_articles": "logs/nol_articles_log.txt"
 "log_file_archive": "logs/nol_archive_log.txt"

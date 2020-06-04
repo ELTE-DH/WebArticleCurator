@@ -1,7 +1,6 @@
 "schema": "site_schemas/vs_schema.yaml"
 
 # "output_corpus": "vs_corpus.txt"
-# "tags": "tags.yaml"
 
 "log_file_articles": "logs/vs_articles_log.txt"
 "log_file_archive": "logs/vs_archive_log.txt"

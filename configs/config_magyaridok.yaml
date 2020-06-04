@@ -1,7 +1,6 @@
 "schema": "site_schemas/magyaridok_schema.yaml"
 
 # "output_corpus": "magyaridok_corpus.txt"
-# "tags": "tags.yaml"
 
 "log_file_articles": "logs/magyaridok_articles_log.txt"
 "log_file_archive": "logs/magyaridok_archive_log.txt"

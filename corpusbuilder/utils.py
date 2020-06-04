@@ -3,12 +3,12 @@
 
 import os
 import sys
+import importlib.util
 import yaml
 import logging
 from datetime import date, timedelta
 
-import corpusbuilder.corpus_converter as corpus_converters
-import corpusbuilder.site_specific_extractor_functions as site_spec_extractor_functions
+from corpusbuilder.corpus_converter import DummyConverter
 
 
 def wrap_input_consants(current_task_config_filename):
@@ -73,14 +73,24 @@ def wrap_input_consants(current_task_config_filename):
                                                                     settings['date_last_article']))
 
     # Set and init converter class which is dummy-converter by default
-    settings['CORPUS_CONVERTER'] = getattr(corpus_converters,
-                                           settings.get('corpus_converter', 'dummy-converter'))(settings)
+    corp_conv = settings.get('corpus_converter', 'dummy-converter')
+    if corp_conv == 'dummy-converter':
+        corpus_converter_class = DummyConverter
+    else:
+        file_path = settings.get('corpus_converter_file')
+        if file_path is None:
+            raise ValueError('corpus_converter is {0}, but {1} is unset!'.format(corp_conv, file_path))
+        module = import_pyhton_file(file_path)
+        corpus_converter_class = getattr(module, corp_conv)
+    settings['CORPUS_CONVERTER'] = corpus_converter_class(settings)
 
     # Portal specific functions
+    file_path = settings['portal_specific_exctractor_functions_file']
+    module = import_pyhton_file(file_path)
     for attr_name, attr_name_dest, mandatory in \
             (('extract_next_page_url_fun', 'EXTRACT_NEXT_PAGE_URL_FUN', False),
              ('extract_article_urls_from_page_fun', 'EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN', True),):
-        settings[attr_name_dest] = getattr(site_spec_extractor_functions, settings.get(attr_name, ''), None)
+        settings[attr_name_dest] = getattr(module, settings.get(attr_name, ''), None)
         if mandatory and settings[attr_name_dest] is None:
             raise ValueError('{0} is unset!'.format(attr_name))
 
@@ -106,6 +116,15 @@ def wrap_input_consants(current_task_config_filename):
     settings['INITIAL_PAGENUM'] = str(settings['INITIAL_PAGENUM'])
 
     return settings
+
+
+def import_pyhton_file(file_path):
+    # Import module from file: https://docs.python.org/3/library/importlib.html#importing-a-source-file-directly
+    spec = importlib.util.spec_from_file_location('portal_specific_exctractor_functions', file_path)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules['portal_specific_exctractor_functions'] = module
+    spec.loader.exec_module(module)
+    return module
 
 
 class Logger:

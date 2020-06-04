@@ -19,6 +19,3 @@
 "follow_links_on_page": false
 
 "corpus_converter": "dummy-converter"
-
-# "tags_keys":
-#    "^https://444\\.hu/": "444-html"

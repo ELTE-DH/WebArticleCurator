@@ -1,7 +1,6 @@
 "schema": "site_schemas/index_schema.yaml"
 
 # "output_corpus": "index_corpus.txt"
-# "tags": "tags.yaml"
 
 "log_file_articles": "logs/index_articles_log.txt"
 "log_file_archive": "logs/index_archive_log.txt"
