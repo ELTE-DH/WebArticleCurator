@@ -66,6 +66,11 @@ class CorpusConverterNewspaper:  # Mimic CorpusConverter
               html_body, '</html_article>', sep='\n', end='', file=self._file_out)
         self._logger.log('INFO', url, 'Article extraction OK', sep='\t', file=sys.stderr)
 
+    @staticmethod
+    def follow_links_on_page(url, article_raw_html, scheme):
+        _ = url, article_raw_html, scheme  # Silence dummy IDE
+        return set()
+
     def __del__(self):
         if hasattr(self, '_file_out') and self._file_out is not None:
             self._file_out.close()

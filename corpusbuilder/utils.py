@@ -229,5 +229,10 @@ class DummyConverter:  # No output corpus
         _ = url, article_raw_html, scheme  # Silence dummy IDE
         pass
 
+    @staticmethod
+    def follow_links_on_page(url, article_raw_html, scheme):
+        _ = url, article_raw_html, scheme  # Silence dummy IDE
+        return set()
+
     def __del__(self):
         pass
