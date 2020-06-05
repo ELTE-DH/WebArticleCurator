@@ -3,12 +3,21 @@
 
 import os
 import sys
-import importlib.util
-import yaml
 import logging
-from datetime import date, timedelta
+import importlib.util
+from argparse import Namespace
+from datetime import datetime, date, timedelta
 
-from corpusbuilder.corpus_converter import DummyConverter
+import yaml
+
+
+def import_pyhton_file(module_name, file_path):
+    # Import module from file: https://docs.python.org/3/library/importlib.html#importing-a-source-file-directly
+    spec = importlib.util.spec_from_file_location(module_name, file_path)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+    return module
 
 
 def wrap_input_consants(current_task_config_filename):
@@ -30,9 +39,7 @@ def wrap_input_consants(current_task_config_filename):
     with open(os.path.join(settings['DIR_NAME'], settings['site_schemas']), encoding='UTF-8') as fh:
         current_site_schema = yaml.load(fh)[settings['site_name']]
 
-    # TODO: How to avoid key errors?
-    # if len(settings.keys() & current_site_schema.keys()) > 0:
-    #    raise KeyError('Config file key collision!')
+    # TODO: How to avoid key errors? YAML Shema!
     current_site_schema.update(settings)
     settings = current_site_schema  # Settings have higher priority over current_site_schema!
 
@@ -80,13 +87,13 @@ def wrap_input_consants(current_task_config_filename):
         file_path = settings.get('corpus_converter_file')
         if file_path is None:
             raise ValueError('corpus_converter is {0}, but {1} is unset!'.format(corp_conv, file_path))
-        module = import_pyhton_file(file_path)
+        module = import_pyhton_file('corpus_converter', file_path)
         corpus_converter_class = getattr(module, corp_conv)
     settings['CORPUS_CONVERTER'] = corpus_converter_class(settings)
 
     # Portal specific functions
     file_path = settings['portal_specific_exctractor_functions_file']
-    module = import_pyhton_file(file_path)
+    module = import_pyhton_file('portal_specific_exctractor_functions', file_path)
     for attr_name, attr_name_dest, mandatory in \
             (('extract_next_page_url_fun', 'EXTRACT_NEXT_PAGE_URL_FUN', False),
              ('extract_article_urls_from_page_fun', 'EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN', True),):
@@ -116,15 +123,6 @@ def wrap_input_consants(current_task_config_filename):
     settings['INITIAL_PAGENUM'] = str(settings['INITIAL_PAGENUM'])
 
     return settings
-
-
-def import_pyhton_file(file_path):
-    # Import module from file: https://docs.python.org/3/library/importlib.html#importing-a-source-file-directly
-    spec = importlib.util.spec_from_file_location('portal_specific_exctractor_functions', file_path)
-    module = importlib.util.module_from_spec(spec)
-    sys.modules['portal_specific_exctractor_functions'] = module
-    spec.loader.exec_module(module)
-    return module
 
 
 class Logger:
@@ -202,3 +200,34 @@ class Logger:
             h.flush()
             if isinstance(h, logging.FileHandler):
                 h.close()
+
+
+class DummyConverter:  # No output corpus
+    """
+        An example converter to showcase API and to suppress any article processing at crawling time (for new portals)
+    """
+
+    def __init__(self, settings):
+        self._logger = Namespace(log=print)  # Hack to be able to monkeypatch logger
+        # Init stuff
+        _ = settings  # Silence IDE
+
+    @staticmethod
+    def identify_site_scheme(url, article_raw_html):
+        _ = url, article_raw_html  # Silence IDE
+
+    @staticmethod
+    def extract_article_date(url, article_raw_html, scheme):
+        """
+            extracts and returns next page URL from an HTML code if there is one...
+        """
+        _ = url, article_raw_html, scheme  # Silence dummy IDE
+        return datetime.today()
+
+    @staticmethod
+    def article_to_corpus(url, article_raw_html, scheme):
+        _ = url, article_raw_html, scheme  # Silence dummy IDE
+        pass
+
+    def __del__(self):
+        pass

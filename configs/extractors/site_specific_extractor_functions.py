@@ -69,13 +69,13 @@ def extract_next_page_url_abcug(archive_page_raw_html):
     return ret
 
 
-def extract_next_page_url_test(filename):
-    """Quick test"""
-
-    w = WarcCachingDownloader(filename, None, Logger(), just_cache=True, download_params={'stay_offline': True})
+def extract_next_page_url_test(filename, test_logger):
+    """Quick test for extracting "next page" URLs when needed"""
+    # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
+    w = WarcCachingDownloader(filename, None, test_logger, just_cache=True, download_params={'stay_offline': True})
 
     # Some of these are intentionally yields None
-    print('Testing 444')
+    test_logger.log('INFO', 'Testing 444')
     text = w.download_url('https://444.hu/2018/04/08')
     assert extract_next_page_url_444(text) == 'https://444.hu/2018/04/08?page=2'
     text = w.download_url('https://444.hu/2018/04/08?page=3')
@@ -83,19 +83,19 @@ def extract_next_page_url_test(filename):
     text = w.download_url('https://444.hu/2013/04/13')
     assert extract_next_page_url_444(text) is None
 
-    print('Testing magyarnemzet')
+    test_logger.log('INFO', 'Testing magyarnemzet')
     text = w.download_url('https://magyarnemzet.hu/archivum/page/99643')
     assert extract_next_page_url_mno(text) == 'https://magyarnemzet.hu/archivum/page/99644/'
     text = w.download_url('https://magyarnemzet.hu/archivum/page/99644')
     assert extract_next_page_url_mno(text) is None
 
-    print('Testing blikk')
+    test_logger.log('INFO', 'Testing blikk')
     text = w.download_url('https://www.blikk.hu/archivum/online?date=2018-10-15')
     assert extract_next_page_url_blikk(text) == 'https://www.blikk.hu/archivum/online?date=2018-10-15&page=1'
     text = w.download_url('https://www.blikk.hu/archivum/online?date=2018-10-15&page=4')
     assert extract_next_page_url_blikk(text) is None
 
-    print('Test OK!')
+    test_logger.log('INFO', 'Test OK!')
 
 
 # END SITE SPECIFIC extract_next_page_url FUNCTIONS ####################################################################
@@ -248,10 +248,12 @@ def extract_article_urls_from_page_magyaridok(archive_page_raw_html):
     return urls
 
 
-def extract_article_urls_from_page_test(filename, logger):
-    w = WarcCachingDownloader(filename, None, logger, just_cache=True, download_params={'stay_offline': True})
+def extract_article_urls_from_page_test(filename, test_logger):
+    """Quick test for extracting URLs form an archive page"""
+    # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
+    w = WarcCachingDownloader(filename, None, test_logger, just_cache=True, download_params={'stay_offline': True})
 
-    print('Testing nol')
+    test_logger.log('INFO', 'Testing nol')
     text = w.download_url('http://nol.hu/archivum?page=37')
     extracted = extract_article_urls_from_page_nol(text)
     expected = {'http://nol.hu/archivum/szemelycsere_a_malev_gh_elen-1376265',
@@ -285,7 +287,7 @@ def extract_article_urls_from_page_test(filename, logger):
                 }
     assert (extracted, len(extracted)) == (expected, 7)
 
-    print('Testing origo')
+    test_logger.log('INFO', 'Testing origo')
     text = w.download_url('https://www.origo.hu/hir-archivum/2019/20190119.html')
     extracted = extract_article_urls_from_page_origo(text)
     expected = {'https://www.origo.hu/sport/csapat/20190119-kezilabda-vilagbajnoksag-a-magyarok-vbcsoportjaban-hozta-a-'
@@ -433,7 +435,7 @@ def extract_article_urls_from_page_test(filename, logger):
                 }
     assert (extracted, len(extracted)) == (expected, 89)
 
-    print('Testing 444')
+    test_logger.log('INFO', 'Testing 444')
     text = w.download_url('https://444.hu/2019/07/06')
     extracted = extract_article_urls_from_page_444(text)
     expected = {'https://444.hu/2019/07/06/azt-hiszed-szar-iroasztalod-van-nezd-meg-hova-ultettek-ursula-von-der-'
@@ -494,7 +496,7 @@ def extract_article_urls_from_page_test(filename, logger):
                 }
     assert (extracted, len(extracted)) == (expected, 37)
 
-    print('Testing blikk')
+    test_logger.log('INFO', 'Testing blikk')
     text = w.download_url('https://www.blikk.hu/archivum/online?date=2018-11-13&page=0')
     extracted = extract_article_urls_from_page_blikk(text)
     expected = {'https://www.blikk.hu/aktualis/belfold/szorenyi-levente/cr10wsw',
@@ -535,7 +537,7 @@ def extract_article_urls_from_page_test(filename, logger):
                 }
     assert (extracted, len(extracted)) == (expected, 30)
 
-    print('Testing index')
+    test_logger.log('INFO', 'Testing index')
     text = w.download_url('https://index.hu/24ora?s=&tol=2019-07-12&ig=2019-07-12&tarskiadvanyokbanis=1&profil=&rovat='
                           '&cimke=&word=1&pepe=1&page=')
     extracted = extract_article_urls_from_page_index(text)
@@ -643,7 +645,7 @@ def extract_article_urls_from_page_test(filename, logger):
                 }
     assert (extracted, len(extracted)) == (expected, 60)
 
-    print('Testing velvet')
+    test_logger.log('INFO', 'Testing velvet')
     text = w.download_url('https://velvet.hu/24ora?s=&tol=2019-08-03&ig=2019-08-04&profil=&rovat=&cimke=&word=1&pepe=1')
     extracted = extract_article_urls_from_page_index(text)
     expected = {'https://velvet.hu/nyar/2019/08/04/sziget_nagyszinpad_fellepok_heti_trend/',
@@ -669,7 +671,7 @@ def extract_article_urls_from_page_test(filename, logger):
                 }
     assert (extracted, len(extracted)) == (expected, 17)
 
-    print('Testing mno')
+    test_logger.log('INFO', 'Testing mno')
     text = w.download_url('https://magyarnemzet.hu/archivum/page/99000/')
     extracted = extract_article_urls_from_page_mno(text)
     expected = {'https://magyarnemzet.hu/archivum/archivum-archivum/a-szuverenitas-hatarai-4473980/',
@@ -687,7 +689,7 @@ def extract_article_urls_from_page_test(filename, logger):
                 }
     assert (extracted, len(extracted)) == (expected, 10)
 
-    print('Testing vs')
+    test_logger.log('INFO', 'Testing vs')
     text = w.download_url('https://vs.hu/ajax/archive?Data={%22QueryString%22:%22%22,%22ColumnIds%22:[],'
                           '%22SubcolumnIds%22:[],%22TagIds%22:[],%22HasPublicationMinFilter%22:true,'
                           '%22PublicationMin%22:%222018-04-04T00:00:00.000Z%22,%22HasPublicationMaxFilter%22:true,'
@@ -717,7 +719,7 @@ def extract_article_urls_from_page_test(filename, logger):
                 }
     assert (extracted, len(extracted)) == (expected, 19)
 
-    print('Testing valasz (normal)')
+    test_logger.log('INFO', 'Testing valasz (normal)')
     text = w.download_url('http://valasz.hu/itthon/?page=1')
     extracted = extract_article_urls_from_page_valasz(text)
     expected = {'http://valasz.hu/itthon/ez-nem-autopalya-epites-nagyinterju-palinkas-jozseffel-a-tudomany-penzeirol-'
@@ -740,7 +742,7 @@ def extract_article_urls_from_page_test(filename, logger):
                 }
     assert (extracted, len(extracted)) == (expected, 15)
 
-    print('Testing valasz (publi)')
+    test_logger.log('INFO', 'Testing valasz (publi)')
     text = w.download_url('http://valasz.hu/publi?page=2')
     extracted = extract_article_urls_from_page_valasz(text)
     expected = {'http://valasz.hu/publi/szelektiven-nemzeti-kormany-127741',
@@ -761,25 +763,21 @@ def extract_article_urls_from_page_test(filename, logger):
                 'http://valasz.hu/publi/a-nyugati-hanyatlas-uj-szimboluma-127602'
                 }
     assert (extracted, len(extracted)) == (expected, 15)
-    print('Test OK!')
+    test_logger.log('INFO', 'Test OK!')
 
 # END SITE SPECIFIC extract_article_urls_from_page FUNCTIONS ###########################################################
 
 
 if __name__ == '__main__':
     import sys
-    from os.path import dirname, join as os_path_join, abspath
 
-    # TODO: Module! To be able to run it standalone from anywhere!
-    project_dir = abspath(os_path_join(dirname(__file__), '..'))
-    sys.path.append(project_dir)
-    from corpusbuilder.utils import Logger
-    from corpusbuilder.enhanced_downloader import WarcCachingDownloader, sample_warc_by_urls
+    from corpusbuilder import sample_warc_by_urls, WarcCachingDownloader, Logger
 
     main_logger = Logger()
 
-    choices = {'nextpage': os_path_join(project_dir, 'tests/next_page_url.warc.gz'),
-               'archive': os_path_join(project_dir, 'tests/extract_article_urls_from_page.warc.gz')}
+    # Relateive path from this directory to the files in the project's test directory
+    choices = {'nextpage': '../../tests/next_page_url.warc.gz',
+               'archive': '../../tests/extract_article_urls_from_page.warc.gz'}
 
     if len(sys.argv) > 1:  # TODO: ArgParse!
         # Usage: [echo URL|cat urls.txt] | __file__ [archive|nextpage] new.warc.gz
@@ -787,13 +785,13 @@ if __name__ == '__main__':
         warc_filename = sys.argv[2]
         if warc not in choices.keys():
             print('ERROR: Argument must be in {0} instead of {1} and filename must supplied !'.
-                  format(set(choices.keys()), warc))
+                  format(set(choices.keys()), warc), file=sys.stderr)
             exit(1)
-        print('Addig URLs to {0} :'.format(warc))
+        main_logger.log('INFO', 'Addig URLs to {0} :'.format(warc))
         input_urls = (url.strip() for url in sys.stdin)
-        sample_warc_by_urls(choices[warc], input_urls, main_logger, warc_filename, stay_offline=False)
-        print('Done!')
-        print('Do not forget to mv {0} {1} before commit!'.format(warc_filename, choices[warc]))
+        sample_warc_by_urls(choices[warc], input_urls, main_logger, new_warc_fineame=warc_filename, stay_offline=False)
+        main_logger.log('INFO', 'Done!')
+        main_logger.log('INFO', 'Do not forget to mv', warc_filename, choices[warc], 'before commit!')
     else:
-        extract_next_page_url_test(choices['nextpage'])
+        extract_next_page_url_test(choices['nextpage'], main_logger)
         extract_article_urls_from_page_test(choices['archive'], main_logger)

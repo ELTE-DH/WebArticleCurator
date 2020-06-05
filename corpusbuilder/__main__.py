@@ -4,8 +4,8 @@
 import sys
 from argparse import ArgumentParser, ArgumentTypeError
 
-from corpusbuilder.utils import wrap_input_consants
-from corpusbuilder.news_crawler import NewsArchiveCrawler, NewsArticleCrawler
+from corpusbuilder import wrap_input_consants, NewsArchiveCrawler, NewsArticleCrawler, sample_warc_by_urls,\
+    validate_warc_file, online_test, Logger
 
 
 def str2bool(v):
@@ -95,13 +95,34 @@ def parse_args():
     return cli_args
 
 
-if __name__ == '__main__':
+def enhanced_downloader():  # TODO place it properly Create an ArgParser for it...
+    """
+        Modes:
+            - validate [warcfile to validate] WarcReader(..., strict_mode=True, check_digest=True)
+            - sample [warcfile to sample] [urls list] [new warcfile to sample]
+    """
+    main_logger = Logger()
+    if len(sys.argv) == 1:
+        online_test(main_logger)
+    elif sys.argv[1] == 'validate':
+        validate_warc_file(sys.argv[2], main_logger)
+    elif sys.argv[1] == 'sample':
+        urls = sys.argv[3]
+        if not urls.startswith('http'):
+            with open(urls, encoding='UTF-8') as fhandle:
+                urls = {url.strip() for url in fhandle}
+        if len(sys.argv) == 5:
+            new_warc_file = sys.argv[4]
+        else:
+            new_warc_file = None
+        sample_warc_by_urls(sys.argv[2], urls, main_logger, new_warc_fineame=new_warc_file)
+
+
+def main():
     # Parse CLI args
     args = parse_args()
-
     # read input data from the given files, initialize variables
     portal_settings = wrap_input_consants(args.config)
-
     # These parameters go down directly to the downloader
     download_params = {'program_name': args.crawler_name, 'user_agent': args.user_agent,
                        'overwrite_warc': args.no_overwrite_warc, 'err_threshold': args.comulative_error_threshold,
@@ -109,7 +130,6 @@ if __name__ == '__main__':
                        'max_no_of_calls_in_period': args.max_no_of_calls_in_period, 'limit_period': args.limit_period,
                        'proxy_url': args.proxy_url, 'allow_cookies': args.allow_cookies,
                        'stay_offline': args.stay_offline, 'verify_request': portal_settings['verify_request']}
-
     if args.archive:
         # For the article links only...
         archive_crawler = NewsArchiveCrawler(portal_settings, args.old_archive_warc, args.archive_warc,
@@ -124,3 +144,7 @@ if __name__ == '__main__':
                                               args.known_article_urls, args.debug_params,
                                               download_params)
         articles_crawler.download_and_extract_all_articles()
+
+
+if __name__ == '__main__':
+    main()

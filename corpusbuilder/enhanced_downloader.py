@@ -18,9 +18,7 @@ from urllib.parse import urlparse, quote, urlunparse
 from requests.exceptions import RequestException
 from urllib3.exceptions import ProtocolError, InsecureRequestWarning
 from urllib3 import disable_warnings
-
 from chardet import detect
-
 from ratelimit import limits, sleep_and_retry
 
 respv_str = {10: '1.0', 11: '1.1'}
@@ -420,51 +418,22 @@ class WarcReader:
         return text
 
 
-def sample_warc_by_urls(old_warc_filename, new_urls, _logger, new_warc_fineame=None, stay_offline=True):
+def sample_warc_by_urls(old_warc_filename, new_urls, sampler_logger, new_warc_fineame=None, stay_offline=True):
     """ Create new warc file for the supplied list of URLs from an existing warc file """
-    w = WarcCachingDownloader(old_warc_filename, new_warc_fineame, _logger,
+    w = WarcCachingDownloader(old_warc_filename, new_warc_fineame, sampler_logger,
                               download_params={'stay_offline': stay_offline})
     for url in new_urls:
-        _logger.log('INFO', 'Adding url', url)
+        sampler_logger.log('INFO', 'Adding url', url)
         w.download_url(url)
 
 
-def validate_warc_file(filename, logger):
-    reader = WarcReader(filename, logger, strict_mode=True, check_digest=True)
-    logger.log('INFO', 'OK!', len(reader.url_index), 'records read!')
+def validate_warc_file(filename, validator_logger):
+    reader = WarcReader(filename, validator_logger, strict_mode=True, check_digest=True)
+    validator_logger.log('INFO', 'OK!', len(reader.url_index), 'records read!')
 
 
-def online_test():
-    filename = 'example.warc.gz'
-    url = 'https://index.hu/belfold/2018/08/27/fidesz_media_helyreigazitas/'
-    from corpusbuilder.utils import Logger
-    test_logger = Logger('WarcCachingDownloader-test.log')
+def online_test(url='https://index.hu/belfold/2018/08/27/fidesz_media_helyreigazitas/', filename='example.warc.gz',
+                test_logger=None):
     w = WarcCachingDownloader(None, filename, test_logger)
     t = w.download_url(url)
     test_logger.log('INFO', t)
-
-
-if __name__ == '__main__':
-    # import sys
-    from os.path import dirname, join as os_path_join, abspath
-
-    # To be able to run it standalone from anywhere!  # TODO create a python module for it!
-    project_dir = abspath(os_path_join(dirname(__file__), '..'))
-    sys.path.append(project_dir)
-
-    from corpusbuilder.utils import Logger  # TODO: Create an ArgParser for it...
-    main_logger = Logger()
-    if len(sys.argv) == 1:
-        online_test()
-    elif sys.argv[1] == 'validate':
-        validate_warc_file(sys.argv[2], main_logger)
-    elif sys.argv[1] == 'sample':
-        urls = sys.argv[3]
-        if not urls.startswith('http'):
-            with open(urls, encoding='UTF-8') as fhandle:
-                urls = {url.strip() for url in fhandle}
-        if len(sys.argv) == 5:
-            new_warc_file = sys.argv[4]
-        else:
-            new_warc_file = None
-        sample_warc_by_urls(sys.argv[2], urls, main_logger, new_warc_file)
