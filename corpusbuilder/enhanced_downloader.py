@@ -318,7 +318,7 @@ class WarcReader:
         self._strict_mode = strict_mode
         if check_digest:
             check_digest = 'raise'
-        self._check_digest = check_digest  # TODO 'log' or 'raise'
+        self._check_digest = check_digest
         try:
             self._create_index()
         except KeyError as e:
@@ -418,18 +418,37 @@ class WarcReader:
         return text
 
 
-def sample_warc_by_urls(old_warc_filename, new_urls, sampler_logger, new_warc_fineame=None, stay_offline=True):
+def sample_warc_by_urls(source_warcfile, new_urls, sampler_logger, target_warcfile=None, out_dir=None, offline=True,
+                        just_cache=False):
     """ Create new warc file for the supplied list of URLs from an existing warc file """
-    w = WarcCachingDownloader(old_warc_filename, new_warc_fineame, sampler_logger,
-                              download_params={'stay_offline': stay_offline})
+    is_out_dir_mode = out_dir is not None
+    if is_out_dir_mode:
+        os.makedirs(out_dir, exist_ok=True)
+        if len(os.listdir(out_dir)) != 0:
+            print('Supplied output directory ({0}) is not empty!'.format(out_dir), file=sys.stderr)
+            exit(1)
+
+    w = WarcCachingDownloader(source_warcfile, target_warcfile, sampler_logger, just_cache=just_cache,
+                              download_params={'stay_offline': offline})
     for url in new_urls:
+        url = url.strip()
         sampler_logger.log('INFO', 'Adding url', url)
-        w.download_url(url)
+        cont = w.download_url(url)
+        if is_out_dir_mode and cont is not None:
+            safe_url = ''.join(char if char.isalnum() else '_' for char in url).rstrip('_')[:200]
+            i, fname = 0, os.path.join(out_dir, '{0}{1}.html'.format(safe_url, i))
+            while os.path.exists(fname):
+                i += 1
+                fname = os.path.join(out_dir, '{0}{1}.html'.format(safe_url, i))
+            sampler_logger.log('INFO', 'Creating file', fname)
+            with open(fname, 'w', encoding='UTF-8') as fh:
+                fh.write(cont)
 
 
 def validate_warc_file(filename, validator_logger):
     reader = WarcReader(filename, validator_logger, strict_mode=True, check_digest=True)
     validator_logger.log('INFO', 'OK!', len(reader.url_index), 'records read!')
+    return reader.url_index
 
 
 def online_test(url='https://index.hu/belfold/2018/08/27/fidesz_media_helyreigazitas/', filename='example.warc.gz',

@@ -769,9 +769,7 @@ def extract_article_urls_from_page_test(filename, test_logger):
 
 
 if __name__ == '__main__':
-    import sys
-
-    from corpusbuilder import sample_warc_by_urls, WarcCachingDownloader, Logger
+    from corpusbuilder import WarcCachingDownloader, Logger
 
     main_logger = Logger()
 
@@ -779,19 +777,6 @@ if __name__ == '__main__':
     choices = {'nextpage': '../../tests/next_page_url.warc.gz',
                'archive': '../../tests/extract_article_urls_from_page.warc.gz'}
 
-    if len(sys.argv) > 1:  # TODO: ArgParse!
-        # Usage: [echo URL|cat urls.txt] | __file__ [archive|nextpage] new.warc.gz
-        warc = sys.argv[1]
-        warc_filename = sys.argv[2]
-        if warc not in choices.keys():
-            print('ERROR: Argument must be in {0} instead of {1} and filename must supplied !'.
-                  format(set(choices.keys()), warc), file=sys.stderr)
-            exit(1)
-        main_logger.log('INFO', 'Addig URLs to {0} :'.format(warc))
-        input_urls = (url.strip() for url in sys.stdin)
-        sample_warc_by_urls(choices[warc], input_urls, main_logger, new_warc_fineame=warc_filename, stay_offline=False)
-        main_logger.log('INFO', 'Done!')
-        main_logger.log('INFO', 'Do not forget to mv', warc_filename, choices[warc], 'before commit!')
-    else:
-        extract_next_page_url_test(choices['nextpage'], main_logger)
-        extract_article_urls_from_page_test(choices['archive'], main_logger)
+    # Use the main module to modify the warc files!
+    extract_next_page_url_test(choices['nextpage'], main_logger)
+    extract_article_urls_from_page_test(choices['archive'], main_logger)

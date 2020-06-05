@@ -2,7 +2,7 @@
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
 import sys
-from argparse import ArgumentParser, ArgumentTypeError
+from argparse import ArgumentParser, ArgumentTypeError, FileType
 
 from corpusbuilder import wrap_input_consants, NewsArchiveCrawler, NewsArticleCrawler, sample_warc_by_urls,\
     validate_warc_file, online_test, Logger
@@ -21,8 +21,9 @@ def str2bool(v):
         raise ArgumentTypeError('Boolean value expected.')
 
 
-def parse_args():
-    parser = ArgumentParser()
+def parse_args_crawl(parser):
+    parser.add_argument(dest='command', choices={'crawl'}, metavar='crawl',
+                        help='Crawl a portal with the supplied configuation and arguments')
     parser.add_argument('config', type=str, help='Portal configfile (see configs folder for examples!)')
     parser.add_argument('--old-archive-warc', type=str, help='Existing WARC archive of the portal\'s archive '
                                                              '(Use it as cache)', default=None)
@@ -33,19 +34,22 @@ def parse_args():
     parser.add_argument('--articles-warc', type=str, help='New WARC archive of the portal\'s archive '
                                                           '(Copy all cached pages if --old-archive-warc is specified)')
     parser.add_argument('--archive-just-cache', type=str2bool, nargs='?', const=True, default=False,
-                        help='Use only cached pages:--old-archive-warc must be specified!')
+                        metavar='True/False', help='Use only cached pages (no output warcfile):'
+                                                   ' --old-archive-warc must be specified!')
     parser.add_argument('--articles-just-cache', type=str2bool, nargs='?', const=True, default=False,
-                        help='Use only cached pages:--old-articles-warc must be specified!')
+                        metavar='True/False', help='Use only cached pages (no output warcfile):'
+                                                   ' --old-articles-warc must be specified!')
     parser.add_argument('--debug-news-archive', type=str2bool, nargs='?', const=True, default=False,
-                        help='Set DEBUG logging on NewsArchiveCrawler and print the number of extracted URLs per page')
-    parser.add_argument('--strict', type=str2bool, nargs='?', const=True, default=False,
-                        help='Set strict-mode in WARCReader')
+                        metavar='True/False', help='Set DEBUG logging on NewsArchiveCrawler'
+                                                   ' and print the number of extracted URLs per page')
+    parser.add_argument('--strict', type=str2bool, nargs='?', const=True, default=False, metavar='True/False',
+                        help='Set strict-mode in WARCReader to enable validation')
     parser.add_argument('--crawler-name', type=str, help='The name of the crawler for the WARC info record',
                         default='corpusbuilder 1.0')
     parser.add_argument('--user-agent', type=str, help='The User-Agent string to use in headers while downloading')
     parser.add_argument('--no-overwrite-warc', help='Do not overwrite --{archive,articles}-warc if needed',
                         action='store_false')
-    parser.add_argument('--comulative-error-threshold', type=int, help='Sum of download errors before giving up',
+    parser.add_argument('--cumulative-error-threshold', type=int, help='Sum of download errors before giving up',
                         default=15)
     parser.add_argument('--known-bad-urls', type=str, help='Known bad URLs to be excluded from download (filename, '
                                                            'one URL per line)', default=None)
@@ -58,11 +62,11 @@ def parse_args():
                         default=1)
     parser.add_argument('--proxy-url', type=str, help='SOCKS Proxy URL to use eg. socks5h://localhost:9050',
                         default=None)
-    parser.add_argument('--allow-cookies', type=str2bool, nargs='?', help='Allow session cookies', const=True,
-                        default=False)
-    parser.add_argument('--stay-offline', type=str2bool, nargs='?', help='Do not download, but write output WARC'
-                                                                         ' (see --just-cache)', const=True,
-                        default=False)
+    parser.add_argument('--allow-cookies', type=str2bool, nargs='?', const=True, default=False, metavar='True/False',
+                        help='Allow session cookies')
+    parser.add_argument('--stay-offline', type=str2bool, nargs='?', const=True, default=False, metavar='True/False',
+                        help='Do not download, but write output WARC (see --just-cache when no output warcfile'
+                             ' is needed)')
 
     # Mutually exclusive group...
     group = parser.add_mutually_exclusive_group()
@@ -95,37 +99,58 @@ def parse_args():
     return cli_args
 
 
-def enhanced_downloader():  # TODO place it properly Create an ArgParser for it...
-    """
-        Modes:
-            - validate [warcfile to validate] WarcReader(..., strict_mode=True, check_digest=True)
-            - sample [warcfile to sample] [urls list] [new warcfile to sample]
-    """
-    main_logger = Logger()
-    if len(sys.argv) == 1:
-        online_test(main_logger)
-    elif sys.argv[1] == 'validate':
-        validate_warc_file(sys.argv[2], main_logger)
-    elif sys.argv[1] == 'sample':
-        urls = sys.argv[3]
-        if not urls.startswith('http'):
-            with open(urls, encoding='UTF-8') as fhandle:
-                urls = {url.strip() for url in fhandle}
-        if len(sys.argv) == 5:
-            new_warc_file = sys.argv[4]
-        else:
-            new_warc_file = None
-        sample_warc_by_urls(sys.argv[2], urls, main_logger, new_warc_fineame=new_warc_file)
+def parse_args_validate_and_list(parser):
+    parser.add_argument('command', choices={'validate', 'listurls'}, metavar='validate|listurls',
+                        help='Validate a warc file (created by this program) or list the urls in it')
+    parser.add_argument('-s', '--source-warcfile', type=str, metavar='SOURCE WARCFILE',
+                        help='A warc file (created by this program) to work from')
+    return parser.parse_args()
 
 
-def main():
-    # Parse CLI args
-    args = parse_args()
-    # read input data from the given files, initialize variables
+def parse_args_sample(parser):
+    parser.add_argument(dest='command', choices={'sample'}, metavar='sample',
+                        help='Copy the supplied list of URLs to the output warc file from the internet '
+                             'or from the supplied warc file (created by this program)')
+    parser.add_argument('-s', '--source-warcfile', type=str, default=None, nargs='?', metavar='SOURCE WARCFILE',
+                        help='A warc file (created by this program) to work from '
+                             '(not mandatory when --offline is True)')
+    parser.add_argument('-i', '--input-urls', dest='url_input_stream', type=FileType(), default=sys.stdin,
+                        help='Use input file instead of STDIN (one URL per line)', metavar='FILE', required=False)
+    parser.add_argument('target_warcfile', type=str, metavar='TARGET_WARFCILE', help='The name of the target warc file')
+    parser.add_argument('--offline', type=str2bool, nargs='?', const=True, default=True, metavar='True/False',
+                        help='Download URLs which are not present in the source archive (default True)')
+    args = parser.parse_args()
+    if args.source_warcfile is None and args.offline:
+        print('Must specify SOURCE_WARC if --offline is False!', file=sys.stderr)
+        exit(1)
+    return args
+
+
+def parse_args_cat(parser):
+    parser.add_argument(dest='command', choices={'cat'}, metavar='cat',
+                        help='Print the list of URLs from the supplied warc file (created by this program)')
+    parser.add_argument('-s', '--source-warcfile', type=str, metavar='SOURCE WARCFILE',
+                        help='A warc file (created by this program) to work from')
+    parser.add_argument('-i', '--input-urls', dest='url_input_stream', type=FileType(), default=sys.stdin,
+                        help='Use input file instead of STDIN (one URL per line)', metavar='FILE')
+    parser.add_argument('out_dir', type=str)
+    return parser.parse_args()
+
+
+def parse_args_donwload(parser):
+    parser.add_argument(dest='command', choices={'download'}, metavar='downlaod',
+                        help='Download a single URL to a warc file')
+    parser.add_argument('source_url', type=str, metavar='URL', help='The URL to download')
+    parser.add_argument('target_warcfile', type=str, metavar='TARGET_WARFCILE', help='The name of the target warc file')
+    return parser.parse_args()
+
+
+def main_crawl(args):
+    """ read input data from the given files, initialize variables """
     portal_settings = wrap_input_consants(args.config)
     # These parameters go down directly to the downloader
     download_params = {'program_name': args.crawler_name, 'user_agent': args.user_agent,
-                       'overwrite_warc': args.no_overwrite_warc, 'err_threshold': args.comulative_error_threshold,
+                       'overwrite_warc': args.no_overwrite_warc, 'err_threshold': args.cumulative_error_threshold,
                        'known_bad_urls': args.known_bad_urls, 'strict_mode': args.strict,
                        'max_no_of_calls_in_period': args.max_no_of_calls_in_period, 'limit_period': args.limit_period,
                        'proxy_url': args.proxy_url, 'allow_cookies': args.allow_cookies,
@@ -139,11 +164,58 @@ def main():
             print(url, flush=True)
     else:
         articles_crawler = NewsArticleCrawler(portal_settings, args.old_articles_warc, args.articles_warc,
-                                              args.old_archive_warc, args.archive_warc,
-                                              args.articles_just_cache, args.archive_just_cache,
-                                              args.known_article_urls, args.debug_params,
+                                              args.old_archive_warc, args.archive_warc, args.articles_just_cache,
+                                              args.archive_just_cache, args.known_article_urls, args.debug_params,
                                               download_params)
         articles_crawler.download_and_extract_all_articles()
+
+
+def main_validate_and_list(args):
+    """ __file__ validate [source warcfile]     # WarcReader(..., strict_mode=True, check_digest=True) """
+    level = 'INFO'
+    if args.command == 'listurls':
+        level = 'WARNING'
+    url_index = validate_warc_file(args.source_warcfile, Logger(console_level=level))
+    if args.command == 'listurls':
+        for url in url_index:
+            print(url)
+
+
+def main_cat_and_sample(args):
+    """ __file__ sample [source warcfile or None] [urls list file or stdin] [target warcfile] [Online or Offline] """
+    main_logger = Logger()
+    out_dir = getattr(args, 'out_dir', None)
+    target_warcfile = getattr(args, 'target_warcfile', None)
+    target = out_dir if out_dir is not None else target_warcfile
+    main_logger.log('INFO', 'Adding URLs to', target, ':')
+    offline = getattr(args, 'offline', True)  # Sample can be online or offline, but we write warc only when sampling!
+    sample_warc_by_urls(args.source_warcfile, args.url_input_stream, main_logger, target_warcfile=target_warcfile,
+                        offline=offline, out_dir=out_dir, just_cache=args.command == 'cat')
+    main_logger.log('INFO', 'Done!')
+
+
+def main_download(args):
+    """ __file__ download [URL] [target warfile] """
+    main_logger = Logger()
+    main_logger.log('INFO', 'Adding URL to', args.target_warcfile, ':')
+    online_test(args.source_url, args.target_warcfile, main_logger)
+    main_logger.log('INFO', 'Done!')
+
+
+def main():
+    # Parse command arg from CLI and pass to the selected main function
+    commands = {'validate': (parse_args_validate_and_list, main_validate_and_list),
+                'listurls': (parse_args_validate_and_list, main_validate_and_list),
+                'sample': (parse_args_sample, main_cat_and_sample), 'download': (parse_args_donwload, main_download),
+                'cat': (parse_args_cat, main_cat_and_sample), 'crawl': (parse_args_crawl, main_crawl)}
+    parser = ArgumentParser()
+    parser.add_argument('command', choices=commands.keys(), metavar='COMMAND',
+                        help='Please choose from the available commands ({0}) to set mode and see deatiled help!'.
+                        format(set(commands.keys())))
+
+    command = parser.parse_args(sys.argv[1:2]).command  # Route ArgumentParser before reparsing the whole CLI
+    sub_args = commands[command][0](ArgumentParser())
+    commands[command][1](sub_args)
 
 
 if __name__ == '__main__':
