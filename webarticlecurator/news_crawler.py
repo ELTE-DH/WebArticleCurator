@@ -3,7 +3,7 @@
 
 from datetime import timedelta
 
-from corpusbuilder import WarcCachingDownloader, Logger
+from webarticlecurator import WarcCachingDownloader, Logger
 
 
 class NewsArchiveCrawler:

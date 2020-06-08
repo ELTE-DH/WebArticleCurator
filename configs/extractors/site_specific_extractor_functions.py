@@ -769,7 +769,7 @@ def extract_article_urls_from_page_test(filename, test_logger):
 
 
 if __name__ == '__main__':
-    from corpusbuilder import WarcCachingDownloader, Logger
+    from webarticlecurator import WarcCachingDownloader, Logger
 
     main_logger = Logger()
 

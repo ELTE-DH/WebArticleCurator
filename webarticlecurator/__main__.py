@@ -4,7 +4,7 @@
 import sys
 from argparse import ArgumentParser, ArgumentTypeError, FileType
 
-from corpusbuilder import wrap_input_consants, NewsArchiveCrawler, NewsArticleCrawler, sample_warc_by_urls, \
+from webarticlecurator import wrap_input_consants, NewsArchiveCrawler, NewsArticleCrawler, sample_warc_by_urls, \
     validate_warc_file, online_test, Logger, __version__
 
 
@@ -45,7 +45,7 @@ def parse_args_crawl(parser):
     parser.add_argument('--strict', type=str2bool, nargs='?', const=True, default=False, metavar='True/False',
                         help='Set strict-mode in WARCReader to enable validation')
     parser.add_argument('--crawler-name', type=str, help='The name of the crawler for the WARC info record',
-                        default='corpusbuilder {0}'.format(__version__))
+                        default='WebArticleCurator {0}'.format(__version__))
     parser.add_argument('--user-agent', type=str, help='The User-Agent string to use in headers while downloading')
     parser.add_argument('--no-overwrite-warc', help='Do not overwrite --{archive,articles}-warc if needed',
                         action='store_false')
