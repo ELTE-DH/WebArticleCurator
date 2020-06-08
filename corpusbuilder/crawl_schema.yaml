@@ -1,0 +1,14 @@
+schema: str(min=1)
+
+# string or missing (null is not accepted)
+output_corpus: str(min=1, required=False, none=False)
+
+log_file_articles: str(min=1, required=False, none=False)
+log_file_archive: str(min=1, required=False, none=False)
+new_problematic_urls: str(min=1, required=False, none=False)
+new_good_urls: str(min=1, required=False, none=False)
+new_problematic_archive_urls: str(min=1, required=False, none=False)
+new_good_archive_urls: str(min=1, required=False, none=False)
+
+date_from: day(required=False, none=False)
+date_until: day(required=False, none=False)

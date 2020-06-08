@@ -1,0 +1,35 @@
+site_name: str(min=1)
+
+# The name of the column mapped to its configuration
+columns: map(include('column'), key=str(min=1))
+
+portal_specific_exctractor_functions_file: str(min=1)
+# str with length > 1 or missing (null is not accepted)
+extract_next_page_url_fun: str(min=1, required=False, none=False)
+extract_article_urls_from_page_fun: str(min=1)
+
+next_url_by_pagenum: bool()
+infinite_scrolling: bool()
+archive_page_urls_by_date: bool()
+go_reverse_in_archive: bool()
+verify_request: bool()
+ignore_archive_cache: bool()
+
+new_article_url_threshold: int(min=0, required=False, none=False)
+
+# corpus_converter_file can be None if corpus_converter == 'dummy-converter'
+corpus_converter_file: any([str(min=1), null()])
+corpus_converter: str(min=1)
+---
+column:
+    # date or missing (null is not accepted)
+    date_first_article: day(required=False, none=False)
+    date_last_article: day(required=False, none=False)
+
+    # The url schema of the archive with optional labels #pagenum #year #month #day #nex-year #next-mondth #next-day
+    archive_url_format: str(min=1)
+
+    # If initial_pagenum is not specificed '' will be used by utils.py these used when number-based pagination is used
+    initial_pagenum: int(min=0, required=False, none=False)
+    min_pagenum: int(min=0, required=False, none=False)
+    max_pagenum: int(min=0, required=False, none=False)

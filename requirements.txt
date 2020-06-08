@@ -6,3 +6,4 @@ warcio
 newspaper3k
 ratelimit
 beautifulsoup4
+yamale

@@ -31,7 +31,7 @@ class NewsArchiveCrawler:
         # Save the original settings for using it with all columns
         self._settings = settings
         # Get columns, if there is only one we use None to keep default settings
-        self._columns = settings.get('columns', {'main-column': None})
+        self._columns = settings['columns']
 
         # Initialise the logger
         if debug_params is None:
@@ -62,34 +62,28 @@ class NewsArchiveCrawler:
         self._downloader = WarcCachingDownloader(existing_archive_filename, new_archive_filename, self._logger,
                                                  archive_just_cache, downloader_params)
 
-    def _store_settings(self, overlay_settings=None):
-        if overlay_settings is None:
-            overlay_settings = {}
-        # Copy and add overlay
-        settings = self._settings.copy()
-        settings.update(overlay_settings)
-
-        # Store values
-
+    def _store_settings(self, column_spec_settings):
         # Settings for URL iterator
-        self._archive_page_urls_by_date = settings['archive_page_urls_by_date']
-        self._archive_url_format = settings['archive_url_format']
-        self._date_from = settings['DATE_FROM']
-        self._date_until = settings['DATE_UNTIL']
-        self._go_reverse_in_archive = settings['go_reverse_in_archive']
+        self._archive_page_urls_by_date = self._settings['archive_page_urls_by_date']
+        self._archive_url_format = column_spec_settings['archive_url_format']
+        if self._archive_page_urls_by_date:
+            self._date_from = column_spec_settings['DATE_FROM']
+            self._date_until = column_spec_settings['DATE_UNTIL']
+            self._go_reverse_in_archive = self._settings['go_reverse_in_archive']
 
         # Settings for gen_article_urls_including_subpages()
-        self._min_pagenum = settings['min_pagenum']
-        self._initial_page_num = settings['INITIAL_PAGENUM']
-        self._ignore_archive_cache = settings['ignore_archive_cache']
-        self._infinite_scrolling = settings['infinite_scrolling']
-        self._extract_article_urls_from_page_fun = settings['EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN']
+        self._min_pagenum = column_spec_settings['min_pagenum']
+        self._initial_page_num = column_spec_settings['INITIAL_PAGENUM']
+        self._ignore_archive_cache = self._settings['ignore_archive_cache']
+        self._infinite_scrolling = self._settings['infinite_scrolling']
+        self._extract_article_urls_from_page_fun = self._settings['EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN']
 
         # Store the constant parameters for the actual function used later
         self._find_next_page_url = \
-            self._find_next_page_url_factory(settings['EXTRACT_NEXT_PAGE_URL_FUN'], settings['next_url_by_pagenum'],
-                                             settings['infinite_scrolling'], settings['MAX_PAGENUM'],
-                                             settings['NEW_ARTICLE_URL_THRESHOLD'], self.known_article_urls)
+            self._find_next_page_url_factory(self._settings['EXTRACT_NEXT_PAGE_URL_FUN'],
+                                             self._settings['next_url_by_pagenum'],
+                                             self._settings['infinite_scrolling'], column_spec_settings['max_pagenum'],
+                                             self._settings['new_article_url_threshold'], self.known_article_urls)
 
     def __del__(self):  # Write newly found URLs to files when output files supplied...
         # Save the good URLs...
@@ -118,7 +112,7 @@ class NewsArchiveCrawler:
         :return: Every page of the archive contain multiple URL to the actual articles, which are extrated and
          then returned as an iterator based on URLs.
         """
-        for column_name, params in self._columns:
+        for column_name, params in self._columns.items():
             self._logger.log('INFO', 'Starting column:', column_name)
             # 1) Set params for the actual column
             self._store_settings(params)
@@ -258,8 +252,9 @@ class NewsArticleCrawler:
 
         # Store values at init-time
         self._filter_by_date = settings['FILTER_ARTICLES_BY_DATE']
-        self._date_from = settings['DATE_FROM']
-        self._date_until = settings['DATE_UNTIL']
+        if self._filter_by_date:  # Global date intervals, only if they are explicitly set!
+            self._date_from = settings['date_from']
+            self._date_until = settings['date_from']
 
         # Get the initialised corpus converter (can be dummy) and set the apropriate logger
         self._converter = settings['CORPUS_CONVERTER']
@@ -296,7 +291,7 @@ class NewsArticleCrawler:
         # Save the problematic URLs...
         attr = getattr(self, 'problematic_article_urls', {})
         new_problematic_urls_fh = getattr(self, '_new_problematic_urls_fh', None)
-        if self._new_problematic_urls_fh is not None:
+        if new_problematic_urls_fh is not None:
             if len(attr) > 0:
                 new_problematic_urls_fh.writelines('{0}\n'.format(elem) for elem in attr)
             new_problematic_urls_fh.close()
@@ -332,6 +327,7 @@ class NewsArticleCrawler:
                         self._logger.log('ERROR', url, 'Article was not processed because download failed!', sep='\t')
                         self.problematic_article_urls.add(url)  # New problematic URL for manual checking
                     continue
+                self._new_urls.add(url)  # New article URLs
 
                 # 3) Identify the site scheme of the article to be able to look up the appropriate extracting method
                 scheme = self._converter.identify_site_scheme(url, article_raw_html)

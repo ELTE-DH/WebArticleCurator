@@ -8,7 +8,23 @@ import importlib.util
 from argparse import Namespace
 from datetime import datetime, date, timedelta
 
-import yaml
+import yamale
+
+site_schema = yamale.make_schema(os.path.join(os.path.dirname(os.path.abspath(__file__)), './site_schema.yaml'))
+crawl_schema = yamale.make_schema(os.path.join(os.path.dirname(os.path.abspath(__file__)), './crawl_schema.yaml'))
+
+
+def load_and_validate(schema, fname):
+    data = yamale.make_data(fname)
+    try:
+        yamale.validate(schema, data, strict=True)
+    except yamale.YamaleError as e:
+        for result in e.results:
+            print('Error validating data {0} with {1}:'.format(result.data, result.schema), file=sys.stderr)
+            for error in result.errors:
+                print('', error, sep='\t', file=sys.stderr)
+        exit(1)
+    return data[0][0]
 
 
 def import_pyhton_file(module_name, file_path):
@@ -29,98 +45,94 @@ def wrap_input_consants(current_task_config_filename):
          lowercase keys are present in the config and will be used as is
     """
     # Instructions to the current task
-    with open(current_task_config_filename, encoding='UTF-8') as fh:
-        settings = yaml.load(fh)
+    settings = load_and_validate(crawl_schema, current_task_config_filename)
 
     # The directory name of the configs
     settings['DIR_NAME'] = os.path.dirname(os.path.abspath(current_task_config_filename))
 
     # Technical data about the website to crawl
-    with open(os.path.join(settings['DIR_NAME'], settings['site_schemas']), encoding='UTF-8') as fh:
-        current_site_schema = yaml.load(fh)[settings['site_name']]
-
-    # TODO: How to avoid key errors? YAML Shema!
-    current_site_schema.update(settings)
-    settings = current_site_schema  # Settings have higher priority over current_site_schema!
+    site_schema_fname = os.path.join(settings['DIR_NAME'], settings['schema'])
+    settings['SITE_SCHEMA_DIR_NAME'] = os.path.dirname(os.path.abspath(site_schema_fname))
+    current_site_schema = load_and_validate(site_schema, site_schema_fname)
+    settings.update(current_site_schema)
 
     # Date filtering ON in any other cases OFF
     settings['FILTER_ARTICLES_BY_DATE'] = 'date_from' in settings and 'date_until' in settings
 
-    # Check for date type
-    for attr_name, settings_dict in (('date_from', settings), ('date_first_article', current_site_schema),
-                                     ('date_until', settings), ('date_last_article', current_site_schema)):
-        if attr_name in settings_dict and not isinstance(settings_dict[attr_name], date):
-            raise ValueError('DateError: {0} not datetime ({1})!'.format(attr_name, settings_dict[attr_name]))
+    for column in settings['columns'].keys():
+        column_settings = settings['columns'][column]
+        # We use the supplied dates (None != date_first_article <= date_from <= date_until < today (or raise exception))
+        # to generate all URLs from the first day to the last one-by-one
+        if 'date_from' in settings:
+            column_settings['DATE_FROM'] = settings['date_from']
+        elif 'date_first_article' in column_settings:
+            column_settings['DATE_FROM'] = column_settings['date_first_article']
 
-    # We use the supplied dates (None != date_first_article <= date_from <= date_until < today (or raise exception))
-    # to generate all URLs from the first day to the last one-by-one
-    if 'date_from' in settings:
-        settings['DATE_FROM'] = settings['date_from']
-    elif 'date_first_article' in current_site_schema:
-        settings['DATE_FROM'] = current_site_schema['date_first_article']
+        if 'date_until' in settings:
+            column_settings['DATE_UNTIL'] = settings['date_until']
+        elif'date_last_article' in column_settings:
+            column_settings['DATE_UNTIL'] = column_settings['date_last_article']
+        else:
+            column_settings['DATE_UNTIL'] = date.today() - timedelta(1)  # yesterday
 
-    if 'date_until' in settings:
-        settings['DATE_UNTIL'] = settings['date_until']
-    elif'date_last_article' in current_site_schema:
-        settings['DATE_UNTIL'] = current_site_schema['date_last_article']
-    else:
-        settings['DATE_UNTIL'] = date.today() - timedelta(1)  # yesterday
+        if settings['FILTER_ARTICLES_BY_DATE'] or settings['archive_page_urls_by_date']:
+            if 'DATE_FROM' not in column_settings:
+                raise ValueError('DateError: date_first_article and date_from is not set please'
+                                 ' set at least one of them!'.format(column_settings['date_first_article']))
+            if not (column_settings['DATE_FROM'] <= column_settings['DATE_UNTIL'] < date.today()):
+                raise ValueError('DateError: DATE_FROM ({0}) <= DATE UNTIL ({1}) < date.doday() ({2}) is not'
+                                 ' satisfiable! Please check date_from ({3}), date_until ({4}),'
+                                 ' date_first_article ({5}) and date_last_article ({6})!'.
+                                 format(column_settings['DATE_FROM'], column_settings['DATE_UNTIL'], date.today(),
+                                        settings['date_from'], settings['date_until'],
+                                        column_settings['date_first_article'], column_settings['date_last_article']))
 
-    if settings['FILTER_ARTICLES_BY_DATE'] or settings['archive_page_urls_by_date']:
-        if 'DATE_FROM' not in settings:
-            raise ValueError('DateError: date_first_article and date_from is not set please set at least one of them!'.
-                             format(current_site_schema['date_first_article']))
-        if not (settings['DATE_FROM'] <= settings['DATE_UNTIL'] < date.today()):
-            raise ValueError('DateError: DATE_FROM ({0}) <= DATE UNTIL ({1}) < date.doday() ({2}) is not satisfiable!'
-                             ' Please check date_from ({3}), date_until ({4}), date_first_article ({5})'
-                             ' and date_last_article ({6})!'.format(settings['DATE_FROM'], settings['DATE_UNTIL'],
-                                                                    date.today(), settings['date_from'],
-                                                                    settings['date_until'],
-                                                                    settings['date_first_article'],
-                                                                    settings['date_last_article']))
+        min_pagenum = column_settings.get('min_pagenum', -1)  # Can not normally be -1!
+        initial_pagenum = column_settings.get('initial_pagenum', '')
+        max_pagenum = column_settings.get('max_pagenum')
+
+        if settings['next_url_by_pagenum']:
+            if 'min_pagenum' not in column_settings:
+                raise ValueError('min_pagenum must be set, if next_url_by_pagenum is true!')
+
+            # If initial_pagenum is explicitly set, initial_pagenum + 1 == min_pagenum <= max_pagenum must be satisfied!
+            if ((isinstance(initial_pagenum, int) and min_pagenum != initial_pagenum + 1) or
+               (isinstance(max_pagenum, int) and min_pagenum > max_pagenum)):
+                raise ValueError('If initial_pagenum or max_pagenum is set,'
+                                 ' initial_pagenum + 1 == min_pagenum <= max_pagenum must be satisfied!')
+
+        # If initial_pagenum is implicit, then it will be substituted with empty string. e.g. in &page=
+        column_settings['INITIAL_PAGENUM'] = str(initial_pagenum)
+        column_settings['min_pagenum'] = min_pagenum
+        column_settings['max_pagenum'] = max_pagenum
+
+    settings['new_article_url_threshold'] = settings.get('new_article_url_threshold')
 
     # Set and init converter class which is dummy-converter by default
     corp_conv = settings.get('corpus_converter', 'dummy-converter')
     if corp_conv == 'dummy-converter':
         corpus_converter_class = DummyConverter
+        if settings['FILTER_ARTICLES_BY_DATE'] and not settings['archive_page_urls_by_date']:
+            raise ValueError('Date filtering is not possible with DummyConverter with a non-date-based archive!')
+        settings['FILTER_ARTICLES_BY_DATE'] = False  # Use the archive dates for filtering...
     else:
-        file_path = settings.get('corpus_converter_file')
+        file_path = settings['corpus_converter_file']
         if file_path is None:
             raise ValueError('corpus_converter is {0}, but {1} is unset!'.format(corp_conv, file_path))
-        module = import_pyhton_file('corpus_converter', file_path)
+        module = import_pyhton_file('corpus_converter', os.path.join(settings['SITE_SCHEMA_DIR_NAME'], file_path))
         corpus_converter_class = getattr(module, corp_conv)
     settings['CORPUS_CONVERTER'] = corpus_converter_class(settings)
 
     # Portal specific functions
     file_path = settings['portal_specific_exctractor_functions_file']
-    module = import_pyhton_file('portal_specific_exctractor_functions', file_path)
+    module = import_pyhton_file('portal_specific_exctractor_functions',
+                                os.path.join(settings['SITE_SCHEMA_DIR_NAME'], file_path))
     for attr_name, attr_name_dest, mandatory in \
             (('extract_next_page_url_fun', 'EXTRACT_NEXT_PAGE_URL_FUN', False),
              ('extract_article_urls_from_page_fun', 'EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN', True),):
         settings[attr_name_dest] = getattr(module, settings.get(attr_name, ''), None)
         if mandatory and settings[attr_name_dest] is None:
             raise ValueError('{0} is unset!'.format(attr_name))
-
-    # Non-mandatory integer thresholds: int > 0
-    for attr_name, attr_name_dest in (('initial_pagenum', 'INITIAL_PAGENUM'),
-                                      ('min_pagenum', 'MIN_PAGENUM'),
-                                      ('max_pagenum', 'MAX_PAGENUM'),
-                                      ('new_article_url_threshold', 'NEW_ARTICLE_URL_THRESHOLD')):
-        threshold_value = settings.get(attr_name)
-        if threshold_value is not None:
-            if not isinstance(threshold_value, int) or threshold_value < 0:
-                raise ValueError('{0} should be int >= 0!'.format(attr_name))
-        settings[attr_name_dest] = threshold_value
-
-    # If initial_pagenum is explicit it should immediately preceed min_pagenum
-    if settings['INITIAL_PAGENUM'] is not None and settings['MIN_PAGENUM'] is not None \
-            and settings['MIN_PAGENUM'] != settings['INITIAL_PAGENUM'] + 1:
-        raise ValueError('If initial_pagenum is an integer min_pagenum must have value initial_pagenum+1!')
-
-    # If initial_pagenum is implicit, then it will be substituted with empty string. e.g. in &page=
-    if settings['INITIAL_PAGENUM'] is None:
-        settings['INITIAL_PAGENUM'] = ''
-    settings['INITIAL_PAGENUM'] = str(settings['INITIAL_PAGENUM'])
 
     return settings
 
@@ -218,11 +230,9 @@ class DummyConverter:  # No output corpus
 
     @staticmethod
     def extract_article_date(url, article_raw_html, scheme):
-        """
-            extracts and returns next page URL from an HTML code if there is one...
-        """
+        """ extracts and returns next page URL from an HTML code if there is one... """
         _ = url, article_raw_html, scheme  # Silence dummy IDE
-        return datetime.today()
+        return datetime.today().date()
 
     @staticmethod
     def article_to_corpus(url, article_raw_html, scheme):

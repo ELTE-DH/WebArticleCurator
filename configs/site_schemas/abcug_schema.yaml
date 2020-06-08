@@ -1,22 +1,27 @@
 "site_name": "abcug"
-"date_first_article": 2014-09-17
-"date_last_article": 2019-12-31
-"archive_url_format": "https://abcug.hu/#year/"
 
+"columns":
+    "main-column":
+        "archive_url_format": "https://abcug.hu/#year/"
+
+        "date_first_article": 2014-09-17
+        "date_last_article": 2019-12-31
+
+        "min_pagenum": 1
+        # "max_pagenum": NULL
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
 "extract_next_page_url_fun": "extract_next_page_url_abcug"
 "extract_article_urls_from_page_fun": "extract_article_urls_from_page_abcug"
+
 "next_url_by_pagenum": true
-# de a pagenum felesleges
 "infinite_scrolling": false
 "archive_page_urls_by_date": true
 "go_reverse_in_archive": true
 "verify_request": false
-
-"min_pagenum": 1
-# "max_pagenum": NULL
-
 "ignore_archive_cache": false
-# "new_article_url_threshold": 0
-"follow_links_on_page": false
 
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
 "corpus_converter": "dummy-converter"

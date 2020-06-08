@@ -4,8 +4,8 @@
 import sys
 from argparse import ArgumentParser, ArgumentTypeError, FileType
 
-from corpusbuilder import wrap_input_consants, NewsArchiveCrawler, NewsArticleCrawler, sample_warc_by_urls,\
-    validate_warc_file, online_test, Logger
+from corpusbuilder import wrap_input_consants, NewsArchiveCrawler, NewsArticleCrawler, sample_warc_by_urls, \
+    validate_warc_file, online_test, Logger, __version__
 
 
 def str2bool(v):
@@ -45,7 +45,7 @@ def parse_args_crawl(parser):
     parser.add_argument('--strict', type=str2bool, nargs='?', const=True, default=False, metavar='True/False',
                         help='Set strict-mode in WARCReader to enable validation')
     parser.add_argument('--crawler-name', type=str, help='The name of the crawler for the WARC info record',
-                        default='corpusbuilder 1.0')
+                        default='corpusbuilder {0}'.format(__version__))
     parser.add_argument('--user-agent', type=str, help='The User-Agent string to use in headers while downloading')
     parser.add_argument('--no-overwrite-warc', help='Do not overwrite --{archive,articles}-warc if needed',
                         action='store_false')
@@ -58,7 +58,7 @@ def parse_args_crawl(parser):
     parser.add_argument('--max-no-of-calls-in-period', type=int, help='Limit number of HTTP request per period',
                         default=2)
     parser.add_argument('--limit-period', type=int, help='Limit (seconds) the period the number of HTTP request'
-                                                         'see \'also max-no-of-calls-in-period\'',
+                                                         ' see also --max-no-of-calls-in-period',
                         default=1)
     parser.add_argument('--proxy-url', type=str, help='SOCKS Proxy URL to use eg. socks5h://localhost:9050',
                         default=None)

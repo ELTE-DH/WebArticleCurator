@@ -1,62 +1,117 @@
 "site_name": "nol"
-"date_first_article": 1999-08-28
-# "date_last_article": 2016-04-15
 
 "columns":
     "archivum":
         "archive_url_format": "http://nol.hu/archivum?page=#pagenum"
+
+        # "date_first_article": 1999-08-28
+        # "date_last_article": 2016-04-15
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
         "max_pagenum": 14671
 
     "auto":
         "archive_url_format": "http://nol.hu/auto?page=#pagenum"
+
+        # "date_first_article": 1999-08-28
+        # "date_last_article": 2016-04-15
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
         "max_pagenum": 108
 
     "belfold":
         "archive_url_format": "http://nol.hu/belfold?page=#pagenum"
+
+        # "date_first_article": 1999-08-28
+        # "date_last_article": 2016-04-15
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
         "max_pagenum": 3347
 
     "gazdasag":
         "archive_url_format": "http://nol.hu/gazdasag?page=#pagenum"
+
+        # "date_first_article": 1999-08-28
+        # "date_last_article": 2016-04-15
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
         "max_pagenum": 2255
 
     "kulfold":
         "archive_url_format": "http://nol.hu/kulfold?page=#pagenum"
+
+        # "date_first_article": 1999-08-28
+        # "date_last_article": 2016-04-15
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
         "max_pagenum": 2561
 
     "kultura":
         "archive_url_format": "http://nol.hu/kultura?page=#pagenum"
+
+        # "date_first_article": 1999-08-28
+        # "date_last_article": 2016-04-15
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
         "max_pagenum": 1353
 
     "mozaik":
         "archive_url_format": "http://nol.hu/mozaik?page=#pagenum"
+
+        # "date_first_article": 1999-08-28
+        # "date_last_article": 2016-04-15
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
         "max_pagenum": 2301
 
     "sport":
         "archive_url_format": "http://nol.hu/sport?page=#pagenum"
+
+        # "date_first_article": 1999-08-28
+        # "date_last_article": 2016-04-15
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
         "max_pagenum": 704
 
     "tudomány-technika":
         "archive_url_format": "http://nol.hu/tud-tech?page=#pagenum"
+
+        # "date_first_article": 1999-08-28
+        # "date_last_article": 2016-04-15
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
         "max_pagenum": 329
 
     "velemeny":
         "archive_url_format": "http://nol.hu/velemeny?page=#pagenum"
+
+        # "date_first_article": 1999-08-28
+        # "date_last_article": 2016-04-15
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
         "max_pagenum": 784
 
-"extract_next_page_url_fun": NULL
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
 "extract_article_urls_from_page_fun": "extract_article_urls_from_page_nol"
+
 "next_url_by_pagenum": true
 "infinite_scrolling": false
 "archive_page_urls_by_date": false
 "go_reverse_in_archive": true
 "verify_request": true
-
-"initial_pagenum": 1
-"min_pagenum": 2
-# "max_pagenum": 14671
-
 "ignore_archive_cache": false
-# "new_article_url_threshold": 0
-"follow_links_on_page": false
 
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
 "corpus_converter": "dummy-converter"

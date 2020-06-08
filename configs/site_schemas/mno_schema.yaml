@@ -1,69 +1,97 @@
 "site_name": "mno"
-"date_first_article": 2009-01-21
-# "date_last_article": 2100-01-01
 
 "columns":
     "archivum":
         "archive_url_format": "https://magyarnemzet.hu/archivum/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
         "initial_pagenum": 0
-        "min_pagenum": 1
+        # "min_pagenum": 1
 
     "a-helyzet":
         "archive_url_format": "https://magyarnemzet.hu/ahelyzet/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
         "initial_pagenum": 1
-        "min_pagenum": 2
-        "max_pagenum": 20
+        # "min_pagenum": 2
+        # "max_pagenum": 20
 
     "belfold":
         "archive_url_format": "https://magyarnemzet.hu/belfold/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
         "initial_pagenum": 1
-        "min_pagenum": 2
-        "max_pagenum": 907
+        # "min_pagenum": 2
+        # "max_pagenum": 907
 
     "gazdasag":
         "archive_url_format": "https://magyarnemzet.hu/gazdasag/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
         "initial_pagenum": 1
-        "min_pagenum": 2
-        "max_pagenum": 501
+        # "min_pagenum": 2
+        # "max_pagenum": 501
 
     "kulfold":
         "archive_url_format": "https://magyarnemzet.hu/kulfold/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
         "initial_pagenum": 1
-        "min_pagenum": 2
-        "max_pagenum": 888
+        # "min_pagenum": 2
+        # "max_pagenum": 888
 
     "kultura":
         "archive_url_format": "https://magyarnemzet.hu/kultura/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
         "initial_pagenum": 1
-        "min_pagenum": 2
-        "max_pagenum": 241
+        # "min_pagenum": 2
+        # "max_pagenum": 241
 
     "sport":
         "archive_url_format": "https://magyarnemzet.hu/sport/page/#pagenum/"
-        "initial_pagenum": 1
-        "min_pagenum": 2
-        "max_pagenum": 277
 
-    "velemegy":
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
+        "initial_pagenum": 1
+        # "min_pagenum": 2
+        # "max_pagenum": 277
+
+    "velemeny":
         "archive_url_format": "https://magyarnemzet.hu/velemeny/page/#pagenum/"
-        "initial_pagenum": 1
-        "min_pagenum": 2
-        "max_pagenum": 50
 
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
+        "initial_pagenum": 1
+        # "min_pagenum": 2
+        # "max_pagenum": 50
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
 "extract_next_page_url_fun": "extract_next_page_url_mno"
 "extract_article_urls_from_page_fun": "extract_article_urls_from_page_mno"
+
 "next_url_by_pagenum": false
 "infinite_scrolling": false
 "archive_page_urls_by_date": false
 "go_reverse_in_archive": true
 "verify_request": true
-
-# "initial_pagenum": 0
-# "min_pagenum": 1
-# "max_pagenum": NULL
-
 "ignore_archive_cache": false
-# "new_article_url_threshold": 0
-"follow_links_on_page": false
 
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
 "corpus_converter": "dummy-converter"

@@ -117,7 +117,7 @@ class WarcDownloader:
     """
         Download URL with HTTP GET, save to a WARC file and return the decoded text
     """
-    def __init__(self, expected_filename, _logger, warcinfo_record_data=None, program_name='corpusbuilder 1.0',
+    def __init__(self, expected_filename, _logger, warcinfo_record_data=None, program_name='WebArticleCurator',
                  user_agent=None, overwrite_warc=True, err_threshold=10, known_bad_urls=None,
                  max_no_of_calls_in_period=2, limit_period=1, proxy_url=None, allow_cookies=False, verify_request=True,
                  stay_offline=False):
@@ -436,7 +436,7 @@ def sample_warc_by_urls(source_warcfile, new_urls, sampler_logger, target_warcfi
         cont = w.download_url(url)
         if is_out_dir_mode and cont is not None:
             safe_url = ''.join(char if char.isalnum() else '_' for char in url).rstrip('_')[:200]
-            i, fname = 0, os.path.join(out_dir, '{0}{1}.html'.format(safe_url, i))
+            i, fname = 0, os.path.join(out_dir, '{0}{1}.html'.format(safe_url, 0))
             while os.path.exists(fname):
                 i += 1
                 fname = os.path.join(out_dir, '{0}{1}.html'.format(safe_url, i))

@@ -2,28 +2,36 @@
 
 "columns":
     "index":
-        "date_first_article": 1999-06-30
-        # "date_last_article":  2100-01-01
         "archive_url_format": "https://index.hu/24ora/?s=&tol=#year-#month-#day&ig=#year-#month-#day&tarskiadvanyokbanis=1&profil=&rovat=&cimke=&word=1&pepe=1&p=#pagenum"
 
+        "date_first_article": 1999-06-30
+        # "date_last_article":  2100-01-01
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+        # "max_pagenum": NULL
+
     "velvet":
-        "date_first_article": 2005-01-03
         "archive_url_format": "https://velvet.hu/24ora/?s=&tol=#year-#month-#day&ig=#year-#month-#day&tarskiadvanyokbanis=1&profil=&rovat=&cimke=&word=1&pepe=1&p=#pagenum"
 
-"extract_next_page_url_fun": NULL
+        "date_first_article": 2005-01-03
+        # "date_last_article":  2100-01-01
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+        # "max_pagenum": NULL
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
 "extract_article_urls_from_page_fun": "extract_article_urls_from_page_index"
+
 "next_url_by_pagenum": true
 "infinite_scrolling": true
 "archive_page_urls_by_date": true
 "go_reverse_in_archive": true
 "verify_request": true
-
-"initial_pagenum": 0
-"min_pagenum": 1
-# "max_pagenum": NULL
-
 "ignore_archive_cache": false
-# "new_article_url_threshold": 0
-"follow_links_on_page": false
 
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
 "corpus_converter": "dummy-converter"
