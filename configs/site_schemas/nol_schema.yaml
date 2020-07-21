@@ -14,78 +14,78 @@
     "auto":
         "archive_url_format": "http://nol.hu/auto?page=#pagenum"
 
-        # "date_first_article": 1999-08-28
-        # "date_last_article": 2016-04-15
+        # "date_first_article": 2004-06-25   # First article
+        # "date_last_article": 2016-10-07  # Last article
 
         "initial_pagenum": 1
         "min_pagenum": 2
-        "max_pagenum": 108
+        "max_pagenum": 108  # Last page can not be accessed by "next_page_url"
 
     "belfold":
         "archive_url_format": "http://nol.hu/belfold?page=#pagenum"
 
-        # "date_first_article": 1999-08-28
-        # "date_last_article": 2016-04-15
+        # "date_first_article": 2005-10-04   # First article
+        # "date_last_article": 2016-10-08  # Last article
 
         "initial_pagenum": 1
         "min_pagenum": 2
-        "max_pagenum": 3347
+        "max_pagenum": 3347  # Last page can not be accessed by "next_page_url"
 
     "gazdasag":
         "archive_url_format": "http://nol.hu/gazdasag?page=#pagenum"
 
-        # "date_first_article": 1999-08-28
-        # "date_last_article": 2016-04-15
+        # "date_first_article": 2007-12-16   # First article
+        # "date_last_article": 2016-10-07  # Last article
 
         "initial_pagenum": 1
         "min_pagenum": 2
-        "max_pagenum": 2255
+        "max_pagenum": 2255  # Last page can not be accessed by "next_page_url"
 
     "kulfold":
         "archive_url_format": "http://nol.hu/kulfold?page=#pagenum"
 
-        # "date_first_article": 1999-08-28
-        # "date_last_article": 2016-04-15
+        # "date_first_article": 2008-09-02   # First article
+        # "date_last_article": 2016-10-07  # Last article
 
         "initial_pagenum": 1
         "min_pagenum": 2
-        "max_pagenum": 2561
+        "max_pagenum": 2561  # Last page can not be accessed by "next_page_url"
 
     "kultura":
         "archive_url_format": "http://nol.hu/kultura?page=#pagenum"
 
-        # "date_first_article": 1999-08-28
-        # "date_last_article": 2016-04-15
+        # "date_first_article": 2007-03-18   # First article
+        # "date_last_article": 2016-10-07  # Last article
 
         "initial_pagenum": 1
         "min_pagenum": 2
-        "max_pagenum": 1353
+        "max_pagenum": 1353  # Last page can not be accessed by "next_page_url"
 
     "mozaik":
         "archive_url_format": "http://nol.hu/mozaik?page=#pagenum"
 
-        # "date_first_article": 1999-08-28
-        # "date_last_article": 2016-04-15
+        # "date_first_article": 2008-09-02   # First article
+        # "date_last_article": 2016-10-07  # Last article
 
         "initial_pagenum": 1
         "min_pagenum": 2
-        "max_pagenum": 2301
+        "max_pagenum": 2301  # Last page can not be accessed by "next_page_url"
 
     "sport":
         "archive_url_format": "http://nol.hu/sport?page=#pagenum"
 
-        # "date_first_article": 1999-08-28
-        # "date_last_article": 2016-04-15
+        # "date_first_article": 2008-09-02   # First article
+        # "date_last_article": 2016-10-07  # Last article
 
         "initial_pagenum": 1
         "min_pagenum": 2
-        "max_pagenum": 704
+        "max_pagenum": 704  # Last page can not be accessed by "next_page_url"
 
     "tudomány-technika":
         "archive_url_format": "http://nol.hu/tud-tech?page=#pagenum"
 
-        # "date_first_article": 1999-08-28
-        # "date_last_article": 2016-04-15
+        # "date_first_article": 2009-09-08   # First article
+        # "date_last_article": 2016-10-07  # Last article
 
         "initial_pagenum": 1
         "min_pagenum": 2
@@ -94,12 +94,12 @@
     "velemeny":
         "archive_url_format": "http://nol.hu/velemeny?page=#pagenum"
 
-        # "date_first_article": 1999-08-28
-        # "date_last_article": 2016-04-15
+        # "date_first_article": 2008-08-04   # First article
+        # "date_last_article": 2016-10-07  # Last article
 
         "initial_pagenum": 1
         "min_pagenum": 2
-        "max_pagenum": 784
+        "max_pagenum": 784  # Last page can not be accessed by "next_page_url"
 
 "portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
 "extract_article_urls_from_page_fun": "extract_article_urls_from_page_nol"
