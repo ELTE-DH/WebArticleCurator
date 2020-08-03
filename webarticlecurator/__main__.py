@@ -214,8 +214,9 @@ def main():
                         format(set(commands.keys())))
 
     command = parser.parse_args(sys.argv[1:2]).command  # Route ArgumentParser before reparsing the whole CLI
-    sub_args = commands[command][0](ArgumentParser())
-    commands[command][1](sub_args)
+    argparse_fun, main_fun = commands[command]
+    sub_args = argparse_fun(ArgumentParser())
+    main_fun(sub_args)
 
 
 if __name__ == '__main__':

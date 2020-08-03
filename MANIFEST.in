@@ -1,0 +1,2 @@
+include webarticlecurator/crawl_schema.yaml
+include webarticlecurator/site_schema.yaml

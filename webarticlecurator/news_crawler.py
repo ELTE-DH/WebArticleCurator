@@ -40,14 +40,14 @@ class NewsArchiveCrawler:
 
         # Open files for writing gathered URLs on exit if needed
         self.good_urls = set()
-        self._new_good_archive_urls_fh = settings.get('new_good_archive_urls')
-        if self._new_good_archive_urls_fh is not None:
-            self._new_good_archive_urls_fh = open(self._new_good_archive_urls_fh, 'w', encoding='UTF-8')
+        new_good_archive_urls_fname = settings.get('new_good_archive_urls')
+        if new_good_archive_urls_fname is not None:
+            self._new_good_archive_urls_fh = open(new_good_archive_urls_fname, 'w', encoding='UTF-8')
 
         self.problematic_urls = set()
-        self._new_problematic_archive_urls_fh = settings.get('new_problematic_archive_urls')
-        if self._new_problematic_archive_urls_fh is not None:
-            self._new_problematic_archive_urls_fh = open(self._new_problematic_archive_urls_fh, 'w', encoding='UTF-8')
+        new_problematic_archive_urls_fname = settings.get('new_problematic_archive_urls')
+        if new_problematic_archive_urls_fname is not None:
+            self._new_problematic_archive_urls_fh = open(new_problematic_archive_urls_fname, 'w', encoding='UTF-8')
 
         # Setup the list of cached article URLs to stop archive crawling in time
         self.known_article_urls = set()
@@ -241,14 +241,14 @@ class NewsArticleCrawler:
 
         # Open files for writing gathered URLs on exit if needed
         self._new_urls = set()
-        self._new_good_urls_fh = settings.get('new_good_urls')
-        if self._new_good_urls_fh is not None:
-            self._new_good_urls_fh = open(self._new_good_urls_fh, 'a+', encoding='UTF-8')
+        new_good_urls_fname = settings.get('new_good_urls')
+        if new_good_urls_fname is not None:
+            self._new_good_urls_fh = open(new_good_urls_fname, 'a+', encoding='UTF-8')
 
         self.problematic_article_urls = set()
-        self._new_problematic_urls_fh = settings.get('new_problematic_urls')
-        if self._new_problematic_urls_fh is not None:
-            self._new_problematic_urls_fh = open(self._new_problematic_urls_fh, 'a+', encoding='UTF-8')
+        new_problematic_urls_fname = settings.get('new_problematic_urls')
+        if new_problematic_urls_fname is not None:
+            self._new_problematic_urls_fh = open(new_problematic_urls_fname, 'a+', encoding='UTF-8')
 
         # Store values at init-time
         self._filter_by_date = settings['FILTER_ARTICLES_BY_DATE']

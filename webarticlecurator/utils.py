@@ -10,8 +10,8 @@ from datetime import datetime, date, timedelta
 
 import yamale
 
-site_schema = yamale.make_schema(os.path.join(os.path.dirname(os.path.abspath(__file__)), './site_schema.yaml'))
-crawl_schema = yamale.make_schema(os.path.join(os.path.dirname(os.path.abspath(__file__)), './crawl_schema.yaml'))
+site_schema = yamale.make_schema(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'site_schema.yaml'))
+crawl_schema = yamale.make_schema(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'crawl_schema.yaml'))
 
 
 def load_and_validate(schema, fname):
