@@ -239,7 +239,7 @@ class WarcDownloader:
 
         try:  # The actual request
             resp = self._requests_get(url, headers=self._req_headers, stream=True, verify=self._verify_request)
-        except RequestException as err:
+        except (UnicodeError, RequestException) as err:  # UnicodeError is originated from idna codec error
             self._handle_request_exception(url, 'RequestException happened during downloading: {0} \n\n'
                                                 ' The program ignores it and jumps to the next one.'.format(err))
             return None
