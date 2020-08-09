@@ -95,9 +95,9 @@ See the examples in the `configs` directory for further information and `DummyCo
 
 The first two command-line parameters should be `crawl` and the filename pointing to the configuration file of the current crawl. These can be followed by some optional parameters:
 
-- `--old-archive-warc OLD_ARCHIVE_WARC`: Existing WARC archive of the portal's archive (use it as cache)
+- `--old-archive-warcs OLD_ARCHIVE_WARC`: Existing WARC archives of the portal's archive (use them as cache)
 - `--archive-warc ARCHIVE_WARC`: New WARC archive of the portal's archive (copy all cached pages if `--old-archive-warc` is specified)
-- `--old-articles-warc OLD_ARTICLES_WARC`: Existing WARC archive of the portal's archive (use it as cache)
+- `--old-articles-warcs OLD_ARTICLES_WARC`: Existing WARC archives of the portal's archive (use them as cache)
 - `--articles-warc ARTICLES_WARC`: New WARC archive of the portal's archive (copy all cached pages if `--old-archive-warc` is specified)
 - `--archive-just-cache [ARCHIVE_JUST_CACHE]`: Use only cached pages (no output WARC file): `--old-archive-warc` must be specified!
 - `--articles-just-cache [ARTICLES_JUST_CACHE]`: Use only cached pages (no output WARC file): `--old-articles-warc` must be specified!

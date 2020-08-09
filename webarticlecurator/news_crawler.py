@@ -12,7 +12,7 @@ class NewsArchiveCrawler:
         1) Generates URLs of lists of articles (archives)
         2) Extracts URLs of articles from these lists (with helper functions and config)
     """
-    def __init__(self, settings, existing_archive_filename, new_archive_filename, archive_just_cache=False,
+    def __init__(self, settings, existing_archive_filenames, new_archive_filename, archive_just_cache=False,
                  known_article_urls=None, debug_params=None, downloader_params=None):
 
         # List the used properties
@@ -59,7 +59,7 @@ class NewsArchiveCrawler:
                 self.known_article_urls = known_article_urls
 
         # Create new archive while downloading, or simulate download and read the archive
-        self._downloader = WarcCachingDownloader(existing_archive_filename, new_archive_filename, self._logger,
+        self._downloader = WarcCachingDownloader(existing_archive_filenames, new_archive_filename, self._logger,
                                                  archive_just_cache, downloader_params)
 
     def _store_settings(self, column_spec_settings):
@@ -232,8 +232,8 @@ class NewsArticleCrawler:
         6) Follow the links on page (depends on corpus converter)
     """
 
-    def __init__(self, settings, articles_existing_warc_filename, articles_new_warc_filename,
-                 archive_existing_warc_filename, archive_new_warc_filename, articles_just_cache=False,
+    def __init__(self, settings, articles_existing_warc_filenames, articles_new_warc_filename,
+                 archive_existing_warc_filenames, archive_new_warc_filename, articles_just_cache=False,
                  archive_just_cache=False, known_article_urls=None, debug_params=None, download_params=None):
 
         # Initialise the logger
@@ -261,18 +261,18 @@ class NewsArticleCrawler:
         self._converter.logger = self._logger
 
         # Create new archive while downloading, or simulate download and read the archive
-        self._downloader = WarcCachingDownloader(articles_existing_warc_filename, articles_new_warc_filename,
+        self._downloader = WarcCachingDownloader(articles_existing_warc_filenames, articles_new_warc_filename,
                                                  self._logger, articles_just_cache, download_params)
 
         if known_article_urls is None:  # If None is supplied copy the ones from the article archive
-            known_article_urls = set(self._downloader.url_index.keys())  # All URLs in the archive are known good!
+            known_article_urls = self._downloader.url_index  # All URLs in the archive are known good!
 
         if archive_just_cache and articles_just_cache:
             # Full offline mode for processing articles only withouht the archive
-            self._archive_downloader = NewsArchiveDummyCrawler(self._downloader.url_index.keys())
+            self._archive_downloader = NewsArchiveDummyCrawler(self._downloader.url_index)
         else:  # known_bad_urls are common between the NewsArchiveCrawler and the NewsArticleCrawler
             # For downloading the articles from a (possibly read-only) archive
-            self._archive_downloader = NewsArchiveCrawler(settings, archive_existing_warc_filename,
+            self._archive_downloader = NewsArchiveCrawler(settings, archive_existing_warc_filenames,
                                                           archive_new_warc_filename, archive_just_cache,
                                                           known_article_urls, debug_params, download_params)
 
@@ -323,7 +323,7 @@ class NewsArticleCrawler:
                 if article_raw_html is None:
                     # If the URL is not cached, not listed as explicitly bad, and not already downloaded successfully
                     # (=duplicate), then there is a download error to be logged!
-                    if url not in self._downloader.cached_urls and \
+                    if url not in self._downloader.url_index and \
                             url not in self._downloader.bad_urls and url not in self._downloader.good_urls:
                         self._logger.log('ERROR', url, 'Article was not processed because download failed!', sep='\t')
                         self.problematic_article_urls.add(url)  # New problematic URL for manual checking

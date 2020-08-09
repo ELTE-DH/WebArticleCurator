@@ -25,12 +25,12 @@ def parse_args_crawl(parser):
     parser.add_argument(dest='command', choices={'crawl'}, metavar='crawl',
                         help='Crawl a portal with the supplied configuation and arguments')
     parser.add_argument('config', type=str, help='Portal configfile (see configs folder for examples!)')
-    parser.add_argument('--old-archive-warc', type=str, help='Existing WARC archive of the portal\'s archive '
-                                                             '(Use it as cache)', default=None)
+    parser.add_argument('--old-archive-warcs', type=str, help='Existing WARC archives of the portal\'s archive '
+                                                              '(Use them as cache)', nargs='+', default=None)
     parser.add_argument('--archive-warc', type=str, help='New WARC archive of the portal\'s archive '
                                                          '(Copy all cached pages if --old-archive-warc is specified)')
-    parser.add_argument('--old-articles-warc', type=str, help='Existing WARC archive of the portal\'s archive '
-                                                              '(Use it as cache)', default=None)
+    parser.add_argument('--old-articles-warcs', type=str, help='Existing WARC archives of the portal\'s archive '
+                                                               '(Use them as cache)', nargs='+', default=None)
     parser.add_argument('--articles-warc', type=str, help='New WARC archive of the portal\'s archive '
                                                           '(Copy all cached pages if --old-archive-warc is specified)')
     parser.add_argument('--archive-just-cache', type=str2bool, nargs='?', const=True, default=False,
@@ -102,16 +102,20 @@ def parse_args_crawl(parser):
 def parse_args_validate_and_list(parser):
     parser.add_argument('command', choices={'validate', 'listurls'}, metavar='validate|listurls',
                         help='Validate a warc file (created by this program) or list the urls in it')
-    parser.add_argument('-s', '--source-warcfile', type=str, metavar='SOURCE WARCFILE',
+    parser.add_argument('-s', '--source-warcfiles', type=str, metavar='SOURCE WARCFILE', nargs='+',
                         help='A warc file (created by this program) to work from')
-    return parser.parse_args()
+    args = parser.parse_args()
+    if args.source_warcfiles is None or len(args.source_warcfiles) == 0 and args.offline:
+        print('Must specify at least one SOURCE_WARC !', file=sys.stderr)
+        exit(1)
+    return args
 
 
 def parse_args_sample(parser):
     parser.add_argument(dest='command', choices={'sample'}, metavar='sample',
                         help='Copy the supplied list of URLs to the output warc file from the internet '
                              'or from the supplied warc file (created by this program)')
-    parser.add_argument('-s', '--source-warcfile', type=str, default=None, nargs='?', metavar='SOURCE WARCFILE',
+    parser.add_argument('-s', '--source-warcfiles', type=str, default=None, nargs='*', metavar='SOURCE WARCFILE',
                         help='A warc file (created by this program) to work from '
                              '(not mandatory when --offline is True)')
     parser.add_argument('-i', '--input-urls', dest='url_input_stream', type=FileType(), default=sys.stdin,
@@ -120,8 +124,8 @@ def parse_args_sample(parser):
     parser.add_argument('--offline', type=str2bool, nargs='?', const=True, default=True, metavar='True/False',
                         help='Download URLs which are not present in the source archive (default True)')
     args = parser.parse_args()
-    if args.source_warcfile is None and args.offline:
-        print('Must specify SOURCE_WARC if --offline is False!', file=sys.stderr)
+    if args.source_warcfiles is None or len(args.source_warcfiles) == 0 and args.offline:
+        print('Must specify at least one SOURCE_WARC if --offline is False!', file=sys.stderr)
         exit(1)
     return args
 
@@ -157,13 +161,13 @@ def main_crawl(args):
                        'stay_offline': args.stay_offline, 'verify_request': portal_settings['verify_request']}
     if args.archive:
         # For the article links only...
-        archive_crawler = NewsArchiveCrawler(portal_settings, args.old_archive_warc, args.archive_warc,
+        archive_crawler = NewsArchiveCrawler(portal_settings, args.old_archive_warcs, args.archive_warc,
                                              args.archive_just_cache, args.known_article_urls, args.debug_params,
                                              download_params)
         for url in archive_crawler.url_iterator():  # Get the list of urls in the archive...
             print(url, flush=True)
     else:
-        articles_crawler = NewsArticleCrawler(portal_settings, args.old_articles_warc, args.articles_warc,
+        articles_crawler = NewsArticleCrawler(portal_settings, args.old_articles_warcs, args.articles_warc,
                                               args.old_archive_warc, args.archive_warc, args.articles_just_cache,
                                               args.archive_just_cache, args.known_article_urls, args.debug_params,
                                               download_params)
@@ -175,7 +179,7 @@ def main_validate_and_list(args):
     level = 'INFO'
     if args.command == 'listurls':
         level = 'WARNING'
-    url_index = validate_warc_file(args.source_warcfile, Logger(console_level=level))
+    url_index = validate_warc_file(args.source_warcfiles, Logger(console_level=level))
     if args.command == 'listurls':
         for url in url_index:
             print(url)
@@ -189,7 +193,7 @@ def main_cat_and_sample(args):
     target = out_dir if out_dir is not None else target_warcfile
     main_logger.log('INFO', 'Adding URLs to', target, ':')
     offline = getattr(args, 'offline', True)  # Sample can be online or offline, but we write warc only when sampling!
-    sample_warc_by_urls(args.source_warcfile, args.url_input_stream, main_logger, target_warcfile=target_warcfile,
+    sample_warc_by_urls(args.source_warcfiles, args.url_input_stream, main_logger, target_warcfile=target_warcfile,
                         offline=offline, out_dir=out_dir, just_cache=args.command == 'cat')
     main_logger.log('INFO', 'Done!')
 

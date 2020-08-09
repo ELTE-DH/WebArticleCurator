@@ -34,20 +34,26 @@ class WarcCachingDownloader:
 
         All parameters are wired out to the CLI and are documented there.
     """
-    def __init__(self, existing_warc_filename, new_warc_filename, _logger, just_cache=False, download_params=None):
+    def __init__(self, existing_warc_filenames, new_warc_filename, _logger, just_cache=False, download_params=None):
         self._logger = _logger
         if download_params is not None:
             strict_mode = download_params.pop('strict_mode', False)
         else:
             strict_mode = False
             download_params = {}
-        if existing_warc_filename is not None:  # Setup the supplied existing warc archive file as cache
-            self._cached_downloads = WarcReader(existing_warc_filename, _logger, strict_mode=strict_mode)
-            self.url_index = self._cached_downloads.url_index
-            info_record_data = self._cached_downloads.info_record_data
-        else:
-            self.url_index = {}
-            info_record_data = None
+
+        self.url_index = set()
+        info_record_data = None
+        if existing_warc_filenames is not None:  # Setup the supplied existing warc archive file as cache
+            if isinstance(existing_warc_filenames, str):  # Transform it to list
+                existing_warc_filenames = [existing_warc_filenames]
+            self._cached_downloads = []
+            for ex_warc_filename in existing_warc_filenames:
+                cached_downloads = WarcReader(ex_warc_filename, _logger, strict_mode=strict_mode)
+                self._cached_downloads.append(cached_downloads)
+                url_index = cached_downloads.url_index
+                self.url_index.union(url_index)
+                info_record_data = cached_downloads.info_record_data
 
         if just_cache:
             self._new_downloads = WarcDummyDownloader()
@@ -59,8 +65,14 @@ class WarcCachingDownloader:
         if url in self.url_index:
             # 2) If the URL does not present in the newly created WARC file...
             if url not in self._new_downloads.good_urls:
-                # 2a) ...copy it!
-                reqv, resp = self._cached_downloads.get_record(url)
+                # 2a) ...copy it! (from the last source WARC where the URL is found in)
+                for cache in reversed(self._cached_downloads):
+                    if url in cache.url_index:
+                        reqv, resp = cache.get_record(url)
+                        break
+                else:
+                    raise ValueError('INTERNAL ERROR: {0} not found in any supplied source WARC file,'
+                                     ' but is in the URL index!'.format(url))
                 self._new_downloads.write_record(reqv, url)
                 self._new_downloads.write_record(resp, url)
             else:
@@ -68,7 +80,7 @@ class WarcCachingDownloader:
                 self._logger.log('ERROR', 'Not processing URL, because it is already present in the WARC archive:', url)
                 return None
             # Get content even if the URL is a duplicate, because ignore_cache knows better what to do with it
-            cached_content = self._cached_downloads.download_url(url)
+            cached_content = cache.download_url(url)
         else:
             cached_content = None
 
@@ -90,10 +102,6 @@ class WarcCachingDownloader:
     @property
     def good_urls(self):  # Ready-only property for shortcut
         return self._new_downloads.good_urls
-
-    @property
-    def cached_urls(self):  # Ready-only property for shortcut
-        return self.url_index
 
 
 class WarcDummyDownloader:
@@ -312,7 +320,7 @@ class WarcDownloader:
 class WarcReader:
     def __init__(self, filename, _logger, strict_mode=False, check_digest=False):
         self._stream = open(filename, 'rb')
-        self.url_index = {}
+        self._internal_url_index = {}
         self._logger = _logger
         self.info_record_data = None
         self._strict_mode = strict_mode
@@ -329,6 +337,10 @@ class WarcReader:
     def __del__(self):
         if hasattr(self, '_stream'):  # If the program opened a file, then it should gracefully close it on exit!
             self._stream.close()
+
+    @property
+    def url_index(self):  # Ready-only property for shortcut
+        return self._internal_url_index.keys()
 
     def _create_index(self):
         self._logger.log('INFO', 'Creating index...')
@@ -373,13 +385,14 @@ class WarcReader:
                 assert resp_url == reqv_data[0]
                 double_urls[resp_url] += 1
                 try:
-                    self.url_index[resp_url] = (reqv_data[1],  # Request-response pair
-                                                (archive_it.get_record_offset(), archive_it.get_record_length()))
+                    self._internal_url_index[resp_url] = (reqv_data[1],  # Request-response pair
+                                                          (archive_it.get_record_offset(),
+                                                           archive_it.get_record_length()))
                 except ArchiveLoadFailed as e:
                     self._logger.log('ERROR', 'RESPONSE:', e.msg, 'for', resp_url)
                     archive_load_failed = True
                 count += 1
-        if count != len(self.url_index):
+        if count != len(self._internal_url_index):
             double_urls_str = '\n'.join('{0}\t{1}'.format(url, freq) for url, freq in double_urls.most_common()
                                         if freq > 1)
             raise KeyError('The following double URLs detected in the WARC file:{0}'.format(double_urls_str))
@@ -391,7 +404,7 @@ class WarcReader:
         self._logger.log('INFO', 'Index succesuflly created.')
 
     def get_record(self, url):
-        reqv_resp_pair = self.url_index.get(url)
+        reqv_resp_pair = self._internal_url_index.get(url)
         if reqv_resp_pair is not None:
             self._stream.seek(reqv_resp_pair[0][0])
             reqv = next(iter(ArchiveIterator(self._stream, check_digests=self._check_digest)))
@@ -403,7 +416,7 @@ class WarcReader:
 
     def download_url(self, url):
         text = None
-        reqv_resp_pair = self.url_index.get(url)
+        reqv_resp_pair = self._internal_url_index.get(url)
         if reqv_resp_pair is not None:
             offset = reqv_resp_pair[1][0]  # Only need the offset of the response part
             self._stream.seek(offset)  # Can not be cached as we also want to write it out to the new archive!
@@ -418,7 +431,7 @@ class WarcReader:
         return text
 
 
-def sample_warc_by_urls(source_warcfile, new_urls, sampler_logger, target_warcfile=None, out_dir=None, offline=True,
+def sample_warc_by_urls(source_warcfiles, new_urls, sampler_logger, target_warcfile=None, out_dir=None, offline=True,
                         just_cache=False):
     """ Create new warc file for the supplied list of URLs from an existing warc file """
     is_out_dir_mode = out_dir is not None
@@ -428,7 +441,7 @@ def sample_warc_by_urls(source_warcfile, new_urls, sampler_logger, target_warcfi
             print('Supplied output directory ({0}) is not empty!'.format(out_dir), file=sys.stderr)
             exit(1)
 
-    w = WarcCachingDownloader(source_warcfile, target_warcfile, sampler_logger, just_cache=just_cache,
+    w = WarcCachingDownloader(source_warcfiles, target_warcfile, sampler_logger, just_cache=just_cache,
                               download_params={'stay_offline': offline})
     for url in new_urls:
         url = url.strip()
