@@ -6,6 +6,15 @@ from datetime import timedelta
 from webarticlecurator import WarcCachingDownloader, Logger
 
 
+def add_and_write_factory(var, fh):
+    """A helper function to write gathered URLs to a file handle if it is supplied"""
+    def add_fun(elem):
+        var.add(elem)
+        print(elem, file=fh, flush=True)
+
+    return add_fun
+
+
 class NewsArchiveCrawler:
     """
         Using the provided regexes
@@ -43,11 +52,18 @@ class NewsArchiveCrawler:
         new_good_archive_urls_fname = settings.get('new_good_archive_urls')
         if new_good_archive_urls_fname is not None:
             self._new_good_archive_urls_fh = open(new_good_archive_urls_fname, 'w', encoding='UTF-8')
+            self._good_urls_add = add_and_write_factory(self.good_urls, self._new_good_archive_urls_fh)
+        else:
+            self._good_urls_add = self.good_urls.add
 
         self.problematic_urls = set()
         new_problematic_archive_urls_fname = settings.get('new_problematic_archive_urls')
         if new_problematic_archive_urls_fname is not None:
             self._new_problematic_archive_urls_fh = open(new_problematic_archive_urls_fname, 'w', encoding='UTF-8')
+            self._problematic_urls_add = add_and_write_factory(self.problematic_urls,
+                                                               self._new_problematic_archive_urls_fh)
+        else:
+            self._problematic_urls_add = self.problematic_urls.add
 
         # Setup the list of cached article URLs to stop archive crawling in time
         self.known_article_urls = set()
@@ -87,20 +103,12 @@ class NewsArchiveCrawler:
 
     def __del__(self):  # Write newly found URLs to files when output files supplied...
         # Save the good URLs...
-        attr = getattr(self, 'good_urls', {})
-        new_good_archive_urls_fh = getattr(self, '_new_good_archive_urls_fh', None)
-        if new_good_archive_urls_fh is not None:
-            if len(attr) > 0:
-                new_good_archive_urls_fh.writelines('{0}\n'.format(elem) for elem in attr)
-            new_good_archive_urls_fh.close()
 
-        # Save the problematic URLs...
-        attr = getattr(self, 'problematic_urls', {})
-        new_good_archive_urls_fh = getattr(self, '_new_good_archive_urls_fh', None)
-        if new_good_archive_urls_fh is not None:
-            if len(attr) > 0:
-                new_good_archive_urls_fh.writelines('{0}\n'.format(elem) for elem in attr)
-            new_good_archive_urls_fh.close()
+        if hasattr(self, '_new_good_archive_urls_fh') and hasattr(self, 'close'):
+            self._new_good_archive_urls_fh.close()
+
+        if hasattr(self, '_new_good_archive_urls_fh') and hasattr(self, 'close'):
+            self._new_good_archive_urls_fh.close()
 
     def url_iterator(self):
         """
@@ -162,7 +170,7 @@ class NewsArchiveCrawler:
             archive_page_raw_html = self._downloader.download_url(next_page_url, self._ignore_archive_cache)
             curr_page_url = next_page_url
             if archive_page_raw_html is not None:  # Download succeeded
-                self.good_urls.add(next_page_url)
+                self._good_urls_add(next_page_url)
                 # 1) We need article URLs here to reliably determine the end of pages in some cases
                 article_urls = self._extract_article_urls_from_page_fun(archive_page_raw_html)
                 if len(article_urls) == 0 and (not self._infinite_scrolling or first_page):
@@ -172,7 +180,7 @@ class NewsArchiveCrawler:
                                                          article_urls)
             else:  # Download failed
                 if next_page_url not in self._downloader.bad_urls and next_page_url not in self._downloader.good_urls:
-                    self.problematic_urls.add(next_page_url)  # New possibly bad URL
+                    self._problematic_urls_add(next_page_url)  # New possibly bad URL
                 next_page_url = None
                 article_urls = []
             page_num += 1
@@ -244,11 +252,18 @@ class NewsArticleCrawler:
         new_good_urls_fname = settings.get('new_good_urls')
         if new_good_urls_fname is not None:
             self._new_good_urls_fh = open(new_good_urls_fname, 'a+', encoding='UTF-8')
+            self._new_urls_add = add_and_write_factory(self._new_urls, self._new_good_urls_fh)
+        else:
+            self._new_urls_add = self._new_urls.add
 
         self.problematic_article_urls = set()
         new_problematic_urls_fname = settings.get('new_problematic_urls')
         if new_problematic_urls_fname is not None:
             self._new_problematic_urls_fh = open(new_problematic_urls_fname, 'a+', encoding='UTF-8')
+            self._problematic_article_urls_add = add_and_write_factory(self.problematic_article_urls,
+                                                                       self._new_problematic_urls_fh)
+        else:
+            self._problematic_article_urls_add = self.problematic_article_urls.add
 
         # Store values at init-time
         self._filter_by_date = settings['FILTER_ARTICLES_BY_DATE']
@@ -280,21 +295,11 @@ class NewsArticleCrawler:
         if hasattr(self, '_archive_downloader'):  # Make sure that the previous files are closed...
             del self._archive_downloader
 
-        # Save the new URLs...
-        attr = getattr(self, '_new_urls', {})
-        new_good_urls_fh = getattr(self, '_new_good_urls_fh', None)
-        if new_good_urls_fh is not None:
-            if len(attr) > 0:
-                new_good_urls_fh.writelines('{0}\n'.format(elem) for elem in attr)
-            new_good_urls_fh.close()
+        if hasattr(self, '_new_good_urls_fh') and hasattr(self, 'close'):
+            self._new_good_urls_fh.close()
 
-        # Save the problematic URLs...
-        attr = getattr(self, 'problematic_article_urls', {})
-        new_problematic_urls_fh = getattr(self, '_new_problematic_urls_fh', None)
-        if new_problematic_urls_fh is not None:
-            if len(attr) > 0:
-                new_problematic_urls_fh.writelines('{0}\n'.format(elem) for elem in attr)
-            new_problematic_urls_fh.close()
+        if hasattr(self, '_new_problematic_urls_fh') and hasattr(self, 'close'):
+            self._new_problematic_urls_fh.close()
 
     def _is_problematic_url(self, url):
         # Download failed in this session (requries manual check) or Archive URLs failed to download in this session
@@ -326,9 +331,9 @@ class NewsArticleCrawler:
                     if url not in self._downloader.url_index and \
                             url not in self._downloader.bad_urls and url not in self._downloader.good_urls:
                         self._logger.log('ERROR', url, 'Article was not processed because download failed!', sep='\t')
-                        self.problematic_article_urls.add(url)  # New problematic URL for manual checking
+                        self._problematic_article_urls_add(url)  # New problematic URL for manual checking
                     continue
-                self._new_urls.add(url)  # New article URLs
+                self._new_urls_add(url)  # New article URLs
 
                 # 3) Identify the site scheme of the article to be able to look up the appropriate extracting method
                 scheme = self._converter.identify_site_scheme(url, article_raw_html)
