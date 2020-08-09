@@ -65,7 +65,7 @@ class WarcCachingDownloader:
                 self._new_downloads.write_record(resp, url)
             else:
                 # 2b) ...or throw error and return None!
-                self._logger.log('ERROR', 'Not processing URL because it is already present in the WARC archive:', url)
+                self._logger.log('ERROR', 'Not processing URL, because it is already present in the WARC archive:', url)
                 return None
             # Get content even if the URL is a duplicate, because ignore_cache knows better what to do with it
             cached_content = self._cached_downloads.download_url(url)
@@ -230,7 +230,7 @@ class WarcDownloader:
             return None
 
         if url in self.good_urls:  # This should not happen!
-            self._logger.log('ERROR', 'Not downloading URL because it is already downloaded in this session:', url)
+            self._logger.log('ERROR', 'Not downloading URL, because it is already downloaded in this session:', url)
             return None
 
         scheme, netloc, path, params, query, fragment = urlparse(url)

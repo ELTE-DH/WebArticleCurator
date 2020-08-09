@@ -310,8 +310,9 @@ class NewsArticleCrawler:
             while len(urls) > 0:
                 # This loop runs only one iteration if no URLs are extracted in step (6) else it consumes them first
                 url = urls.pop()
-                # 1) Check if the URL is a duplicate (archive URL or problematic)
-                if url in self._archive_downloader.good_urls or self._is_problematic_url(url):
+                # 1) Check if the URL is a duplicate (archive or article URL) or problematic
+                if url in self._archive_downloader.good_urls or url in self._downloader.good_urls or \
+                        self._is_problematic_url(url):
                     self._logger.log('WARNING', url, 'Not processing URL, because it is a problematic URL already'
                                                      ' encountered in this session or it points to the portal\'s'
                                                      ' archive!', sep='\t')
