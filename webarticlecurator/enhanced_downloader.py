@@ -38,6 +38,7 @@ class WarcCachingDownloader:
         self._logger = _logger
         if download_params is not None:
             strict_mode = download_params.pop('strict_mode', False)
+            check_digest = download_params.pop('check_digest', False)
         else:
             strict_mode = False
             download_params = {}
@@ -49,10 +50,11 @@ class WarcCachingDownloader:
                 existing_warc_filenames = [existing_warc_filenames]
             self._cached_downloads = []
             for ex_warc_filename in existing_warc_filenames:
-                cached_downloads = WarcReader(ex_warc_filename, _logger, strict_mode=strict_mode)
+                cached_downloads = WarcReader(ex_warc_filename, _logger, strict_mode=strict_mode,
+                                              check_digest=check_digest)
                 self._cached_downloads.append(cached_downloads)
                 url_index = cached_downloads.url_index
-                self.url_index.union(url_index)
+                self.url_index |= url_index
                 info_record_data = cached_downloads.info_record_data
 
         if just_cache:
@@ -319,6 +321,7 @@ class WarcDownloader:
 
 class WarcReader:
     def __init__(self, filename, _logger, strict_mode=False, check_digest=False):
+        self._inp_filename =filename
         self._stream = open(filename, 'rb')
         self._internal_url_index = {}
         self._logger = _logger
@@ -343,7 +346,7 @@ class WarcReader:
         return self._internal_url_index.keys()
 
     def _create_index(self):
-        self._logger.log('INFO', 'Creating index...')
+        self._logger.log('INFO', 'Creating index for {0}...'.format(self._inp_filename))
         archive_it = ArchiveIterator(self._stream, check_digests=self._check_digest)
         info_rec = next(archive_it)
         # First record should be an info record, then it should be followed by the request-response pairs
@@ -458,8 +461,9 @@ def sample_warc_by_urls(source_warcfiles, new_urls, sampler_logger, target_warcf
                 fh.write(cont)
 
 
-def validate_warc_file(filename, validator_logger):
-    reader = WarcReader(filename, validator_logger, strict_mode=True, check_digest=True)
+def validate_warc_file(source_warcfiles, validator_logger):
+    reader = WarcCachingDownloader(source_warcfiles, None, validator_logger, True,
+                                   download_params={'stay_offline': True, 'strict_mode': True, 'check_digest': True})
     validator_logger.log('INFO', 'OK!', len(reader.url_index), 'records read!')
     return reader.url_index
 
