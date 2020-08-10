@@ -6,13 +6,18 @@ from datetime import timedelta
 from webarticlecurator import WarcCachingDownloader, Logger
 
 
-def add_and_write_factory(var, fh):
+def add_and_write_factory(attr, fname):
     """A helper function to write gathered URLs to a file handle if it is supplied"""
-    def add_fun(elem):
-        var.add(elem)
-        print(elem, file=fh, flush=True)
+    if fname is None:
+        return None, attr.add
+    else:
+        fh = open(fname, 'w', encoding='UTF-8')  # To store FH (for closing it)
 
-    return add_fun
+        def add_fun(elem):
+            attr.add(elem)
+            print(elem, file=fh, flush=True)
+
+        return fh, add_fun
 
 
 class NewsArchiveCrawler:
@@ -47,23 +52,14 @@ class NewsArchiveCrawler:
             debug_params = {}
         self._logger = Logger(settings['log_file_archive'], **debug_params)
 
-        # Open files for writing gathered URLs on exit if needed
+        # Open files for writing gathered URLs if needed,
         self.good_urls = set()
-        new_good_archive_urls_fname = settings.get('new_good_archive_urls')
-        if new_good_archive_urls_fname is not None:
-            self._new_good_archive_urls_fh = open(new_good_archive_urls_fname, 'w', encoding='UTF-8')
-            self._good_urls_add = add_and_write_factory(self.good_urls, self._new_good_archive_urls_fh)
-        else:
-            self._good_urls_add = self.good_urls.add
+        self._new_good_archive_urls_fh, self._good_urls_add = \
+            add_and_write_factory(self.good_urls, settings.get('new_good_archive_urls'))
 
         self.problematic_urls = set()
-        new_problematic_archive_urls_fname = settings.get('new_problematic_archive_urls')
-        if new_problematic_archive_urls_fname is not None:
-            self._new_problematic_archive_urls_fh = open(new_problematic_archive_urls_fname, 'w', encoding='UTF-8')
-            self._problematic_urls_add = add_and_write_factory(self.problematic_urls,
-                                                               self._new_problematic_archive_urls_fh)
-        else:
-            self._problematic_urls_add = self.problematic_urls.add
+        self._new_problematic_archive_urls_fh, self._problematic_urls_add = \
+            add_and_write_factory(self.problematic_urls, settings.get('new_problematic_archive_urls'))
 
         # Setup the list of cached article URLs to stop archive crawling in time
         self.known_article_urls = set()
@@ -77,6 +73,10 @@ class NewsArchiveCrawler:
         # Create new archive while downloading, or simulate download and read the archive
         self._downloader = WarcCachingDownloader(existing_archive_filenames, new_archive_filename, self._logger,
                                                  archive_just_cache, downloader_params)
+        # Known bad URLs (read-only, available at __init__ time)
+        self.bad_urls = self._downloader.bad_urls
+        # Known good URLs (read-only, available at __init__ time from cache)
+        self.url_index = self._downloader.url_index
 
     def _store_settings(self, column_spec_settings):
         # Settings for URL iterator
@@ -107,8 +107,8 @@ class NewsArchiveCrawler:
         if hasattr(self, '_new_good_archive_urls_fh') and hasattr(self, 'close'):
             self._new_good_archive_urls_fh.close()
 
-        if hasattr(self, '_new_good_archive_urls_fh') and hasattr(self, 'close'):
-            self._new_good_archive_urls_fh.close()
+        if hasattr(self, '_new_problematic_archive_urls_fh') and hasattr(self, 'close'):
+            self._new_problematic_archive_urls_fh.close()
 
     def url_iterator(self):
         """
@@ -179,7 +179,8 @@ class NewsArchiveCrawler:
                 next_page_url = self._find_next_page_url(archive_page_url_base, page_num, archive_page_raw_html,
                                                          article_urls)
             else:  # Download failed
-                if next_page_url not in self._downloader.bad_urls and next_page_url not in self._downloader.good_urls:
+                if next_page_url not in self.bad_urls and next_page_url not in self._downloader.good_urls and \
+                        next_page_url not in self._downloader.url_index:  # URLs in url_index should not be a problem
                     self._problematic_urls_add(next_page_url)  # New possibly bad URL
                 next_page_url = None
                 article_urls = []
@@ -247,23 +248,14 @@ class NewsArticleCrawler:
         # Initialise the logger
         self._logger = Logger(settings['log_file_articles'])
 
-        # Open files for writing gathered URLs on exit if needed
+        # Open files for writing gathered URLs if needed
         self._new_urls = set()
-        new_good_urls_fname = settings.get('new_good_urls')
-        if new_good_urls_fname is not None:
-            self._new_good_urls_fh = open(new_good_urls_fname, 'a+', encoding='UTF-8')
-            self._new_urls_add = add_and_write_factory(self._new_urls, self._new_good_urls_fh)
-        else:
-            self._new_urls_add = self._new_urls.add
+        self._new_good_urls_fh, self._new_urls_add = \
+            add_and_write_factory(self._new_urls, settings.get('new_good_urls'))
 
         self.problematic_article_urls = set()
-        new_problematic_urls_fname = settings.get('new_problematic_urls')
-        if new_problematic_urls_fname is not None:
-            self._new_problematic_urls_fh = open(new_problematic_urls_fname, 'a+', encoding='UTF-8')
-            self._problematic_article_urls_add = add_and_write_factory(self.problematic_article_urls,
-                                                                       self._new_problematic_urls_fh)
-        else:
-            self._problematic_article_urls_add = self.problematic_article_urls.add
+        self._new_problematic_urls_fh, self._problematic_article_urls_add = \
+            add_and_write_factory(self.problematic_article_urls, settings.get('new_problematic_urls'))
 
         # Store values at init-time
         self._filter_by_date = settings['FILTER_ARTICLES_BY_DATE']
@@ -302,8 +294,16 @@ class NewsArticleCrawler:
             self._new_problematic_urls_fh.close()
 
     def _is_problematic_url(self, url):
-        # Download failed in this session (requries manual check) or Archive URLs failed to download in this session
-        return url in self.problematic_article_urls or url in self._archive_downloader.problematic_urls
+        # Explicitly marked as bad URL (either Article or Archive) OR
+        # Download failed in this session and requries manual check (either Article or Archive)
+        return url in self._downloader.bad_urls or url in self._archive_downloader.bad_urls or \
+               url in self.problematic_article_urls or url in self._archive_downloader.problematic_urls
+
+    def _is_processed_good_url(self, url):
+        # New good URL newly downloaded (either Article or Archive)
+        # We do not count old good URLs (url_index) have taken from the cache WARC (either Article or Archive)
+        #  as they are needed to be copied to the target WARC!
+        return url in self._downloader.good_urls or url in self._archive_downloader.good_urls
 
     def download_and_extract_all_articles(self):
         self.process_urls(self._archive_downloader.url_iterator())
@@ -315,23 +315,25 @@ class NewsArticleCrawler:
             while len(urls) > 0:
                 # This loop runs only one iteration if no URLs are extracted in step (6) else it consumes them first
                 url = urls.pop()
-                # 1) Check if the URL is a duplicate (archive or article URL) or problematic
-                if url in self._archive_downloader.good_urls or url in self._downloader.good_urls or \
-                        self._is_problematic_url(url):
-                    self._logger.log('WARNING', url, 'Not processing URL, because it is a problematic URL already'
-                                                     ' encountered in this session or it points to the portal\'s'
-                                                     ' archive!', sep='\t')
+                # 1) Check if the URL is
+                # 1a) Explicitly marked as bad URL (either Article or Archive) -> Skip it, only INFO log!
+                if url in self._downloader.bad_urls or url in self._archive_downloader.bad_urls:
+                    self._logger.log('DEBUG', url, 'Skipping URLs explicitly marked as bad!', sep='\t')
+                    continue
+                # 1b) Download succeded in this session either Article or Archive (duplicate)
+                # 1c) Download failed in this session and requries manual check either Article or Archive (duplicate)
+                elif self._is_processed_good_url(url) or \
+                        url in self.problematic_article_urls or url in self._archive_downloader.problematic_urls:
+                    self._logger.log('WARNING', url, 'Not processing URL, because it is an URL already'
+                                                     ' encountered in this session (including the caches)'
+                                                     ' or it is known to point to the portal\'s archive!', sep='\t')
                     continue
 
                 # 2) "Download" article
                 article_raw_html = self._downloader.download_url(url)
-                if article_raw_html is None:
-                    # If the URL is not cached, not listed as explicitly bad, and not already downloaded successfully
-                    # (=duplicate), then there is a download error to be logged!
-                    if url not in self._downloader.url_index and \
-                            url not in self._downloader.bad_urls and url not in self._downloader.good_urls:
-                        self._logger.log('ERROR', url, 'Article was not processed because download failed!', sep='\t')
-                        self._problematic_article_urls_add(url)  # New problematic URL for manual checking
+                if article_raw_html is None:  # Download failed, must be investigated!
+                    self._logger.log('ERROR', url, 'Article was not processed because download failed!', sep='\t')
+                    self._problematic_article_urls_add(url)  # New problematic URL for manual checking
                     continue
                 self._new_urls_add(url)  # New article URLs
 
@@ -356,4 +358,7 @@ class NewsArticleCrawler:
                 self._converter.article_to_corpus(url, article_raw_html, scheme)
 
                 # 6) Extract links to other articles and check for already extracted urls (also in the archive)?
-                urls |= self._converter.follow_links_on_page(url, article_raw_html, scheme)
+                urls_to_follow = self._converter.follow_links_on_page(url, article_raw_html, scheme)
+                # Only add those which has not been already handled to avoid loops!
+                urls |= {url_to_follow for url_to_follow in urls_to_follow
+                         if not self._is_processed_good_url(url) and not self._is_problematic_url(url)}

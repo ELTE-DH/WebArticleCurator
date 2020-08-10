@@ -41,6 +41,7 @@ class WarcCachingDownloader:
             check_digest = download_params.pop('check_digest', False)
         else:
             strict_mode = False
+            check_digest = False
             download_params = {}
 
         self.url_index = set()
@@ -50,11 +51,9 @@ class WarcCachingDownloader:
                 existing_warc_filenames = [existing_warc_filenames]
             self._cached_downloads = []
             for ex_warc_filename in existing_warc_filenames:
-                cached_downloads = WarcReader(ex_warc_filename, _logger, strict_mode=strict_mode,
-                                              check_digest=check_digest)
+                cached_downloads = WarcReader(ex_warc_filename, _logger, strict_mode, check_digest)
                 self._cached_downloads.append(cached_downloads)
-                url_index = cached_downloads.url_index
-                self.url_index |= url_index
+                self.url_index |= cached_downloads.url_index
                 info_record_data = cached_downloads.info_record_data
 
         if just_cache:
@@ -63,38 +62,42 @@ class WarcCachingDownloader:
             self._new_downloads = WarcDownloader(new_warc_filename, _logger, info_record_data, **download_params)
 
     def download_url(self, url, ignore_cache=False):
-        # 1) Check if the URL presents in the cached_content...
-        if url in self.url_index:
-            # 2) If the URL does not present in the newly created WARC file...
-            if url not in self._new_downloads.good_urls:
-                # 2a) ...copy it! (from the last source WARC where the URL is found in)
-                for cache in reversed(self._cached_downloads):
-                    if url in cache.url_index:
-                        reqv, resp = cache.get_record(url)
-                        break
-                else:
-                    raise ValueError('INTERNAL ERROR: {0} not found in any supplied source WARC file,'
-                                     ' but is in the URL index!'.format(url))
-                self._new_downloads.write_record(reqv, url)
-                self._new_downloads.write_record(resp, url)
+        # 1) Check if the URL is explicitly marked as bad...
+        if url in self._new_downloads.bad_urls:
+            self._logger.log('WARNING', url, 'Skipping URL explicitly marked as bad!', sep='\t')
+            return None
+        # 2) If the URL is present in the newly created WARC file warn and skip the URL!
+        elif url in self._new_downloads.good_urls:
+            # 3) throw error and return None!
+            self._logger.log('ERROR', 'Not processing URL, because it is already present in the WARC archive:', url)
+            return None
+        # 3) Check if the URL presents in the cached_content...
+        elif url in self.url_index:
+            # 3a) ...copy it! (from the last source WARC where the URL is found in)
+            for cache in reversed(self._cached_downloads):
+                if url in cache.url_index:
+                    reqv, resp = cache.get_record(url)
+                    break
             else:
-                # 2b) ...or throw error and return None!
-                self._logger.log('ERROR', 'Not processing URL, because it is already present in the WARC archive:', url)
-                return None
-            # Get content even if the URL is a duplicate, because ignore_cache knows better what to do with it
+                raise ValueError('INTERNAL ERROR: {0} not found in any supplied source WARC file,'
+                                 ' but is in the URL index!'.format(url))
+            self._new_downloads.write_record(reqv, url)
+            self._new_downloads.write_record(resp, url)
+            # 3b) Get content even if the URL is a duplicate, because ignore_cache knows better what to do with it
             cached_content = cache.download_url(url)
         else:
             cached_content = None
 
-        # 3) If we have the URL cached...
+        # 4) If we have the URL cached...
         if cached_content is not None:
             if not ignore_cache:
-                return cached_content  # 3a) and we do not expliticly ignore the cache, return the cached content!
+                # 4a) and we do not expliticly ignore the cache, return the cached content!
+                return cached_content
             else:
-                # 3b) Log that we ignored the cached_content and do noting!
+                # 4b) Log that we ignored the cached_content and do noting!
                 self._logger.log('INFO', 'Ignoring cached_content for URL:', url)
 
-        # 4) Really download the URL! (url not in cached_content or cached_content is ignored)
+        # 5) Really download the URL! (url not in cached_content or cached_content is ignored)
         return self._new_downloads.download_url(url)  # Still check if the URL is already downloaded!
 
     @property
@@ -244,11 +247,11 @@ class WarcDownloader:
             return None
 
         scheme, netloc, path, params, query, fragment = urlparse(url)
-        path = quote(path)  # For safety urlencode the generated URL...
-        url = urlunparse((scheme, netloc, path, params, query, fragment))
+        path = quote(path)  # For safety urlencode the generated URL... (The URL might by modified in this step.)
+        url_reparsed = urlunparse((scheme, netloc, path, params, query, fragment))
 
-        try:  # The actual request
-            resp = self._requests_get(url, headers=self._req_headers, stream=True, verify=self._verify_request)
+        try:  # The actual request (on the reparsed URL, everything else is made on the original URL)
+            resp = self._requests_get(url_reparsed, headers=self._req_headers, stream=True, verify=self._verify_request)
         except (UnicodeError, RequestException) as err:  # UnicodeError is originated from idna codec error
             self._handle_request_exception(url, 'RequestException happened during downloading: {0} \n\n'
                                                 ' The program ignores it and jumps to the next one.'.format(err))
@@ -321,7 +324,7 @@ class WarcDownloader:
 
 class WarcReader:
     def __init__(self, filename, _logger, strict_mode=False, check_digest=False):
-        self._inp_filename =filename
+        self._inp_filename = filename
         self._stream = open(filename, 'rb')
         self._internal_url_index = {}
         self._logger = _logger
