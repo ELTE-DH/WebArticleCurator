@@ -13,9 +13,9 @@ def str2bool(v):
     Original code from:
      https://stackoverflow.com/questions/15008758/parsing-boolean-values-with-argparse/43357954#43357954
     """
-    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+    if v.lower() in ('yes', 'Yes', 'YES', 'true', 'True', 'TRUE', 't', 'T', 'y', 'Y', '1'):
         return True
-    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+    elif v.lower() in ('no', 'No', 'NO', 'false', 'False', 'FALSE', 'f', 'F', 'n', 'N', '0'):
         return False
     else:
         raise ArgumentTypeError('Boolean value expected.')
@@ -105,7 +105,7 @@ def parse_args_validate_and_list(parser):
     parser.add_argument('-s', '--source-warcfile', type=str, metavar='SOURCE WARCFILE', nargs='+',
                         help='A warc file (created by this program) to work from')
     args = parser.parse_args()
-    if args.source_warcfile is None or len(args.source_warcfile) == 0 and args.offline:
+    if (args.source_warcfile is None or len(args.source_warcfile) == 0) and args.offline:
         print('Must specify at least one SOURCE_WARC !', file=sys.stderr)
         exit(1)
     return args
@@ -124,7 +124,7 @@ def parse_args_sample(parser):
     parser.add_argument('--offline', type=str2bool, nargs='?', const=True, default=True, metavar='True/False',
                         help='Download URLs which are not present in the source archive (default True)')
     args = parser.parse_args()
-    if args.source_warcfile is None or len(args.source_warcfile) == 0 and args.offline:
+    if (args.source_warcfile is None or len(args.source_warcfile) == 0) and args.offline:
         print('Must specify at least one SOURCE_WARC if --offline is False!', file=sys.stderr)
         exit(1)
     return args
@@ -139,7 +139,7 @@ def parse_args_cat(parser):
                         help='Use input file instead of STDIN (one URL per line)', metavar='FILE')
     parser.add_argument('out_dir', type=str)
     args = parser.parse_args()
-    if args.source_warcfile is None or len(args.source_warcfile) == 0 and args.offline:
+    if (args.source_warcfile is None or len(args.source_warcfile) == 0) and args.offline:
         print('Must specify at least one SOURCE_WARC !', file=sys.stderr)
         exit(1)
     return args
