@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
+from os.path import abspath, dirname, join as os_path_join
 import json
 from bs4 import BeautifulSoup
 
@@ -69,6 +70,21 @@ def extract_next_page_url_abcug(archive_page_raw_html):
     return ret
 
 
+def extract_next_page_url_bbeacon(archive_page_raw_html):
+    """
+        Extract next page url from current archive page
+        Specific for budapestbeacon.com
+
+        :returns string of url if there is one, None otherwise
+    """
+    ret = None
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    next_page_url = soup.select_one('.next')
+    if next_page_url is not None and 'href' in next_page_url.attrs:
+        ret = next_page_url['href']
+    return ret
+
+
 def extract_next_page_url_test(filename, test_logger):
     """Quick test for extracting "next page" URLs when needed"""
     # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
@@ -94,6 +110,12 @@ def extract_next_page_url_test(filename, test_logger):
     assert extract_next_page_url_blikk(text) == 'https://www.blikk.hu/archivum/online?date=2018-10-15&page=1'
     text = w.download_url('https://www.blikk.hu/archivum/online?date=2018-10-15&page=4')
     assert extract_next_page_url_blikk(text) is None
+
+    test_logger.log('INFO', 'Testing budapestbeacon')
+    text = w.download_url('https://budapestbeacon.com/timeline/page/41/')
+    assert extract_next_page_url_bbeacon(text) == 'https://budapestbeacon.com/timeline/page/42/'
+    text = w.download_url('https://budapestbeacon.com/timeline/page/262/')
+    assert extract_next_page_url_bbeacon(text) is None
 
     test_logger.log('INFO', 'Test OK!')
 
@@ -246,6 +268,18 @@ def extract_article_urls_from_page_magyaridok(archive_page_raw_html):
     main_container = soup.find_all('h2')
     urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
     return urls
+
+
+def extract_article_urls_from_page_bbeacon(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    articles = soup.select('.entry-title a')
+    article_urls = {article['href'] for article in articles if article is not None and 'href' in article.attrs}
+    return article_urls
 
 
 def extract_article_urls_from_page_test(filename, test_logger):
@@ -763,6 +797,53 @@ def extract_article_urls_from_page_test(filename, test_logger):
                 'http://valasz.hu/publi/a-nyugati-hanyatlas-uj-szimboluma-127602'
                 }
     assert (extracted, len(extracted)) == (expected, 15)
+
+    test_logger.log('INFO', 'Testing budapestbeacon (HU)')
+    text = w.download_url('https://hu.budapestbeacon.com/archivum/page/1/')
+    extracted = extract_article_urls_from_page_bbeacon(text)
+    expected = {'https://hu.budapestbeacon.com/video/kunhalmi-ne-adjak-fel-mi-sem-adjuk-fel/',
+                'https://hu.budapestbeacon.com/kiemelt-cikkek/juhasz-peter-teljesen-evidens-hogy-csalas-tortent/',
+                'https://hu.budapestbeacon.com/kiemelt-cikkek/bar-budapesten-aratott-a-demokrata-oldal-a-mandatumok-'
+                'mintegy-ketharmadat-nyerte-meg-a-fidesz/',
+                'https://hu.budapestbeacon.com/kiemelt-cikkek/szivemhez-legkozelebb-a-momentum-all-interju-lukacsi-'
+                'katalinnal/',
+                'https://hu.budapestbeacon.com/video/az-egyuttnek-mint-politikai-partnak-nincsen-folytatasa-interju-'
+                'szabo-szabolccsal/',
+                'https://hu.budapestbeacon.com/video/gulyas-marton-uzenete-a-budapest-beacon-olvasoinak/',
+                'https://hu.budapestbeacon.com/video/nyomas-mindig-van-a-kerdes-hogy-a-biro-ellen-tud-e-allni/',
+                'https://hu.budapestbeacon.com/kiemelt-cikkek/el-nem-tudom-kepzelni-hogy-ez-az-ellenzek-le-tudja-'
+                'gyozni-a-mostani-hatalmat-az-egesz-politikai-elitet-kiosztotta-eloadasaban-tolgyessy-peter/',
+                'https://hu.budapestbeacon.com/kiemelt-cikkek/a-budapest-beacon-bucsuinterjuja/',
+                'https://hu.budapestbeacon.com/kiemelt-cikkek/kovacs-gergely-a-444-a-jelleget-tekintve-megszorozta-'
+                'magat-kettovel/',
+                'https://hu.budapestbeacon.com/video/kovacs-gergely-a-444-a-jelleget-tekintve-megszorozta-magat-'
+                'kettovel/',
+                'https://hu.budapestbeacon.com/kiemelt-cikkek/kunhalmi-ne-adjak-fel-mi-sem-adjuk-fel/',
+                'https://hu.budapestbeacon.com/kiemelt-cikkek/isten-mentsen-meg-minket-a-forradalomtol-vagy-a-'
+                'polgarhaborutol-interju-ara-kovacs-attilaval/',
+                'https://hu.budapestbeacon.com/kiemelt-cikkek/gulyas-marton-uzenete-a-budapest-beacon-olvasoinak/',
+                'https://hu.budapestbeacon.com/egyebhirek/karacsony-szerint-a-fidesz-egyharmad-a-fidesz-plusz-jobbik-'
+                'fel-alatt-lesz-az-uj-parlamentben-ez-tortent-csutortokon/',
+                'https://hu.budapestbeacon.com/kiemelt-cikkek/az-egyuttnek-mint-politikai-partnak-nincsen-folytatasa-'
+                'interju-szabo-szabolccsal/',
+                'https://hu.budapestbeacon.com/kiemelt-cikkek/a-hatalom-azt-akarja-elerni-hogy-feljunk-atszavazni/',
+                'https://hu.budapestbeacon.com/kiemelt-cikkek/szabo-szabolcs-ebbol-az-lesz-a-vegen-hogy-a-fidesz-fog-'
+                'gyozni-es-akkor-ego-sepruvel-fognak-kergetni-minket-az-utcan-a-valasztok/',
+                'https://hu.budapestbeacon.com/video/isten-mentsen-meg-minket-a-forradalomtol-vagy-a-polgarhaborutol-'
+                'interju-ara-kovacs-attilaval/',
+                'https://hu.budapestbeacon.com/video/juhasz-peter-teljesen-evidens-hogy-csalas-tortent/'
+                }
+    assert (extracted, len(extracted)) == (expected, 20)
+
+    test_logger.log('INFO', 'Testing budapestbeacon (EN)')
+    text = w.download_url("https://budapestbeacon.com/search/?_sf_s&sf_paged=436")
+    extracted = extract_article_urls_from_from_bbeacon(text)
+    expected = {'https://budapestbeacon.com/moma-chairman-lajos-bokros-calls-opposition-unity/?_sf_s&sf_paged=436',
+                'https://budapestbeacon.com/figyelo-eu-funds-embezzled-in-hungary/?_sf_s&sf_paged=436',
+                'https://budapestbeacon.com/hungarian-teachers-preparing-strike/?_sf_s&sf_paged=436'
+                }
+    assert (extracted, len(extracted)) == (expected, 3)
+
     test_logger.log('INFO', 'Test OK!')
 
 # END SITE SPECIFIC extract_article_urls_from_page FUNCTIONS ###########################################################
@@ -774,8 +855,9 @@ if __name__ == '__main__':
     main_logger = Logger()
 
     # Relateive path from this directory to the files in the project's test directory
-    choices = {'nextpage': '../../tests/next_page_url.warc.gz',
-               'archive': '../../tests/extract_article_urls_from_page.warc.gz'}
+    choices = {'nextpage': os_path_join(dirname(abspath(__file__)), '../../tests/next_page_url.warc.gz'),
+               'archive': os_path_join(dirname(abspath(__file__)), '../../tests/extract_article_urls_from_page.warc.gz')
+               }
 
     # Use the main module to modify the warc files!
     extract_next_page_url_test(choices['nextpage'], main_logger)

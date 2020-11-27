@@ -1,0 +1,68 @@
+"site_name": "budapestbeacon"
+
+"columns":
+    "archivum":
+        "archive_url_format": "https://hu.budapestbeacon.com/archivum/page/#pagenum/"
+
+        # "date_first_article": 2013-10-13
+        # "date_last_article": 2018-04-13
+
+        "initial_pagenum": 1
+        # "min_pagenum": 2
+        # "max_pagenum": 212
+
+    "kereses":
+        "archive_url_format": "https://hu.budapestbeacon.com/kereses/?_sf_s&sf_paged=#pagenum"
+
+        # "date_first_article": 2013-10-13
+        # "date_last_article": 2018-04-13
+
+        "initial_pagenum": 1
+        # "min_pagenum": 2
+        # "max_pagenum": 249
+
+    "timeline":
+        "archive_url_format": "https://budapestbeacon.com/timeline/page/#pagenum/"
+
+        # "date_first_article": 2013-10-13
+        # "date_last_article": 2018-04-13
+
+        "initial_pagenum": 1
+        # "min_pagenum": 2
+        # "max_pagenum": 262
+
+    "search":
+        "archive_url_format": "https://budapestbeacon.com/search/?_sf_s&sf_paged=#pagenum"
+
+        # "date_first_article": 2013-10-13
+        # "date_last_article": 2018-04-13
+
+        "initial_pagenum": 1
+        # "min_pagenum": 2
+        # "max_pagenum": 436
+
+    "translated-articles":
+        "archive_url_format": "https://budapestbeacon.com/translated-articles/page/#pagenum/"
+
+        # "date_first_article": 2013-10-13
+        # "date_last_article": 2018-04-13
+
+        "initial_pagenum": 1
+        # "min_pagenum": 2
+        # "max_pagenum": 6
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
+"extract_next_page_url_fun": "extract_next_page_url_bbeacon"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_bbeacon"
+
+"next_url_by_pagenum": false
+"infinite_scrolling": false
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": true
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"
