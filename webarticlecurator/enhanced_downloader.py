@@ -247,7 +247,8 @@ class WarcDownloader:
             return None
 
         scheme, netloc, path, params, query, fragment = urlparse(url)
-        path = quote(path)  # For safety urlencode the generated URL... (The URL might by modified in this step.)
+        # For safety urlencode the generated URL... (The URL might by modified in this step.)
+        path = quote(path, safe='/%')
         url_reparsed = urlunparse((scheme, netloc, path, params, query, fragment))
 
         try:  # The actual request (on the reparsed URL, everything else is made on the original URL)
