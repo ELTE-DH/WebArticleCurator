@@ -66,8 +66,8 @@ Python functions:
 
 Boolean features to describe the site:
 
-- `next_url_by_pagenum`: Use page numbering for pagination of the archive, e.g. infinite scrolling (false means no pages)
-- `infinite_scrolling`
+- `next_url_by_pagenum`: Use page numbering for pagination of the archive, e.g. infinite scrolling (false means no pages or pages handled by `extract_next_page_url_fun`)
+- `infinite_scrolling`: The crawler increment page numbers until the first page with zero article urls
 - `archive_page_urls_by_date`: Group the archive page URLs by their dates
 - `go_reverse_in_archive`: Go reverse (backwards in time) in the archive by date (when the earliest article is not known)
 - `verify_request`: Suppress complaining about invalid HTTPS certificates
