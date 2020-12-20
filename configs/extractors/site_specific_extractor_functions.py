@@ -85,6 +85,21 @@ def extract_next_page_url_bbeacon(archive_page_raw_html):
     return ret
 
 
+def extract_next_page_url_mosthallottam(archive_page_raw_html):
+    """
+        extracts and returns next page URL from an HTML code if there is one...
+        Specific for abcug.hu
+
+        :returns string of url if there is one, None otherwise
+    """
+    ret = None
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    next_page = soup.find('a', class_='nextpostslink')
+    if next_page is not None and 'href' in next_page.attrs:
+        ret = next_page['href']
+    return ret
+
+
 def extract_next_page_url_test(filename, test_logger):
     """Quick test for extracting "next page" URLs when needed"""
     # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
@@ -116,6 +131,12 @@ def extract_next_page_url_test(filename, test_logger):
     assert extract_next_page_url_bbeacon(text) == 'https://budapestbeacon.com/timeline/page/42/'
     text = w.download_url('https://budapestbeacon.com/timeline/page/262/')
     assert extract_next_page_url_bbeacon(text) is None
+
+    test_logger.log('INFO', 'Testing mosthallottam')
+    text = w.download_url('https://www.mosthallottam.hu/page/2/?s')
+    assert extract_next_page_url_mosthallottam(text) == 'https://www.mosthallottam.hu/page/3/?s'
+    text = w.download_url('https://www.mosthallottam.hu/page/31/?s')
+    assert extract_next_page_url_mosthallottam(text) is None
 
     test_logger.log('INFO', 'Test OK!')
 
@@ -837,12 +858,38 @@ def extract_article_urls_from_page_test(filename, test_logger):
 
     test_logger.log('INFO', 'Testing budapestbeacon (EN)')
     text = w.download_url("https://budapestbeacon.com/search/?_sf_s&sf_paged=436")
-    extracted = extract_article_urls_from_from_bbeacon(text)
+    extracted = extract_article_urls_from_page_bbeacon(text)
     expected = {'https://budapestbeacon.com/moma-chairman-lajos-bokros-calls-opposition-unity/?_sf_s&sf_paged=436',
                 'https://budapestbeacon.com/figyelo-eu-funds-embezzled-in-hungary/?_sf_s&sf_paged=436',
                 'https://budapestbeacon.com/hungarian-teachers-preparing-strike/?_sf_s&sf_paged=436'
                 }
     assert (extracted, len(extracted)) == (expected, 3)
+
+    test_logger.log('INFO', 'Testing mosthallottam')
+    text = w.download_url("https://www.mosthallottam.hu/page/2/?s")
+    extracted = extract_article_urls_from_page_magyaridok(text)
+    expected = {'https://www.mosthallottam.hu/hasznos_info/munkaszuneti-napok-2021-ev-munkarend/',
+                'https://www.mosthallottam.hu/tudtad-hogy/regi-mertekegysegek-mertekek-1/',
+                'https://www.mosthallottam.hu/erzelemertelem/a-koronavirus-utani-uj-vilag/',
+                'https://www.mosthallottam.hu/erdekes/latod-az-orrodat-vagy-megsem/',
+                'https://www.mosthallottam.hu/erdekes/online-tarskereses-a-karanten-maganyabol/',
+                'https://www.mosthallottam.hu/uncategorized/boldog-husveti-unnepeket-2/',
+                'https://www.mosthallottam.hu/tudtad-hogy/facebook-shops-ingyen-nyithatsz-webaruhazat/',
+                'https://www.mosthallottam.hu/termeszet/azsiai-tigrisszunyog-azsiai-zebraszunyog/',
+                'https://www.mosthallottam.hu/termeszet/ev-madara-2021/',
+                'https://www.mosthallottam.hu/allat/ezert-szaritkozik-bundajat-razva-a-kutya/',
+                'https://www.mosthallottam.hu/tudtad-hogy/ennyi-telefonszamot-hasznalnak-magyarorszagon/',
+                'https://www.mosthallottam.hu/tudtad-hogy/regi-mertekegysegek-mertekek-2/',
+                'https://www.mosthallottam.hu/erdekes/csaladnevek-kalandozas-a-nevek-vilagaban-2/',
+                'https://www.mosthallottam.hu/tudtad-hogy/mennyi-nemzeti-unnepunk-van/'
+                }
+    assert (extracted, len(extracted)) == (expected, 14)
+
+    test_logger.log('INFO', 'Testing mosthallottam2')
+    text = w.download_url("https://www.mosthallottam.hu/page/31/?s")
+    extracted = extract_article_urls_from_page_magyaridok(text)
+    expected = {'https://www.mosthallottam.hu/about/'}
+    assert (extracted, len(extracted)) == (expected, 1)
 
     test_logger.log('INFO', 'Test OK!')
 

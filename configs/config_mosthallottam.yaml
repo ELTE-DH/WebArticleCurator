@@ -1,0 +1,13 @@
+"schema": "site_schemas/mosthallottam_schema.yaml"
+
+# "output_corpus": "mosthallottam_corpus.txt"
+
+"log_file_articles": "logs/mosthallottam_articles_log.txt"
+"log_file_archive": "logs/mosthallottam_archive_log.txt"
+"new_problematic_urls": "logs/mosthallottam_new_problematic_urls.txt"
+"new_good_urls": "logs/mosthallottam_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/mosthallottam_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/mosthallottam_new_good_archive_urls.txt"
+
+# "date_from": 2015-12-24
+# "date_until": 2020-12-17
