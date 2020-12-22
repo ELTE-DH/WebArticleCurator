@@ -1,0 +1,13 @@
+"schema": "site_schemas/semmelweis_schema.yaml"
+
+# "output_corpus": "semmelweis_corpus.txt"
+
+"log_file_articles": "logs/semmelweis_articles_log.txt"
+"log_file_archive": "logs/semmelweis_archive_log.txt"
+"new_problematic_urls": "logs/semmelweis_new_problematic_urls.txt"
+"new_good_urls": "logs/semmelweis_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/semmelweis_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/semmelweis_new_good_archive_urls.txt"
+
+# "date_from": 2020-03-02
+# "date_until": 2020-12-20

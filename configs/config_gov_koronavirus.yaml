@@ -1,0 +1,13 @@
+"schema": "site_schemas/gov_koronavirus_schema.yaml"
+
+# "output_corpus": "gov_koronavirus_corpus.txt"
+
+"log_file_articles": "logs/gov_koronavirus_articles_log.txt"
+"log_file_archive": "logs/gov_koronavirus_archive_log.txt"
+"new_problematic_urls": "logs/gov_koronavirus_new_problematic_urls.txt"
+"new_good_urls": "logs/gov_koronavirus_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/gov_koronavirus_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/gov_koronavirus_new_good_archive_urls.txt"
+
+# "date_from": 2020-01-22
+# "date_until": 2020-12-18

@@ -100,6 +100,23 @@ def extract_next_page_url_mosthallottam(archive_page_raw_html):
     return ret
 
 
+def extract_next_page_url_gov_koronavirus(archive_page_raw_html):
+    """
+        extracts and returns next page URL from an HTML code if there is one...
+        Specific for abcug.hu
+        :returns string of url if there is one, None otherwise
+    """
+    ret = None
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    next_page = soup.find('li', class_='pagination-next')
+    if next_page is not None:
+        next_page_link = next_page.find('a')
+        if next_page_link is not None and 'href' in next_page_link.attrs:
+            url_end = next_page_link.attrs['href']
+            ret = f'https://www.nnk.gov.hu{url_end}'
+    return ret
+
+
 def extract_next_page_url_test(filename, test_logger):
     """Quick test for extracting "next page" URLs when needed"""
     # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
@@ -137,6 +154,22 @@ def extract_next_page_url_test(filename, test_logger):
     assert extract_next_page_url_mosthallottam(text) == 'https://www.mosthallottam.hu/page/3/?s'
     text = w.download_url('https://www.mosthallottam.hu/page/31/?s')
     assert extract_next_page_url_mosthallottam(text) is None
+
+    test_logger.log('INFO', 'Testing SOTE koronavirus')
+    text = w.download_url('https://semmelweis.hu/hirek/tag/koronavirus/page/3/')
+    assert extract_next_page_url_mosthallottam(text) == 'https://semmelweis.hu/hirek/tag/koronavirus/page/4/'
+    text = w.download_url('https://semmelweis.hu/hirek/tag/koronavirus/page/8/')
+    assert extract_next_page_url_mosthallottam(text) is None
+
+    test_logger.log('INFO', 'Testing NNK.gov.hu koronavirus')
+    text = w.download_url('https://www.nnk.gov.hu/index.php/jarvanyugyi-es-infekciokontroll-foosztaly/'
+                          'lakossagi-tajekoztatok/koronavirus?start=40')
+    assert extract_next_page_url_gov_koronavirus(text) == \
+           'https://www.nnk.gov.hu/index.php/jarvanyugyi-es-infekciokontroll-foosztaly/lakossagi-tajekoztatok/' \
+           'koronavirus?start=60'
+    text = w.download_url('https://www.nnk.gov.hu/index.php/jarvanyugyi-es-infekciokontroll-foosztaly/'
+                          'lakossagi-tajekoztatok/koronavirus?start=140')
+    assert extract_next_page_url_gov_koronavirus(text) is None
 
     test_logger.log('INFO', 'Test OK!')
 
@@ -301,6 +334,32 @@ def extract_article_urls_from_page_bbeacon(archive_page_raw_html):
     articles = soup.select('.entry-title a')
     article_urls = {article['href'] for article in articles if article is not None and 'href' in article.attrs}
     return article_urls
+
+
+def extract_article_urls_from_page_semmelweis(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all('div', class_='card-format')
+    if len(main_container) == 0:
+        main_container = soup.find_all('h3', class_='entry-title')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_gov_koronavirus(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all('h3', class_='tagtitle')
+    urls = {f'https://www.nnk.gov.hu{link}' for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
 
 
 def extract_article_urls_from_page_test(filename, test_logger):
@@ -857,7 +916,7 @@ def extract_article_urls_from_page_test(filename, test_logger):
     assert (extracted, len(extracted)) == (expected, 20)
 
     test_logger.log('INFO', 'Testing budapestbeacon (EN)')
-    text = w.download_url("https://budapestbeacon.com/search/?_sf_s&sf_paged=436")
+    text = w.download_url('https://budapestbeacon.com/search/?_sf_s&sf_paged=436')
     extracted = extract_article_urls_from_page_bbeacon(text)
     expected = {'https://budapestbeacon.com/moma-chairman-lajos-bokros-calls-opposition-unity/?_sf_s&sf_paged=436',
                 'https://budapestbeacon.com/figyelo-eu-funds-embezzled-in-hungary/?_sf_s&sf_paged=436',
@@ -866,7 +925,7 @@ def extract_article_urls_from_page_test(filename, test_logger):
     assert (extracted, len(extracted)) == (expected, 3)
 
     test_logger.log('INFO', 'Testing mosthallottam')
-    text = w.download_url("https://www.mosthallottam.hu/page/2/?s")
+    text = w.download_url('https://www.mosthallottam.hu/page/2/?s')
     extracted = extract_article_urls_from_page_magyaridok(text)
     expected = {'https://www.mosthallottam.hu/hasznos_info/munkaszuneti-napok-2021-ev-munkarend/',
                 'https://www.mosthallottam.hu/tudtad-hogy/regi-mertekegysegek-mertekek-1/',
@@ -886,10 +945,118 @@ def extract_article_urls_from_page_test(filename, test_logger):
     assert (extracted, len(extracted)) == (expected, 14)
 
     test_logger.log('INFO', 'Testing mosthallottam2')
-    text = w.download_url("https://www.mosthallottam.hu/page/31/?s")
+    text = w.download_url('https://www.mosthallottam.hu/page/31/?s')
     extracted = extract_article_urls_from_page_magyaridok(text)
     expected = {'https://www.mosthallottam.hu/about/'}
     assert (extracted, len(extracted)) == (expected, 1)
+
+    test_logger.log('INFO', 'Testing SOTE koronavirus')
+    text = w.download_url('https://semmelweis.hu/hirek/tag/koronavirus/page/3/')
+    extracted = extract_article_urls_from_page_semmelweis(text)
+    expected = {'https://semmelweis.hu/hirek/2020/06/13/latogatasi-tilalom/',
+                'https://semmelweis.hu/hirek/2020/05/22/milesz-dora-konduktorkent-ebben-a-megvaltozott-helyzetben-'
+                'itthonrol-igyekszem-segitseget-nyujtani/',
+                'https://semmelweis.hu/hirek/2020/06/05/dr-fenyves-bank-sokunknak-ez-egy-eletre-szolo-tapasztalat/',
+                'https://semmelweis.hu/hirek/2020/05/25/interaktiv-terkepen-kovethetoek-a-vilag-orszagainak-aktualis-'
+                'utazasi-korlatozasai/',
+                'https://semmelweis.hu/hirek/2020/05/19/kotelezo-maszkviseles-es-a-vedotavolsag-betartasa-mellett-nyit-'
+                'az-egyetem/',
+                'https://semmelweis.hu/hirek/2020/05/27/kozma-borbala-komoly-attorest-hozott-a-munkamban-a-jarvanyugyi-'
+                'helyzet/',
+                'https://semmelweis.hu/hirek/2020/05/18/h-uncover-reprezentativ-lett-az-orszagos-koronavirus-'
+                'szurovizsgalat-eredmenye/',
+                'https://semmelweis.hu/hirek/2020/05/13/lekerult-a-lelegeztetogeprol-a-covid-19-beteg-a-'
+                'verplazmaterapianak-koszonhetoen-a-semmelweis-egyetemen/',
+                'https://semmelweis.hu/hirek/2020/05/19/ajandekcsomagokat-kaptak-a-semmelweis-egyetem-apoloi-a-loreal-'
+                'magyarorszagtol/',
+                'https://semmelweis.hu/hirek/2020/06/04/a-semmelweis-egyetem-felel-a-jarvanyugyi-biztonsagert-az-idei-'
+                'hungaroringen/',
+                'https://semmelweis.hu/hirek/2020/05/29/az-orszagos-verellato-szolgalat-felhivasa-hallgatok-szamara/',
+                'https://semmelweis.hu/hirek/2020/05/14/karantenba-zart-dolgozatok-erettsegi-a-jarvany-alatt/',
+                'https://semmelweis.hu/hirek/2020/05/20/eletmento-szallitoinkubatort-adomanyozott-a-semmelweis-'
+                'egyetemnek-a-meszaros-csoport/',
+                'https://semmelweis.hu/hirek/2020/05/20/lepcsozetesen-oldja-fel-az-intezmenylatogatasi-tilalmat-a-'
+                'semmelweis-egyetem/',
+                'https://semmelweis.hu/hirek/2020/05/28/kozlemeny-dijat-kapott-dr-palko-judit/',
+                'https://semmelweis.hu/hirek/2020/05/15/dr-jasz-mate-oktatasi-forradalom-11-nap-alatt/',
+                'https://semmelweis.hu/hirek/2020/05/11/tajekoztato-az-ideiglenes-otthoni-munkavegzes-indokoltsaganak-'
+                'felulvizsgalatarol/',
+                'https://semmelweis.hu/hirek/2020/05/20/onjaro-robot-segiti-a-koronavirus-elleni-vedekezest-a-'
+                'semmelweis-egyetemen/',
+                'https://semmelweis.hu/hirek/2020/06/02/lukacs-maria-a-takarito-szemelyzeten-most-majdnem-ketszeres-a-'
+                'terheles/',
+                'https://semmelweis.hu/hirek/2020/05/14/kozlemeny-szombaton-zarul-az-orszagos-koronavirus-teszteles/',
+                'https://semmelweis.hu/hirek/2020/06/10/betegtajekoztato-ismet-eredeti-helyen-mukodik-az-ortopediai-'
+                'klinika-es-a-ful-orr-gegeszeti-es-fej-nyaksebeszeti-klinika/',
+                'https://semmelweis.hu/hirek/2020/05/12/h-uncover-a-meghivottak-fele-mar-elment-a-koronavirus-'
+                'szurovizsgalatra/',
+                'https://semmelweis.hu/hirek/2020/05/29/lehoczky-gyozo-mindenki-megtanult-alkalmazkodni-a-kialakult-'
+                'helyzethez/',
+                'https://semmelweis.hu/hirek/2020/05/13/h-uncover-reszeredmenyek-8276-tesztbol-ketto-lett-pozitiv/'
+                }
+    assert (extracted, len(extracted)) == (expected, 24)
+
+    test_logger.log('INFO', 'Testing SOTE koronavirus 2')
+    text = w.download_url('https://semmelweis.hu/hirek/tag/koronavirus/page/8/')
+    extracted = extract_article_urls_from_page_semmelweis(text)
+    expected = {'https://semmelweis.hu/hirek/2020/03/02/a-semmelweis-egyetem-lakossagi-tajekoztatoja-az-uj-'
+                'koronavirusrol/',
+                'https://semmelweis.hu/hirek/2020/01/28/a-semmelweis-egyetem-felkeszult-a-koronavirussal-erintett-'
+                'teruletrol-erkezo-hallgatok-fogadasara/'
+                }
+    assert (extracted, len(extracted)) == (expected, 2)
+
+    test_logger.log('INFO', 'Testing NNK.gov.hu koronavirus')
+    text = w.download_url('https://www.nnk.gov.hu/index.php/jarvanyugyi-es-infekciokontroll-foosztaly/'
+                          'lakossagi-tajekoztatok/koronavirus?start=40')
+    extracted = extract_article_urls_from_page_gov_koronavirus(text)
+    expected = {'https://www.nnk.gov.hu/index.php/koronavirus-tajekoztato/766-m-surile-restrictive-privind-accesul-n-'
+                'ungaria-au-intrat-n-vigoare',
+                'https://www.nnk.gov.hu/index.php/koronavirus-tajekoztato/777-32-het-enyhen-novekszik-a-koronavirus-'
+                'orokitoanyag-mennyisege-a-szennyvizben',
+                'https://www.nnk.gov.hu/index.php/koronavirus-tajekoztato/760-otthoni-koronavirus-tesztekkel-'
+                'kapcsolatban-figyelmeztet-a-gvh',
+                'https://www.nnk.gov.hu/index.php/koronavirus-tajekoztato/774-31-het-tovabbra-is-alacsony-a-'
+                'szennyvizekben-mert-virus-koncentracioja',
+                'https://www.nnk.gov.hu/index.php/koronavirus-tajekoztato/785-tanulok-cov-2-teszt',
+                'https://www.nnk.gov.hu/index.php/koronavirus-tajekoztato/746-kanada-sarga-portugalia-zold-besorolast-'
+                'kapott',
+                'https://www.nnk.gov.hu/index.php/koronavirus-tajekoztato/740-the-restrictive-measures-regarding-the-'
+                'access-to-hungary-have-come-into-force',
+                'https://www.nnk.gov.hu/index.php/koronavirus-tajekoztato/739-az-orszag-valamennyi-teruleten-'
+                'vizsgaljuk-a-szennyvizet',
+                'https://www.nnk.gov.hu/index.php/koronavirus-tajekoztato/713-hazautaztak-megfigyelesre-a-ket-'
+                'koronavirusos-taborozoval-erintkezok',
+                'https://www.nnk.gov.hu/index.php/component/content/article/11-foosztalyok/782-33-het-stagnal-a-'
+                'szennyvizben-a-koronavirus-orokitoanyaga?Itemid=1050',
+                'https://www.nnk.gov.hu/index.php/koronavirus-tajekoztato/743-jelentos-emelkedes-a-megbetegedesek-'
+                'szamaban-a-kovetkezo-1-2-hetben-tovabbra-sem-varhato',
+                'https://www.nnk.gov.hu/index.php/koronavirus-tajekoztato/745-jarvanyugyi-szakertelem-szukseges-a-'
+                'jarvanyugyi-adatok-megfelelo-ertekelesehez',
+                'https://www.nnk.gov.hu/index.php/koronavirus-tajekoztato/742-orszagok-besorolasa',
+                'https://www.nnk.gov.hu/index.php/koronavirus-tajekoztato/764-die-restriktiven-ma-nahmen-fur-den-'
+                'zugang-zu-ungarn-sind-in-kraft-getreten',
+                'https://www.nnk.gov.hu/index.php/koronavirus-tajekoztato/748-tovabbra-is-alacsony-a-szennyvizekben-'
+                'mert-virus-koncentracioja',
+                'https://www.nnk.gov.hu/index.php/koronavirus-tajekoztato/765-tajekoztatas-a-jarvanyugyi-keszultsegi-'
+                'idoszak-alatt-betartando-altalanos-jarvanyugyi-megelozo-szabalyokrol',
+                'https://www.nnk.gov.hu/index.php/component/content/article/175-a-nemzeti-nepegeszsegugyi-kozpont-'
+                'kozlemenyei/736-kozlemeny-a-covid-19-betegseggel-valo-aktualis-fertozottsegi-viszonyok-alapjan-az-'
+                'orszagok-besorolasarol-szolo-orszagos-tisztifoorvosi-hatarozatrol?Itemid=1050',
+                'https://www.nnk.gov.hu/index.php/koronavirus-tajekoztato/780-tajekoztatas-a-koronavirus-'
+                'vizsgalatokkal-kapcsolatos-leletek-email-cimre-torteno-megkuldesehez',
+                'https://www.nnk.gov.hu/index.php/koronavirus-tajekoztato/769-30-heti-eredmenyek-a-szennyvizmintakbol-'
+                'kimutathato-sars-cov-2-virussal-kapcsolatban',
+                'https://www.nnk.gov.hu/index.php/component/content/article/11-foosztalyok/784-34-het-tovabbra-is-'
+                'stagnal-a-szennyvizben-a-koronavirus-orokitoanyaga?Itemid=1050'
+                }
+    assert (extracted, len(extracted)) == (expected, 20)
+
+    test_logger.log('INFO', 'Testing NNK.gov.hu koronavirus 2')
+    text = w.download_url('https://semmelweis.hu/hirek/tag/koronavirus/page/8/')
+    extracted = extract_article_urls_from_page_gov_koronavirus(text)
+    expected = set()
+    assert (extracted, len(extracted)) == (expected, 0)
 
     test_logger.log('INFO', 'Test OK!')
 
