@@ -117,6 +117,24 @@ def extract_next_page_url_gov_koronavirus(archive_page_raw_html):
     return ret
 
 
+def extract_next_page_url_telex(archive_page_raw_html):
+    """
+        extracts and returns next page URL from an HTML code if there is one...
+        Specific for abcug.hu
+        :returns string of url if there is one, None otherwise
+    """
+    ret = None
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    pages = soup.find_all('a', class_='page')
+    if pages is not None:
+        for a_tag in pages:
+            if a_tag.text.strip() == '>':
+                url_end = a_tag.attrs['href']
+                ret = f'https://telex.hu{url_end}'
+                break
+    return ret
+
+
 def extract_next_page_url_test(filename, test_logger):
     """Quick test for extracting "next page" URLs when needed"""
     # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
@@ -170,6 +188,12 @@ def extract_next_page_url_test(filename, test_logger):
     text = w.download_url('https://www.nnk.gov.hu/index.php/jarvanyugyi-es-infekciokontroll-foosztaly/'
                           'lakossagi-tajekoztatok/koronavirus?start=140')
     assert extract_next_page_url_gov_koronavirus(text) is None
+
+    test_logger.log('INFO', 'Testing Telex')
+    text = w.download_url('https://telex.hu/rovat/koronavirus?oldal=4')
+    assert extract_next_page_url_telex(text) == 'https://telex.hu/rovat/koronavirus?oldal=5'
+    text = w.download_url('https://telex.hu/rovat/koronavirus?oldal=39')
+    assert extract_next_page_url_telex(text) is None
 
     test_logger.log('INFO', 'Test OK!')
 
@@ -359,6 +383,18 @@ def extract_article_urls_from_page_gov_koronavirus(archive_page_raw_html):
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all('h3', class_='tagtitle')
     urls = {f'https://www.nnk.gov.hu{link}' for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_telex(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all('div', class_='article')
+    urls = {f'https://telex.hu{link}' for link in safe_extract_hrefs_from_a_tags(main_container)}
     return urls
 
 
@@ -944,7 +980,6 @@ def extract_article_urls_from_page_test(filename, test_logger):
                 }
     assert (extracted, len(extracted)) == (expected, 14)
 
-    test_logger.log('INFO', 'Testing mosthallottam2')
     text = w.download_url('https://www.mosthallottam.hu/page/31/?s')
     extracted = extract_article_urls_from_page_magyaridok(text)
     expected = {'https://www.mosthallottam.hu/about/'}
@@ -996,7 +1031,6 @@ def extract_article_urls_from_page_test(filename, test_logger):
                 }
     assert (extracted, len(extracted)) == (expected, 24)
 
-    test_logger.log('INFO', 'Testing SOTE koronavirus 2')
     text = w.download_url('https://semmelweis.hu/hirek/tag/koronavirus/page/8/')
     extracted = extract_article_urls_from_page_semmelweis(text)
     expected = {'https://semmelweis.hu/hirek/2020/03/02/a-semmelweis-egyetem-lakossagi-tajekoztatoja-az-uj-'
@@ -1052,11 +1086,98 @@ def extract_article_urls_from_page_test(filename, test_logger):
                 }
     assert (extracted, len(extracted)) == (expected, 20)
 
-    test_logger.log('INFO', 'Testing NNK.gov.hu koronavirus 2')
     text = w.download_url('https://semmelweis.hu/hirek/tag/koronavirus/page/8/')
     extracted = extract_article_urls_from_page_gov_koronavirus(text)
     expected = set()
     assert (extracted, len(extracted)) == (expected, 0)
+
+    test_logger.log('INFO', 'Testing Telex')
+    text = w.download_url('https://telex.hu/rovat/koronavirus?oldal=4')
+    extracted = extract_article_urls_from_page_telex(text)
+    expected = {'https://telex.hu/koronavirus/2021/01/21/szputnyik-v-nemetorszag-orosz-vakcina-tamogatas',
+                'https://telex.hu/koronavirus/2021/01/22/nyerceknek-fejleszt-koronavirus-elleni-oltast-tobb-'
+                'amerikai-ceg-is',
+                'https://telex.hu/koronavirus/2021/01/22/vendeglatok-ettermek-koronavirus-zarva-tart-nagykanizsa',
+                'https://telex.hu/koronavirus/2021/01/23/az-usa-vezeti-a-legfertozottebb-orszagok-listajat-majdnem-25-'
+                'millio-fertozottel',
+                'https://telex.hu/koronavirus/2021/01/23/megfertozodott-a-sri-lanka-i-egeszsegugyi-miniszter-miutan-'
+                'nyilvanosan-kiallt-koronavirustol-vedo-varazsital-mellett',
+                'https://telex.hu/koronavirus/2021/01/21/specialis-oltoing-oltas-romania-miniszter',
+                'https://telex.hu/koronavirus/2021/01/21/operativ-torzs-tajekoztato-01-21',
+                'https://telex.hu/koronavirus/2021/01/22/vizsgalat-nelkul-engedelyezte-az-astra-zeneca-vakcinat-az-'
+                'ogyei',
+                'https://telex.hu/koronavirus/2021/01/22/tomeges-oltas-helyett-egymast-szurkaljak-az-europai-vezetok',
+                'https://telex.hu/koronavirus/2021/01/23/tomegkozlekedes-francia-orvos',
+                'https://telex.hu/koronavirus/2021/01/23/rendorseg-romania-karanten',
+                'https://telex.hu/koronavirus/2021/01/22/boris-johnson-nagy-britannia-koronavirus-varians',
+                'https://telex.hu/koronavirus/2021/01/22/koronavirus-vakcina-mellekhatasok-kapcsolat-pfizer-moderna',
+                'https://telex.hu/koronavirus/2021/01/23/friss-hazai-koronavirus-adatok-stagnalo-szamok',
+                'https://telex.hu/koronavirus/2021/01/21/vakcina-oltas-koronavirus-autoimmun-reakcio-hosszu-tavu-'
+                'mellekhatas-falus-andras',
+                'https://telex.hu/koronavirus/2021/01/22/joe-biden-koronavirus-intezkedes',
+                'https://telex.hu/koronavirus/2021/01/21/koronavirus-fertozes-nemetorszag',
+                'https://telex.hu/koronavirus/2021/01/23/boston-oltas-zsinor-fagyaszto',
+                'https://telex.hu/koronavirus/2021/01/21/adatok-koronavirus-magyarorszag-fertozottek-korhaz-2',
+                'https://telex.hu/koronavirus/2021/01/22/uffizi-keptar-firenze-szabalyok-ujranyitas',
+                'https://telex.hu/koronavirus/2021/01/21/albania-orosz-diplomata-kiutasitas-jarvany-szabalyok-'
+                'megsertes',
+                'https://telex.hu/koronavirus/2021/01/21/szputnyik-v-gyartas-szallitas-magyarorszag',
+                'https://telex.hu/koronavirus/2021/01/22/gyartasi-gondok-miatt-kevesebb-vakcinat-fog-az-eu-ba-'
+                'szallitani-az-astrazeneca',
+                'https://telex.hu/koronavirus/2021/01/22/anthony-fauci-donald-trump-koronavirus',
+                'https://telex.hu/koronavirus/2021/01/22/operativ-torzs-muller-cecilia-1',
+                'https://telex.hu/koronavirus/2021/01/23/svedorszagban-csak-textilmaszknal-komolyabbakat-javasolnak',
+                'https://telex.hu/koronavirus/2021/01/21/oltasprogramrol-es-vakcinaigazolasrol-is-kerdezzuk-a-'
+                'kormanyt/elo',
+                'https://telex.hu/koronavirus/2021/01/23/elmarad-az-orosz-vakcina-magyar-klinikai-vizsgalata',
+                'https://telex.hu/koronavirus/2021/01/22/rioi-karneval-elmarad',
+                'https://telex.hu/koronavirus/2021/01/22/adatok-koronavirus-fertozottek-korhaz-magyarorszag'
+                }
+    assert (extracted, len(extracted)) == (expected, 30)
+
+    text = w.download_url('https://telex.hu/rovat/koronavirus?oldal=39')
+    extracted = extract_article_urls_from_page_telex(text)
+    expected = {'https://telex.hu/koronavirus/2020/09/26/ne-higgyen-az-alhireknek-nem-mertek-felre-94-szazalekkal-a-'
+                'koronavirus-aldozatainak-szamat',
+                'https://telex.hu/koronavirus/2020/09/30/angela-merkel-koronavirus-jarvany-vakcina-szazmillio-dollar-'
+                'tamogatas',
+                'https://telex.hu/koronavirus/2020/10/01/magyarorszag-koronavirus-fertozes-napi-adatok',
+                'https://telex.hu/koronavirus/2020/09/28/magyarorszagot-telibe-kapta-a-masodik-hullam-es-meg-csak-most-'
+                'jon-a-java',
+                'https://telex.hu/koronavirus/2020/09/29/jon-a-szuksegallapot-csehorszagban',
+                'https://telex.hu/koronavirus/2020/10/01/koronavirus-terapia-dpc-gyulladas-citokinvihar-valyi-nagy-'
+                'istvan',
+                'https://telex.hu/koronavirus/2020/09/26/mar-32-5-millioan-kaptak-el-vilagszerte-a-koronavirust',
+                'https://telex.hu/koronavirus/2020/09/29/miert-erinthetetlenek-a-jarvanytagado-orvos-celebek',
+                'https://telex.hu/koronavirus/2020/09/25/927-uj-koronavirus-fertozott-fertozott-9-en-meghaltak',
+                'https://telex.hu/koronavirus/2020/09/26/kohog-lazas-volt-hat-napja-var-a-teszteredmenyere',
+                'https://telex.hu/koronavirus/2020/09/29/petro-porosenko-is-koronavirusos',
+                'https://telex.hu/koronavirus/2020/09/26/orban-viktor-van-eleg-korhazi-agy-eszkoz-es-szemelyzet-a-'
+                'vedekezeshez',
+                'https://telex.hu/koronavirus/2020/09/26/egy-maszkellenes-es-egy-turizmusvedo-tuntetest-is-hozott-a-'
+                'virus',
+                'https://telex.hu/koronavirus/2020/09/27/cikk-cime-3',
+                'https://telex.hu/koronavirus/2020/10/01/koronavirus-jarvany-csehorszag-izrael-oroszorszag',
+                'https://telex.hu/koronavirus/2020/09/29/koronavirus-magyarorszag-fertozes-influenzaoltas-kiskunhalasi-'
+                'korhaz',
+                'https://telex.hu/koronavirus/2020/09/26/50-ezer-forintra-buntethetik-aki-budapesten-megserti-a-'
+                'maszkviselesi-szabalyokat',
+                'https://telex.hu/koronavirus/2020/09/26/keresre-ingyenmaszkot-ad-a-vasarloknak-a-spar',
+                'https://telex.hu/koronavirus/2020/09/29/becs-koronavirus-teszt',
+                'https://telex.hu/koronavirus/2020/09/26/12-en-haltak-meg-589-koronavirusos-beteg-van-korhazban',
+                'https://telex.hu/koronavirus/2020/09/26/927-ujabb-koronavirusos-beteget-azonositottak',
+                'https://telex.hu/koronavirus/2020/09/26/othavi-csucsra-emelkedett-az-uj-esetek-szama-nemetorszagban',
+                'https://telex.hu/koronavirus/2020/10/01/koronavirus-magyarorszag-jakab-ferenc-virologus',
+                'https://telex.hu/koronavirus/2020/09/26/miert-erdemes-influenzaoltast-kerni-koronavirusjarvany-idejen',
+                'https://telex.hu/koronavirus/2020/10/01/emmi-van-futes-a-kiskunhalasi-mobilkorhazban-es-orvosokat-is-'
+                'vezenyelnek-oda',
+                'https://telex.hu/koronavirus/2020/09/29/kulfold-koronavirus-fertozes-gorogorszag-kirandulohajo',
+                'https://telex.hu/koronavirus/2020/09/27/937-uj-koronavirus-fertozott-hatan-meghaltak',
+                'https://telex.hu/koronavirus/2020/09/28/csaknem-33-millioan-fertozodtek-meg-koronavirussal-'
+                'vilagszerte',
+                'https://telex.hu/koronavirus/2020/09/29/ecdc-magyarorszag-koronavirus-jarvany-dania-izland-hollandia'
+                }
+    assert (extracted, len(extracted)) == (expected, 29)
 
     test_logger.log('INFO', 'Test OK!')
 
