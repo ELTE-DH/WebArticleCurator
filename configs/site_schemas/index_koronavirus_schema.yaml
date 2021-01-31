@@ -1,0 +1,38 @@
+"site_name": "index_koronavirus"  # Index, velvet, totalcar, totalbike, divany?
+
+"columns":
+    "index":
+        "archive_url_format": "https://index.hu/24ora/?s=&tol=#year-#month-#day&ig=#year-#month-#day&tarskiadvanyokbanis=1&profil=&rovat=&cimke=koronav%C3%ADrus&word=1&pepe=1&p=#pagenum"
+
+        "date_first_article": 2020-01-20
+        # "date_last_article":  2100-01-01
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+        # "max_pagenum": NULL
+
+    "index_old":
+        # From 2020-01-19 to 2013-03-28 there is only one page of articles (13 articles)
+        "archive_url_format": "https://index.hu/24ora/?s=&tol=2013-03-27&ig=2020-01-19&tarskiadvanyokbanis=1&profil=&rovat=&cimke=koronav%C3%ADrus&word=1&pepe=1&p=#pagenum"
+
+        "date_first_article": 2013-03-28
+        "date_last_article":  2020-01-19
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+        # "max_pagenum": NULL
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_index"
+
+"next_url_by_pagenum": true
+"infinite_scrolling": true
+"archive_page_urls_by_date": true
+"go_reverse_in_archive": true
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"
