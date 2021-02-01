@@ -360,5 +360,5 @@ class NewsArticleCrawler:
                 # 6) Extract links to other articles and check for already extracted urls (also in the archive)?
                 urls_to_follow = self._converter.follow_links_on_page(url, article_raw_html, scheme)
                 # Only add those which has not been already handled to avoid loops!
-                urls |= {url_to_follow for url_to_follow in urls_to_follow
+                urls |= {url for url in urls_to_follow
                          if not self._is_processed_good_url(url) and not self._is_problematic_url(url)}

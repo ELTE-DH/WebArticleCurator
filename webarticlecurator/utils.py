@@ -108,6 +108,18 @@ def wrap_input_consants(current_task_config_filename):
 
     settings['new_article_url_threshold'] = settings.get('new_article_url_threshold')
 
+    # Portal specific functions
+    file_path = settings['portal_specific_exctractor_functions_file']
+    module = import_pyhton_file('portal_specific_exctractor_functions',
+                                os.path.join(settings['SITE_SCHEMA_DIR_NAME'], file_path))
+    for attr_name, attr_name_dest, mandatory in \
+            (('extract_next_page_url_fun', 'EXTRACT_NEXT_PAGE_URL_FUN', False),
+             ('extract_article_urls_from_page_fun', 'EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN', True),
+             ('next_page_of_article_fun', 'NEXT_PAGE_OF_ARTICLE_FUN', False)):
+        settings[attr_name_dest] = getattr(module, settings.get(attr_name, ''), None)
+        if mandatory and settings[attr_name_dest] is None:
+            raise ValueError('{0} is unset!'.format(attr_name))
+
     # Set and init converter class which is dummy-converter by default
     corp_conv = settings.get('corpus_converter', 'dummy-converter')
     if corp_conv == 'dummy-converter':
@@ -122,17 +134,6 @@ def wrap_input_consants(current_task_config_filename):
         module = import_pyhton_file('corpus_converter', os.path.join(settings['SITE_SCHEMA_DIR_NAME'], file_path))
         corpus_converter_class = getattr(module, corp_conv)
     settings['CORPUS_CONVERTER'] = corpus_converter_class(settings)
-
-    # Portal specific functions
-    file_path = settings['portal_specific_exctractor_functions_file']
-    module = import_pyhton_file('portal_specific_exctractor_functions',
-                                os.path.join(settings['SITE_SCHEMA_DIR_NAME'], file_path))
-    for attr_name, attr_name_dest, mandatory in \
-            (('extract_next_page_url_fun', 'EXTRACT_NEXT_PAGE_URL_FUN', False),
-             ('extract_article_urls_from_page_fun', 'EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN', True),):
-        settings[attr_name_dest] = getattr(module, settings.get(attr_name, ''), None)
-        if mandatory and settings[attr_name_dest] is None:
-            raise ValueError('{0} is unset!'.format(attr_name))
 
     return settings
 
@@ -221,6 +222,10 @@ class DummyConverter:  # No output corpus
 
     def __init__(self, settings):
         self._logger = Namespace(log=print)  # Hack to be able to monkeypatch logger
+        # Override this if needed!
+        if settings['FILTER_ARTICLES_BY_DATE'] and not settings['archive_page_urls_by_date']:
+            raise ValueError(f'Date filtering is not possible with {type(self).__name__} on a non-date-based archive!')
+        settings['FILTER_ARTICLES_BY_DATE'] = False  # Use the archive dates for filtering...
         # Init stuff
         _ = settings  # Silence IDE
 

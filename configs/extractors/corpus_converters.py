@@ -4,6 +4,7 @@
 import re
 import sys
 from argparse import Namespace
+from datetime import datetime
 
 import yaml
 from newspaper import Article
@@ -74,3 +75,45 @@ class CorpusConverterNewspaper:  # Mimic CorpusConverter
     def __del__(self):
         if hasattr(self, '_file_out') and self._file_out is not None:
             self._file_out.close()
+
+
+class MultiPageArticleConverter:  # No output corpus
+    """
+        An example converter to showcase API and to suppress any article processing at crawling time (for new portals)
+    """
+
+    def __init__(self, settings):
+        self._logger = Namespace(log=print)  # Hack to be able to monkeypatch logger
+        # Override this if needed!
+        if settings['FILTER_ARTICLES_BY_DATE'] and not settings['archive_page_urls_by_date']:
+            raise ValueError(f'Date filtering is not possible with {type(self).__name__} on a non-date-based archive!')
+        settings['FILTER_ARTICLES_BY_DATE'] = False  # Use the archive dates for filtering...
+        # Init stuff
+        if settings['NEXT_PAGE_OF_ARTICLE_FUN'] is None:
+            raise ValueError('next_page_of_article_fun is not supplied!')
+        self._next_page_of_article_fun = settings['NEXT_PAGE_OF_ARTICLE_FUN']
+
+    @staticmethod
+    def identify_site_scheme(url, article_raw_html):
+        _ = url, article_raw_html  # Silence IDE
+
+    @staticmethod
+    def extract_article_date(url, article_raw_html, scheme):
+        """ extracts and returns next page URL from an HTML code if there is one... """
+        _ = url, article_raw_html, scheme  # Silence dummy IDE
+        return datetime.today().date()
+
+    @staticmethod
+    def article_to_corpus(url, article_raw_html, scheme):
+        _ = url, article_raw_html, scheme  # Silence dummy IDE
+        pass
+
+    def follow_links_on_page(self, url, article_raw_html, scheme):
+        _ = url, scheme  # Silence dummy IDE
+        ret = self._next_page_of_article_fun(article_raw_html)
+        if ret is not None:
+            return {ret}
+        return set()
+
+    def __del__(self):
+        pass
