@@ -7,7 +7,7 @@ portal_specific_exctractor_functions_file: str(min=1)
 # str with length > 1 or missing (null is not accepted)
 extract_next_page_url_fun: str(min=1, required=False, none=False)
 extract_article_urls_from_page_fun: str(min=1)
-next_page_of_article_fun: str(min=1)
+next_page_of_article_fun: str(min=1, required=False, none=False)
 
 next_url_by_pagenum: bool()
 infinite_scrolling: bool()

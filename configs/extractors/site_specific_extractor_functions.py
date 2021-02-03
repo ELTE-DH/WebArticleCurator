@@ -1199,6 +1199,20 @@ def next_page_of_article_telex(curr_html):  # https://telex.hu/koronavirus/2020/
     return None
 
 
+def next_page_of_article_444(curr_html):
+    bs = BeautifulSoup(curr_html, 'lxml')
+    next_page_cont1 = bs.find('li', class_='arrow')
+    next_page_link2 = bs.find('a', {'class': 'page-link', 'aria-label': 'Következő »'})
+    if next_page_cont1 is not None:
+        next_page_link = next_page_cont1.find('a', href=True)
+        if next_page_link is not None and next_page_link.text.startswith('Következő'):
+            return next_page_link.attrs['href']
+        return None
+    elif next_page_link2 is not None:
+        return next_page_link2.attrs['href']
+    return None
+
+
 def next_page_of_article_test(filename, test_logger):
     """Quick test for extracting URLs form an archive page"""
     # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
@@ -1212,6 +1226,15 @@ def next_page_of_article_test(filename, test_logger):
     text = w.download_url('https://telex.hu/koronavirus/2021/01/21/oltasprogramrol-es-vakcinaigazolasrol-is-kerdezzuk-'
                           'a-kormanyt/elo?oldal=2')
     assert next_page_of_article_telex(text) is None
+
+    text = w.download_url('https://444.hu/2014/03/02/mindjart-kezdodik-az-oscar-dij-atadas')
+    assert next_page_of_article_444(text) == 'https://444.hu/2014/03/02/mindjart-kezdodik-az-oscar-dij-atadas?page=2'
+    text = w.download_url('https://444.hu/2014/03/02/mindjart-kezdodik-az-oscar-dij-atadas?page=4')
+    assert next_page_of_article_444(text) is None
+    text = w.download_url('https://444.hu/2014/03/23/real-madrid-barcelona-elo')
+    assert next_page_of_article_444(text) == 'https://444.hu/2014/03/23/real-madrid-barcelona-elo?page=2'
+    text = w.download_url('https://444.hu/2014/03/23/real-madrid-barcelona-elo?page=7')
+    assert next_page_of_article_444(text) is None
 
     test_logger.log('INFO', 'Test OK!')
 
