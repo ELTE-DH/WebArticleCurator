@@ -61,6 +61,7 @@ Python functions:
 - `portal_specific_exctractor_functions_file`: The filename pointing to the python file which contains the required extractor functions
 - `extract_next_page_url_fun` (it can be NULL): The name of the function to be imported from the `portal_specific_exctractor_functions_file` to extract the "next page URL"
 - `extract_article_urls_from_page_fun`: The name of the function to be imported from the `portal_specific_exctractor_functions_file` to extract the article URLs from the archive page
+- `next_page_of_article_fun` (it can be NULL): The name of the function to be imported from the `portal_specific_exctractor_functions_file` if there are multipage articles. This function extracts the "next page URL" for the rest of the pages in a multipage article. (It must be used with `MultiPageArticleConverter` or similar as `corpus_converter` to work!)
 - `corpus_converter_file`: The filename pointing to the python file which contains the required corpus extractor class
 - `corpus_converter`: The name of the class to be imported from the `corpus_converter_file`. The default is to do nothing (`dummy-converter`).
 

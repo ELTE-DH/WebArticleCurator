@@ -123,6 +123,8 @@ def wrap_input_consants(current_task_config_filename):
     # Set and init converter class which is dummy-converter by default
     corp_conv = settings.get('corpus_converter', 'dummy-converter')
     if corp_conv == 'dummy-converter':
+        if settings['NEXT_PAGE_OF_ARTICLE_FUN'] is not None:
+            raise ValueError('If next_page_of_article_fun is supplied corpus_converter cannot be dummy-converter!')
         corpus_converter_class = DummyConverter
         if settings['FILTER_ARTICLES_BY_DATE'] and not settings['archive_page_urls_by_date']:
             raise ValueError('Date filtering is not possible with DummyConverter with a non-date-based archive!')
