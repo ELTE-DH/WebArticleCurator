@@ -74,13 +74,7 @@ class WarcCachingDownloader:
         # 3) Check if the URL presents in the cached_content...
         elif url in self.url_index:
             # 3a) ...copy it! (from the last source WARC where the URL is found in)
-            for cache in reversed(self._cached_downloads):
-                if url in cache.url_index:
-                    reqv, resp = cache.get_record(url)
-                    break
-            else:
-                raise ValueError('INTERNAL ERROR: {0} not found in any supplied source WARC file,'
-                                 ' but is in the URL index!'.format(url))
+            cache, reqv, resp = self.get_records(url)
             self._new_downloads.write_record(reqv, url)
             self._new_downloads.write_record(resp, url)
             # 3b) Get content even if the URL is a duplicate, because ignore_cache knows better what to do with it
@@ -99,6 +93,16 @@ class WarcCachingDownloader:
 
         # 5) Really download the URL! (url not in cached_content or cached_content is ignored)
         return self._new_downloads.download_url(url)  # Still check if the URL is already downloaded!
+
+    def get_records(self, url):
+        for cache in reversed(self._cached_downloads):
+            if url in cache.url_index:
+                reqv, resp = cache.get_record(url)
+                break
+        else:
+            raise ValueError('INTERNAL ERROR: {0} not found in any supplied source WARC file,'
+                             ' but is in the URL index!'.format(url))
+        return cache, reqv, resp
 
     @property
     def bad_urls(self):  # Ready-only property for shortcut
@@ -325,7 +329,7 @@ class WarcDownloader:
 
 class WarcReader:
     def __init__(self, filename, _logger, strict_mode=False, check_digest=False):
-        self._inp_filename = filename
+        self.filename = filename
         self._stream = open(filename, 'rb')
         self._internal_url_index = {}
         self._logger = _logger
@@ -350,7 +354,7 @@ class WarcReader:
         return self._internal_url_index.keys()
 
     def _create_index(self):
-        self._logger.log('INFO', 'Creating index for {0}...'.format(self._inp_filename))
+        self._logger.log('INFO', 'Creating index for {0}...'.format(self.filename))
         archive_it = ArchiveIterator(self._stream, check_digests=self._check_digest)
         info_rec = next(archive_it)
         # First record should be an info record, then it should be followed by the request-response pairs
