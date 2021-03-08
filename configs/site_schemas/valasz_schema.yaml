@@ -11,12 +11,13 @@
         "min_pagenum": 2
         "max_pagenum": 243
 
-#    "budapest/pest-budai-latkep":
-#        "archive_url_format": "http://valasz.hu/pest_budai_latkep?page=#pagenum"
-#
-#        "initial_pagenum": 1
-#        "min_pagenum": 2
-#        "max_pagenum": 162
+    # Duplicate: part of "budapest"
+    "budapest/pest-budai-latkep":
+        "archive_url_format": "http://valasz.hu/pest_budai_latkep?page=#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 162
 
     "gadasag":
         "archive_url_format": "http://valasz.hu/uzlet?page=#pagenum"
@@ -49,9 +50,8 @@
     "gazdasag/magyarok-a-piacon":
         "archive_url_format": "http://valasz.hu/magyarokapiacon?page=#pagenum"
 
+        # Only one page for this column
         "initial_pagenum": 1
-        "min_pagenum": 2
-        "max_pagenum": 1
 
     "gazdasag/pr":
         "archive_url_format": "http://valasz.hu/pr?page=#pagenum"
@@ -63,9 +63,8 @@
     "gazdasag/techvilag":
         "archive_url_format": "http://valasz.hu/techvilag?page=#pagenum"
 
+        # Only one page for this column
         "initial_pagenum": 1
-        "min_pagenum": 2
-        "max_pagenum": 1
 
     "itthon":
         "archive_url_format": "http://valasz.hu/itthon?page=#pagenum"
@@ -74,33 +73,36 @@
         "min_pagenum": 2
         "max_pagenum": 2341
 
-#    "itthon/csalad":
-#        "archive_url_format": "http://valasz.hu/csalad?page=#pagenum"
-#
-#        "initial_pagenum": 1
-#        "min_pagenum": 2
-#        "max_pagenum": 1
-#
-#    "itthon/eletmod":
-#        "archive_url_format": "http://valasz.hu/eletmod?page=#pagenum"
-#
-#        "initial_pagenum": 1
-#        "min_pagenum": 2
-#        "max_pagenum": 187
-#
-#    "itthon/felsooktatasi-rangsor":
-#        "archive_url_format": "http://valasz.hu/felsooktatasi_rangsor?page=#pagenum"
-#
-#        "initial_pagenum": 1
-#        "min_pagenum": 2
-#        "max_pagenum": 11
-#
-#    "itthon/reflektor":
-#        "archive_url_format": "http://valasz.hu/reflektor?page=#pagenum"
-#
-#        "initial_pagenum": 1
-#        "min_pagenum": 2
-#        "max_pagenum": 86
+    # Duplicate: part of "itthon"
+    "itthon/csalad":
+        "archive_url_format": "http://valasz.hu/csalad?page=#pagenum"
+
+        # Only one page for this column
+        "initial_pagenum": 1
+
+    # Duplicate: part of "itthon"
+    "itthon/eletmod":
+        "archive_url_format": "http://valasz.hu/eletmod?page=#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 187
+
+    # Duplicate: part of "itthon"
+    "itthon/felsooktatasi-rangsor":
+        "archive_url_format": "http://valasz.hu/felsooktatasi_rangsor?page=#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 11
+
+    # Duplicate: part of "itthon"
+    "itthon/reflektor":
+        "archive_url_format": "http://valasz.hu/reflektor?page=#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 86
 
     "kultura":
         "archive_url_format": "http://valasz.hu/kultura?page=#pagenum"
@@ -109,47 +111,52 @@
         "min_pagenum": 2
         "max_pagenum": 1693
 
-#    "kultura/esszencia":
-#        "archive_url_format": "http://valasz.hu/esszencia?page=#pagenum"
-#
-#        "initial_pagenum": 1
-#        "min_pagenum": 2
-#        "max_pagenum": 11
-#
-#    "kultura/gasztronomia":
-#        "archive_url_format": "http://valasz.hu/gasztronomia?page=#pagenum"
-#
-#        "initial_pagenum": 1
-#        "min_pagenum": 2
-#        "max_pagenum": 62
-#
-#    "kultura/kult-tura":
-#        "archive_url_format": "http://valasz.hu/kult_tura?page=#pagenum"
-#
-#        "initial_pagenum": 1
-#        "min_pagenum": 2
-#        "max_pagenum": 1
-#
-#    "kultura/mozi":
-#        "archive_url_format": "http://valasz.hu/mozi?page=#pagenum"
-#
-#        "initial_pagenum": 1
-#        "min_pagenum": 2
-#        "max_pagenum": 21
-#
-#    "kultura/sport":
-#        "archive_url_format": "http://valasz.hu/sport?page=#pagenum"
-#
-#        "initial_pagenum": 1
-#        "min_pagenum": 2
-#        "max_pagenum": 437
-#
-#    "kultura/szinhaz":
-#        "archive_url_format": "http://valasz.hu/szinhaz?page=#pagenum"
-#
-#        "initial_pagenum": 1
-#        "min_pagenum": 2
-#        "max_pagenum": 22
+    # Duplicate: part of "kultura"
+    "kultura/esszencia":
+        "archive_url_format": "http://valasz.hu/esszencia?page=#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 11
+
+    # Duplicate: part of "kultura"
+    "kultura/gasztronomia":
+        "archive_url_format": "http://valasz.hu/gasztronomia?page=#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 62
+
+    # Duplicate: part of "kultura"
+    "kultura/kult-tura":
+        "archive_url_format": "http://valasz.hu/kult_tura?page=#pagenum"
+
+        # Only one page for this column
+        "initial_pagenum": 1
+
+    # Duplicate: part of "kultura"
+    "kultura/mozi":
+        "archive_url_format": "http://valasz.hu/mozi?page=#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 21
+
+    # Duplicate: part of "kultura"
+    "kultura/sport":
+        "archive_url_format": "http://valasz.hu/sport?page=#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 437
+
+    # Duplicate: part of "kultura"
+    "kultura/szinhaz":
+        "archive_url_format": "http://valasz.hu/szinhaz?page=#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 22
 
     "publi": # Publi column is special!
         "archive_url_format": "http://valasz.hu/publi?page=#pagenum"
@@ -165,15 +172,16 @@
         "min_pagenum": 2
         "max_pagenum": 1453
 
-#    "vilag/amerika-visszainteget":
-#        "archive_url_format": "http://valasz.hu/amerika_visszainteget?page=#pagenum"
-#
-#        "initial_pagenum": 1
-#        "min_pagenum": 2
-#        "max_pagenum": 1
+    # Duplicate: part of "vilag"
+    "vilag/amerika-visszainteget":
+        "archive_url_format": "http://valasz.hu/amerika_visszainteget?page=#pagenum"
+
+        # Only one page for this column
+        "initial_pagenum": 1
 
 "portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
 "extract_article_urls_from_page_fun": "extract_article_urls_from_page_valasz"
+"next_page_of_article_fun": "next_page_of_article_valasz"
 
 "next_url_by_pagenum": true
 "infinite_scrolling": false
@@ -185,4 +193,4 @@
 # "new_article_url_threshold": 0
 
 "corpus_converter_file": "../extractors/corpus_converters.py"
-"corpus_converter": "dummy-converter"
+"corpus_converter": "MultiPageArticleConverter"

@@ -92,14 +92,22 @@ def wrap_input_consants(current_task_config_filename):
         max_pagenum = column_settings.get('max_pagenum')
 
         if settings['next_url_by_pagenum']:
+            # If column consists of only one page, min_pagenum and max_pagenum must be omited
+            # while initial_pagenum must be set
             if 'min_pagenum' not in column_settings:
-                raise ValueError('min_pagenum must be set, if next_url_by_pagenum is true!')
-
-            # If initial_pagenum is explicitly set, initial_pagenum + 1 == min_pagenum <= max_pagenum must be satisfied!
-            if ((isinstance(initial_pagenum, int) and min_pagenum != initial_pagenum + 1) or
-               (isinstance(max_pagenum, int) and min_pagenum > max_pagenum)):
-                raise ValueError('If initial_pagenum or max_pagenum is set,'
-                                 ' initial_pagenum + 1 == min_pagenum <= max_pagenum must be satisfied!')
+                if 'max_pagenum' in column_settings or 'initial_pagenum' not in column_settings:
+                    raise ValueError('min_pagenum can be omited iff max_pagenum is not present'
+                                     ' and initial_pagenum is set, when next_url_by_pagenum is true!')
+                else:  # min_pagenum and max_pagenum are not set, but initial_pagenum is. -> One page column!
+                    min_pagenum = 2  # so max < min and exit immediately
+                    max_pagenum = 1
+            else:
+                # If initial_pagenum is explicitly set as int and min_pagenum is set,
+                #  initial_pagenum + 1 == min_pagenum <= max_pagenum must be satisfied!
+                if ((isinstance(initial_pagenum, int) and min_pagenum != initial_pagenum + 1) or
+                   (isinstance(max_pagenum, int) and min_pagenum > max_pagenum)):
+                    raise ValueError('If two or more from initial_pagenum, min_pagenum and max_pagenum are set,'
+                                     ' initial_pagenum + 1 == min_pagenum <= max_pagenum must be satisfied!')
 
         # If initial_pagenum is implicit, then it will be substituted with empty string. e.g. in &page=
         column_settings['INITIAL_PAGENUM'] = str(initial_pagenum)

@@ -1213,6 +1213,17 @@ def next_page_of_article_444(curr_html):
     return None
 
 
+def next_page_of_article_valasz(curr_html):
+    bs = BeautifulSoup(curr_html, 'lxml')
+    if bs.find('article', class_='percro-percre-lista') is not None:
+        next_tag = bs.find('a', rel='next')
+        if next_tag is not None and 'href' in next_tag.attrs.keys():
+            next_link = next_tag.attrs['href']
+            link = f'http://valasz.hu{next_link}'
+            return link
+    return None
+
+
 def next_page_of_article_test(filename, test_logger):
     """Quick test for extracting URLs form an archive page"""
     # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
@@ -1235,6 +1246,15 @@ def next_page_of_article_test(filename, test_logger):
     assert next_page_of_article_444(text) == 'https://444.hu/2014/03/23/real-madrid-barcelona-elo?page=2'
     text = w.download_url('https://444.hu/2014/03/23/real-madrid-barcelona-elo?page=7')
     assert next_page_of_article_444(text) is None
+
+    text = w.download_url('http://valasz.hu/itthon/percrol-percre-az-onkormanyzati-valasztasokrol-105350?page=3')
+    assert next_page_of_article_valasz(text) == 'http://valasz.hu/itthon/percrol-percre-az-onkormanyzati' \
+                                                '-valasztasokrol-105350?page=4'
+    text = w.download_url('http://valasz.hu/vilag/kelet-ukrajna-percrol-percre-103699?page=3')
+    assert next_page_of_article_valasz(text) is None
+    text = w.download_url('http://valasz.hu/itthon/humboldt-dijas-kvantumfizikus-alapkutatas-nelkul'
+                          '-nincs-fejlodes-129197')
+    assert next_page_of_article_valasz(text) is None
 
     test_logger.log('INFO', 'Test OK!')
 
