@@ -252,7 +252,8 @@ def extract_article_urls_from_page_444(archive_page_raw_html):
     """
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all(class_='card')
-    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    # % -> %25 if not found (escaping error is introduced between 2019 and 2021)
+    urls = {link.replace('%', '%25') for link in safe_extract_hrefs_from_a_tags(main_container)}
     return urls
 
 
