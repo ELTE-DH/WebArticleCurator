@@ -27,7 +27,7 @@ def load_and_validate(schema, fname):
     return data[0][0]
 
 
-def import_pyhton_file(module_name, file_path):
+def import_python_file(module_name, file_path):
     # Import module from file: https://docs.python.org/3/library/importlib.html#importing-a-source-file-directly
     spec = importlib.util.spec_from_file_location(module_name, file_path)
     module = importlib.util.module_from_spec(spec)
@@ -118,7 +118,7 @@ def wrap_input_consants(current_task_config_filename):
 
     # Portal specific functions
     file_path = settings['portal_specific_exctractor_functions_file']
-    module = import_pyhton_file('portal_specific_exctractor_functions',
+    module = import_python_file('portal_specific_exctractor_functions',
                                 os.path.join(settings['SITE_SCHEMA_DIR_NAME'], file_path))
     for attr_name, attr_name_dest, mandatory in \
             (('extract_next_page_url_fun', 'EXTRACT_NEXT_PAGE_URL_FUN', False),
@@ -141,7 +141,7 @@ def wrap_input_consants(current_task_config_filename):
         file_path = settings['corpus_converter_file']
         if file_path is None:
             raise ValueError('corpus_converter is {0}, but {1} is unset!'.format(corp_conv, file_path))
-        module = import_pyhton_file('corpus_converter', os.path.join(settings['SITE_SCHEMA_DIR_NAME'], file_path))
+        module = import_python_file('corpus_converter', os.path.join(settings['SITE_SCHEMA_DIR_NAME'], file_path))
         corpus_converter_class = getattr(module, corp_conv)
     settings['CORPUS_CONVERTER'] = corpus_converter_class(settings)
 
