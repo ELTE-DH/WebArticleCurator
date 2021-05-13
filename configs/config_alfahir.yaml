@@ -1,0 +1,13 @@
+"schema": "site_schemas/alfahir_schema.yaml"
+
+# "output_corpus": "alfahir_corpus.txt"
+
+"log_file_articles": "logs/alfahir_articles_log.txt"
+"log_file_archive": "logs/alfahir_archive_log.txt"
+"new_problematic_urls": "logs/alfahir_new_problematic_urls.txt"
+"new_good_urls": "logs/alfahir_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/alfahir_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/alfahir_new_good_archive_urls.txt"
+
+# "date_from": 2011-12-31
+# "date_until": 2021-04-26

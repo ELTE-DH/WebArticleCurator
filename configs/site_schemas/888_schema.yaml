@@ -1,0 +1,220 @@
+"site_name": "888"
+
+"columns":
+    "piszkostizenketto":
+        "archive_url_format": "https://888.hu/piszkostizenketto/page/#pagenum/"
+
+         "date_first_article": 2009-01-21
+         "date_last_article": 2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 118
+
+
+    "ketharmad":
+        "archive_url_format": "https://888.hu/ketharmad/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 913
+
+
+    "amerika-london-parizs":
+        "archive_url_format": "https://888.hu/amerika-london-parizs/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 1497
+
+    "big-pikcsor":
+        "archive_url_format": "https://888.hu/big-pikcsor/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 4
+
+    "hajra-magyarok":
+        "archive_url_format": "https://888.hu/hajra-magyarok/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 179
+
+    "csak-neked-csak-most":
+        "archive_url_format": "https://888.hu/csak-neked-csak-most/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 14
+
+    "feher-ferfi":
+        "archive_url_format": "https://888.hu/feher-ferfi/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 18
+
+    "pszicho":
+        "archive_url_format": "https://888.hu/pszicho/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 6
+
+    "egy-soros-egy-forditott":
+        "archive_url_format": "https://888.hu/egy-soros-egy-forditott/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 2
+
+    "kinyilott-a-pitypang":
+        "archive_url_format": "https://888.hu/kinyilott-a-pitypang/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 216
+
+    "censored":
+        "archive_url_format": "https://888.hu/censored/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 6
+
+    "sivalkodjatok":
+        "archive_url_format": "https://888.hu/sivalkodjatok/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 17
+
+    "7:59":
+        "archive_url_format": "https://888.hu/759/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 126
+
+    "889":
+        "archive_url_format": "https://888.hu/889/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 12
+
+    "888":
+        "archive_url_format": "https://888.hu/888/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 44
+
+    "century-on":
+        "archive_url_format": "https://888.hu/century-on/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 37
+
+    "szabad-vasarnap":
+        "archive_url_format": "https://888.hu/szabad-vasarnap/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 127
+
+    "bulvar":
+        "archive_url_format": "https://888.hu/bulvar/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 78
+
+    "okojobb":
+        "archive_url_format": "https://888.hu/okojobb/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 19
+
+    "maccabi":
+        "archive_url_format": "https://888.hu/maccabi/page/#pagenum/"
+
+        # "date_first_article": 2009-01-21
+        # "date_last_article": 2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 2
+
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_888"
+
+"next_url_by_pagenum": true
+"infinite_scrolling": false
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": true
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"

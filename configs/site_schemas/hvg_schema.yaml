@@ -1,0 +1,139 @@
+"site_name": "hvg"
+
+"columns":
+    "itthon":
+        "archive_url_format": "https://hvg.hu/itthon/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "idojaras":
+        "archive_url_format": "https://hvg.hu/idojaras/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "vilag":
+        "archive_url_format": "https://hvg.hu/vilag/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "eurologus":
+        "archive_url_format": "https://hvg.hu/eurologus/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "gazdasag":
+        "archive_url_format": "https://hvg.hu/gazdasag/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "zhvg":
+        "archive_url_format": "https://hvg.hu/zhvg/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "ingatlan":
+        "archive_url_format": "https://hvg.hu/ingatlan/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "tudomany":
+        "archive_url_format": "https://hvg.hu/tudomany/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "velemeny":
+        "archive_url_format": "https://hvg.hu/velemeny/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "velemeny_nyuzsog":
+        "archive_url_format": "https://hvg.hu/velemeny.nyuzsog/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "w":
+        "archive_url_format": "https://hvg.hu/w/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "sport":
+        "archive_url_format": "https://hvg.hu/sport/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "cegauto":
+        "archive_url_format": "https://hvg.hu/cegauto/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "kkv":
+        "archive_url_format": "https://hvg.hu/kkv/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "kultura":
+        "archive_url_format": "https://hvg.hu/kultura/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "hvgmuerto":
+        "archive_url_format": "https://hvg.hu/hvgmuerto/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "elet":
+        "archive_url_format": "https://hvg.hu/elet/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "pszichologiamagazin":
+        "archive_url_format": "https://hvg.hu/pszichologiamagazin/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "hvgkonyvek":
+        "archive_url_format": "https://hvg.hu/hvgkonyvek/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "brandcontent":
+        "archive_url_format": "https://hvg.hu/brandcontent/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
+# "extract_next_page_url_fun": "extract_next_page_url_hvg"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_hvg"
+# "next_page_of_article_fun": "next_page_of_article_hvg"
+
+"next_url_by_pagenum": true
+"infinite_scrolling": true
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": false
+"verify_request": false
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"

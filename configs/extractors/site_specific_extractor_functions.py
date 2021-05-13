@@ -12,7 +12,6 @@ def extract_next_page_url_444(archive_page_raw_html):
     """
         extracts and returns next page URL from an HTML code if there is one...
         Specific for 444.hu
-
         :returns string of url if there is one, None otherwise
     """
     ret = None
@@ -27,7 +26,6 @@ def extract_next_page_url_blikk(archive_page_raw_html):
     """
         extracts and returns next page URL from an HTML code if there is one...
         Specific for blikk.hu
-
         :returns string of url if there is one, None otherwise
     """
     ret = None
@@ -44,7 +42,6 @@ def extract_next_page_url_mno(archive_page_raw_html):
     """
         extracts and returns next page URL from an HTML code if there is one...
         Specific for magyarnemzet.hu
-
         :returns string of url if there is one, None otherwise
     """
     ret = None
@@ -59,7 +56,6 @@ def extract_next_page_url_abcug(archive_page_raw_html):
     """
         extracts and returns next page URL from an HTML code if there is one...
         Specific for abcug.hu
-
         :returns string of url if there is one, None otherwise
     """
     ret = None
@@ -74,7 +70,6 @@ def extract_next_page_url_bbeacon(archive_page_raw_html):
     """
         Extract next page url from current archive page
         Specific for budapestbeacon.com
-
         :returns string of url if there is one, None otherwise
     """
     ret = None
@@ -89,7 +84,6 @@ def extract_next_page_url_mosthallottam(archive_page_raw_html):
     """
         extracts and returns next page URL from an HTML code if there is one...
         Specific for abcug.hu
-
         :returns string of url if there is one, None otherwise
     """
     ret = None
@@ -134,6 +128,36 @@ def extract_next_page_url_telex(archive_page_raw_html):
                 break
     return ret
 
+
+
+def extract_next_page_url_maszol(archive_page_raw_html):
+    """
+        Extract next page url from current archive page
+        Specific for maszol.ro
+
+        :returns string of url if there is one, None otherwise
+    """
+    ret = None
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    next_page_url = soup.select_one('.page_next a')
+    if next_page_url is not None and 'href' in next_page_url.attrs:
+        ret = next_page_url['href']
+    return ret
+
+
+def extract_next_page_url_portfolio(archive_page_raw_html):
+    """
+        extracts and returns next page URL from an HTML code if there is one...
+        Specific for portfolio.hu
+
+        :returns string of url if there is one, None otherwise
+    """
+    ret = None
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    next_page = soup.find(attrs={"class": "page-link", "rel":"next"})
+    if next_page is not None and 'href' in next_page.attrs:
+        ret = next_page['href']
+    return ret
 
 def extract_next_page_url_test(filename, test_logger):
     """Quick test for extracting "next page" URLs when needed"""
@@ -201,6 +225,7 @@ def extract_next_page_url_test(filename, test_logger):
 # END SITE SPECIFIC extract_next_page_url FUNCTIONS ####################################################################
 
 # BEGIN SITE SPECIFIC extract_article_urls_from_page FUNCTIONS #########################################################
+
 
 def safe_extract_hrefs_from_a_tags(main_container):
     """
@@ -396,6 +421,403 @@ def extract_article_urls_from_page_telex(archive_page_raw_html):
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all('div', class_='article')
     urls = {f'https://telex.hu{link}' for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_24hu(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all(attrs={'class': re.compile('m-articleWidget__wrap[ ].*')})
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_888(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all('div', class_='fig-wrap') + soup.find_all('div', class_='text-frame')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_alfahir(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all('h2')
+    urls = {"https://alfahir.hu"+link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_atlatszo_ro(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all('h4', class_='entry-title')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_demokrata(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all('h4')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_eduline(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.select('.column-articlelist h2')
+    urls = {"https://eduline.hu"+link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_feol(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all('div', class_= 'enews-tax-article-title')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_forumportfolio(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.select('.col-md-8.col-7.topicname')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_foter(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.select('.entry-title')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_greenfo(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all('h3')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_hang(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all('h2', class_='entry-title')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_hvg(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all('h2', class_='heading-3')
+    if len(main_container) == 0:  # The "nagyitas" column has a different structure
+        main_container = soup.find_all('h1')
+    urls = {f'https://hvg.hu{link}' for link in safe_extract_hrefs_from_a_tags(main_container)
+            if not link.startswith('brandcontent/')}  # Filter "brandcontent".
+    return urls
+
+
+def extract_article_urls_from_page_kronikaonline(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.select('.cikktext')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_kuruc(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all('div', class_='alcikkheader')
+    urls = {f'https://kuruc.info{link}' for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_magyarnarancs(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml').find('div', class_='col-lg-9 article-wrapper')
+    main_container = soup.find_all('h3', class_='card-title')
+    urls = {'https://magyarnarancs.hu{0}'.format(link) for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_maszol(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.select('h2')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_merce(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml').find('main', class_='main')
+    main_container = soup.find_all('div', class_='entry-text')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_neokohn(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all('h3', class_='entry-title mh-posts-list-title')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_nepszava(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all('div', class_='articles-block__article-content__title--holder')
+    if len(main_container) == 0:  # The "velemeny" column has a slightly different structure
+        main_container = soup.find_all('div', class_='articles-block__article-content__title')
+    urls = {f'https://nepszava.hu{link}' for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_nlc(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all('h2')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_parameter(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all('article')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_pestisracok(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.select('.widget-full-list-text.left.relative')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_portfolio(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml').find('section', class_='article-lists')
+    main_container = soup.find_all('h3')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_szekelyhon(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    for div in soup.find_all("div", {'class': 'author'}):
+        div.decompose()
+    main_container = soup.find_all('div', class_='cikktext')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_szombat(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all('h1', class_="title")
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_transindex(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all('a', class_='archivumcim')
+    urls = {link["href"] for link in main_container}
+    return urls
+
+
+def extract_article_urls_from_page_lelato_transindex(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    soup = soup.find_all('section', class_='page-left-side rovat')[0]
+    main_container = soup.find_all('h2')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_penzcsinalok_transindex(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    soup = soup.find_all('section', class_='page-left-side rovat')[0]
+    main_container = soup.find_all('h2')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_plakatmagany_transindex(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all('h2', class_='entry-title archiveTitle h1')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_tv_transindex(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    try:
+        main_container = soup.find_all('section', class_='video-list')[-1]
+        main_container = main_container.find_all('a')
+    except:
+        main_container = []
+    urls = {link["href"] for link in main_container}
+    return urls
+
+
+def extract_article_urls_from_page_ujszo(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all("div", class_="molecule--main-article-block__text-block--title")
+    urls = {f"https://ujszo.com{link}" for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_vadhajtasok(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup(id="primary")[0].find_all('h2', class_="cs-entry__title")
+    urls = {f'https://www.vadhajtasok.hu/{link}' for link in safe_extract_hrefs_from_a_tags(main_container)}
     return urls
 
 
@@ -1181,6 +1603,7 @@ def extract_article_urls_from_page_test(filename, test_logger):
     assert (extracted, len(extracted)) == (expected, 29)
 
     test_logger.log('INFO', 'Test OK!')
+
 
 
 # END SITE SPECIFIC extract_article_urls_from_page FUNCTIONS ###########################################################

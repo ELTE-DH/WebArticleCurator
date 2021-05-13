@@ -1,0 +1,13 @@
+"schema": "site_schemas/demokrata_schema.yaml"
+
+# "output_corpus": "demokrata_corpus.txt"
+
+"log_file_articles": "logs/demokrata_articles_log.txt"
+"log_file_archive": "logs/demokrata_archive_log.txt"
+"new_problematic_urls": "logs/demokrata_new_problematic_urls.txt"
+"new_good_urls": "logs/demokrata_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/demokrata_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/demokrata_new_good_archive_urls.txt"
+
+# "date_from": 2005-03-03
+# "date_until": 2021-04-26

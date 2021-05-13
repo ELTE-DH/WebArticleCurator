@@ -1,0 +1,28 @@
+"site_name": "szekelyhon"
+
+"columns":
+    "main-columm":
+        "archive_url_format": "https://szekelyhon.ro/mod/open24h.php?p=#pagenum"
+
+        # "date_first_article": 2017-01-29
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+        # "max_pagenum": 31
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
+#"extract_next_page_url_fun": "extract_next_page_url_szekelyhon"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_szekelyhon"
+
+"next_url_by_pagenum": true
+"infinite_scrolling": true
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": true
+"verify_request": false
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"

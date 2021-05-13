@@ -1,0 +1,119 @@
+"site_name": "neokohn"
+
+"columns":
+    "izrael":
+        "archive_url_format": "https://neokohn.hu/category/izrael/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "amerika":
+        "archive_url_format": "https://neokohn.hu/category/amerika/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "europa":
+        "archive_url_format": "https://neokohn.hu/category/europa/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "jiddiskeit":
+        "archive_url_format": "https://neokohn.hu/category/jiddiskeit/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "antiszemitizmus":
+        "archive_url_format": "https://neokohn.hu/category/antiszemitizmus/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "migracio":
+        "archive_url_format": "https://neokohn.hu/category/migracio/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "kultura":
+        "archive_url_format": "https://neokohn.hu/category/kultura/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "velemeny":
+        "archive_url_format": "https://neokohn.hu/category/velemeny/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "belfold":
+        "archive_url_format": "https://neokohn.hu/category/belfold/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "english":
+        "archive_url_format": "https://neokohn.hu/category/english/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
+#"extract_next_page_url_fun": "extract_next_page_url_neokohn"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_neokohn"
+
+"next_url_by_pagenum": true
+"infinite_scrolling": true
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": true
+"verify_request": false
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"

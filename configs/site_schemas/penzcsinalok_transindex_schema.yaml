@@ -1,0 +1,83 @@
+"site_name": "penzcsinalok_transindex"
+
+"columns":
+    "lokalis":
+        "archive_url_format": "https://penzcsinalok.transindex.ro/lokalis/#pagenum/"
+
+        #"date_first_article": 2001-05-15
+        #"date_last_article": 2021-05-05
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        #"max_pagenum": 52
+
+
+    "globalis":
+        "archive_url_format": "https://penzcsinalok.transindex.ro/globalis/#pagenum/"
+
+        #"date_first_article": 2001-05-15
+        #"date_last_article": 2021-05-05
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        #"max_pagenum": 52
+
+
+    "penzpiac":
+        "archive_url_format": "https://penzcsinalok.transindex.ro/penzpiac/#pagenum/"
+
+        #"date_first_article": 2001-05-15
+        #"date_last_article": 2021-05-05
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        #"max_pagenum": 52
+
+
+    "marketing":
+        "archive_url_format": "https://penzcsinalok.transindex.ro/marketing/#pagenum/"
+
+        #"date_first_article": 2001-05-15
+        #"date_last_article": 2021-05-05
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        #"max_pagenum": 52
+
+
+    "velemeny":
+        "archive_url_format": "https://penzcsinalok.transindex.ro/velemeny/#pagenum/"
+
+        #"date_first_article": 2001-05-15
+        #"date_last_article": 2021-05-05
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        #"max_pagenum": 52
+
+
+    "infografika":
+        "archive_url_format": "https://penzcsinalok.transindex.ro/infografika/#pagenum/"
+
+        #"date_first_article": 2001-05-15
+        #"date_last_article": 2021-05-05
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        #"max_pagenum": 52
+
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_penzcsinalok_transindex"
+
+"next_url_by_pagenum": true
+"infinite_scrolling": true
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": true
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"

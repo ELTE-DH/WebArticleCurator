@@ -1,0 +1,13 @@
+"schema": "site_schemas/hvg_schema.yaml"
+
+# "output_corpus": "hvg_corpus.txt"
+
+"log_file_articles": "logs/hvg_articles_log.txt"
+"log_file_archive": "logs/hvg_archive_log.txt"
+"new_problematic_urls": "logs/hvg_new_problematic_urls.txt"
+"new_good_urls": "logs/hvg_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/hvg_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/hvg_new_good_archive_urls.txt"
+
+# "date_from": 2014-09-17
+# "date_until": 2019-12-31

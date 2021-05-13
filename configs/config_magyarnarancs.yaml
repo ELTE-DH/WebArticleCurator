@@ -1,0 +1,13 @@
+"schema": "site_schemas/magyarnarancs_schema.yaml"
+
+# "output_corpus": "magyarnarancs_corpus.txt"
+
+"log_file_articles": "logs/magyarnarancs_articles_log.txt"
+"log_file_archive": "logs/magyarnarancs_archive_log.txt"
+"new_problematic_urls": "logs/magyarnarancs_new_problematic_urls.txt"
+"new_good_urls": "logs/magyarnarancs_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/magyarnarancs_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/magyarnarancs_new_good_archive_urls.txt"
+
+# "date_from": 1996-05-09
+# "date_until": 2100-01-01

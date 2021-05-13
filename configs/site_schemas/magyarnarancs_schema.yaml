@@ -1,0 +1,57 @@
+"site_name": "magyarnarancs"
+
+"columns":
+    "velemeny":
+        "archive_url_format": "https://magyarnarancs.hu/velemeny?page=#pagenum"
+
+        #"date_first_article": 1996-05-09
+        # "date_last_article":  2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": NULL
+
+    "politika":
+        "archive_url_format": "https://magyarnarancs.hu/politika?page=#pagenum"
+
+        #"date_first_article": 1996-05-09
+        # "date_last_article":  2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": NULL
+    "kultura":
+        "archive_url_format": "https://magyarnarancs.hu/kultura?page=#pagenum"
+
+        #"date_first_article": 1996-05-09
+        # "date_last_article":  2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": NULL
+    "elet_mod":
+        "archive_url_format": "https://magyarnarancs.hu/elet_mod?page=#pagenum"
+
+        #"date_first_article": 1996-05-09
+        # "date_last_article":  2100-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": NULL
+
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_magyarnarancs"
+
+"next_url_by_pagenum": true
+"infinite_scrolling": true
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": true
+"verify_request": false
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"
+

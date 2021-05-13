@@ -1,0 +1,219 @@
+"site_name": "nlc"
+
+"columns":
+    "szerk":
+        "archive_url_format": "https://nlc.hu/szerk/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        #"max_pagenum": 1
+
+    "ezvan":
+        "archive_url_format": "https://nlc.hu/ezvan/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "baba":
+        "archive_url_format": "https://nlc.hu/baba/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "csalad":
+        "archive_url_format": "https://nlc.hu/csalad/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "egeszseg":
+        "archive_url_format": "https://nlc.hu/egeszseg/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "eletmod":
+        "archive_url_format": "https://nlc.hu/eletmod/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "foto":
+        "archive_url_format": "https://nlc.hu/foto/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "gasztro":
+        "archive_url_format": "https://nlc.hu/gasztro/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "horoszkop":
+        "archive_url_format": "https://nlc.hu/horoszkop/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "kert":
+        "archive_url_format": "https://nlc.hu/kert/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "magyarorszagkul":
+        "archive_url_format": "https://nlc.hu/magyarorszagkul/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "lelek":
+        "archive_url_format": "https://nlc.hu/lelek/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "otthon":
+        "archive_url_format": "https://nlc.hu/otthon/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "shine":
+        "archive_url_format": "https://nlc.hu/shine/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "szabadido":
+        "archive_url_format": "https://nlc.hu/szabadido/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "szexesmas":
+        "archive_url_format": "https://nlc.hu/szexesmas/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "sztarok":
+        "archive_url_format": "https://nlc.hu/sztarok/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "trend":
+        "archive_url_format": "https://nlc.hu/trend/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "tv_sztarok":
+        "archive_url_format": "https://nlc.hu/tv_sztarok/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+    "utazas":
+        "archive_url_format": "https://nlc.hu/utazas/page/#pagenum/"
+
+        # "date_first_article": 2015-08-20
+        # "date_last_article": 2020-12-17
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        # "max_pagenum": 31
+
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
+#"extract_next_page_url_fun": "extract_next_page_url_nlc"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_nlc"
+
+"next_url_by_pagenum": true
+"infinite_scrolling": true
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": true
+"verify_request": false
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"

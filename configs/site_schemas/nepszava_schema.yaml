@@ -1,0 +1,103 @@
+"site_name": "nepszava"
+
+"columns":
+    "belfold":
+        "archive_url_format": "https://nepszava.hu/tag/belfold/more?pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "kulfold":
+        "archive_url_format": "https://nepszava.hu/tag/kulfold/more?pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "reflektor":
+        "archive_url_format": "https://nepszava.hu/tag/reflektor/more?pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "fotogaleria":
+        "archive_url_format": "https://nepszava.hu/tag/fotogaleria/more?pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "szep-szo":
+        "archive_url_format": "https://nepszava.hu/tag/szep-szo/more?pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "visszhang":
+        "archive_url_format": "https://nepszava.hu/tag/visszhang/more?pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "fovarosi-negyed":
+        "archive_url_format": "https://nepszava.hu/tag/fovarosi-negyed/more?pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "nyitott-mondat":
+        "archive_url_format": "https://nepszava.hu/tag/nyitott-mondat/more?pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "kultura":
+        "archive_url_format": "https://nepszava.hu/tag/kultura/more?pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "bunugy-baleset":
+        "archive_url_format": "https://nepszava.hu/tag/bunugy-baleset/more?pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "sport":
+        "archive_url_format": "https://nepszava.hu/tag/sport/more?pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "zoldzona":
+        "archive_url_format": "https://nepszava.hu/tag/zoldzona/more?pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "mozaik":
+        "archive_url_format": "https://nepszava.hu/tag/mozaik/more?pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "velemeny":
+        "archive_url_format": "https://nepszava.hu/tag/velemeny/more?pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
+# "extract_next_page_url_fun": "extract_next_page_url_nepszava"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_nepszava"
+# "next_page_of_article_fun": "next_page_of_article_nepszava"
+
+"next_url_by_pagenum": true
+"infinite_scrolling": true
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": false
+"verify_request": false
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"

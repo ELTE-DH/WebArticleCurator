@@ -1,0 +1,99 @@
+"site_name": "maszol"
+
+"columns":
+
+    "belfold":
+        "archive_url_format": "https://maszol.ro/belfold/oldal/#pagenum"
+
+        # "date_first_article": 2011-12-31
+        # "date_last_article": 2021-04-26
+
+        "initial_pagenum": 0
+        # "min_pagenum": 1
+        # "max_pagenum": 9575
+
+    "gazdasag":
+        "archive_url_format": "https://maszol.ro/gazdasag/oldal/#pagenum"
+
+        # "date_first_article": 2011-12-31
+        # "date_last_article": 2021-04-26
+
+        "initial_pagenum": 0
+        # "min_pagenum": 1
+        # "max_pagenum": 9575
+
+    "kultura":
+        "archive_url_format": "https://maszol.ro/kultura/oldal/#pagenum"
+
+        # "date_first_article": 2011-12-31
+        # "date_last_article": 2021-04-26
+
+        "initial_pagenum": 0
+        # "min_pagenum": 1
+        # "max_pagenum": 9575
+
+    "velemeny":
+        "archive_url_format": "https://maszol.ro/velemeny/oldal/#pagenum"
+
+        # "date_first_article": 2011-12-31
+        # "date_last_article": 2021-04-26
+
+        "initial_pagenum": 0
+        # "min_pagenum": 1
+        # "max_pagenum": 9575
+
+    "eletmod":
+        "archive_url_format": "https://maszol.ro/eletmod/oldal/#pagenum"
+
+        # "date_first_article": 2011-12-31
+        # "date_last_article": 2021-04-26
+
+        "initial_pagenum": 0
+        # "min_pagenum": 1
+        # "max_pagenum": 9575
+
+    "kulfold":
+        "archive_url_format": "https://maszol.ro/kulfold/oldal/#pagenum"
+
+        # "date_first_article": 2011-12-31
+        # "date_last_article": 2021-04-26
+
+        "initial_pagenum": 0
+        # "min_pagenum": 1
+        # "max_pagenum": 9575
+
+    "sport":
+        "archive_url_format": "https://maszol.ro/sport/oldal/#pagenum"
+
+        # "date_first_article": 2011-12-31
+        # "date_last_article": 2021-04-26
+
+        "initial_pagenum": 0
+        # "min_pagenum": 1
+        # "max_pagenum": 9575
+
+    "videok":
+        "archive_url_format": "https://maszol.ro/videok/oldal/#pagenum"
+
+        # "date_first_article": 2011-12-31
+        # "date_last_article": 2021-04-26
+
+        "initial_pagenum": 0
+        # "min_pagenum": 1
+        # "max_pagenum": 9575
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
+"extract_next_page_url_fun": "extract_next_page_url_maszol"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_maszol"
+
+"next_url_by_pagenum": false
+"infinite_scrolling": true
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": true
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"

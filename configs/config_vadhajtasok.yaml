@@ -1,0 +1,13 @@
+"schema": "site_schemas/vadhajtasok_schema.yaml"
+
+# "output_corpus": "vadhajtasok_corpus.txt"
+
+"log_file_articles": "logs/vadhajtasok_articles_log.txt"
+"log_file_archive": "logs/vadhajtasok_archive_log.txt"
+"new_problematic_urls": "logs/vadhajtasok_new_problematic_urls.txt"
+"new_good_urls": "logs/vadhajtasok_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/vadhajtasok_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/vadhajtasok_new_good_archive_urls.txt"
+
+# "date_from": 2000-01-01
+# "date_until": 2100-01-01

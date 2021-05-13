@@ -1,0 +1,13 @@
+"schema": "site_schemas/neokohn_schema.yaml"
+
+# "output_corpus": "neokohn_corpus.txt"
+
+"log_file_articles": "logs/neokohn_articles_log.txt"
+"log_file_archive": "logs/neokohn_archive_log.txt"
+"new_problematic_urls": "logs/neokohn_new_problematic_urls.txt"
+"new_good_urls": "logs/neokohn_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/neokohn_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/neokohn_new_good_archive_urls.txt"
+
+# "date_from": 2015-08-20
+# "date_until": 2020-12-17

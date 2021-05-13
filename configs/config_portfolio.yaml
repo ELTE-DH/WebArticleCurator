@@ -1,0 +1,13 @@
+"schema": "site_schemas/portfolio_schema.yaml"
+
+# "output_corpus": "portfolio_corpus.txt"
+
+"log_file_articles": "logs/portfolio_articles_log.txt"
+"log_file_archive": "logs/portfolio_archive_log.txt"
+"new_problematic_urls": "logs/portfolio_new_problematic_urls.txt"
+"new_good_urls": "logs/portfolio_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/portfolio_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/portfolio_new_good_archive_urls.txt"
+
+# "date_from": 2014-09-17
+# "date_until": 2019-12-31

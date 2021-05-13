@@ -1,0 +1,13 @@
+"schema": "site_schemas/888_schema.yaml"
+
+# "output_corpus": "888_corpus.txt"
+
+"log_file_articles": "logs/888_articles_log.txt"
+"log_file_archive": "logs/888_archive_log.txt"
+"new_problematic_urls": "logs/888_new_problematic_urls.txt"
+"new_good_urls": "logs/888_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/888_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/888_new_good_archive_urls.txt"
+
+# "date_from": 2000-01-01
+# "date_until": 2100-01-01

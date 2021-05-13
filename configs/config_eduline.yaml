@@ -1,0 +1,13 @@
+"schema": "site_schemas/eduline_schema.yaml"
+
+# "output_corpus": "eduline_corpus.txt"
+
+"log_file_articles": "logs/eduline_articles_log.txt"
+"log_file_archive": "logs/eduline_archive_log.txt"
+"new_problematic_urls": "logs/eduline_new_problematic_urls.txt"
+"new_good_urls": "logs/eduline_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/eduline_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/eduline_new_good_archive_urls.txt"
+
+# "date_from": 2005-03-03
+# "date_until": 2021-04-26
