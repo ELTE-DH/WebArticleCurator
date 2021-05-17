@@ -2,24 +2,23 @@
 
 "columns":
     "main-column":
-        "archive_url_format": "https://demokrata.hu/page/#pagenum/?s="
+        "archive_url_format": "https://demokrata.hu/page/#pagenum/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
 
-        # "date_first_article": 2005-03-03
+        "date_first_article": 2005-03-03
         # "date_last_article": 2021-04-26
 
         "initial_pagenum": 1
         "min_pagenum": 2
         # "max_pagenum": 9763
 
-
 "portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
-#"extract_next_page_url_fun": ""
+# "extract_next_page_url_fun": ""
 "extract_article_urls_from_page_fun": "extract_article_urls_from_page_demokrata"
 
 "next_url_by_pagenum": true
 "infinite_scrolling": true
-"archive_page_urls_by_date": false
-"go_reverse_in_archive": true
+"archive_page_urls_by_date": true
+"go_reverse_in_archive": false
 "verify_request": true
 "ignore_archive_cache": false
 

@@ -1,7 +1,7 @@
 "site_name": "szekelyhon"
 
 "columns":
-    "main-columm":
+    "main-column":
         "archive_url_format": "https://szekelyhon.ro/mod/open24h.php?p=#pagenum"
 
         # "date_first_article": 2017-01-29

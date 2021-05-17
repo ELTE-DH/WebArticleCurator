@@ -3,10 +3,24 @@
 
 from os.path import abspath, dirname, join as os_path_join
 import json
+import re
 from bs4 import BeautifulSoup
 
 
 # BEGIN SITE SPECIFIC extract_next_page_url FUNCTIONS ##################################################################
+def extract_next_page_url_24hu(archive_page_raw_html):
+    """
+        extracts and returns next page URL from an HTML code if there is one...
+        Specific for 24.hu
+        :returns string of url if there is one, None otherwise
+    """
+    ret = None
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    next_page = soup.find('a', class_='next page-numbers')
+    if next_page is not None and 'href' in next_page.attrs:
+        ret = next_page['href']
+    return ret
+
 
 def extract_next_page_url_444(archive_page_raw_html):
     """
@@ -17,6 +31,34 @@ def extract_next_page_url_444(archive_page_raw_html):
     ret = None
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     next_page = soup.find(class_='infinity-next button')
+    if next_page is not None and 'href' in next_page.attrs:
+        ret = next_page['href']
+    return ret
+
+
+def extract_next_page_url_atv(archive_page_raw_html):
+    """
+        extracts and returns next page URL from an HTML code if there is one...
+        Specific for atv.hu
+        :returns string of url if there is one, None otherwise
+    """
+    ret = None
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    next_page = soup.find('a', class_='more-content-box load-more')
+    if next_page is not None and 'href' in next_page.attrs:
+        ret = 'http://www.atv.hu'+next_page['href']
+    return ret
+
+
+def extract_next_page_url_atlatszo_ro(archive_page_raw_html):
+    """
+        extracts and returns next page URL from an HTML code if there is one...
+        Specific for atlatszo.ro
+        :returns string of url if there is one, None otherwise
+    """
+    ret = None
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    next_page = soup.find(attrs={"class": "next page-numbers"})
     if next_page is not None and 'href' in next_page.attrs:
         ret = next_page['href']
     return ret
@@ -83,7 +125,7 @@ def extract_next_page_url_bbeacon(archive_page_raw_html):
 def extract_next_page_url_mosthallottam(archive_page_raw_html):
     """
         extracts and returns next page URL from an HTML code if there is one...
-        Specific for abcug.hu
+        Specific for mosthallottam.hu
         :returns string of url if there is one, None otherwise
     """
     ret = None
@@ -97,7 +139,7 @@ def extract_next_page_url_mosthallottam(archive_page_raw_html):
 def extract_next_page_url_gov_koronavirus(archive_page_raw_html):
     """
         extracts and returns next page URL from an HTML code if there is one...
-        Specific for abcug.hu
+        Specific for nnk.gov.hu koronavirus
         :returns string of url if there is one, None otherwise
     """
     ret = None
@@ -114,7 +156,7 @@ def extract_next_page_url_gov_koronavirus(archive_page_raw_html):
 def extract_next_page_url_telex(archive_page_raw_html):
     """
         extracts and returns next page URL from an HTML code if there is one...
-        Specific for abcug.hu
+        Specific for telex.hu
         :returns string of url if there is one, None otherwise
     """
     ret = None
@@ -129,12 +171,10 @@ def extract_next_page_url_telex(archive_page_raw_html):
     return ret
 
 
-
 def extract_next_page_url_maszol(archive_page_raw_html):
     """
         Extract next page url from current archive page
         Specific for maszol.ro
-
         :returns string of url if there is one, None otherwise
     """
     ret = None
@@ -149,15 +189,31 @@ def extract_next_page_url_portfolio(archive_page_raw_html):
     """
         extracts and returns next page URL from an HTML code if there is one...
         Specific for portfolio.hu
-
         :returns string of url if there is one, None otherwise
     """
     ret = None
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    next_page = soup.find(attrs={"class": "page-link", "rel":"next"})
+    next_page = soup.find(attrs={"class": "page-link", "rel": "next"})
     if next_page is not None and 'href' in next_page.attrs:
         ret = next_page['href']
     return ret
+
+
+def extract_next_page_url_lelato_penzcsinalok_transindex(archive_page_raw_html):
+    """
+        extracts and returns next page URL from an HTML code if there is one...
+        Specific for abcug.hu
+        :returns string of url if there is one, None otherwise
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    next_page = soup.find('div', class_='pagination')
+    url = None
+    if next_page:
+        next_page_link = next_page.find_all('a')
+        if next_page_link[-1] is not None and next_page_link[-1].getText().startswith("tov"):
+            url = next_page_link[-1]['href']
+    return url
+
 
 def extract_next_page_url_test(filename, test_logger):
     """Quick test for extracting "next page" URLs when needed"""
@@ -282,6 +338,19 @@ def extract_article_urls_from_page_444(archive_page_raw_html):
     return urls
 
 
+def extract_article_urls_from_page_atv(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all('div', class_='left-side')
+    # % -> %25 if not found (escaping error is introduced between 2019 and 2021)
+    urls = {'http://www.atv.hu/'+link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
 def extract_article_urls_from_page_blikk(archive_page_raw_html):
     """
         extracts and returns as a list the URLs belonging to articles from an HTML code
@@ -325,7 +394,7 @@ def extract_article_urls_from_page_valasz(archive_page_raw_html):
     :return: list that contains URLs
     """
     urls = None
-    soup = BeautifulSoup(archive_page_raw_html, 'lxml')  # The column 'publi' has diferent name!
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')  # The column 'publi' has different name!
     container = soup.find('section', class_={'normal cikk lista', 'publi cikk lista'})
     if container is not None:
         main_container = container.find_all('article', itemscope='')
@@ -424,6 +493,9 @@ def extract_article_urls_from_page_telex(archive_page_raw_html):
     return urls
 
 
+article_urls_regex_24hu = re.compile('m-articleWidget__wrap[ ].*')
+
+
 def extract_article_urls_from_page_24hu(archive_page_raw_html):
     """
         extracts and returns as a list the URLs belonging to articles from an HTML code
@@ -431,7 +503,43 @@ def extract_article_urls_from_page_24hu(archive_page_raw_html):
     :return: list that contains URLs
     """
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    main_container = soup.find_all(attrs={'class': re.compile('m-articleWidget__wrap[ ].*')})
+    main_container = soup.find_all(attrs={'class': article_urls_regex_24hu})
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_istentudja_24hu(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all(attrs={'class': 'm-entryPost__title'})
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_roboraptor_24hu(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all(attrs={'class': 'm-entryPost__link'})
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
+def extract_article_urls_from_page_sokszinuvidek_24hu(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all(attrs={'class': 'm-articleWidget__title -fsMedium'})
     urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
     return urls
 
@@ -503,7 +611,7 @@ def extract_article_urls_from_page_feol(archive_page_raw_html):
     :return: list that contains URLs
     """
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    main_container = soup.find_all('div', class_= 'enews-tax-article-title')
+    main_container = soup.find_all('div', class_='enews-tax-article-title')
     urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
     return urls
 
@@ -743,20 +851,23 @@ def extract_article_urls_from_page_transindex(archive_page_raw_html):
     return urls
 
 
-def extract_article_urls_from_page_lelato_transindex(archive_page_raw_html):
+def extract_next_page_url_plakatmagany_transindex(archive_page_raw_html):
     """
-        extracts and returns as a list the URLs belonging to articles from an HTML code
-    :param archive_page_raw_html: archive page containing list of articles with their URLs
-    :return: list that contains URLs
+        extracts and returns next page URL from an HTML code if there is one...
+        Specific for abcug.hu
+        :returns string of url if there is one, None otherwise
     """
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    soup = soup.find_all('section', class_='page-left-side rovat')[0]
-    main_container = soup.find_all('h2')
-    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
-    return urls
+    next_page = soup.find('nav', class_='navigation load-more')
+    url = None
+    if next_page:
+        next_page_link = next_page.find('a')
+        if next_page_link is not None:
+            url = next_page_link['href']
+    return url
 
 
-def extract_article_urls_from_page_penzcsinalok_transindex(archive_page_raw_html):
+def extract_article_urls_from_page_lelato_penzcsinalok_transindex(archive_page_raw_html):
     """
         extracts and returns as a list the URLs belonging to articles from an HTML code
     :param archive_page_raw_html: archive page containing list of articles with their URLs
@@ -788,12 +899,11 @@ def extract_article_urls_from_page_tv_transindex(archive_page_raw_html):
     :return: list that contains URLs
     """
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    try:
-        main_container = soup.find_all('section', class_='video-list')[-1]
+    main_container = soup.find_all('section', class_='video-list')
+    if main_container:
+        main_container = main_container[-1]
         main_container = main_container.find_all('a')
-    except:
-        main_container = []
-    urls = {link["href"] for link in main_container}
+        urls = {link["href"] for link in main_container}
     return urls
 
 
@@ -1605,10 +1715,10 @@ def extract_article_urls_from_page_test(filename, test_logger):
     test_logger.log('INFO', 'Test OK!')
 
 
-
 # END SITE SPECIFIC extract_article_urls_from_page FUNCTIONS ###########################################################
 
 # BEGIN SITE SPECIFIC next_page_of_article FUNCTIONS ###################################################################
+
 
 def next_page_of_article_telex(curr_html):  # https://telex.hu/koronavirus/2020/11/12/koronavirus-pp-2020-11-12/elo
     bs = BeautifulSoup(curr_html, 'lxml')

@@ -1,0 +1,657 @@
+"site_name": "istentudja_24hu"
+
+"columns":
+    "abortusz":
+        "archive_url_format": "https://istentudja.24.hu/tag/abortusz/"
+
+    "adakozas":
+        "archive_url_format": "https://istentudja.24.hu/tag/adakozas/"
+
+    "agyhalal":
+        "archive_url_format": "https://istentudja.24.hu/tag/agyhalal/"
+
+    "alhir":
+        "archive_url_format": "https://istentudja.24.hu/tag/alhir/"
+
+    # "alkalmassag": no articles, but it is listed on the archive page.
+
+    "alkoholizmus":
+        "archive_url_format": "https://istentudja.24.hu/tag/alkoholizmus/"
+
+    # "allatok": no articles, but it is listed on the archive page.
+
+    "allatvedelem":
+        "archive_url_format": "https://istentudja.24.hu/tag/allatvedelem/"
+
+    "alom":
+        "archive_url_format": "https://istentudja.24.hu/tag/alom/"
+
+    "angyal":
+        "archive_url_format": "https://istentudja.24.hu/tag/angyal/"
+
+    "antiszemitizmus":
+        "archive_url_format": "https://istentudja.24.hu/tag/antiszemitizmus/"
+
+    "ateizmus":
+        "archive_url_format": "https://istentudja.24.hu/tag/ateizmus/"
+
+    "atok":
+        "archive_url_format": "https://istentudja.24.hu/tag/atok/"
+
+    "babona":
+        "archive_url_format": "https://istentudja.24.hu/tag/babona/"
+
+    "beranyasag":
+        "archive_url_format": "https://istentudja.24.hu/tag/beranyasag/"
+
+    "beszelgetesek":
+        "archive_url_format": "https://istentudja.24.hu/tag/beszelgetesek/"
+
+    "betegseg":
+        "archive_url_format": "https://istentudja.24.hu/tag/betegseg/"
+
+    "bevandorlas":
+        "archive_url_format": "https://istentudja.24.hu/tag/bevandorlas/"
+
+    "boldogtalansag":
+        "archive_url_format": "https://istentudja.24.hu/tag/boldogtalansag/"
+
+    "bosszu":
+        "archive_url_format": "https://istentudja.24.hu/tag/bosszu/"
+
+    "bortonbuntetes":
+        "archive_url_format": "https://istentudja.24.hu/tag/bortonbuntetes/"
+
+    "breivik":
+        "archive_url_format": "https://istentudja.24.hu/tag/breivik/"
+
+    "buddhizmus":
+        "archive_url_format": "https://istentudja.24.hu/tag/buddhizmus/"
+
+    "charlie-hebdo":
+        "archive_url_format": "https://istentudja.24.hu/tag/charlie-hebdo/"
+
+    "colibatus":
+        "archive_url_format": "https://istentudja.24.hu/tag/colibatus/"
+
+    "csaladi-otthonteremtesi-kedvezmeny-csok":
+        "archive_url_format": "https://istentudja.24.hu/tag/csaladi-otthonteremtesi-kedvezmeny-csok/"
+
+    "csaladon-beluli-eroszak":
+        "archive_url_format": "https://istentudja.24.hu/tag/csaladon-beluli-eroszak/"
+
+    "csoda":
+        "archive_url_format": "https://istentudja.24.hu/tag/csoda/"
+
+    "csodagyerek":
+        "archive_url_format": "https://istentudja.24.hu/tag/csodagyerek/"
+
+    "dalai-lama":
+        "archive_url_format": "https://istentudja.24.hu/tag/dalai-lama/"
+
+    "diakoknak":
+        "archive_url_format": "https://istentudja.24.hu/tag/diakoknak/"
+
+    "digitalis-kommunikacio":
+        "archive_url_format": "https://istentudja.24.hu/tag/digitalis-kommunikacio/"
+
+    "drog":
+        "archive_url_format": "https://istentudja.24.hu/tag/drog/"
+
+    "dzsihad":
+        "archive_url_format": "https://istentudja.24.hu/tag/dzsihad/"
+
+    "egyenlotlenseg":
+        "archive_url_format": "https://istentudja.24.hu/tag/egyenlotlenseg/"
+
+    "egyhaz":
+        "archive_url_format": "https://istentudja.24.hu/tag/egyhaz/"
+
+    "egyhazszakadas":
+        "archive_url_format": "https://istentudja.24.hu/tag/egyhazszakadas/"
+
+    "egyutteles":
+        "archive_url_format": "https://istentudja.24.hu/tag/egyutteles/"
+
+    "elelmiszer":
+        "archive_url_format": "https://istentudja.24.hu/tag/elelmiszer/"
+
+    "elet-a-halal-utan":
+        "archive_url_format": "https://istentudja.24.hu/tag/elet-a-halal-utan/"
+
+    "elfogadas":
+        "archive_url_format": "https://istentudja.24.hu/tag/elfogadas/"
+
+    "eloitelet":
+        "archive_url_format": "https://istentudja.24.hu/tag/eloitelet/"
+
+    # "embrio": no articles, but it is listed on the archive page.
+
+    # "embriobeultetes": no articles, but it is listed on the archive page.
+
+    "erdekhazassag":
+        "archive_url_format": "https://istentudja.24.hu/tag/erdekhazassag/"
+
+    "eroszak":
+        "archive_url_format": "https://istentudja.24.hu/tag/eroszak/"
+
+    "eskuvo":
+        "archive_url_format": "https://istentudja.24.hu/tag/eskuvo/"
+
+    "eutanazia":
+        "archive_url_format": "https://istentudja.24.hu/tag/eutanazia/"
+
+    "evolucio":
+        "archive_url_format": "https://istentudja.24.hu/tag/evolucio/"
+
+    "fakivagas":
+        "archive_url_format": "https://istentudja.24.hu/tag/fakivagas/"
+
+    "felelem":
+        "archive_url_format": "https://istentudja.24.hu/tag/felelem/"
+
+    "felelossegre-vonas":
+        "archive_url_format": "https://istentudja.24.hu/tag/felelossegre-vonas/"
+
+    "feltamadas":
+        "archive_url_format": "https://istentudja.24.hu/tag/feltamadas/"
+
+    "feny":
+        "archive_url_format": "https://istentudja.24.hu/tag/feny/"
+
+    "foci-vb":
+        "archive_url_format": "https://istentudja.24.hu/tag/foci-vb/"
+
+    "fogyatekkal-elok":
+        "archive_url_format": "https://istentudja.24.hu/tag/fogyatekkal-elok/"
+
+    "forradalom":
+        "archive_url_format": "https://istentudja.24.hu/tag/forradalom/"
+
+    "foldonkivuli-elet":
+        "archive_url_format": "https://istentudja.24.hu/tag/foldonkivuli-elet/"
+
+    "fuggoseg":
+        "archive_url_format": "https://istentudja.24.hu/tag/fuggoseg/"
+
+    "genmanipulacio":
+        "archive_url_format": "https://istentudja.24.hu/tag/genmanipulacio/"
+
+    "gondatlansagbol-elkovetett-emberoles":
+        "archive_url_format": "https://istentudja.24.hu/tag/gondatlansagbol-elkovetett-emberoles/"
+
+    "gonosz":
+        "archive_url_format": "https://istentudja.24.hu/tag/gonosz/"
+
+    "gyasz":
+        "archive_url_format": "https://istentudja.24.hu/tag/gyasz/"
+
+    "gyaszhir":
+        "archive_url_format": "https://istentudja.24.hu/tag/gyaszhir/"
+
+    "gyerekneveles":
+        "archive_url_format": "https://istentudja.24.hu/tag/gyerekneveles/"
+
+    "gyermekmolesztalas":
+        "archive_url_format": "https://istentudja.24.hu/tag/gyermekmolesztalas/"
+
+    "gyilkossag":
+        "archive_url_format": "https://istentudja.24.hu/tag/gyilkossag/"
+
+    "gyogyulas":
+        "archive_url_format": "https://istentudja.24.hu/tag/gyogyulas/"
+
+    "hajlektalanok":
+        "archive_url_format": "https://istentudja.24.hu/tag/hajlektalanok/"
+
+    "halalbuntetes":
+        "archive_url_format": "https://istentudja.24.hu/tag/halalbuntetes/"
+
+    "halalkozeli-elmeny":
+        "archive_url_format": "https://istentudja.24.hu/tag/halalkozeli-elmeny/"
+
+    "haldoklas":
+        "archive_url_format": "https://istentudja.24.hu/tag/haldoklas/"
+
+    "halottak-napja":
+        "archive_url_format": "https://istentudja.24.hu/tag/halottak-napja/"
+
+    "hamvasztas":
+        "archive_url_format": "https://istentudja.24.hu/tag/hamvasztas/"
+
+    "hatalommal-valo-visszaeles":
+        "archive_url_format": "https://istentudja.24.hu/tag/hatalommal-valo-visszaeles/"
+
+    "hazassag":
+        "archive_url_format": "https://istentudja.24.hu/tag/hazassag/"
+
+    "hir":
+        "archive_url_format": "https://istentudja.24.hu/tag/hir/"
+
+    "hitetlenseg":
+        "archive_url_format": "https://istentudja.24.hu/tag/hitetlenseg/"
+
+    "hitterites":
+        "archive_url_format": "https://istentudja.24.hu/tag/hitterites/"
+
+    "hold":
+        "archive_url_format": "https://istentudja.24.hu/tag/hold/"
+
+    "holdujev":
+        "archive_url_format": "https://istentudja.24.hu/tag/holdujev/"
+
+    "homoszexualitas":
+        "archive_url_format": "https://istentudja.24.hu/tag/homoszexualitas/"
+
+    "horogkereszt":
+        "archive_url_format": "https://istentudja.24.hu/tag/horogkereszt/"
+
+    "humor":
+        "archive_url_format": "https://istentudja.24.hu/tag/humor/"
+
+    # "idegengyulolet": no articles, but it is listed on the archive page.
+
+    "ido":
+        "archive_url_format": "https://istentudja.24.hu/tag/ido/"
+
+    "imahaz":
+        "archive_url_format": "https://istentudja.24.hu/tag/imahaz/"
+
+    "informacio":
+        "archive_url_format": "https://istentudja.24.hu/tag/informacio/"
+
+    "interju":
+        "archive_url_format": "https://istentudja.24.hu/tag/interju/"
+
+    "internetfuggoseg":
+        "archive_url_format": "https://istentudja.24.hu/tag/internetfuggoseg/"
+
+    "ismeretterjesztes":
+        "archive_url_format": "https://istentudja.24.hu/tag/ismeretterjesztes/"
+
+    "isten":
+        "archive_url_format": "https://istentudja.24.hu/tag/isten/"
+
+    "istenkaromlas":
+        "archive_url_format": "https://istentudja.24.hu/tag/istenkaromlas/"
+
+    "iszlam":
+        "archive_url_format": "https://istentudja.24.hu/tag/iszlam/"
+
+    "iszlam-allam":
+        "archive_url_format": "https://istentudja.24.hu/tag/iszlam-allam/"
+
+    "jezus-krisztus":
+        "archive_url_format": "https://istentudja.24.hu/tag/jezus-krisztus/"
+
+    "jogos-emberoles":
+        "archive_url_format": "https://istentudja.24.hu/tag/jogos-emberoles/"
+
+    "kapcsolat":
+        "archive_url_format": "https://istentudja.24.hu/tag/kapcsolat/"
+
+    "karma":
+        "archive_url_format": "https://istentudja.24.hu/tag/karma/"
+
+    "kenyszerhazassag":
+        "archive_url_format": "https://istentudja.24.hu/tag/kenyszerhazassag/"
+
+    "kepmutatas":
+        "archive_url_format": "https://istentudja.24.hu/tag/kepmutatas/"
+
+    "kerites":
+        "archive_url_format": "https://istentudja.24.hu/tag/kerites/"
+
+    "kesobbi-szuletes":
+        "archive_url_format": "https://istentudja.24.hu/tag/kesobbi-szuletes/"
+
+    "kina":
+        "archive_url_format": "https://istentudja.24.hu/tag/kina/"
+
+    "kipusztulas":
+        "archive_url_format": "https://istentudja.24.hu/tag/kipusztulas/"
+
+    # "kisertet": no articles, but it is listed on the archive page.
+
+    "kiteres":
+        "archive_url_format": "https://istentudja.24.hu/tag/kiteres/"
+
+    "kivandorlas":
+        "archive_url_format": "https://istentudja.24.hu/tag/kivandorlas/"
+
+    "klonozas":
+        "archive_url_format": "https://istentudja.24.hu/tag/klonozas/"
+
+    "komment":
+        "archive_url_format": "https://istentudja.24.hu/tag/komment/"
+
+    "kornyezetvedelem":
+        "archive_url_format": "https://istentudja.24.hu/tag/kornyezetvedelem/"
+
+    "kozossegi-media":
+        "archive_url_format": "https://istentudja.24.hu/tag/kozossegi-media/"
+
+    "lelkigyakorlat":
+        "archive_url_format": "https://istentudja.24.hu/tag/lelkigyakorlat/"
+
+    "lombik":
+        "archive_url_format": "https://istentudja.24.hu/tag/lombik/"
+
+    "magia":
+        "archive_url_format": "https://istentudja.24.hu/tag/magia/"
+
+    "magzatvedelem":
+        "archive_url_format": "https://istentudja.24.hu/tag/magzatvedelem/"
+
+    "marihuana":
+        "archive_url_format": "https://istentudja.24.hu/tag/marihuana/"
+
+    "mecset":
+        "archive_url_format": "https://istentudja.24.hu/tag/mecset/"
+
+    "media":
+        "archive_url_format": "https://istentudja.24.hu/tag/media/"
+
+    "megbocsatas":
+        "archive_url_format": "https://istentudja.24.hu/tag/megbocsatas/"
+
+    "megfigyeles":
+        "archive_url_format": "https://istentudja.24.hu/tag/megfigyeles/"
+
+    "megkulonboztetes":
+        "archive_url_format": "https://istentudja.24.hu/tag/megkulonboztetes/"
+
+    "megvaltas":
+        "archive_url_format": "https://istentudja.24.hu/tag/megvaltas/"
+
+    "meleghazassag":
+        "archive_url_format": "https://istentudja.24.hu/tag/meleghazassag/"
+
+    "menekultek":
+        "archive_url_format": "https://istentudja.24.hu/tag/menekultek/"
+
+    "mennyorszag":
+        "archive_url_format": "https://istentudja.24.hu/tag/mennyorszag/"
+
+    "mesterseges-intelligencia":
+        "archive_url_format": "https://istentudja.24.hu/tag/mesterseges-intelligencia/"
+
+    "mesterseges-megtermekenyites":
+        "archive_url_format": "https://istentudja.24.hu/tag/mesterseges-megtermekenyites/"
+
+    "metafizika":
+        "archive_url_format": "https://istentudja.24.hu/tag/metafizika/"
+
+    "muszlim":
+        "archive_url_format": "https://istentudja.24.hu/tag/muszlim/"
+
+    "muhiba":
+        "archive_url_format": "https://istentudja.24.hu/tag/muhiba/"
+
+    "naptar":
+        "archive_url_format": "https://istentudja.24.hu/tag/naptar/"
+
+    "nemi-megkulonboztetes":
+        "archive_url_format": "https://istentudja.24.hu/tag/nemi-megkulonboztetes/"
+
+    "nepessegszam":
+        "archive_url_format": "https://istentudja.24.hu/tag/nepessegszam/"
+
+    "oktatas":
+        "archive_url_format": "https://istentudja.24.hu/tag/oktatas/"
+
+    "onbiraskodas":
+        "archive_url_format": "https://istentudja.24.hu/tag/onbiraskodas/"
+
+    "ongyilkossag":
+        "archive_url_format": "https://istentudja.24.hu/tag/ongyilkossag/"
+
+    "onkielegites":
+        "archive_url_format": "https://istentudja.24.hu/tag/onkielegites/"
+
+    "onkinzas":
+        "archive_url_format": "https://istentudja.24.hu/tag/onkinzas/"
+
+    "onvedelem":
+        "archive_url_format": "https://istentudja.24.hu/tag/onvedelem/"
+
+    "onzes":
+        "archive_url_format": "https://istentudja.24.hu/tag/onzes/"
+
+    "onzetlenseg":
+        "archive_url_format": "https://istentudja.24.hu/tag/onzetlenseg/"
+
+    "ordog":
+        "archive_url_format": "https://istentudja.24.hu/tag/ordog/"
+
+    "ordoguzes":
+        "archive_url_format": "https://istentudja.24.hu/tag/ordoguzes/"
+
+    "oregedes":
+        "archive_url_format": "https://istentudja.24.hu/tag/oregedes/"
+
+    "pancelba-zart-szellem":
+        "archive_url_format": "https://istentudja.24.hu/tag/pancelba-zart-szellem/"
+
+    "pap":
+        "archive_url_format": "https://istentudja.24.hu/tag/pap/"
+
+    "plakat":
+        "archive_url_format": "https://istentudja.24.hu/tag/plakat/"
+
+    "pokol":
+        "archive_url_format": "https://istentudja.24.hu/tag/pokol/"
+
+    "politika":
+        "archive_url_format": "https://istentudja.24.hu/tag/politika/"
+
+    "porno":
+        "archive_url_format": "https://istentudja.24.hu/tag/porno/"
+
+    "profetak-halala":
+        "archive_url_format": "https://istentudja.24.hu/tag/profetak-halala/"
+
+    "remenytelenseg":
+        "archive_url_format": "https://istentudja.24.hu/tag/remenytelenseg/"
+
+    "robot":
+        "archive_url_format": "https://istentudja.24.hu/tag/robot/"
+
+    "rombolo-erzelmek":
+        "archive_url_format": "https://istentudja.24.hu/tag/rombolo-erzelmek/"
+
+    "satan":
+        "archive_url_format": "https://istentudja.24.hu/tag/satan/"
+
+    "segitsegnyujtas":
+        "archive_url_format": "https://istentudja.24.hu/tag/segitsegnyujtas/"
+
+    "semmi":
+        "archive_url_format": "https://istentudja.24.hu/tag/semmi/"
+
+    "sors":
+        "archive_url_format": "https://istentudja.24.hu/tag/sors/"
+
+    "szegenyseg":
+        "archive_url_format": "https://istentudja.24.hu/tag/szegenyseg/"
+
+    "szellemek":
+        "archive_url_format": "https://istentudja.24.hu/tag/szellemek/"
+
+    "szelsoseg":
+        "archive_url_format": "https://istentudja.24.hu/tag/szelsoseg/"
+
+    "szemelyiseg":
+        "archive_url_format": "https://istentudja.24.hu/tag/szemelyiseg/"
+
+    "szent-helyek":
+        "archive_url_format": "https://istentudja.24.hu/tag/szent-helyek/"
+
+    "szentely":
+        "archive_url_format": "https://istentudja.24.hu/tag/szentely/"
+
+    "szentirasok":
+        "archive_url_format": "https://istentudja.24.hu/tag/szentirasok/"
+
+    "szentlelek":
+        "archive_url_format": "https://istentudja.24.hu/tag/szentlelek/"
+
+    "szeplotelen-fogantatas":
+        "archive_url_format": "https://istentudja.24.hu/tag/szeplotelen-fogantatas/"
+
+    "szerelem":
+        "archive_url_format": "https://istentudja.24.hu/tag/szerelem/"
+
+    "szerencse":
+        "archive_url_format": "https://istentudja.24.hu/tag/szerencse/"
+
+    "szeretet":
+        "archive_url_format": "https://istentudja.24.hu/tag/szeretet/"
+
+    "szervatultetes":
+        "archive_url_format": "https://istentudja.24.hu/tag/szervatultetes/"
+
+    "szex":
+        "archive_url_format": "https://istentudja.24.hu/tag/szex/"
+
+    "szimbolum":
+        "archive_url_format": "https://istentudja.24.hu/tag/szimbolum/"
+
+    "szolasszabadsag":
+        "archive_url_format": "https://istentudja.24.hu/tag/szolasszabadsag/"
+
+    "szvasztika":
+        "archive_url_format": "https://istentudja.24.hu/tag/szvasztika/"
+
+    "taplalkozas":
+        "archive_url_format": "https://istentudja.24.hu/tag/taplalkozas/"
+
+    "teli-napfordulo":
+        "archive_url_format": "https://istentudja.24.hu/tag/teli-napfordulo/"
+
+    "temetkezes":
+        "archive_url_format": "https://istentudja.24.hu/tag/temetkezes/"
+
+    "templom":
+        "archive_url_format": "https://istentudja.24.hu/tag/templom/"
+
+    "tenyleges-eletfogytiglan":
+        "archive_url_format": "https://istentudja.24.hu/tag/tenyleges-eletfogytiglan/"
+
+    "teremtes":
+        "archive_url_format": "https://istentudja.24.hu/tag/teremtes/"
+
+    "termeszeti-katasztrofa":
+        "archive_url_format": "https://istentudja.24.hu/tag/termeszeti-katasztrofa/"
+
+    "terror":
+        "archive_url_format": "https://istentudja.24.hu/tag/terror/"
+
+    "tetovalas":
+        "archive_url_format": "https://istentudja.24.hu/tag/tetovalas/"
+
+    "tiltas":
+        "archive_url_format": "https://istentudja.24.hu/tag/tiltas/"
+
+    "torveny":
+        "archive_url_format": "https://istentudja.24.hu/tag/torveny/"
+
+    "truc-lam-zen":
+        "archive_url_format": "https://istentudja.24.hu/tag/truc-lam-zen/"
+
+    "tudat":
+        "archive_url_format": "https://istentudja.24.hu/tag/tudat/"
+
+    "tudatmodosito":
+        "archive_url_format": "https://istentudja.24.hu/tag/tudatmodosito/"
+
+    "tulfogyasztas":
+        "archive_url_format": "https://istentudja.24.hu/tag/tulfogyasztas/"
+
+    "ujev":
+        "archive_url_format": "https://istentudja.24.hu/tag/ujev/"
+
+    "ujevi-fogadalom":
+        "archive_url_format": "https://istentudja.24.hu/tag/ujevi-fogadalom/"
+
+    # "unnep": no articles, but it is listed on the archive page.
+
+    "uresseg":
+        "archive_url_format": "https://istentudja.24.hu/tag/uresseg/"
+
+    "vadaszat":
+        "archive_url_format": "https://istentudja.24.hu/tag/vadaszat/"
+
+    "valas":
+        "archive_url_format": "https://istentudja.24.hu/tag/valas/"
+
+    "valasztasok":
+        "archive_url_format": "https://istentudja.24.hu/tag/valasztasok/"
+
+    "vallas":
+        "archive_url_format": "https://istentudja.24.hu/tag/vallas/"
+
+    "vallas-az-agyban":
+        "archive_url_format": "https://istentudja.24.hu/tag/vallas-az-agyban/"
+
+    "vallasgyakorlas":
+        "archive_url_format": "https://istentudja.24.hu/tag/vallasgyakorlas/"
+
+    "vallashaboru":
+        "archive_url_format": "https://istentudja.24.hu/tag/vallashaboru/"
+
+    "vallasi-fanatizmus":
+        "archive_url_format": "https://istentudja.24.hu/tag/vallasi-fanatizmus/"
+
+    "vallasi-vezeto":
+        "archive_url_format": "https://istentudja.24.hu/tag/vallasi-vezeto/"
+
+    "vallaskozi-parbeszed":
+        "archive_url_format": "https://istentudja.24.hu/tag/vallaskozi-parbeszed/"
+
+    "vallasvaltas":
+        "archive_url_format": "https://istentudja.24.hu/tag/vallasvaltas/"
+
+    "vasarnapi-nyitvatartas":
+        "archive_url_format": "https://istentudja.24.hu/tag/vasarnapi-nyitvatartas/"
+
+    "vegtelen":
+        "archive_url_format": "https://istentudja.24.hu/tag/vegtelen/"
+
+    "veletlen":
+        "archive_url_format": "https://istentudja.24.hu/tag/veletlen/"
+
+    "vietnam":
+        "archive_url_format": "https://istentudja.24.hu/tag/vietnam/"
+
+    "vilagur":
+        "archive_url_format": "https://istentudja.24.hu/tag/vilagur/"
+
+    "vilagvege":
+        "archive_url_format": "https://istentudja.24.hu/tag/vilagvege/"
+
+    "zarandoklat":
+        "archive_url_format": "https://istentudja.24.hu/tag/zarandoklat/"
+
+    "zene":
+        "archive_url_format": "https://istentudja.24.hu/tag/zene/"
+
+    "zsinagoga":
+        "archive_url_format": "https://istentudja.24.hu/tag/zsinagoga/"
+
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
+"extract_next_page_url_fun": "extract_next_page_url_24hu"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_istentudja_24hu"
+
+"next_url_by_pagenum": false
+"infinite_scrolling": false
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": false
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"

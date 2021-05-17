@@ -20,7 +20,7 @@
 "infinite_scrolling": true
 "archive_page_urls_by_date": false
 "go_reverse_in_archive": true
-"verify_request": false
+"verify_request": true
 "ignore_archive_cache": false
 
 # "new_article_url_threshold": 0

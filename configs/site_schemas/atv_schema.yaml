@@ -1,0 +1,38 @@
+"site_name": "atv"
+
+"columns":
+    "belfold":
+        "archive_url_format": "http://www.atv.hu/belfold?a=1&p=#pagenum"
+
+        "initial_pagenum": 1
+
+    "kulfold":
+        "archive_url_format": "http://www.atv.hu/kulfold?a=1&p=#pagenum"
+
+        "initial_pagenum": 1
+
+    "egyeb":
+        "archive_url_format": "http://www.atv.hu/egyeb?a=1&p=#pagenum"
+
+        "initial_pagenum": 1
+
+    # The "sport" column is not working (no new articles are loaded).
+    # The "gazdasag" column does not have an archive page (error 403 on http://www.atv.hu/gazdasag/).
+
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
+"extract_next_page_url_fun": "extract_next_page_url_atv"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_atv"
+# "next_page_of_article_fun": "next_page_of_article_atv"
+
+"next_url_by_pagenum": true
+"infinite_scrolling": false
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": false
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"

@@ -2,78 +2,32 @@
 
 "columns":
     "aktualis":
-        "archive_url_format": "https://lelato.transindex.ro/aktualis/#pagenum/"
-
-        #"date_first_article": 2001-05-15
-        #"date_last_article": 2021-05-05
-
-        "initial_pagenum": 1
-        "min_pagenum": 2
-        #"max_pagenum": 52
-
+        "archive_url_format": "https://lelato.transindex.ro/aktualis/"
 
     "portre":
-        "archive_url_format": "https://lelato.transindex.ro/portre/#pagenum/"
+        "archive_url_format": "https://lelato.transindex.ro/portre/"
 
-        #"date_first_article": 2001-05-15
-        #"date_last_article": 2021-05-05
-
-        "initial_pagenum": 1
-        "min_pagenum": 2
-        #"max_pagenum": 52
-
-
-    "OTT VOLTUNK":
-        "archive_url_format": "https://lelato.transindex.ro/helyszini/#pagenum/"
-
-        #"date_first_article": 2001-05-15
-        #"date_last_article": 2021-05-05
-
-        "initial_pagenum": 1
-        "min_pagenum": 2
-        #"max_pagenum": 52
-
+    "ott-voltunk":
+        "archive_url_format": "https://lelato.transindex.ro/helyszini/"
 
     "velemeny":
-        "archive_url_format": "https://lelato.transindex.ro/velemeny/#pagenum/"
-
-        #"date_first_article": 2001-05-15
-        #"date_last_article": 2021-05-05
-
-        "initial_pagenum": 1
-        "min_pagenum": 2
-        #"max_pagenum": 52
-
+        "archive_url_format": "https://lelato.transindex.ro/velemeny/"
 
     "viral":
-        "archive_url_format": "https://lelato.transindex.ro/viral/#pagenum/"
-
-        #"date_first_article": 2001-05-15
-        #"date_last_article": 2021-05-05
-
-        "initial_pagenum": 1
-        "min_pagenum": 2
-        #"max_pagenum": 52
-
+        "archive_url_format": "https://lelato.transindex.ro/viral/"
 
     "hirek":
-        "archive_url_format": "https://lelato.transindex.ro/hirek/#pagenum/"
-
-        #"date_first_article": 2001-05-15
-        #"date_last_article": 2021-05-05
-
-        "initial_pagenum": 1
-        "min_pagenum": 2
-        #"max_pagenum": 52
+        "archive_url_format": "https://lelato.transindex.ro/hirek/"
 
 
 "portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
-"extract_article_urls_from_page_fun": "extract_article_urls_from_page_lelato_transindex"
+"extract_next_page_url_fun": "extract_next_page_url_lelato_penzcsinalok_transindex"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_lelato_penzcsinalok_transindex"
 
-"next_url_by_pagenum": true
-"infinite_scrolling": true
+"next_url_by_pagenum": false
+"infinite_scrolling": false
 "archive_page_urls_by_date": false
-"go_reverse_in_archive": true
+"go_reverse_in_archive": false
 "verify_request": true
 "ignore_archive_cache": false
 
