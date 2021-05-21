@@ -16,7 +16,7 @@ from warcio.exceptions import ArchiveLoadFailed
 from requests import Session
 from urllib.parse import urlparse, quote, urlunparse
 from requests.exceptions import RequestException
-from urllib3.exceptions import ProtocolError, InsecureRequestWarning
+from urllib3.exceptions import ProtocolError, InsecureRequestWarning, LocationParseError
 from urllib3 import disable_warnings
 from chardet import detect
 from ratelimit import limits, sleep_and_retry
@@ -257,7 +257,8 @@ class WarcDownloader:
 
         try:  # The actual request (on the reparsed URL, everything else is made on the original URL)
             resp = self._requests_get(url_reparsed, headers=self._req_headers, stream=True, verify=self._verify_request)
-        except (UnicodeError, RequestException) as err:  # UnicodeError is originated from idna codec error
+        # UnicodeError is originated from idna codec error, LocationParseError is originated from URLlib3 error
+        except (UnicodeError, RequestException, LocationParseError) as err:
             self._handle_request_exception(url, 'RequestException happened during downloading: {0} \n\n'
                                                 ' The program ignores it and jumps to the next one.'.format(err))
             return None
