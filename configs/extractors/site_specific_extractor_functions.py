@@ -8,11 +8,11 @@ from bs4 import BeautifulSoup
 
 # BEGIN SITE SPECIFIC extract_next_page_url FUNCTIONS ##################################################################
 
+
 def extract_next_page_url_444(archive_page_raw_html):
     """
         extracts and returns next page URL from an HTML code if there is one...
         Specific for 444.hu
-
         :returns string of url if there is one, None otherwise
     """
     ret = None
@@ -27,7 +27,6 @@ def extract_next_page_url_blikk(archive_page_raw_html):
     """
         extracts and returns next page URL from an HTML code if there is one...
         Specific for blikk.hu
-
         :returns string of url if there is one, None otherwise
     """
     ret = None
@@ -44,7 +43,6 @@ def extract_next_page_url_mno(archive_page_raw_html):
     """
         extracts and returns next page URL from an HTML code if there is one...
         Specific for magyarnemzet.hu
-
         :returns string of url if there is one, None otherwise
     """
     ret = None
@@ -59,7 +57,6 @@ def extract_next_page_url_abcug(archive_page_raw_html):
     """
         extracts and returns next page URL from an HTML code if there is one...
         Specific for abcug.hu
-
         :returns string of url if there is one, None otherwise
     """
     ret = None
@@ -74,7 +71,6 @@ def extract_next_page_url_bbeacon(archive_page_raw_html):
     """
         Extract next page url from current archive page
         Specific for budapestbeacon.com
-
         :returns string of url if there is one, None otherwise
     """
     ret = None
@@ -88,8 +84,7 @@ def extract_next_page_url_bbeacon(archive_page_raw_html):
 def extract_next_page_url_mosthallottam(archive_page_raw_html):
     """
         extracts and returns next page URL from an HTML code if there is one...
-        Specific for abcug.hu
-
+        Specific for mosthallottam.hu
         :returns string of url if there is one, None otherwise
     """
     ret = None
@@ -103,7 +98,7 @@ def extract_next_page_url_mosthallottam(archive_page_raw_html):
 def extract_next_page_url_gov_koronavirus(archive_page_raw_html):
     """
         extracts and returns next page URL from an HTML code if there is one...
-        Specific for abcug.hu
+        Specific for nnk.gov.hu koronavirus
         :returns string of url if there is one, None otherwise
     """
     ret = None
@@ -120,7 +115,7 @@ def extract_next_page_url_gov_koronavirus(archive_page_raw_html):
 def extract_next_page_url_telex(archive_page_raw_html):
     """
         extracts and returns next page URL from an HTML code if there is one...
-        Specific for abcug.hu
+        Specific for telex.hu
         :returns string of url if there is one, None otherwise
     """
     ret = None
@@ -201,6 +196,7 @@ def extract_next_page_url_test(filename, test_logger):
 # END SITE SPECIFIC extract_next_page_url FUNCTIONS ####################################################################
 
 # BEGIN SITE SPECIFIC extract_article_urls_from_page FUNCTIONS #########################################################
+
 
 def safe_extract_hrefs_from_a_tags(main_container):
     """
@@ -300,7 +296,7 @@ def extract_article_urls_from_page_valasz(archive_page_raw_html):
     :return: list that contains URLs
     """
     urls = None
-    soup = BeautifulSoup(archive_page_raw_html, 'lxml')  # The column 'publi' has diferent name!
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')  # The column 'publi' has different name!
     container = soup.find('section', class_={'normal cikk lista', 'publi cikk lista'})
     if container is not None:
         main_container = container.find_all('article', itemscope='')
@@ -1186,6 +1182,7 @@ def extract_article_urls_from_page_test(filename, test_logger):
 # END SITE SPECIFIC extract_article_urls_from_page FUNCTIONS ###########################################################
 
 # BEGIN SITE SPECIFIC next_page_of_article FUNCTIONS ###################################################################
+
 
 def next_page_of_article_telex(curr_html):  # https://telex.hu/koronavirus/2020/11/12/koronavirus-pp-2020-11-12/elo
     bs = BeautifulSoup(curr_html, 'lxml')

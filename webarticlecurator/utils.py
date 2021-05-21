@@ -153,7 +153,8 @@ class Logger:
         Handle logging with Python's built-in logging facilities simplified
     """
     def __init__(self, log_filename=None, logfile_mode='a', logfile_encoding='UTF-8', logfile_level='INFO',
-                 console_stream=sys.stderr, console_level='INFO'):
+                 console_stream=sys.stderr, console_level='INFO', console_format='{asctime} {levelname}: {message}',
+                 file_format='{asctime} {levelname}: {message}'):
         # logging.basicConfig(level=logging.INFO)  # For debugging requests
         log_levels = {'DEBUG': logging.DEBUG, 'INFO': logging.INFO, 'WARNING': logging.WARNING, 'ERROR': logging.ERROR,
                       'CRITICAL': logging.CRITICAL}
@@ -177,7 +178,7 @@ class Logger:
         c_handler.setLevel(console_level)
 
         # Create formatters and add them to handlers
-        c_format = logging.Formatter('{asctime} {levelname}: {message}', style='{')
+        c_format = logging.Formatter(console_format, style='{')
         c_handler.setFormatter(c_format)
 
         # Add handlers to the logger
@@ -187,7 +188,7 @@ class Logger:
         if log_filename is not None:
             f_handler = logging.FileHandler(log_filename, mode=logfile_mode, encoding=logfile_encoding)
             f_handler.setLevel(logfile_level)
-            f_format = logging.Formatter('{asctime} {levelname}: {message}', style='{')
+            f_format = logging.Formatter(file_format, style='{')
             f_handler.setFormatter(f_format)
             self._logger.addHandler(f_handler)
 
