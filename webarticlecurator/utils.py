@@ -131,7 +131,7 @@ def wrap_input_consants(current_task_config_filename):
     if settings['infinite_scrolling']:
         if not settings['next_url_by_pagenum']:
             raise ValueError('If infinite_scrolling is true, next_url_by_pagenum must be also true!')
-        if not settings['EXTRACT_NEXT_PAGE_URL_FUN'] is not None:
+        if settings['EXTRACT_NEXT_PAGE_URL_FUN'] is not None:
             raise ValueError('If infinite_scrolling is true, extract_next_page_url_fun must be None!')
 
     # Set and init converter class which is dummy-converter by default
