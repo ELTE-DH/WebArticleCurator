@@ -3,7 +3,6 @@
 
 import os
 import sys
-import logging
 import importlib.util
 from argparse import Namespace
 from datetime import datetime, date, timedelta
@@ -152,84 +151,6 @@ def wrap_input_consants(current_task_config_filename):
     settings['CORPUS_CONVERTER'] = corpus_converter_class(settings)
 
     return settings
-
-
-class Logger:
-    """
-        Handle logging with Python's built-in logging facilities simplified
-    """
-    def __init__(self, log_filename=None, logfile_mode='a', logfile_encoding='UTF-8', logfile_level='INFO',
-                 console_stream=sys.stderr, console_level='INFO', console_format='{asctime} {levelname}: {message}',
-                 file_format='{asctime} {levelname}: {message}'):
-        # logging.basicConfig(level=logging.INFO)  # For debugging requests
-        log_levels = {'DEBUG': logging.DEBUG, 'INFO': logging.INFO, 'WARNING': logging.WARNING, 'ERROR': logging.ERROR,
-                      'CRITICAL': logging.CRITICAL}
-
-        if console_level not in log_levels:
-            raise KeyError('Console loglevel is not valid ({0}): {1}'.format(', '.join(log_levels.keys()),
-                                                                             console_level))
-        console_level = log_levels[console_level]
-
-        if logfile_level not in log_levels:
-            raise KeyError('Logfile loglevel is not valid ({0}): {1}'.format(', '.join(log_levels.keys()),
-                                                                             logfile_level))
-        logfile_level = log_levels[logfile_level]
-
-        # Create logger
-        self._logger = logging.getLogger(log_filename)  # Logger is named after the logfile
-        self._logger.propagate = False
-
-        # Create one handler for console output and set its properties accordingly
-        c_handler = logging.StreamHandler(stream=console_stream)
-        c_handler.setLevel(console_level)
-
-        # Create formatters and add them to handlers
-        c_format = logging.Formatter(console_format, style='{')
-        c_handler.setFormatter(c_format)
-
-        # Add handlers to the logger
-        self._logger.addHandler(c_handler)
-
-        # Create another handler for the logfile and set its properties accordingly
-        if log_filename is not None:
-            f_handler = logging.FileHandler(log_filename, mode=logfile_mode, encoding=logfile_encoding)
-            f_handler.setLevel(logfile_level)
-            f_format = logging.Formatter(file_format, style='{')
-            f_handler.setFormatter(f_format)
-            self._logger.addHandler(f_handler)
-
-        self._logger.setLevel(min(console_level, logfile_level))
-
-        self._leveled_logger = {'DEBUG': self._logger.debug, 'INFO': self._logger.info, 'WARNING': self._logger.warning,
-                                'ERROR': self._logger.error, 'CRITICAL': self._logger.critical}
-
-        self.log('INFO', 'Logging started')
-
-    def log(self, level, *message, sep=' ', end='\n', file=None):
-        """
-            A print()-like logging function
-                :param level: (str) Levels from the standard set: 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'
-                :param message: One or more elems as for print()
-                :param sep: Separator element as for print()
-                :param end: Ending element as for print()
-                :param file: Ignored as handlers are set in __init__()
-                :return: None
-        """
-        _ = file  # Silence IDE
-        for handler in self._logger.handlers:
-            handler.terminator = end
-        if level not in self._leveled_logger:
-            self._leveled_logger['CRITICAL']('UNKNOWN LOGGING LEVEL SPECIFIED FOR THE NEXT ENTRY: {0}'.format(level))
-            level = 'CRITICAL'
-        self._leveled_logger[level](sep.join(str(msg) for msg in message))
-
-    def __del__(self):
-        handlers = list(self._logger.handlers)  # Copy, because we write the same variable in the loop!
-        for h in handlers:
-            self._logger.removeHandler(h)
-            h.flush()
-            if isinstance(h, logging.FileHandler):
-                h.close()
 
 
 class DummyConverter:  # No output corpus

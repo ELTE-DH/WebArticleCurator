@@ -123,7 +123,7 @@ def extract_next_page_url_telex(archive_page_raw_html):
     pages = soup.find_all('a', class_='page')
     if pages is not None:
         for a_tag in pages:
-            if a_tag.text.strip() == '>':
+            if a_tag.text.strip() == '>' or a_tag.text.strip() == '►':
                 url_end = a_tag.attrs['href']
                 ret = f'https://telex.hu{url_end}'
                 break
