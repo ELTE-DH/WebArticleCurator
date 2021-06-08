@@ -371,7 +371,7 @@ class WarcReader:
             # and https://github.com/webrecorder/warcio/issues/91
             self.info_record_data = dict(r.split(': ', maxsplit=1) for r in custom_headers_raw.decode('UTF-8')
                                          .strip().split('\r\n') if len(r) > 0)
-        except (UnicodeDecodeError, ValueError) as e:
+        except ValueError as e:
             if self._strict_mode:
                 raise e
             self._logger.log('WARNING', 'WARCINFO record in', self._stream.name,

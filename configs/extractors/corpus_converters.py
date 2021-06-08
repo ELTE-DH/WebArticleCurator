@@ -106,7 +106,7 @@ class MultiPageArticleConverter:  # No output corpus
     @staticmethod
     def article_to_corpus(url, article_raw_html, scheme):
         _ = url, article_raw_html, scheme  # Silence dummy IDE
-        pass
+        # pass
 
     def follow_links_on_page(self, url, article_raw_html, scheme):
         _ = url, scheme  # Silence dummy IDE
@@ -114,6 +114,3 @@ class MultiPageArticleConverter:  # No output corpus
         if ret is not None:
             return {ret}
         return set()
-
-    def __del__(self):
-        pass

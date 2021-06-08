@@ -77,7 +77,7 @@ def wrap_input_consants(current_task_config_filename):
         if settings['FILTER_ARTICLES_BY_DATE'] or settings['archive_page_urls_by_date']:
             if 'DATE_FROM' not in column_settings:
                 raise ValueError('DateError: date_first_article and date_from is not set please'
-                                 ' set at least one of them!'.format(column_settings['date_first_article']))
+                                 ' set at least one of them!')
             if not (column_settings['DATE_FROM'] <= column_settings['DATE_UNTIL'] < date.today()):
                 raise ValueError('DateError: DATE_FROM ({0}) <= DATE UNTIL ({1}) < date.doday() ({2}) is not'
                                  ' satisfiable! Please check date_from ({3}), date_until ({4}),'
