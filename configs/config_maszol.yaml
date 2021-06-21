@@ -1,0 +1,13 @@
+"schema": "site_schemas/maszol_schema.yaml"
+
+# "output_corpus": "maszol_corpus.txt"
+
+"log_file_articles": "logs/maszol_articles_log.txt"
+"log_file_archive": "logs/maszol_archive_log.txt"
+"new_problematic_urls": "logs/maszol_new_problematic_urls.txt"
+"new_good_urls": "logs/maszol_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/maszol_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/maszol_new_good_archive_urls.txt"
+
+# "date_from": 2011-12-31
+# "date_until": 2021-04-26

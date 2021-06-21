@@ -1,0 +1,13 @@
+"schema": "site_schemas/foter_schema.yaml"
+
+# "output_corpus": "foter_corpus.txt"
+
+"log_file_articles": "logs/foter_articles_log.txt"
+"log_file_archive": "logs/foter_archive_log.txt"
+"new_problematic_urls": "logs/foter_new_problematic_urls.txt"
+"new_good_urls": "logs/foter_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/foter_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/foter_new_good_archive_urls.txt"
+
+# "date_from": 2014-09-17
+# "date_until": 2019-12-31

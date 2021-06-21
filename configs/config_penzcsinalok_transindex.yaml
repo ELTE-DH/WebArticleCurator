@@ -1,0 +1,13 @@
+"schema": "site_schemas/penzcsinalok_transindex_schema.yaml"
+
+# "output_corpus": "penzcsinalok_transindex_corpus.txt"
+
+"log_file_articles": "logs/penzcsinalok_transindex_articles_log.txt"
+"log_file_archive": "logs/penzcsinalok_transindex_archive_log.txt"
+"new_problematic_urls": "logs/penzcsinalok_transindex_new_problematic_urls.txt"
+"new_good_urls": "logs/penzcsinalok_transindex_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/penzcsinalok_transindex_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/penzcsinalok_transindex_new_good_archive_urls.txt"
+
+# "date_from": 2000-01-01
+# "date_until": 2100-01-01
