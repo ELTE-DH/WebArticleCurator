@@ -1,0 +1,42 @@
+"site_name": "maszol"
+
+"columns":
+    "belfold":
+        "archive_url_format": "https://maszol.ro/belfold/oldal/0"
+
+    "gazdasag":
+        "archive_url_format": "https://maszol.ro/gazdasag/oldal/0"
+
+    "kultura":
+        "archive_url_format": "https://maszol.ro/kultura/oldal/0"
+
+    "velemeny":
+        "archive_url_format": "https://maszol.ro/velemeny/oldal/0"
+
+    "eletmod":
+        "archive_url_format": "https://maszol.ro/eletmod/oldal/0"
+
+    "kulfold":
+        "archive_url_format": "https://maszol.ro/kulfold/oldal/0"
+
+    "sport":
+        "archive_url_format": "https://maszol.ro/sport/oldal/0"
+
+    "videok":
+        "archive_url_format": "https://maszol.ro/videok/oldal/0"
+
+"portal_specific_exctractor_functions_file": "../extractors/htro_site_specific_extractor_functions.py"
+"extract_next_page_url_fun": "extract_next_page_url_maszol"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_maszol"
+
+"next_url_by_pagenum": false
+"infinite_scrolling": false
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": false
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"

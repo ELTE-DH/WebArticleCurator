@@ -1,0 +1,37 @@
+"site_name": "transindex"
+
+"columns":
+    "main-column-2001":
+        # This archive section has weeks with 0 articles - warnings will be shown during crawling.
+        "archive_url_format": "https://archivum.transindex.ro/?ev=#year&het=#pagenum&new=1"
+
+        "date_first_article": 2001-05-15
+        "date_last_article": 2001-12-24
+
+        "initial_pagenum": 20
+        "min_pagenum": 21
+        "max_pagenum": 52
+
+    "main-column-2002-2021":
+        "archive_url_format": "https://archivum.transindex.ro/?ev=#year&het=#pagenum&new=1"
+
+        "date_first_article": 2002-01-01
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 52
+
+"portal_specific_exctractor_functions_file": "../extractors/htro_site_specific_extractor_functions.py"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_transindex"
+
+"next_url_by_pagenum": true
+"infinite_scrolling": false
+"archive_page_urls_by_date": true
+"go_reverse_in_archive": false
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"

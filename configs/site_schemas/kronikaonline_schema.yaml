@@ -1,0 +1,19 @@
+"site_name": "kronikaonline"
+
+"columns":
+    "main-column":
+        "archive_url_format": "https://kronikaonline.ro/kereses?op=search&src_words=.&src_author=&src_search=KERES%C3%89S&page=1583"
+
+"portal_specific_exctractor_functions_file": "../extractors/htro_site_specific_extractor_functions.py"
+"extract_next_page_url_fun": "extract_next_page_url_kronikaonline"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_kronikaonline"
+
+"next_url_by_pagenum": false
+"infinite_scrolling": false
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": false
+"verify_request": true
+"ignore_archive_cache": false
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"

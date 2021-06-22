@@ -1,0 +1,27 @@
+"site_name": "atlatszo_ro"
+
+"columns":
+    "hu":
+        "archive_url_format": "https://atlatszo.ro/page/1/?s"
+
+    "ro":
+        "archive_url_format": "https://atlatszo.ro/ro/page/1/?s"
+
+    "en":
+        "archive_url_format": "https://atlatszo.ro/en/page/1/?s"
+
+"portal_specific_exctractor_functions_file": "../extractors/htro_site_specific_extractor_functions.py"
+"extract_next_page_url_fun": "extract_next_page_url_atlatszo_ro"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_atlatszo_ro"
+
+"next_url_by_pagenum": false
+"infinite_scrolling": false
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": false
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"

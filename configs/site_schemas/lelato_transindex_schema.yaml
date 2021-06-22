@@ -1,0 +1,65 @@
+"site_name": "lelato_transindex"
+
+"columns":
+    "aktualis":
+        "archive_url_format": "https://lelato.transindex.ro/aktualis/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 10  # There are no articles displayed after page 10.
+
+    "portre":
+        "archive_url_format": "https://lelato.transindex.ro/portre/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 2  # There are no articles displayed after page 2.
+
+    "ott-voltunk":
+        "archive_url_format": "https://lelato.transindex.ro/helyszini/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 3  # There are no articles displayed after page 3.
+
+    "velemeny":
+        "archive_url_format": "https://lelato.transindex.ro/velemeny/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 2  # There are no articles displayed after page 2.
+
+    "viral":
+        "archive_url_format": "https://lelato.transindex.ro/viral/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 3  # There are no articles displayed after page 3.
+
+    "hirek":
+        "archive_url_format": "https://lelato.transindex.ro/hirek/#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 10  # There are no articles displayed after page 10.
+
+    "lelatoblog":
+        "archive_url_format": "https://lelato.transindex.ro/lelatoblog/#pagenum"
+
+        "initial_pagenum": 1
+
+"portal_specific_exctractor_functions_file": "../extractors/htro_site_specific_extractor_functions.py"
+# "extract_next_page_url_fun": "extract_next_page_url_lelato_penzcsinalok_transindex"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_lelato_penzcsinalok_transindex"
+
+"next_url_by_pagenum": true
+"infinite_scrolling": false
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": false
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"

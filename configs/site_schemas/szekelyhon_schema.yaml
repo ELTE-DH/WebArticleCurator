@@ -1,0 +1,29 @@
+"site_name": "szekelyhon"
+
+"columns":
+    "main-columm":
+        "archive_url_format": "https://szekelyhon.ro/mod/open24h.php?p=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "sport":
+        "archive_url_format": "https://sport.szekelyhon.ro/mod/open24h.php?p=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+"portal_specific_exctractor_functions_file": "../extractors/htro_site_specific_extractor_functions.py"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_szekelyhon"
+
+"next_url_by_pagenum": true
+"infinite_scrolling": true
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": false
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"

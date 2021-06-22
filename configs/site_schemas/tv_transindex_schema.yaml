@@ -1,0 +1,91 @@
+"site_name": "tv_transindex"
+
+# Warning: the first entry (movie) of each column will not be downloaded, as it is not displayed in the archive section.
+# The first entry is part of the archive page itself.
+
+"columns":
+    "main-column-1-2":
+        "archive_url_format": "https://tv.transindex.ro/?kategoria=#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+        "max_pagenum": 2
+
+    "main-column-4-5":
+        "archive_url_format": "https://tv.transindex.ro/?kategoria=#pagenum"
+
+        "initial_pagenum": 4
+        "min_pagenum": 5
+        "max_pagenum": 5
+
+    "main-column-7-14":
+        "archive_url_format": "https://tv.transindex.ro/?kategoria=#pagenum"
+
+        "initial_pagenum": 7
+        "min_pagenum": 8
+        "max_pagenum": 14
+
+    "main-column-16-17":
+        "archive_url_format": "https://tv.transindex.ro/?kategoria=#pagenum"
+
+        "initial_pagenum": 16
+        "min_pagenum": 17
+        "max_pagenum": 17
+
+    "main-column-23":
+        "archive_url_format": "https://tv.transindex.ro/?kategoria=#pagenum"
+
+        "initial_pagenum": 23
+
+    "main-column-25-36":
+        "archive_url_format": "https://tv.transindex.ro/?kategoria=#pagenum"
+
+        "initial_pagenum": 25
+        "min_pagenum": 26
+        "max_pagenum": 36
+
+    "main-column-40":
+        "archive_url_format": "https://tv.transindex.ro/?kategoria=#pagenum"
+
+        "initial_pagenum": 40
+
+    "main-column-42":
+        "archive_url_format": "https://tv.transindex.ro/?kategoria=#pagenum"
+
+        "initial_pagenum": 42
+
+    "main-column-44-46":
+        "archive_url_format": "https://tv.transindex.ro/?kategoria=#pagenum"
+
+        "initial_pagenum": 44
+        "min_pagenum": 45
+        "max_pagenum": 46
+
+    "main-column-48-50":
+        "archive_url_format": "https://tv.transindex.ro/?kategoria=#pagenum"
+
+        "initial_pagenum": 48
+        "min_pagenum": 49
+        "max_pagenum": 50
+
+    "main-column-52-59":
+        "archive_url_format": "https://tv.transindex.ro/?kategoria=#pagenum"
+
+        "initial_pagenum": 52
+        "min_pagenum": 53
+        "max_pagenum": 59
+
+"portal_specific_exctractor_functions_file": "../extractors/htro_site_specific_extractor_functions.py"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_tv_transindex"
+
+"next_url_by_pagenum": true
+"infinite_scrolling": false
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": false
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"
