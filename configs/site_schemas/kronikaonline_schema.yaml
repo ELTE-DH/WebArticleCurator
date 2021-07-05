@@ -2,7 +2,7 @@
 
 "columns":
     "main-column":
-        "archive_url_format": "https://kronikaonline.ro/kereses?op=search&src_words=.&src_author=&src_search=KERES%C3%89S&page=1583"
+        "archive_url_format": "https://kronikaonline.ro/kereses?op=search&src_words=.&src_author=&src_search=KERES%C3%89S&page=1"
 
 "portal_specific_exctractor_functions_file": "../extractors/htro_site_specific_extractor_functions.py"
 "extract_next_page_url_fun": "extract_next_page_url_kronikaonline"
