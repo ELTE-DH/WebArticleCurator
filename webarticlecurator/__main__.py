@@ -4,7 +4,7 @@
 import sys
 from argparse import ArgumentParser, ArgumentTypeError, FileType
 
-from webarticlecurator import wrap_input_consants, NewsArchiveCrawler, NewsArticleCrawler, sample_warc_by_urls, \
+from webarticlecurator import wrap_input_constants, NewsArchiveCrawler, NewsArticleCrawler, sample_warc_by_urls, \
     validate_warc_file, online_test, Logger, __version__
 
 
@@ -155,7 +155,7 @@ def parse_args_donwload(parser):
 
 def main_crawl(args):
     """ read input data from the given files, initialize variables """
-    portal_settings = wrap_input_consants(args.config)
+    portal_settings = wrap_input_constants(args.config)
     # These parameters go down directly to the downloader
     download_params = {'program_name': args.crawler_name, 'user_agent': args.user_agent,
                        'overwrite_warc': args.no_overwrite_warc, 'err_threshold': args.cumulative_error_threshold,
