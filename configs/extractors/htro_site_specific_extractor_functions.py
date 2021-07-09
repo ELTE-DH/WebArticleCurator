@@ -319,7 +319,7 @@ def extract_article_urls_from_page_tv_transindex(archive_page_raw_html):
 
 
 def extract_article_urls_from_page_test(filename, test_logger):
-    """Quick test for extracting URLs form an archive page"""
+    """Quick test for extracting URLs from an archive page"""
     # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
     w = WarcCachingDownloader(filename, None, test_logger, just_cache=True, download_params={'stay_offline': True})
 
@@ -821,7 +821,7 @@ if __name__ == '__main__':
 
     main_logger = Logger()
 
-    # Relateive path from this directory to the files in the project's test directory
+    # Relative path from this directory to the files in the project's test directory
     choices = {'nextpage': os_path_join(dirname(abspath(__file__)), '../../tests/next_page_url_htro.warc.gz'),
                'article_nextpage': os_path_join(dirname(abspath(__file__)),
                                                 '../../tests/next_page_of_article_htro.warc.gz'),
