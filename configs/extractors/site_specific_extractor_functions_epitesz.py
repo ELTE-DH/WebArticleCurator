@@ -13,7 +13,7 @@ from webarticlecurator import WarcCachingDownloader
 def extract_next_page_url_epiteszforum(archive_page_raw_html):
     """
         extracts and returns next page URL from an HTML code if there is one...
-        Specific for http://epiteszforum.hu
+        Specific for https://epiteszforum.hu
         :returns string of url if there is one, None otherwise
     """
     ret = None
@@ -21,7 +21,7 @@ def extract_next_page_url_epiteszforum(archive_page_raw_html):
     next_page = soup.find('a', class_='right')
     if next_page is not None and next_page.has_attr('href'):
         url_end = next_page.attrs['href']
-        ret = f'http://epiteszforum.hu{url_end}'
+        ret = f'https://epiteszforum.hu{url_end}'
     return ret
 
 
@@ -32,12 +32,12 @@ def extract_next_page_url_test(filename, test_logger):
 
     # Some of these are intentionally yields None
     test_logger.log('INFO', 'Testing epiteszforum')
-    text = w.download_url('http://epiteszforum.hu/archivum?search=&p=2')
-    assert extract_next_page_url_epiteszforum(text) == 'http://epiteszforum.hu/archivum?search=&p=3'
-    text = w.download_url('http://epiteszforum.hu/archivum?search=&p=486')
+    text = w.download_url('https://epiteszforum.hu/archivum?search=&p=2')
+    assert extract_next_page_url_epiteszforum(text) == 'https://epiteszforum.hu/archivum?search=&p=3'
+    text = w.download_url('https://epiteszforum.hu/archivum?search=&p=486')
     assert extract_next_page_url_epiteszforum(text) is None
-    text = w.download_url('http://epiteszforum.hu/archivum?search=&p=487')
-    assert extract_next_page_url_epiteszforum(text) == 'http://epiteszforum.hu/archivum?search=&p=488'
+    text = w.download_url('https://epiteszforum.hu/archivum?search=&p=487')
+    assert extract_next_page_url_epiteszforum(text) == 'https://epiteszforum.hu/archivum?search=&p=488'
     test_logger.log('INFO', 'Test OK!')
 
 # END SITE SPECIFIC extract_next_page_url FUNCTIONS ####################################################################
@@ -65,7 +65,7 @@ def extract_article_urls_from_page_epiteszforum(archive_page_raw_html):
     """
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all('div', class_='title')
-    urls = {f'http://epiteszforum.hu{link}' for link in safe_extract_hrefs_from_a_tags(main_container)}
+    urls = {f'https://epiteszforum.hu{link}' for link in safe_extract_hrefs_from_a_tags(main_container)}
     return urls
 
 
@@ -75,63 +75,63 @@ def extract_article_urls_from_page_test(filename, test_logger):
     w = WarcCachingDownloader(filename, None, test_logger, just_cache=True, download_params={'stay_offline': True})
 
     test_logger.log('INFO', 'Testing epiteszforum')
-    text = w.download_url('http://epiteszforum.hu/archivum?search=&p=2')
+    text = w.download_url('https://epiteszforum.hu/archivum?search=&p=2')
     extracted = extract_article_urls_from_page_epiteszforum(text)
-    expected = {'http://epiteszforum.hu/okologikus-epiteszet--epiteszeti-eszkozok',
-                'http://epiteszforum.hu/otvenlakasos-tarsashaz-epult-az-egykori-balatonlellei-szot-udulo-helyen',
-                'http://epiteszforum.hu/kerekparos-kozlekedesfejlesztes-budapesten-',
-                'http://epiteszforum.hu/architizer-szakmai-zsuri-dijat-nyert-a-bord-epitesz-studio-a-debreceni'
+    expected = {'https://epiteszforum.hu/okologikus-epiteszet--epiteszeti-eszkozok',
+                'https://epiteszforum.hu/otvenlakasos-tarsashaz-epult-az-egykori-balatonlellei-szot-udulo-helyen',
+                'https://epiteszforum.hu/kerekparos-kozlekedesfejlesztes-budapesten-',
+                'https://epiteszforum.hu/architizer-szakmai-zsuri-dijat-nyert-a-bord-epitesz-studio-a-debreceni'
                 '-aquaticum-terveivel',
-                'http://epiteszforum.hu/toronyhaz-vita-a-felhokarcolo-mint-innovacio',
-                'http://epiteszforum.hu/kozepiskolasok-terveztek-uszo-egyetemet-a-balatoni-kozseg-vizpartjara-',
-                'http://epiteszforum.hu/nehany-gondolat-a-budai-var-varoskeperol--roth-janos-irasa',
-                'http://epiteszforum.hu/pillantasok-a-feny-fele-tiz-kulonleges-templom-a-szocializmus-eveibol',
-                'http://epiteszforum.hu/kiirtak-a-meghivasos-tervpalyazatot-az-uj-pazmany-campusra',
-                'http://epiteszforum.hu/templomot-irodat-es-csaladi-hazat-is-jutalmaztak--atadtak-az-ev-tetoje'
+                'https://epiteszforum.hu/toronyhaz-vita-a-felhokarcolo-mint-innovacio',
+                'https://epiteszforum.hu/kozepiskolasok-terveztek-uszo-egyetemet-a-balatoni-kozseg-vizpartjara-',
+                'https://epiteszforum.hu/nehany-gondolat-a-budai-var-varoskeperol--roth-janos-irasa',
+                'https://epiteszforum.hu/pillantasok-a-feny-fele-tiz-kulonleges-templom-a-szocializmus-eveibol',
+                'https://epiteszforum.hu/kiirtak-a-meghivasos-tervpalyazatot-az-uj-pazmany-campusra',
+                'https://epiteszforum.hu/templomot-irodat-es-csaladi-hazat-is-jutalmaztak--atadtak-az-ev-tetoje'
                 '-nivodijakat',
-                'http://epiteszforum.hu/jo-egyutt-ujrakezdeni--a-2021-es-epitesz-regatta-margojara',
-                'http://epiteszforum.hu/esztergom-szalloda',
-                'http://epiteszforum.hu/mi-lesz-veled-nyugati-ter-ii--az-aluljaro-fejlesztese-',
-                'http://epiteszforum.hu/modernizmus-ujratoltve--lang-muvelodesi-kozpont',
-                'http://epiteszforum.hu/egy-hely--matyasfold',
-                'http://epiteszforum.hu/kandalloval-is-teljesitheto-a-megujulo-energia-reszarany',
-                'http://epiteszforum.hu/het-evtized-szarnyas-vaskereken--a-budapesti-gyermekvasut-allomasai',
-                'http://epiteszforum.hu/az-epuletek-szelloztetese-',
-                'http://epiteszforum.hu/otthon-az-egykori-nyaralotelepen',
-                'http://epiteszforum.hu/101--falvai-balazs-dla',
-                'http://epiteszforum.hu/nehany-gondolat-a-budai-var-varoskeperol-22--roth-janos-irasa',
-                'http://epiteszforum.hu/pontipoly-fesztival-es-ter-kepzo-epitotabor---a-leptek-ami-igazan-szeretheto',
-                'http://epiteszforum.hu/hamarosan-elkeszul-az-uj-pasareti-kozossegi-haz-',
-                'http://epiteszforum.hu/56-os-magyar-epiteszek-schweger-peter',
-                'http://epiteszforum.hu/101--arkovics-lilla',
-                'http://epiteszforum.hu/megujult-a-rumbach-utcai-zsinagoga--ismet-vallasi-es-kulturalis-elet-koltozik'
+                'https://epiteszforum.hu/jo-egyutt-ujrakezdeni--a-2021-es-epitesz-regatta-margojara',
+                'https://epiteszforum.hu/esztergom-szalloda',
+                'https://epiteszforum.hu/mi-lesz-veled-nyugati-ter-ii--az-aluljaro-fejlesztese-',
+                'https://epiteszforum.hu/modernizmus-ujratoltve--lang-muvelodesi-kozpont',
+                'https://epiteszforum.hu/egy-hely--matyasfold',
+                'https://epiteszforum.hu/kandalloval-is-teljesitheto-a-megujulo-energia-reszarany',
+                'https://epiteszforum.hu/het-evtized-szarnyas-vaskereken--a-budapesti-gyermekvasut-allomasai',
+                'https://epiteszforum.hu/az-epuletek-szelloztetese-',
+                'https://epiteszforum.hu/otthon-az-egykori-nyaralotelepen',
+                'https://epiteszforum.hu/101--falvai-balazs-dla',
+                'https://epiteszforum.hu/nehany-gondolat-a-budai-var-varoskeperol-22--roth-janos-irasa',
+                'https://epiteszforum.hu/pontipoly-fesztival-es-ter-kepzo-epitotabor---a-leptek-ami-igazan-szeretheto',
+                'https://epiteszforum.hu/hamarosan-elkeszul-az-uj-pasareti-kozossegi-haz-',
+                'https://epiteszforum.hu/56-os-magyar-epiteszek-schweger-peter',
+                'https://epiteszforum.hu/101--arkovics-lilla',
+                'https://epiteszforum.hu/megujult-a-rumbach-utcai-zsinagoga--ismet-vallasi-es-kulturalis-elet-koltozik'
                 '-az-epuletbe',
-                'http://epiteszforum.hu/ne-vonjak-el-a-figyelmunket-az-oriasi-falmatricak--az-europa-design-es-az-ev'
+                'https://epiteszforum.hu/ne-vonjak-el-a-figyelmunket-az-oriasi-falmatricak--az-europa-design-es-az-ev'
                 '-irodai',
-                'http://epiteszforum.hu/elkezdodott-az-uj-csepeli-kozpark-kialakitasanak-tervezese--kerdoivben-varjak'
+                'https://epiteszforum.hu/elkezdodott-az-uj-csepeli-kozpark-kialakitasanak-tervezese--kerdoivben-varjak'
                 '-a-javaslatokat',
-                'http://epiteszforum.hu/othernity--a-magyar-pavilon-nemzetkozi-visszhangja',
-                'http://epiteszforum.hu/ha-eppen-a-zaj-a-baj--egy-szombathelyi-epuletegyuttes-akusztikai-megoldasa',
-                'http://epiteszforum.hu/megjelent-az-archicad-25-a-graphisoft-piacvezeto-bim-szoftverenek-legujabb'
+                'https://epiteszforum.hu/othernity--a-magyar-pavilon-nemzetkozi-visszhangja',
+                'https://epiteszforum.hu/ha-eppen-a-zaj-a-baj--egy-szombathelyi-epuletegyuttes-akusztikai-megoldasa',
+                'https://epiteszforum.hu/megjelent-az-archicad-25-a-graphisoft-piacvezeto-bim-szoftverenek-legujabb'
                 '-valtozata',
-                'http://epiteszforum.hu/a-szervezok-varjak-a-javaslatokat-a-8-ugo-rivolta-dij-jeloltjeire'}
+                'https://epiteszforum.hu/a-szervezok-varjak-a-javaslatokat-a-8-ugo-rivolta-dij-jeloltjeire'}
 
     assert (extracted, len(extracted)) == (expected, 32)
 
-    text = w.download_url('http://epiteszforum.hu/archivum?search=&p=486')
+    text = w.download_url('https://epiteszforum.hu/archivum?search=&p=486')
     extracted = extract_article_urls_from_page_epiteszforum(text)
-    expected = {'http://epiteszforum.hu/elkeszult-a-komaromi-csillagerod-felujitasa',
-                'http://epiteszforum.hu/abbol-hogy-valamit-valaki-jol-megcsinalt-meg-soha-nem-szarmazott-hiba',
-                'http://epiteszforum.hu/vidor-ferenc-hidveres-a-varosokat-erinto-elmeletek-es-a-gyakorlat'
+    expected = {'https://epiteszforum.hu/elkeszult-a-komaromi-csillagerod-felujitasa',
+                'https://epiteszforum.hu/abbol-hogy-valamit-valaki-jol-megcsinalt-meg-soha-nem-szarmazott-hiba',
+                'https://epiteszforum.hu/vidor-ferenc-hidveres-a-varosokat-erinto-elmeletek-es-a-gyakorlat'
                 '-mindennapjaink-valosaga-kozott',
-                'http://epiteszforum.hu/borvendeg-bela-torzo',
-                'http://epiteszforum.hu/nyilvanos-vita-a-nemzeti-szinhaz-kapcsan-felmerult-epiteszeti-etikai'
+                'https://epiteszforum.hu/borvendeg-bela-torzo',
+                'https://epiteszforum.hu/nyilvanos-vita-a-nemzeti-szinhaz-kapcsan-felmerult-epiteszeti-etikai'
                 '-kerdesekrol',
-                'http://epiteszforum.hu/az-orszagos-foepiteszi-kollegium-1999-2000',
-                'http://epiteszforum.hu/ybl-dij-2000',
-                'http://epiteszforum.hu/solymos-sandor-a-posztmodern-manierizmus',
-                'http://epiteszforum.hu/nyitott-ter-elvalasztva',
-                'http://epiteszforum.hu/alkotoi-het-az-epiteszkaron-2000'}
+                'https://epiteszforum.hu/az-orszagos-foepiteszi-kollegium-1999-2000',
+                'https://epiteszforum.hu/ybl-dij-2000',
+                'https://epiteszforum.hu/solymos-sandor-a-posztmodern-manierizmus',
+                'https://epiteszforum.hu/nyitott-ter-elvalasztva',
+                'https://epiteszforum.hu/alkotoi-het-az-epiteszkaron-2000'}
 
     assert (extracted, len(extracted)) == (expected, 10)
 

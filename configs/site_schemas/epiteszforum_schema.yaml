@@ -2,7 +2,7 @@
 
 "columns":
     "main-column":
-        "archive_url_format": "http://epiteszforum.hu/archivum?search=&p=#pagenum"
+        "archive_url_format": "https://epiteszforum.hu/archivum?search=&p=#pagenum"
 
         # "date_first_article": 1970-01-01
         # "date_last_article": 2021-07-21
