@@ -1,0 +1,13 @@
+"schema": "site_schemas/epiteszforum_schema.yaml"
+
+# "output_corpus": "epiteszforum_corpus.txt"
+
+"log_file_articles": "logs/epiteszforum_articles_log.txt"
+"log_file_archive": "logs/epiteszforum_archive_log.txt"
+"new_problematic_urls": "logs/epiteszforum_new_problematic_urls.txt"
+"new_good_urls": "logs/epiteszforum_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/epiteszforum_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/epiteszforum_new_good_archive_urls.txt"
+
+# "date_from": 1970-01-01
+# "date_until": 2021-07-21
