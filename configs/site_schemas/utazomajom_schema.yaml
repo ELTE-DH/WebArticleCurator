@@ -1,0 +1,28 @@
+"site_name": "utazomajom"
+
+"columns":
+    "main-column":
+        "archive_url_format": "https://utazomajom.hu/kategoria/elmenybeszamolok/page/#pagenum/?q=%2Fkategoria%2Felmenybeszamolok%2F"
+
+        # "date_first_article": 2015-06-24
+        # "date_last_article": 2019-04-28
+
+        "initial_pagenum": 1
+        # "min_pagenum": 2
+        # "max_pagenum": 5
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
+"extract_next_page_url_fun": "extract_next_page_url_utazomajom"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_utazomajom"
+
+"next_url_by_pagenum": false
+"infinite_scrolling": false
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": true
+"verify_request": false
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+# https://utazomajom.hu/kategoria/elmenybeszamolok/?q=%2Fkategoria%2Felmenybeszamolok%2F
+# https://utazomajom.hu/kategoria/elmenybeszamolok/page/5/?q=%2Fkategoria%2Felmenybeszamolok%2F
