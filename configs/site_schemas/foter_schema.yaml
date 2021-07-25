@@ -34,7 +34,7 @@
     "foci-eb-2021":
         "archive_url_format": "https://foter.ro/cikk/category/foci-eb-2021/"
 
-"portal_specific_exctractor_functions_file": "../extractors/htro_site_specific_extractor_functions.py"
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_htro.py"
 "extract_next_page_url_fun": "extract_next_page_url_foter"
 "extract_article_urls_from_page_fun": "extract_article_urls_from_page_foter"
 
