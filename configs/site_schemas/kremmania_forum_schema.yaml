@@ -1,0 +1,29 @@
+"site_name": "kremmania_forum"
+
+"columns":
+    "main-column":
+        "archive_url_format": "https://forum.kremmania.hu/latest?no_definitions=true&amp;page=#pagenum"
+
+        # "date_first_article":
+        # "date_last_article":
+
+        "initial_pagenum": 0
+        # "min_pagenum": 1
+        # "max_pagenum": 8
+
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
+"extract_next_page_url_fun": "extract_next_page_url_kremmania_forum"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_kremmania_forum"
+
+"next_url_by_pagenum": false
+"infinite_scrolling": false
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": true
+"verify_request": false
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"
