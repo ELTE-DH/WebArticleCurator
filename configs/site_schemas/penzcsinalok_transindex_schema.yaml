@@ -41,7 +41,7 @@
 
         "initial_pagenum": 1  # There are no articles displayed after page 1.
 
-"portal_specific_exctractor_functions_file": "../extractors/htro_site_specific_extractor_functions.py"
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_htro.py"
 "extract_article_urls_from_page_fun": "extract_article_urls_from_page_lelato_penzcsinalok_transindex"
 
 "next_url_by_pagenum": true

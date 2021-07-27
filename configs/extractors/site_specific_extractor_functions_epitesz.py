@@ -2,9 +2,10 @@
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
 from os.path import abspath, dirname, join as os_path_join
-import json
+
 from bs4 import BeautifulSoup
-from webarticlecurator import WarcCachingDownloader
+
+from webarticlecurator import WarcCachingDownloader, Logger
 
 
 # BEGIN SITE SPECIFIC extract_next_page_url FUNCTIONS ##################################################################
@@ -140,19 +141,21 @@ def extract_article_urls_from_page_test(filename, test_logger):
 # END SITE SPECIFIC next_page_of_article FUNCTIONS #####################################################################
 
 
-if __name__ == '__main__':
-    from webarticlecurator import WarcCachingDownloader, Logger
-
+def main_test():
     main_logger = Logger()
 
     # Relateive path from this directory to the files in the project's test directory
     choices = {'nextpage': os_path_join(dirname(abspath(__file__)), '../../tests/next_page_url_epiteszforum.warc.gz'),
                'article_nextpage': os_path_join(dirname(abspath(__file__)), '../../tests/next_page_of_article.warc.gz'),
-               'archive': os_path_join(dirname(abspath(__file__)), '../../tests/extract_article_urls_from_'
-                                                                   'page_epiteszforum.warc.gz')
+               'archive': os_path_join(dirname(abspath(__file__)),
+                                       '../../tests/extract_article_urls_from_page_epiteszforum.warc.gz')
                }
 
     # Use the main module to modify the warc files!
     extract_next_page_url_test(choices['nextpage'], main_logger)
     extract_article_urls_from_page_test(choices['archive'], main_logger)
     # next_page_of_article_test(choices['article_nextpage'], main_logger)
+
+
+if __name__ == '__main__':
+    main_test()

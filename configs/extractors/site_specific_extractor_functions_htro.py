@@ -2,8 +2,10 @@
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
 from os.path import abspath, dirname, join as os_path_join
+
 from bs4 import BeautifulSoup
 
+from webarticlecurator import WarcCachingDownloader, Logger
 
 # BEGIN SITE SPECIFIC extract_next_page_url FUNCTIONS ##################################################################
 
@@ -247,6 +249,83 @@ def extract_article_urls_from_page_szekelyhon(archive_page_raw_html):
     return urls
 
 
+extract_article_urls_from_page_transindex_QUIRKY_URLS = \
+    {'https://.transindex.ro/?cikk=81': 'https://itthon.transindex.ro/?cikk=81',
+     'https://.transindex.ro/?cikk=87': 'https://itthon.transindex.ro/?cikk=87',
+     'https://.transindex.ro/?cikk=308': 'https://itthon.transindex.ro/?cikk=308',
+     'https://.transindex.ro/?cikk=198': 'https://itthon.transindex.ro/?cikk=198',
+     'https://.transindex.ro/?cikk=2066': 'https://itthon.transindex.ro/?cikk=2066',
+     'https://.transindex.ro/?cikk=2086': 'https://itthon.transindex.ro/?cikk=2086',
+     'https://.transindex.ro/?cikk=2105': 'https://itthon.transindex.ro/?cikk=2105',
+     'https://.transindex.ro/?cikk=2120': 'https://itthon.transindex.ro/?cikk=2120',
+     'https://.transindex.ro/?cikk=2129': 'https://itthon.transindex.ro/?cikk=2129',
+     'https://.transindex.ro/?cikk=2134': 'https://itthon.transindex.ro/?cikk=2134',
+     'https://.transindex.ro/?cikk=2154': 'https://itthon.transindex.ro/?cikk=2154',
+     'https://.transindex.ro/?cikk=2172': 'https://itthon.transindex.ro/?cikk=2172',
+     'https://.transindex.ro/?cikk=2212': 'https://itthon.transindex.ro/?cikk=2212',
+     'https://.transindex.ro/?cikk=2225': 'https://itthon.transindex.ro/?cikk=2225',
+     'https://.transindex.ro/?cikk=2245': 'https://itthon.transindex.ro/?cikk=2245',
+     'https://.transindex.ro/?cikk=2244': 'https://itthon.transindex.ro/?cikk=2244',
+     'https://.transindex.ro/?cikk=2276': 'https://itthon.transindex.ro/?cikk=2276',
+     'https://.transindex.ro/?cikk=2323': 'https://itthon.transindex.ro/?cikk=2323',
+     'https://.transindex.ro/?cikk=2325': 'https://itthon.transindex.ro/?cikk=2325',
+     'https://.transindex.ro/?cikk=2394': 'https://itthon.transindex.ro/?cikk=2394',
+     'https://.transindex.ro/?cikk=2427': 'https://itthon.transindex.ro/?cikk=2427',
+     'https://.transindex.ro/?cikk=2477': 'https://itthon.transindex.ro/?cikk=2477',
+     'https://.transindex.ro/?cikk=2481': 'https://itthon.transindex.ro/?cikk=2481',
+     'https://.transindex.ro/?cikk=2486': 'https://itthon.transindex.ro/?cikk=2486',
+     'https://.transindex.ro/?cikk=2494': 'https://itthon.transindex.ro/?cikk=2494',
+     'https://.transindex.ro/?cikk=2606': 'https://itthon.transindex.ro/?cikk=2606',
+     'https://.transindex.ro/?cikk=2650': 'https://itthon.transindex.ro/?cikk=2650',
+     'https://.transindex.ro/?cikk=2847': 'https://itthon.transindex.ro/?cikk=2847',
+     'https://.transindex.ro/?cikk=2843': 'https://itthon.transindex.ro/?cikk=2843',
+     'https://.transindex.ro/?cikk=2884': 'https://itthon.transindex.ro/?cikk=2884',
+     'https://.transindex.ro/?cikk=2969': 'https://itthon.transindex.ro/?cikk=2969',
+     'https://.transindex.ro/?cikk=2987': 'https://itthon.transindex.ro/?cikk=2987',
+     'https://.transindex.ro/?cikk=3005': 'https://itthon.transindex.ro/?cikk=3005',
+     'https://.transindex.ro/?cikk=3024': 'https://itthon.transindex.ro/?cikk=3024',
+     'https://.transindex.ro/?cikk=3038': 'https://itthon.transindex.ro/?cikk=3038',
+     'https://.transindex.ro/?cikk=3055': 'https://itthon.transindex.ro/?cikk=3055',
+     'https://.transindex.ro/?cikk=3094': 'https://itthon.transindex.ro/?cikk=3094',
+     'https://.transindex.ro/?cikk=3108': 'https://itthon.transindex.ro/?cikk=3108',
+     'https://.transindex.ro/?cikk=3136': 'https://itthon.transindex.ro/?cikk=3136',
+     'https://.transindex.ro/?cikk=3143': 'https://itthon.transindex.ro/?cikk=3143',
+     'https://.transindex.ro/?cikk=3175': 'https://itthon.transindex.ro/?cikk=3175',
+     'https://.transindex.ro/?cikk=3188': 'https://itthon.transindex.ro/?cikk=3188',
+     'https://.transindex.ro/?cikk=3213': 'https://itthon.transindex.ro/?cikk=3213',
+     'https://.transindex.ro/?cikk=3220': 'https://itthon.transindex.ro/?cikk=3220',
+     'https://.transindex.ro/?cikk=3236': 'https://itthon.transindex.ro/?cikk=3236',
+     'https://.transindex.ro/?cikk=3253': 'https://itthon.transindex.ro/?cikk=3253',
+     'https://.transindex.ro/?cikk=3280': 'https://itthon.transindex.ro/?cikk=3280',
+     'https://.transindex.ro/?cikk=3320': 'https://itthon.transindex.ro/?cikk=3320',
+     'https://.transindex.ro/?cikk=3349': 'https://itthon.transindex.ro/?cikk=3349',
+     'https://.transindex.ro/?cikk=3518': 'https://itthon.transindex.ro/?cikk=3518',
+     'https://.transindex.ro/?cikk=3678': 'https://itthon.transindex.ro/?cikk=3678',
+     'https://.transindex.ro/?cikk=4115': 'https://itthon.transindex.ro/?cikk=4115',
+     'https://.transindex.ro/?cikk=4138': 'https://itthon.transindex.ro/?cikk=4138',
+     'https://.transindex.ro/?cikk=4181': 'https://itthon.transindex.ro/?cikk=4181',
+     'https://.transindex.ro/?cikk=4228': 'https://itthon.transindex.ro/?cikk=4228',
+     'https://.transindex.ro/?cikk=4373': 'https://itthon.transindex.ro/?cikk=4373',
+     'https://.transindex.ro/?cikk=4433': 'https://itthon.transindex.ro/?cikk=4433',
+     'https://.transindex.ro/?cikk=4460': 'https://itthon.transindex.ro/?cikk=4460',
+     'https://.transindex.ro/?cikk=4464': 'https://itthon.transindex.ro/?cikk=4464',
+     'https://.transindex.ro/?cikk=4608': 'https://itthon.transindex.ro/?cikk=4608',
+     'https://.transindex.ro/?cikk=4632': 'https://itthon.transindex.ro/?cikk=4632',
+     'https://.transindex.ro/?cikk=4638': 'https://itthon.transindex.ro/?cikk=4638',
+     'https://.transindex.ro/?cikk=4695': 'https://itthon.transindex.ro/?cikk=4695',
+     'https://.transindex.ro/?cikk=4749': 'https://itthon.transindex.ro/?cikk=4749',
+     'https://.transindex.ro/?cikk=4926': 'https://itthon.transindex.ro/?cikk=4926',
+     'https://.transindex.ro/?cikk=5038': 'https://itthon.transindex.ro/?cikk=5038',
+     'https://.transindex.ro/?cikk=5101': 'https://itthon.transindex.ro/?cikk=5101',
+     'https://.transindex.ro/?cikk=5214': 'https://itthon.transindex.ro/?cikk=5214',
+     'https://.transindex.ro/?cikk=5352': 'https://itthon.transindex.ro/?cikk=5352',
+     'https://.transindex.ro/?cikk=5386': 'https://itthon.transindex.ro/?cikk=5386',
+     'https://.transindex.ro/?cikk=6130': 'https://itthon.transindex.ro/?cikk=6130',
+     'https://.transindex.ro/?cikk=6879': 'https://itthon.transindex.ro/?cikk=6879',
+     'https://.transindex.ro/?cikk=6959': 'https://itthon.transindex.ro/?cikk=6959',
+     }
+
+
 def extract_article_urls_from_page_transindex(archive_page_raw_html):
     """
         extracts and returns as a list the URLs belonging to articles from an HTML code
@@ -255,7 +334,8 @@ def extract_article_urls_from_page_transindex(archive_page_raw_html):
     """
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all('a', class_='archivumcim')
-    urls = {link['href'] for link in main_container if 'href' in link.attrs}
+    urls = {extract_article_urls_from_page_transindex_QUIRKY_URLS.get(link['href'], link['href'])
+            for link in main_container if 'href' in link.attrs}
     return urls
 
 
@@ -816,9 +896,7 @@ def extract_article_urls_from_page_test(filename, test_logger):
 
 # END SITE SPECIFIC next_page_of_article FUNCTIONS #####################################################################
 
-if __name__ == '__main__':
-    from webarticlecurator import WarcCachingDownloader, Logger
-
+def main_test():
     main_logger = Logger()
 
     # Relative path from this directory to the files in the project's test directory
@@ -833,3 +911,7 @@ if __name__ == '__main__':
     extract_next_page_url_test(choices['nextpage'], main_logger)
     extract_article_urls_from_page_test(choices['archive'], main_logger)
     # next_page_of_article_test(choices['article_nextpage'], main_logger)
+
+
+if __name__ == '__main__':
+    main_test()
