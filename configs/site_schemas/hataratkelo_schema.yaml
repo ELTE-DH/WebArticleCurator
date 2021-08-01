@@ -11,7 +11,7 @@
         # "min_pagenum": 2
         # "max_pagenum": 686	
 
-"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_hataratkelo.py"
 "extract_next_page_url_fun": "extract_next_page_url_hataratkelo"
 "extract_article_urls_from_page_fun": "extract_article_urls_from_page_hataratkelo"
 
