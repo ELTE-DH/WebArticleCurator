@@ -24,5 +24,8 @@
 
 # "new_article_url_threshold": 0
 
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"
+
 # https://utazomajom.hu/kategoria/elmenybeszamolok/?q=%2Fkategoria%2Felmenybeszamolok%2F
 # https://utazomajom.hu/kategoria/elmenybeszamolok/page/5/?q=%2Fkategoria%2Felmenybeszamolok%2F
