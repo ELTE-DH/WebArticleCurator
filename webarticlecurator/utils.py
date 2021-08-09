@@ -189,3 +189,9 @@ class DummyConverter:  # No output corpus
 
     def __del__(self):
         pass
+
+
+if __name__ == '__main__':
+    if len(sys.argv) == 2:
+        wrap_input_constants(sys.argv[1])
+        print(f'Config {sys.argv[1]} OK!')

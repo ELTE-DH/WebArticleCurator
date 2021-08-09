@@ -1,0 +1,9 @@
+language: python
+dist: bionic
+sudo: true
+python:
+  - '3.6'
+install:
+  - make venv install
+script:
+  - make test
