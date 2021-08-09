@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
+import re
 from os.path import abspath, dirname, join as os_path_join
 
 from bs4 import BeautifulSoup
@@ -21,7 +22,7 @@ def extract_next_page_url_hataratkelo(archive_page_raw_html):
     if next_page_div is not None:
         next_page = next_page_div.find('a', {'href': True})
         if next_page is not None and next_page.has_attr('href'):
-            ret = next_page.attrs['href']
+            ret = re.sub('token=[0-9-a-f]+&?', '', next_page.attrs['href'])  # Remove token parameter!
     return ret
 
 
