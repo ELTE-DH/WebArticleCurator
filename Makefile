@@ -14,7 +14,7 @@ venv:
 	@echo "Creating virtualenv in $(VENVDIR)...$(NOCOLOR)"
 	@rm -rf $(VENVDIR)
 	@$(PYTHON) -m venv $(VENVDIR)
-	@$(VENVPIP) install wheel
+	@$(VENVPIP) install wheel twine
 	@$(VENVPIP) install -r requirements.txt
 	@echo "$(GREEN)Virtualenv is succesfully created!$(NOCOLOR)"
 .PHONY: venv

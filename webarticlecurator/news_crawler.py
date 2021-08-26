@@ -156,10 +156,11 @@ class NewsArchiveCrawler:
         elif '#next-month' in url_format:
             # Plus one month (open interval): magyarnarancs.hu
             days_in_curr_month = monthrange(curr_date.year, curr_date.month)[1]
-            next_date = curr_date + timedelta(days=days_in_curr_month)
+            next_date = curr_date + timedelta(days=days_in_curr_month - curr_date.day + 1)
         else:
             # Plus one year (open interval): ???
-            next_date = curr_date + timedelta(days=365+int(isleap(curr_date.year)))
+            next_date = curr_date + timedelta(days=365 + int(isleap(curr_date.year))
+                                              - curr_date.timetuple().tm_yday + 1)
 
         art_list_url = url_format.\
             replace('#year', '{0:04d}'.format(curr_date.year)).\
