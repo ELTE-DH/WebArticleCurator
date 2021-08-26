@@ -35,7 +35,7 @@ def import_python_file(module_name, file_path):
     return module
 
 
-def wrap_input_consants(current_task_config_filename):
+def wrap_input_constants(current_task_config_filename):
     """
         Helper to store and process input data so that main function does not contain so many
          codelines of variable initialization
@@ -189,3 +189,9 @@ class DummyConverter:  # No output corpus
 
     def __del__(self):
         pass
+
+
+if __name__ == '__main__':
+    if len(sys.argv) == 2:
+        wrap_input_constants(sys.argv[1])
+        print(f'Config {sys.argv[1]} OK!')

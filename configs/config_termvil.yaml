@@ -1,0 +1,13 @@
+"schema": "site_schemas/termvil_schema.yaml"
+
+# "output_corpus": "termvil_corpus.txt"
+
+"log_file_articles": "logs/termvil_articles_log.txt"
+"log_file_archive": "logs/termvil_archive_log.txt"
+"new_problematic_urls": "logs/termvil_new_problematic_urls.txt"
+"new_good_urls": "logs/termvil_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/termvil_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/termvil_new_good_archive_urls.txt"
+
+# "date_from": 2018-07-03
+# "date_until": 2021-05-18

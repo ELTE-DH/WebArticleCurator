@@ -87,6 +87,8 @@ In the `columns` dictionary, the following features can be set for each column (
  `#next-year`, `#next-month`, `#next-day` tags which have to be replaced with the actual field of date, and
  `#pagenum` with the actual page number during the crawling)
 
+Note: One can iterate the archive by months or years by omitting `#day` (`#next-day`) or `#month` (`#next-month`) 
+
 ## Site-specific extractors
 
 There are maximum three types of extractors to be included for each portal.

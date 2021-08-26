@@ -1,0 +1,29 @@
+"site_name": "termvil"
+
+"columns":
+    "main-column":
+        "archive_url_format": "https://termvil.hu/cikkek/page/#pagenum/"
+
+        # "date_first_article": 2018-07-03
+        # "date_last_article": 2021-05-18
+
+        "initial_pagenum": 1
+        # "min_pagenum": 2
+        # "max_pagenum": 16
+
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_termvil.py"
+"extract_next_page_url_fun": "extract_next_page_url_termvil"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_termvil"
+
+"next_url_by_pagenum": false
+"infinite_scrolling": false
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": true
+"verify_request": false
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"

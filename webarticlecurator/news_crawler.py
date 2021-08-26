@@ -2,6 +2,7 @@
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
 from datetime import timedelta
+from calendar import monthrange, isleap
 
 from webarticlecurator import WarcCachingDownloader, Logger
 
@@ -145,10 +146,21 @@ class NewsArchiveCrawler:
         """
             Generates the URLs of a page that contains URLs of articles published on that day.
             This function allows URLs to be grouped by years or month as there is no guarantee that all fields exists.
-            We also enable using one day open ended interval of dates. eg. from 2018-04-04 to 2018-04-05 (not included)
+            We also enable using open ended interval of dates. eg. from 2018-04-04 to 2018-04-05 (not included)
+             or with month 2018-04-04 to 2018-05-04 (not included)
             One must place #year #month #day and #next-year #next-month #next-day labels into the url_format variable.
         """
-        next_date = curr_date + timedelta(days=1)  # Plus one day (open ended interval): vs.hu, hvg.hu
+        if '#next-day' in url_format:
+            # Plus one day (open ended interval): vs.hu, hvg.hu
+            next_date = curr_date + timedelta(days=1)
+        elif '#next-month' in url_format:
+            # Plus one month (open interval): magyarnarancs.hu
+            days_in_curr_month = monthrange(curr_date.year, curr_date.month)[1]
+            next_date = curr_date + timedelta(days=days_in_curr_month)
+        else:
+            # Plus one year (open interval): ???
+            next_date = curr_date + timedelta(days=365+int(isleap(curr_date.year)))
+
         art_list_url = url_format.\
             replace('#year', '{0:04d}'.format(curr_date.year)).\
             replace('#month', '{0:02d}'.format(curr_date.month)).\

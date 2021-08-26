@@ -1,0 +1,13 @@
+"schema": "site_schemas/hataratkelo_schema.yaml"
+
+# "output_corpus": "hataratkelo_corpus.txt"
+
+"log_file_articles": "logs/hataratkelo_articles_log.txt"
+"log_file_archive": "logs/hataratkelo_archive_log.txt"
+"new_problematic_urls": "logs/hataratkelo_new_problematic_urls.txt"
+"new_good_urls": "logs/hataratkelo_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/hataratkelo_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/hataratkelo_new_good_archive_urls.txt"
+
+# "date_from": 2012-07-19
+# "date_until": 2021-07-24
