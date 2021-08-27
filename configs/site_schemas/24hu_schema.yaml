@@ -1,0 +1,958 @@
+"site_name": "24hu"
+
+"columns":
+    "belfold":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/#day/"
+
+        "date_first_article": 2000-10-18
+
+    "belfold-2000-09-07":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/#day/"
+
+        "date_first_article": 2000-09-07
+        "date_last_article":  2000-09-07
+
+    "belfold-2000-07-01":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/#day/"
+
+        "date_first_article": 2000-07-01
+        "date_last_article":  2000-07-01
+
+    "belfold-2000-05-17":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/#day/"
+
+        "date_first_article": 2000-05-17
+        "date_last_article":  2000-05-17
+
+    "belfold-2000-05-11":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/#day/"
+
+        "date_first_article": 2000-05-11
+        "date_last_article":  2000-05-11
+
+    "belfold-2000-04-19":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/#day/"
+
+        "date_first_article": 2000-04-19
+        "date_last_article":  2000-04-19
+
+    "belfold-2000-04-01":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/#day/"
+
+        "date_first_article": 2000-04-01
+        "date_last_article":  2000-04-01
+
+    "belfold-2000-03-29":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/#day/"
+
+        "date_first_article": 2000-03-29
+        "date_last_article":  2000-03-29
+
+    "belfold-2000-02-28":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/#day/"
+
+        "date_first_article": 2000-02-28
+        "date_last_article":  2000-02-28
+
+    "belfold-2000-02-24":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/#day/"
+
+        "date_first_article": 2000-02-24
+        "date_last_article":  2000-02-24
+
+    "belfold-2000-02-17":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/#day/"
+
+        "date_first_article": 2000-02-17
+        "date_last_article":  2000-02-17
+
+    "belfold-2000-01-13":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/#day/"
+
+        "date_first_article": 2000-01-13
+        "date_last_article":  2000-01-13
+
+    "belfold-2000-01-06":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/#day/"
+
+        "date_first_article": 2000-01-06
+        "date_last_article":  2000-01-06
+
+    "belfold-2000-01-04":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/#day/"
+
+        "date_first_article": 2000-01-04
+        "date_last_article":  2000-01-04
+
+    "belfold-2000-01-01":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/#day/"
+
+        "date_first_article": 2000-01-01
+        "date_last_article":  2000-01-01
+
+    "belfold-1997-11-04":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/#day/"
+
+        "date_first_article": 1997-11-04
+        "date_last_article":  1997-11-04
+
+    "belfold-1990-11-02":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/#day/"
+
+        "date_first_article": 1990-11-02
+        "date_last_article":  1990-11-02
+
+    "belfold-1848-12-15":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/#day/"
+
+        "date_first_article": 1848-12-15
+        "date_last_article":  1848-12-15
+
+    "belfold-0001-01-01":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/#day/"
+
+        "date_first_article": 0001-01-01
+        "date_last_article":  0001-01-01
+
+    "kulfold":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2005-05-03
+
+    "kulfold-2005-04-30":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2005-04-30
+        "date_last_article": 2005-04-30
+
+    "kulfold-2005-04-29":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2005-04-29
+        "date_last_article": 2005-04-29
+
+    "kulfold-2005-04-27":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2005-04-27
+        "date_last_article": 2005-04-27
+
+    "kulfold-2005-04-25":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2005-04-25
+        "date_last_article": 2005-04-25
+
+    "kulfold-2005-04-19":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2005-04-19
+        "date_last_article": 2005-04-20
+
+    "kulfold-2005-04-13":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2005-04-13
+        "date_last_article": 2005-04-13
+
+    "kulfold-2005-03-18":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2005-03-18
+        "date_last_article": 2005-03-18
+
+    "kulfold-2005-02-27":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2005-02-27
+        "date_last_article": 2005-02-27
+
+    "kulfold-2004-12-10":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2004-12-10
+        "date_last_article": 2004-12-10
+
+    "kulfold-2004-12-01":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2004-12-01
+        "date_last_article": 2004-12-01
+
+    "kulfold-2004-11-11":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2004-11-11
+        "date_last_article": 2004-11-11
+
+    "kulfold-2004-10-25":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2004-10-25
+        "date_last_article": 2004-10-25
+
+    "kulfold-2004-09-16":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2004-09-16
+        "date_last_article": 2004-09-16
+
+    "kulfold-2004-06-24":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2004-06-24
+        "date_last_article": 2004-06-24
+
+    "kulfold-2004-06-10":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2004-06-10
+        "date_last_article": 2004-06-17
+
+    "kulfold-2004-03-11":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2004-03-11
+        "date_last_article": 2004-03-11
+
+    "kulfold-2004-02-26":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2004-02-26
+        "date_last_article": 2004-02-26
+
+    "kulfold-2004-02-14":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2004-02-14
+        "date_last_article": 2004-02-14
+
+    "kulfold-2003-12-17":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-12-17
+        "date_last_article": 2003-12-18
+
+    "kulfold-2003-12-15":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-12-15
+        "date_last_article": 2003-12-15
+
+    "kulfold-2003-12-12":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-12-12
+        "date_last_article": 2003-12-12
+
+    "kulfold-2003-12-10":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-12-10
+        "date_last_article": 2003-12-10
+
+    "kulfold-2003-11-17":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-11-17
+        "date_last_article": 2003-11-17
+
+    "kulfold-2003-11-12":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-11-12
+        "date_last_article": 2003-11-12
+
+    "kulfold-2003-10-27":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-10-27
+        "date_last_article": 2003-10-27
+
+    "kulfold-2003-10-17":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-10-17
+        "date_last_article": 2003-10-17
+
+    "kulfold-2003-10-12":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-10-12
+        "date_last_article": 2003-10-12
+
+    "kulfold-2003-10-10":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-10-10
+        "date_last_article": 2003-10-10
+
+    "kulfold-2003-08-08":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-08-08
+        "date_last_article": 2003-08-08
+
+    "kulfold-2003-07-25":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-07-25
+        "date_last_article": 2003-07-25
+
+    "kulfold-2003-07-18":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-07-18
+        "date_last_article": 2003-07-18
+
+    "kulfold-2003-07-10":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-07-10
+        "date_last_article": 2003-07-11
+
+    "kulfold-2003-07-04":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-07-04
+        "date_last_article": 2003-07-04
+
+    "kulfold-2003-06-06":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-06-06
+        "date_last_article": 2003-06-06
+
+    "kulfold-2003-06-03":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-06-03
+        "date_last_article": 2003-06-03
+
+    "kulfold-2003-05-29":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-05-29
+        "date_last_article": 2003-05-30
+
+    "kulfold-2003-05-07":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-05-07
+        "date_last_article": 2003-05-07
+
+    "kulfold-2003-04-23":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-04-23
+        "date_last_article": 2003-04-23
+
+    "kulfold-2003-04-16":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-04-16
+        "date_last_article": 2003-04-17
+
+    "kulfold-2003-04-14":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-04-14
+        "date_last_article": 2003-04-14
+
+    "kulfold-2003-04-09":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-04-09
+        "date_last_article": 2003-04-10
+
+    "kulfold-2003-04-07":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-04-07
+        "date_last_article": 2003-04-07
+
+    "kulfold-2003-04-03":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-04-03
+        "date_last_article": 2003-04-03
+
+    "kulfold-2003-03-30":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-03-24
+        "date_last_article": 2003-04-01
+
+    "kulfold-2003-03-24":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-03-24
+        "date_last_article": 2003-03-28
+
+    "kulfold-2003-03-17":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-03-17
+        "date_last_article": 2003-03-22
+
+    "kulfold-2003-03-10":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-03-10
+        "date_last_article": 2003-03-12
+
+    "kulfold-2003-03-07":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-03-07
+        "date_last_article": 2003-03-07
+
+    "kulfold-2003-03-04":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-03-04
+        "date_last_article": 2003-03-04
+
+    "kulfold-2003-02-28":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-02-28
+        "date_last_article": 2003-02-28
+
+    "kulfold-2003-02-24":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-02-24
+        "date_last_article": 2003-02-24
+
+    "kulfold-2003-02-19":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-02-19
+        "date_last_article": 2003-02-20
+
+    "kulfold-2003-02-14":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-02-14
+        "date_last_article": 2003-02-14
+
+    "kulfold-2003-02-10":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-02-10
+        "date_last_article": 2003-02-11
+
+    "kulfold-2003-02-08":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-02-08
+        "date_last_article": 2003-02-08
+
+    "kulfold-2003-02-05":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-02-05
+        "date_last_article": 2003-02-05
+
+    "kulfold-2003-01-29":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-01-29
+        "date_last_article": 2003-01-31
+
+    "kulfold-2003-01-24":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-01-24
+        "date_last_article": 2003-01-24
+
+    "kulfold-2003-01-19":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2003-01-19
+        "date_last_article": 2003-01-19
+
+    "kulfold-2002-10-03":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2002-10-03
+        "date_last_article": 2002-10-03
+
+    "kulfold-2002-03-05":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2002-03-05
+        "date_last_article": 2002-03-05
+
+    "kulfold-2001-10-16":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-10-16
+        "date_last_article": 2001-10-16
+
+    "kulfold-2001-09-21":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-09-21
+        "date_last_article": 2001-09-21
+
+    "kulfold-2001-09-11":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-09-11
+        "date_last_article": 2001-09-11
+
+    "kulfold-2001-09-04":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-09-04
+        "date_last_article": 2001-09-04
+
+    "kulfold-2001-08-28":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-08-28
+        "date_last_article": 2001-08-28
+
+    "kulfold-2001-08-21":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-08-21
+        "date_last_article": 2001-08-21
+
+    "kulfold-2001-08-14":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-08-14
+        "date_last_article": 2001-08-14
+
+    "kulfold-2001-08-07":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-08-07
+        "date_last_article": 2001-08-07
+
+    "kulfold-2001-07-31":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-07-31
+        "date_last_article": 2001-07-31
+
+    "kulfold-2001-07-24":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-07-24
+        "date_last_article": 2001-07-24
+
+    "kulfold-2001-07-17":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-07-17
+        "date_last_article": 2001-07-17
+
+    "kulfold-2001-07-10":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-07-10
+        "date_last_article": 2001-07-10
+
+    "kulfold-2001-07-03":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-07-03
+        "date_last_article": 2001-07-03
+
+    "kulfold-2001-06-26":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-06-26
+        "date_last_article": 2001-06-27
+
+    "kulfold-2001-06-19":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-06-19
+        "date_last_article": 2001-06-19
+
+    "kulfold-2001-06-12":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-06-12
+        "date_last_article": 2001-06-12
+
+    "kulfold-2001-06-05":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-06-05
+        "date_last_article": 2001-06-05
+
+    "kulfold-2001-05-29":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-05-29
+        "date_last_article": 2001-05-29
+
+    "kulfold-2001-05-22":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-05-22
+        "date_last_article": 2001-05-22
+
+    "kulfold-2001-05-15":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-05-15
+        "date_last_article": 2001-05-15
+
+    "kulfold-2001-05-08":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-05-08
+        "date_last_article": 2001-05-08
+
+    "kulfold-2001-04-30":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-04-30
+        "date_last_article": 2001-04-30
+
+    "kulfold-2001-04-24":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-04-24
+        "date_last_article": 2001-04-24
+
+    "kulfold-2001-03-27":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 2001-03-27
+        "date_last_article": 2001-03-27
+
+    "kulfold-0001-01-01":
+        "archive_url_format": "https://24.hu/kulfold/#year/#month/#day/"
+
+        "date_first_article": 0001-01-01
+        "date_last_article": 0001-01-01
+
+    "gazdasag":
+        "archive_url_format": "https://24.hu/fn/gazdasag/#year/#month/#day/"
+
+        "date_first_article": 1996-01-03
+        # There are some issues with this column. On the last ~900 pages (after https://24.hu/fn/gazdasag/page/2411/)
+        # new articles appear on every 7th day. This will give warnings.
+
+    "gazdasag-0001-01-01":
+        "archive_url_format": "https://24.hu/fn/gazdasag/#year/#month/#day/"
+
+        "date_first_article": 0001-01-01
+        "date_last_article":  0001-01-01
+
+    "kultura":
+        "archive_url_format": "https://24.hu/kultura/#year/#month/#day/"
+
+        "date_first_article": 2010-04-08
+
+    "kultura-0001-01-01":
+        "archive_url_format": "https://24.hu/kultura/#year/#month/#day/"
+
+        "date_first_article": 0001-01-01
+        "date_last_article":  0001-01-01
+
+    "tech":
+        "archive_url_format": "https://24.hu/tech/#year/#month/#day/"
+
+        "date_first_article": 2010-04-15
+
+    "elet-stilus":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2003-06-09
+        # There are some issues with this column in the last section of the archive.
+        # New articles appear on every 7th day. This will give warnings.
+
+    "elet-stilus-2003-06-04":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2003-06-04
+        "date_last_article": 2003-06-04
+
+    "elet-stilus-2002-11-20":
+      "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+      "date_first_article": 2002-11-20
+      "date_last_article": 2003-03-20
+
+    "elet-stilus-2002-09-01":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2002-09-01
+        "date_last_article": 2002-09-01
+
+    "elet-stilus-2002-08-28":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2002-08-28
+        "date_last_article": 2002-08-28
+
+    "elet-stilus-2002-08-25":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2002-08-25
+        "date_last_article": 2002-08-25
+
+    "elet-stilus-2002-08-21":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2002-08-21
+        "date_last_article": 2002-08-22
+
+    "elet-stilus-2002-08-13":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2002-08-13
+        "date_last_article": 2002-08-16
+
+    "elet-stilus-2002-08-08":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2002-08-08
+        "date_last_article": 2002-08-11
+
+    "elet-stilus-2002-08-06":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2002-08-06
+        "date_last_article": 2002-08-06
+
+    "elet-stilus-2002-07-31":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2002-07-31
+        "date_last_article": 2002-08-01
+
+    "elet-stilus-2002-07-25":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2002-07-25
+        "date_last_article": 2002-07-26
+
+    "elet-stilus-2002-07-18":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2002-07-18
+        "date_last_article": 2002-07-18
+
+    "elet-stilus-2002-07-16":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2002-07-16
+        "date_last_article": 2002-07-16
+
+    "elet-stilus-2002-07-04":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2002-07-04
+        "date_last_article": 2002-07-04
+
+    "elet-stilus-2002-04-17":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2002-04-17
+        "date_last_article": 2002-04-17
+
+    "elet-stilus-2001-09-04":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2001-09-04
+        "date_last_article": 2001-09-04
+
+    "elet-stilus-2001-08-29":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2001-08-29
+        "date_last_article": 2001-08-29
+
+    "elet-stilus-2001-08-14":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2001-08-14
+        "date_last_article": 2001-08-14
+
+    "elet-stilus-2001-07-17":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2001-07-17
+        "date_last_article": 2001-07-18
+
+    "elet-stilus-2001-07-03":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2001-07-03
+        "date_last_article": 2001-07-03
+
+    "elet-stilus-2001-06-28":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2001-06-28
+        "date_last_article": 2001-06-28
+
+    "elet-stilus-2001-06-20":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2001-06-20
+        "date_last_article": 2001-06-20
+
+    "elet-stilus-2001-05-29":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2001-05-29
+        "date_last_article": 2001-05-29
+
+    "elet-stilus-2001-05-08":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2001-05-08
+        "date_last_article": 2001-05-08
+
+    "elet-stilus-2001-04-24":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2001-04-24
+        "date_last_article": 2001-04-24
+
+    "elet-stilus-2001-04-19":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2001-04-19
+        "date_last_article": 2001-04-19
+
+    "elet-stilus-2001-03-20":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2001-03-20
+        "date_last_article": 2001-03-20
+
+    "elet-stilus-2001-03-12":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2001-03-12
+        "date_last_article": 2001-03-12
+
+    "elet-stilus-2001-03-07":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2001-03-07
+        "date_last_article": 2001-03-07
+
+    "elet-stilus-2001-02-21":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2001-02-21
+        "date_last_article": 2001-02-21
+
+    "elet-stilus-2001-02-07":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2001-02-07
+        "date_last_article": 2001-02-07
+
+    "elet-stilus-2000-06-07":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 2000-06-07
+        "date_last_article":  2000-06-07
+
+    "elet-stilus-1956-10-28":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 1956-10-28
+        "date_last_article":  1956-10-30
+
+    "elet-stilus-1910-11-24":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 1910-11-24
+        "date_last_article":  1910-11-24
+
+    "elet-stilus-0001-01-01":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/#day/"
+
+        "date_first_article": 0001-01-01
+        "date_last_article":  0001-01-01
+
+    "kozelet":
+        "archive_url_format": "https://24.hu/kozelet/#year/#month/#day/"
+
+        "date_first_article": 2010-03-02
+
+    "uzleti-tippek":
+        "archive_url_format": "https://24.hu/fn/uzleti-tippek/#year/#month/#day/"
+
+        "date_first_article": 2001-02-03
+
+    "uzleti-tippek-old1":
+        "archive_url_format": "https://24.hu/fn/uzleti-tippek/#year/#month/#day/"
+
+        "date_first_article": 1996-01-01
+        "date_last_article":  1996-01-02
+
+    "uzleti-tippek-old2":
+        "archive_url_format": "https://24.hu/fn/uzleti-tippek/#year/#month/#day/"
+
+        "date_first_article": 0001-01-01
+        "date_last_article":  0001-01-02
+
+    "szorakozas":
+        "archive_url_format": "https://24.hu/szorakozas/#year/#month/#day/"
+
+        "date_first_article": 2010-03-01
+
+    "szorakozas-old1":
+        "archive_url_format": "https://24.hu/szorakozas/#year/#month/#day/"
+
+        "date_first_article": 0001-01-01
+        "date_last_article":  0001-01-02
+
+    # The "europoli" column's articles link to articles in the main columns (e.g. belfold, kulfold, etc.).
+    # No need to download these again.
+
+    "tudomany":
+        "archive_url_format": "https://24.hu/tudomany/#year/#month/#day/"
+
+        "date_first_article": 2010-03-01
+
+    "sport":
+        "archive_url_format": "https://24.hu/sport/#year/#month/#day/"
+
+        "date_first_article": 2011-09-27
+
+    "otthon":
+        "archive_url_format": "https://24.hu/otthon/#year/#month/#day/"
+
+        "date_first_article": 2017-05-01
+
+    # The "velemeny" column's articles link to articles in the main columns (e.g. belfold, kulfold, etc.).
+    # No need to download these again.
+
+    # The "video" column's articles link to articles in the main columns (e.g. belfold, kulfold, etc.).
+    # No need to download these again.
+
+    # The "podcast" column's articles link to articles in the main columns (e.g. belfold, kulfold, etc.).
+    # No need to download these again.
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_news_ngvmt.py"
+"extract_next_page_url_fun": "extract_next_page_url_24hu"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_24hu"
+
+"next_url_by_pagenum": false
+"infinite_scrolling": false
+"archive_page_urls_by_date": true
+"go_reverse_in_archive": false
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"

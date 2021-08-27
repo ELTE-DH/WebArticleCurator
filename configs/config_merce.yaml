@@ -1,0 +1,10 @@
+"schema": "site_schemas/merce_schema.yaml"
+
+# "output_corpus": "merce_corpus.txt"
+
+"log_file_articles": "logs/merce_articles_log.txt"
+"log_file_archive": "logs/merce_archive_log.txt"
+"new_problematic_urls": "logs/merce_new_problematic_urls.txt"
+"new_good_urls": "logs/merce_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/merce_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/merce_new_good_archive_urls.txt"

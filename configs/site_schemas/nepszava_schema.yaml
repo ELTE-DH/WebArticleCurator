@@ -1,0 +1,110 @@
+"site_name": "nepszava"
+
+# This schema works with HTML fragments, injected into the archive pages dynamically by a JavaScript, when scrolling.
+# Unfortunately, warnings will be shown because the site operates with tags, which are non-exclusive.
+
+"columns":
+    "belfold":
+        "archive_url_format": "https://nepszava.hu/json/list.json?type_path=tag&data_path=belfold&pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "gazdasag":
+        "archive_url_format": "https://nepszava.hu/json/list.json?type_path=tag&data_path=gazdasag&pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "kulfold":
+        "archive_url_format": "https://nepszava.hu/json/list.json?type_path=tag&data_path=kulfold&pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "reflektor":
+        "archive_url_format": "https://nepszava.hu/json/list.json?type_path=tag&data_path=reflektor&pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "velemeny":
+        "archive_url_format": "https://nepszava.hu/json/list.json?type_path=tag&data_path=velemeny&pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "fotogaleria":
+        "archive_url_format": "https://nepszava.hu/json/list.json?type_path=tag&data_path=fotogaleria&pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "szep-szo":
+        "archive_url_format": "https://nepszava.hu/json/list.json?type_path=tag&data_path=szep-szo&pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "visszhang":
+        "archive_url_format": "https://nepszava.hu/json/list.json?type_path=tag&data_path=visszhang&pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "fovarosi-negyed":
+        "archive_url_format": "https://nepszava.hu/json/list.json?type_path=tag&data_path=fovarosi-negyed&pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "nyitott-mondat":
+        "archive_url_format": "https://nepszava.hu/json/list.json?type_path=tag&data_path=nyitott-mondat&pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "kultura":
+        "archive_url_format": "https://nepszava.hu/json/list.json?type_path=tag&data_path=kultura&pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "bunugy-baleset":
+        "archive_url_format": "https://nepszava.hu/json/list.json?type_path=tag&data_path=bunugy-baleset&pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "sport":
+        "archive_url_format": "https://nepszava.hu/json/list.json?type_path=tag&data_path=sport&pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "zoldzona":
+        "archive_url_format": "https://nepszava.hu/json/list.json?type_path=tag&data_path=zoldzona&pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+    "mozaik":
+        "archive_url_format": "https://nepszava.hu/json/list.json?type_path=tag&data_path=mozaik&pageCount=#pagenum"
+
+        "initial_pagenum": 0
+        "min_pagenum": 1
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_news_ngvmt.py"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_nepszava"
+
+"next_url_by_pagenum": true
+"infinite_scrolling": true
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": false
+"verify_request": false
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"
