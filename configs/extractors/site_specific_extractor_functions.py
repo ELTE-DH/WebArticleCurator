@@ -295,7 +295,7 @@ def extract_article_urls_from_page_valasz(archive_page_raw_html):
     :param archive_page_raw_html: archive page containing list of articles with their URLs
     :return: list that contains URLs
     """
-    urls = None
+    urls = set()
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')  # The column 'publi' has different name!
     container = soup.find('section', class_={'normal cikk lista', 'publi cikk lista'})
     if container is not None:
