@@ -1,0 +1,101 @@
+"site_name": "hang"
+
+# The site has some articles locked behind a paywall.
+# With the current setup just some part of these articles are downloaded.
+
+"columns":
+    "belfold":
+        "archive_url_format": "https://hang.hu/belfold/?page=#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "kulfold":
+        "archive_url_format": "https://hang.hu/kulfold/?page=#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "publicisztika":
+        "archive_url_format": "https://hang.hu/publicisztika/?page=#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "gazdasag":
+        "archive_url_format": "https://hang.hu/gazdasag/?page=#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "tudomany":
+        "archive_url_format": "https://hang.hu/tudomany/?page=#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "sport":
+        "archive_url_format": "https://hang.hu/sport/?page=#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "kultura":
+        "archive_url_format": "https://hang.hu/kultura/?page=#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "kotottfogas":
+        "archive_url_format": "https://hang.hu/kotottfogas?page=#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "flaszter":
+        "archive_url_format": "https://hang.hu/flaszter?page=#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "arnyek-podcast":
+        "archive_url_format": "https://hang.hu/arnyek-podcast?page=#pagenum"
+
+        "initial_pagenum": 1
+
+    "ner-hirado":
+        "archive_url_format": "https://hang.hu/nerhirado?page=#pagenum"
+
+        "initial_pagenum": 1
+
+    "szamizdat-podcast":
+        "archive_url_format": "https://hang.hu/szamizdat-podcast?page=#pagenum"
+
+        "initial_pagenum": 1
+
+    "video":
+        # Probably a bug: in this column, no pagination is displayed.
+        "archive_url_format": "https://hang.hu/video?page=#pagenum"
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "elovalasztas":
+        "archive_url_format": "https://hang.hu/elovalasztas?page=#pagenum"
+
+        "initial_pagenum": 1
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_news_ngvmt.py"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_hang"
+
+"next_url_by_pagenum": true
+"infinite_scrolling": true
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": false
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"

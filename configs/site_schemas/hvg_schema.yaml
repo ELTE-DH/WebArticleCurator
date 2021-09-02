@@ -1,0 +1,81 @@
+"site_name": "hvg"
+
+"columns":
+    "itthon":
+        "archive_url_format": "https://hvg.hu/itthon/1"
+
+    "idojaras":
+        "archive_url_format": "https://hvg.hu/idojaras/1"
+
+    "vilag":
+        "archive_url_format": "https://hvg.hu/vilag/1"
+
+    "eurologus":
+        "archive_url_format": "https://hvg.hu/eurologus/1"
+
+    "gazdasag":
+        "archive_url_format": "https://hvg.hu/gazdasag/1"
+
+    "zhvg":
+        "archive_url_format": "https://hvg.hu/zhvg/1"
+
+    "ingatlan":
+        "archive_url_format": "https://hvg.hu/ingatlan/1"
+
+    "tudomany":
+        "archive_url_format": "https://hvg.hu/tudomany/1"
+
+    "velemeny":
+        "archive_url_format": "https://hvg.hu/velemeny/1"
+
+    "velemeny_nyuzsog":
+        "archive_url_format": "https://hvg.hu/velemeny.nyuzsog/1"
+
+    "w":
+        "archive_url_format": "https://hvg.hu/w/1"
+
+    "sport":
+        "archive_url_format": "https://hvg.hu/sport/1"
+
+    "cegauto":
+        "archive_url_format": "https://hvg.hu/cegauto/1"
+
+    "kkv":
+        "archive_url_format": "https://hvg.hu/kkv/1"
+
+    "kultura":
+        "archive_url_format": "https://hvg.hu/kultura/1"
+
+    "hvgmuerto":
+        "archive_url_format": "https://hvg.hu/hvgmuerto/1"
+
+    "elet":
+        "archive_url_format": "https://hvg.hu/elet/1"
+
+    "pszichologiamagazin":
+        "archive_url_format": "https://hvg.hu/pszichologiamagazin/1"
+
+    "hvgkonyvek":
+        "archive_url_format": "https://hvg.hu/hvgkonyvek/1"
+
+    "brandcontent":
+        "archive_url_format": "https://hvg.hu/brandcontent/1"
+
+    "nagyitas":
+        "archive_url_format": "https://hvg.hu/nagyitas/1"
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_news_ngvmt.py"
+"extract_next_page_url_fun": "extract_next_page_url_hvg"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_hvg"
+
+"next_url_by_pagenum": false
+"infinite_scrolling": false
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": false
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"
