@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from os.path import abspath, dirname, join as os_path_join
 import re
 import json
+from os.path import abspath, dirname, join as os_path_join
+
 from bs4 import BeautifulSoup
+
 from webarticlecurator import WarcCachingDownloader, Logger
 
 
@@ -212,7 +214,7 @@ def safe_extract_hrefs_from_a_tags(main_container):
             yield a_tag_a['href']
 
 
-article_urls_regex_24hu = re.compile('m-articleWidget__wrap[ ].*')
+ARTICLE_URLS_REGEX_24HU_RE = re.compile('m-articleWidget__wrap .*')
 
 
 def extract_article_urls_from_page_24hu(archive_page_raw_html):
@@ -222,7 +224,7 @@ def extract_article_urls_from_page_24hu(archive_page_raw_html):
     :return: list that contains URLs
     """
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    main_container = soup.find_all(attrs={'class': article_urls_regex_24hu})
+    main_container = soup.find_all(attrs={'class': ARTICLE_URLS_REGEX_24HU_RE})
     urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
     return urls
 
@@ -245,7 +247,7 @@ def extract_article_urls_from_page_hang(archive_page_raw_html):
     :param archive_page_raw_html: archive page containing list of articles with their URLs
     :return: list that contains URLs
     """
-    urls = None
+    urls = set()
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     container = soup.find('div', attrs={'class': 'entry post-list col-12 col-md-7'})
     if container is not None:
@@ -311,7 +313,7 @@ def extract_article_urls_from_page_merce(archive_page_raw_html):
     :param archive_page_raw_html: archive page containing list of articles with their URLs
     :return: list that contains URLs
     """
-    urls = None
+    urls = set()
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     container = soup.find('div', attrs={'class': 'postlist track-cat'})
     if container is not None:

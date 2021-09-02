@@ -9,63 +9,54 @@
 
         "initial_pagenum": 1
         "min_pagenum": 2
-        "max_pagenum": 1011
 
     "kulfold":
         "archive_url_format": "https://hang.hu/kulfold/?page=#pagenum"
 
         "initial_pagenum": 1
         "min_pagenum": 2
-        "max_pagenum": 406
 
     "publicisztika":
         "archive_url_format": "https://hang.hu/publicisztika/?page=#pagenum"
 
         "initial_pagenum": 1
         "min_pagenum": 2
-        "max_pagenum": 182
 
     "gazdasag":
         "archive_url_format": "https://hang.hu/gazdasag/?page=#pagenum"
 
         "initial_pagenum": 1
         "min_pagenum": 2
-        "max_pagenum": 109
 
     "tudomany":
         "archive_url_format": "https://hang.hu/tudomany/?page=#pagenum"
 
         "initial_pagenum": 1
         "min_pagenum": 2
-        "max_pagenum": 43
 
     "sport":
         "archive_url_format": "https://hang.hu/sport/?page=#pagenum"
 
         "initial_pagenum": 1
         "min_pagenum": 2
-        "max_pagenum": 72
 
     "kultura":
         "archive_url_format": "https://hang.hu/kultura/?page=#pagenum"
 
         "initial_pagenum": 1
         "min_pagenum": 2
-        "max_pagenum": 145
 
     "kotottfogas":
         "archive_url_format": "https://hang.hu/kotottfogas?page=#pagenum"
 
         "initial_pagenum": 1
         "min_pagenum": 2
-        "max_pagenum": 10
 
     "flaszter":
         "archive_url_format": "https://hang.hu/flaszter?page=#pagenum"
 
         "initial_pagenum": 1
         "min_pagenum": 2
-        "max_pagenum": 9
 
     "arnyek-podcast":
         "archive_url_format": "https://hang.hu/arnyek-podcast?page=#pagenum"
@@ -88,7 +79,6 @@
 
         "initial_pagenum": 1
         "min_pagenum": 2
-        "max_pagenum": 3
 
     "elovalasztas":
         "archive_url_format": "https://hang.hu/elovalasztas?page=#pagenum"
@@ -99,7 +89,7 @@
 "extract_article_urls_from_page_fun": "extract_article_urls_from_page_hang"
 
 "next_url_by_pagenum": true
-"infinite_scrolling": false
+"infinite_scrolling": true
 "archive_page_urls_by_date": false
 "go_reverse_in_archive": false
 "verify_request": true

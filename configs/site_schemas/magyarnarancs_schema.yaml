@@ -7,7 +7,6 @@
         "archive_url_format": "https://magyarnarancs.hu/kereses?search_txt=.&search_szerzo=&search_idoszak_tol=#year-#month-01&search_idoszak_ig=#year-#next-month-01"
 
         "date_first_article": 1996-05-09
-        "date_last_article": 2021-08-26
 
 "portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_news_ngvmt.py"
 "extract_next_page_url_fun": "extract_next_page_url_magyarnarancs"
