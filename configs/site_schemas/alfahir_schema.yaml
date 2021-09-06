@@ -1,10 +1,23 @@
 "site_name": "alfahir"
 
 "columns":
+    "main-column-to-2012-02":
+        "archive_url_format": "https://alfahir.hu/kereso?kereses=&from=#year-#month-#day&to=#year-#month-#day"
+
+        "date_first_article": 2011-12-01
+        "date_last_article": 2012-02-29
+
+    # This time period has few articles, so a monthly approach is used.
+    "main-column-to-2012-06":
+        "archive_url_format": "https://alfahir.hu/kereso?kereses=&from=#year-#month-01&to=#next-year-#next-month-01"
+
+        "date_first_article": 2012-03-01
+        "date_last_article": 2012-06-30
+
     "main-column":
         "archive_url_format": "https://alfahir.hu/kereso?kereses=&from=#year-#month-#day&to=#year-#month-#day"
 
-        "date_first_article": 2011-12-31
+        "date_first_article": 2012-07-02
 
 "portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_news_ngvmt.py"
 "extract_next_page_url_fun": "extract_next_page_url_alfahir"
