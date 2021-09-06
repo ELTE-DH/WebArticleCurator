@@ -4,7 +4,7 @@
 
 "columns":
     "main-column":
-        "archive_url_format": "https://magyarnarancs.hu/kereses?search_txt=.&search_szerzo=&search_idoszak_tol=#year-#month-01&search_idoszak_ig=#year-#next-month-01"
+        "archive_url_format": "https://magyarnarancs.hu/kereses?search_txt=.&search_szerzo=&search_idoszak_tol=#year-#month-01&search_idoszak_ig=#next-year-#next-month-01"
 
         "date_first_article": 1996-05-09
 
