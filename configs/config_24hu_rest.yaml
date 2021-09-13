@@ -1,0 +1,12 @@
+"schema": "site_schemas/24hu_rest_schema.yaml"
+
+# "output_corpus": "24hu_rest_corpus.txt"
+
+"log_file_articles": "logs/24hu_rest_articles_log.txt"
+"log_file_archive": "logs/24hu_rest_archive_log.txt"
+"new_problematic_urls": "logs/24hu_rest_new_problematic_urls.txt"
+"new_good_urls": "logs/24hu_rest_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/24hu_rest_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/24hu_rest_new_good_archive_urls.txt"
+
+# "date_from": 2014-09-17

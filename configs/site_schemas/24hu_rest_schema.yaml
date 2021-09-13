@@ -1,0 +1,132 @@
+"site_name": "24hu"
+
+"columns":
+    # kultura - empty intervals are avoided with a pseudo-column.
+    "kultura":
+        "archive_url_format": "https://24.hu/kultura/#year/#month/"
+
+        "date_first_article": 2010-04-01
+
+    "kultura-0001-01":
+        "archive_url_format": "https://24.hu/kultura/#year/#month/"
+
+        "date_first_article": 0001-01-01
+        "date_last_article":  0001-01-31
+
+    # tech.
+    "tech":
+        "archive_url_format": "https://24.hu/tech/#year/#month/"
+
+        "date_first_article": 2010-04-01
+
+    # elet-stilus - empty intervals are avoided with several pseudo-columns.
+    "elet-stilus":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/"
+
+        "date_first_article": 2001-02-01
+
+    "elet-stilus-2000-06":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/"
+
+        "date_first_article": 2000-06-01
+        "date_last_article":  2000-06-30
+
+    "elet-stilus-1956-10":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/"
+
+        "date_first_article": 1956-10-01
+        "date_last_article":  1956-10-31
+
+    "elet-stilus-1910-11":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/"
+
+        "date_first_article": 1910-11-01
+        "date_last_article":  1910-11-30
+
+    "elet-stilus-0001-01":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/"
+
+        "date_first_article": 0001-01-01
+        "date_last_article":  0001-01-31
+
+    # kozelet.
+    "kozelet":
+        "archive_url_format": "https://24.hu/kozelet/#year/#month/"
+
+        "date_first_article": 2010-03-01
+
+    # uzleti-tippek - empty intervals are avoided with several pseudo-columns.
+    "uzleti-tippek":
+        "archive_url_format": "https://24.hu/fn/uzleti-tippek/#year/#month/"
+
+        "date_first_article": 2001-02-01
+
+    "uzleti-tippek-1996-01":
+        "archive_url_format": "https://24.hu/fn/uzleti-tippek/#year/#month/"
+
+        "date_first_article": 1996-01-01
+        "date_last_article":  1996-01-31
+
+    "uzleti-tippek-0001-01":
+        "archive_url_format": "https://24.hu/fn/uzleti-tippek/#year/#month/"
+
+        "date_first_article": 0001-01-01
+        "date_last_article":  0001-01-31
+
+    # szorakozas - empty intervals are avoided with a pseudo-column.
+    "szorakozas":
+        "archive_url_format": "https://24.hu/szorakozas/#year/#month/"
+
+        "date_first_article": 2010-03-01
+
+    "szorakozas-0001-01":
+        "archive_url_format": "https://24.hu/szorakozas/#year/#month/"
+
+        "date_first_article": 0001-01-01
+        "date_last_article":  0001-01-31
+
+    # The "europoli" column's articles link to articles in the main columns (e.g. belfold, kulfold, etc.).
+    # No need to download these again.
+
+    # tudomany.
+    "tudomany":
+        "archive_url_format": "https://24.hu/tudomany/#year/#month/"
+
+        "date_first_article": 2010-03-01
+
+    # sport.
+    "sport":
+        "archive_url_format": "https://24.hu/sport/#year/#month/"
+
+        "date_first_article": 2011-09-01
+
+    # otthon.
+    "otthon":
+        "archive_url_format": "https://24.hu/otthon/#year/#month/"
+
+        "date_first_article": 2017-05-01
+
+    # The "velemeny" column's articles link to articles in the main columns (e.g. belfold, kulfold, etc.).
+    # No need to download these again.
+
+    # The "video" column's articles link to articles in the main columns (e.g. belfold, kulfold, etc.).
+    # No need to download these again.
+
+    # The "podcast" column's articles link to articles in the main columns (e.g. belfold, kulfold, etc.).
+    # No need to download these again.
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_news_ngvmt.py"
+"extract_next_page_url_fun": "extract_next_page_url_24hu"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_24hu"
+
+"next_url_by_pagenum": false
+"infinite_scrolling": false
+"archive_page_urls_by_date": true
+"go_reverse_in_archive": false
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"
