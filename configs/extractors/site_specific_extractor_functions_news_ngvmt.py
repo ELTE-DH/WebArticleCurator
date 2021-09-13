@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-import re
 import json
 from os.path import abspath, dirname, join as os_path_join
 
@@ -214,9 +213,6 @@ def safe_extract_hrefs_from_a_tags(main_container):
             yield a_tag_a['href']
 
 
-ARTICLE_URLS_REGEX_24HU_RE = re.compile('m-articleWidget__wrap .*')
-
-
 def extract_article_urls_from_page_24hu(archive_page_raw_html):
     """
         extracts and returns as a list the URLs belonging to articles from an HTML code
@@ -224,7 +220,10 @@ def extract_article_urls_from_page_24hu(archive_page_raw_html):
     :return: list that contains URLs
     """
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    main_container = soup.find_all(attrs={'class': ARTICLE_URLS_REGEX_24HU_RE})
+    main_container = soup.find_all('article', class_='-listPost')
+    large = soup.find('article', class_='-largeEntryPost')
+    if large is not None:
+        main_container.append(large)
     urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
     return urls
 
