@@ -458,16 +458,19 @@ def sample_warc_by_urls(source_warcfiles, new_urls, sampler_logger, target_warcf
     for url in new_urls:
         url = url.strip()
         sampler_logger.log('INFO', 'Adding url', url)
-        cont = w.download_url(url)
-        if is_out_dir_mode and cont is not None:
-            safe_url = ''.join(char if char.isalnum() else '_' for char in url).rstrip('_')[:200]
-            i, fname = 0, os.path.join(out_dir, '{0}{1}.html'.format(safe_url, 0))
-            while os.path.exists(fname):
-                i += 1
-                fname = os.path.join(out_dir, '{0}{1}.html'.format(safe_url, i))
-            sampler_logger.log('INFO', 'Creating file', fname)
-            with open(fname, 'w', encoding='UTF-8') as fh:
-                fh.write(cont)
+        if not offline or url in w.url_index:
+            cont = w.download_url(url)
+            if is_out_dir_mode and cont is not None:
+                safe_url = ''.join(char if char.isalnum() else '_' for char in url).rstrip('_')[:200]
+                i, fname = 0, os.path.join(out_dir, '{0}{1}.html'.format(safe_url, 0))
+                while os.path.exists(fname):
+                    i += 1
+                    fname = os.path.join(out_dir, '{0}{1}.html'.format(safe_url, i))
+                sampler_logger.log('INFO', 'Creating file', fname)
+                with open(fname, 'w', encoding='UTF-8') as fh:
+                    fh.write(cont)
+        else:
+            sampler_logger.log('ERROR', 'URL not present in archive', url)
 
 
 def validate_warc_file(source_warcfiles, validator_logger):
