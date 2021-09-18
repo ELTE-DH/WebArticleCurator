@@ -1222,11 +1222,26 @@ def next_page_of_article_valasz(curr_html):
     return None
 
 
+def next_page_of_article_index(curr_html):
+    bs = BeautifulSoup(curr_html, 'lxml')
+    pages = bs.find('div', class_='pagination clearfix')
+    if pages is not None:
+        for p in pages.find_all('a', class_='next'):
+            if 'rel' not in p.attrs.keys():
+                link = p.attrs['href']
+                return link
+    else:
+        pages_velvet = bs.find('a', {'data-page': True, 'class': 'next', 'href': True})
+        if pages_velvet:
+            link = pages_velvet['href']
+            return link
+    return None
+
+
 def next_page_of_article_test(filename, test_logger):
     """Quick test for extracting URLs form an archive page"""
     # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
     w = WarcCachingDownloader(filename, None, test_logger, just_cache=True, download_params={'stay_offline': True})
-
     test_logger.log('INFO', 'Testing Telex')
     text = w.download_url('https://telex.hu/koronavirus/2021/01/21/oltasprogramrol-es-vakcinaigazolasrol-is-kerdezzuk-'
                           'a-kormanyt/elo')
@@ -1254,6 +1269,29 @@ def next_page_of_article_test(filename, test_logger):
                           '-nincs-fejlodes-129197')
     assert next_page_of_article_valasz(text) is None
 
+
+def next_page_of_article_test_index(filename, test_logger):
+    """Quick test for extracting URLs form an archive page"""
+    # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
+    w = WarcCachingDownloader(filename, None, test_logger, just_cache=True, download_params={'stay_offline': True})
+    test_logger.log('INFO', 'Testing Index')
+    text = w.download_url(
+        'https://velvet.hu/gumicukor/2016/08/27/egyszerre_indul_a_valo_vilag_es_a_star_academy/palyazat_a_tv2-n/')
+    assert next_page_of_article_index(
+        text) == 'https://velvet.hu/gumicukor/2016/08/27/egyszerre_indul_a_valo_vilag_es_a_star_academy' \
+                 '/palyazat_a_tv2-n/?p=1'
+    text = w.download_url(
+        'https://velvet.hu/gumicukor/2016/08/27/egyszerre_indul_a_valo_vilag_es_a_star_academy/palyazat_a_tv2-n/?p=4')
+    assert next_page_of_article_telex(text) is None
+    text = w.download_url('https://index.hu/tech/cellanaplo/2016/09/07/megerkezett_az_iphone_7/')
+    assert next_page_of_article_index(text) == 'https://index.hu/tech/cellanaplo/2016/09/07/megerkezett_az_iphone_7' \
+                                               '/?p=1'
+    text = w.download_url('https://index.hu/tech/cellanaplo/2016/09/07/megerkezett_az_iphone_7/?p=1')
+    assert next_page_of_article_index(text) is None
+    text = w.download_url('https://divany.hu/offline/2017/01/24/bocuse_2017/')
+    assert next_page_of_article_index(text) == 'https://divany.hu/offline/2017/01/24/bocuse_2017/?p=1'
+    text = w.download_url('https://divany.hu/offline/2017/01/24/bocuse_2017/?p=3')
+    assert next_page_of_article_index(text) is None
     test_logger.log('INFO', 'Test OK!')
 
 
@@ -1273,4 +1311,4 @@ if __name__ == '__main__':
     # Use the main module to modify the warc files!
     extract_next_page_url_test(choices['nextpage'], main_logger)
     extract_article_urls_from_page_test(choices['archive'], main_logger)
-    next_page_of_article_test(choices['article_nextpage'], main_logger)
+    next_page_of_article_test_index(choices['article_nextpage'], main_logger)
