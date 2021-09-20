@@ -1238,6 +1238,16 @@ def next_page_of_article_index(curr_html):
     return None
 
 
+def next_page_of_article_origo(curr_html):
+    bs = BeautifulSoup(curr_html, 'lxml')
+    pages = bs.find('a', {'class': 'ap-next', 'rel': 'next', 'href': True})
+    if pages:
+        link = pages['href']
+        link = f'https://www.origo.hu{link}'
+        return link
+    return None
+
+
 def next_page_of_article_test(filename, test_logger):
     """Quick test for extracting URLs form an archive page"""
     # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
@@ -1270,7 +1280,7 @@ def next_page_of_article_test(filename, test_logger):
     assert next_page_of_article_valasz(text) is None
 
 
-def next_page_of_article_test_index(filename, test_logger):
+def next_page_of_article_test_index_origo(filename, test_logger):
     """Quick test for extracting URLs form an archive page"""
     # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
     w = WarcCachingDownloader(filename, None, test_logger, just_cache=True, download_params={'stay_offline': True})
@@ -1294,8 +1304,21 @@ def next_page_of_article_test_index(filename, test_logger):
     assert next_page_of_article_index(text) is None
     test_logger.log('INFO', 'Test OK!')
 
+    test_logger.log('INFO', 'Testing Origo')
+    text = w.download_url(
+        'https://www.origo.hu/auto/20190823-bmw-x7-m50d-teszt.html')
+    assert next_page_of_article_origo(
+        text) == 'https://www.origo.hu/auto/20190823-bmw-x7-m50d-teszt.html?pIdx=1'
+    text = w.download_url(
+        'https://www.origo.hu/auto/20190823-bmw-x7-m50d-teszt.html?pIdx=1')
+    assert next_page_of_article_origo(text) is None
+    text = w.download_url('https://www.origo.hu/itthon/20190709-tobb-gyerek-meghalt-vagy-eletveszelyesen-megserult-azert-mert-a-szuleik-nem-figyeltek-rajuk-elegge.html?pIdx=3')
+    assert next_page_of_article_origo(text) == 'https://www.origo.hu/itthon/20190709-tobb-gyerek-meghalt-vagy-eletveszelyesen-megserult-azert-mert-a-szuleik-nem-figyeltek-rajuk-elegge.html?pIdx=4'
+    text = w.download_url('https://www.origo.hu/itthon/20190709-tobb-gyerek-meghalt-vagy-eletveszelyesen-megserult-azert-mert-a-szuleik-nem-figyeltek-rajuk-elegge.html?pIdx=6')
+    assert next_page_of_article_origo(text) is None
 
 # END SITE SPECIFIC next_page_of_article FUNCTIONS #####################################################################
+
 
 if __name__ == '__main__':
     from webarticlecurator import WarcCachingDownloader, Logger
@@ -1304,11 +1327,11 @@ if __name__ == '__main__':
 
     # Relateive path from this directory to the files in the project's test directory
     choices = {'nextpage': os_path_join(dirname(abspath(__file__)), '../../tests/next_page_url.warc.gz'),
-               'article_nextpage': os_path_join(dirname(abspath(__file__)), '../../tests/next_page_of_article.warc.gz'),
+               'article_nextpage': os_path_join(dirname(abspath(__file__)), '../../tests/next_page_of_article_index_origo.warc.gz'),
                'archive': os_path_join(dirname(abspath(__file__)), '../../tests/extract_article_urls_from_page.warc.gz')
                }
 
     # Use the main module to modify the warc files!
     extract_next_page_url_test(choices['nextpage'], main_logger)
     extract_article_urls_from_page_test(choices['archive'], main_logger)
-    next_page_of_article_test_index(choices['article_nextpage'], main_logger)
+    next_page_of_article_test_index_origo(choices['article_nextpage'], main_logger)
