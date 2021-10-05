@@ -1,0 +1,81 @@
+"site_name": "hirado"
+
+# Rate limiting is needed. Tested and working parameters: --max-no-of-calls-in-period 1 --limit-period 2
+# This config only contains columns found on the hirado.hu domain.
+# There are some article URLs that contain '│' characters (encoded '%e2%94%82'). These will return errors.
+
+"columns":
+    "koronavirus":
+        "archive_url_format": "https://hirado.hu/wp-content/plugins/hirado.hu.widgets/widgets/newSubCategory/ajax_loadmore.php?cat_id=4986&post_type=post&blog_id=0&page_number=#pagenum"
+
+        "initial_pagenum": 1
+
+    "video-hirmusorok":
+        "archive_url_format": "https://hirado.hu/wp-content/plugins/hirado.hu.widgets/widgets/newSubCategory/ajax_loadmore.php?cat_id=434&post_type=video&blog_id=4&page_number=#pagenum"
+
+        "initial_pagenum": 1
+
+    "video-kulfold":
+        "archive_url_format": "https://hirado.hu/wp-content/plugins/hirado.hu.widgets/widgets/newSubCategory/ajax_loadmore.php?cat_id=440&post_type=video&blog_id=4&page_number=#pagenum"
+
+        "initial_pagenum": 1
+
+    "video-mikrofilm":
+        "archive_url_format": "https://hirado.hu/wp-content/plugins/hirado.hu.widgets/widgets/newSubCategory/ajax_loadmore.php?cat_id=5944&post_type=video&blog_id=4&page_number=#pagenum"
+
+        "initial_pagenum": 1
+
+    "video-no-comment":
+        "archive_url_format": "https://hirado.hu/wp-content/plugins/hirado.hu.widgets/widgets/newSubCategory/ajax_loadmore.php?cat_id=443&post_type=video&blog_id=4&page_number=#pagenum"
+
+        "initial_pagenum": 1
+
+    "galeria-belfold":
+        "archive_url_format": "https://hirado.hu/wp-content/plugins/hirado.hu.widgets/widgets/newSubCategory/ajax_loadmore.php?cat_id=92&post_type=gallery&blog_id=0&page_number=#pagenum"
+
+        "initial_pagenum": 1
+
+    "galeria-kulfold":
+        "archive_url_format": "https://hirado.hu/wp-content/plugins/hirado.hu.widgets/widgets/newSubCategory/ajax_loadmore.php?cat_id=107&post_type=gallery&blog_id=0&page_number=#pagenum"
+
+        "initial_pagenum": 1
+
+    "galeria-tudomany-high-tech":
+        "archive_url_format": "https://hirado.hu/wp-content/plugins/hirado.hu.widgets/widgets/newSubCategory/ajax_loadmore.php?cat_id=235&post_type=gallery&blog_id=0&page_number=#pagenum"
+
+        "initial_pagenum": 1
+
+    "belfold":
+        "archive_url_format": "https://hirado.hu/wp-content/plugins/hirado.hu.widgets/widgets/newSubCategory/ajax_loadmore.php?cat_id=92&post_type=post&blog_id=0&page_number=#pagenum"
+
+        "initial_pagenum": 1
+
+    "kulfold":
+        "archive_url_format": "https://hirado.hu/wp-content/plugins/hirado.hu.widgets/widgets/newSubCategory/ajax_loadmore.php?cat_id=107&post_type=post&blog_id=0&page_number=#pagenum"
+
+        "initial_pagenum": 1
+
+    "kultura-eletmod":
+        "archive_url_format": "https://hirado.hu/wp-content/plugins/hirado.hu.widgets/widgets/newSubCategory/ajax_loadmore.php?cat_id=269&post_type=post&blog_id=0&page_number=#pagenum"
+
+        "initial_pagenum": 1
+
+    "tudomany-high-tech":
+        "archive_url_format": "https://hirado.hu/wp-content/plugins/hirado.hu.widgets/widgets/newSubCategory/ajax_loadmore.php?cat_id=235&post_type=post&blog_id=0&page_number=#pagenum"
+
+        "initial_pagenum": 1
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_news_pgvmt.py"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_hirado"
+
+"next_url_by_pagenum": true
+"infinite_scrolling": true
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": false
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"
