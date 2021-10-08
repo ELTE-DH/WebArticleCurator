@@ -710,6 +710,37 @@ def extract_article_urls_from_page_test(filename, test_logger):
 # END SITE SPECIFIC extract_article_urls_from_page FUNCTIONS ###########################################################
 
 # BEGIN SITE SPECIFIC next_page_of_article FUNCTIONS ###################################################################
+def next_page_of_article_merce(archive_page_raw_html):
+    """
+        extracts and returns next page URL from an HTML code if there is one...
+        Specific for merce.hu
+        :returns string of url if there is one, None otherwise
+    """
+    ret = None
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    next_page = soup.find('a', attrs={"data-act": "load-more"})
+    last_page = soup.select('div.pplive__loadmore-wrap.text-center.d-none')
+    if next_page is not None and 'href' in next_page.attrs and len(last_page) == 0:
+        url = soup.find("meta", property="og:url")["content"]
+        pars = next_page.attrs['href']
+        ret = url + pars
+    return ret
+
+
+def next_page_of_article_test(filename, test_logger):
+    """Quick test for extracting URLs form an archive page"""
+    # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
+    w = WarcCachingDownloader(filename, None, test_logger, just_cache=True, download_params={'stay_offline': True})
+
+    test_logger.log('INFO', 'Testing Merce')
+    text = w.download_url('https://merce.hu/2018/04/08/magyarorszag-valaszt/')
+    assert next_page_of_article_merce(text) == 'https://merce.hu/2018/04/08/magyarorszag-valaszt/?loadall=1'
+    text = w.download_url('https://merce.hu/2018/04/08/magyarorszag-valaszt/?loadall=1')
+    assert next_page_of_article_merce(text) is None
+    text = w.download_url('https://merce.hu/2015/10/12/nincs_mas_valasztas_baratkozni_kell_irannal_kozel'
+                          '-keleti_kilatasok/')
+    assert next_page_of_article_merce(text) is None
+    test_logger.log('INFO', 'Test OK!')
 
 
 # END SITE SPECIFIC next_page_of_article FUNCTIONS #####################################################################
@@ -728,7 +759,7 @@ def main_test():
     # Use the main module to modify the warc files!
     extract_next_page_url_test(choices['nextpage'], main_logger)
     extract_article_urls_from_page_test(choices['archive'], main_logger)
-    # next_page_of_article_test(choices['article_nextpage'], main_logger)
+    next_page_of_article_test(choices['article_nextpage'], main_logger)
 
 
 if __name__ == '__main__':
