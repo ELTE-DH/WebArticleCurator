@@ -721,7 +721,7 @@ def next_page_of_article_merce(archive_page_raw_html):
     next_page = soup.find('a', attrs={"data-act": "load-more"})
     last_page = soup.select('div.pplive__loadmore-wrap.text-center.d-none')
     if next_page is not None and 'href' in next_page.attrs and len(last_page) == 0:
-        url = soup.find("meta", property="og:url")["content"]
+        url = soup.find('meta', property='og:url')['content']
         pars = next_page.attrs['href']
         ret = url + pars
     return ret
