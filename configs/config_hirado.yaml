@@ -1,0 +1,13 @@
+"schema": "site_schemas/hirado_schema.yaml"
+
+# "output_corpus": "hirado_corpus.txt"
+
+"log_file_articles": "logs/hirado_articles_log.txt"
+"log_file_archive": "logs/hirado_archive_log.txt"
+"new_problematic_urls": "logs/hirado_new_problematic_urls.txt"
+"new_good_urls": "logs/hirado_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/hirado_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/hirado_new_good_archive_urls.txt"
+
+# "date_from": 2000-01-01
+# "date_until": 2100-01-01

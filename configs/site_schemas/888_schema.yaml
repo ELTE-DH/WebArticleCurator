@@ -1,0 +1,78 @@
+"site_name": "888"
+
+"columns":
+    "piszkostizenketto":
+        "archive_url_format": "https://888.hu/piszkostizenketto/"
+
+    "ketharmad":
+        "archive_url_format": "https://888.hu/ketharmad/"
+
+    "amerika-london-parizs":
+        "archive_url_format": "https://888.hu/amerika-london-parizs/"
+
+    "big-pikcsor":
+        "archive_url_format": "https://888.hu/big-pikcsor/"
+
+    "hajra-magyarok":
+        "archive_url_format": "https://888.hu/hajra-magyarok/"
+
+    "csak-neked-csak-most":
+        "archive_url_format": "https://888.hu/csak-neked-csak-most/"
+
+    "feher-ferfi":
+        "archive_url_format": "https://888.hu/feher-ferfi/"
+
+    "pszicho":
+        "archive_url_format": "https://888.hu/pszicho/"
+
+    "egy-soros-egy-forditott":
+        "archive_url_format": "https://888.hu/egy-soros-egy-forditott/"
+
+    "kinyilott-a-pitypang":
+        "archive_url_format": "https://888.hu/kinyilott-a-pitypang/"
+
+    "censored":
+        "archive_url_format": "https://888.hu/censored/"
+
+    "sivalkodjatok":
+        "archive_url_format": "https://888.hu/sivalkodjatok/"
+
+    "7:59":
+        "archive_url_format": "https://888.hu/759/"
+
+    "889":
+        "archive_url_format": "https://888.hu/889/"
+
+    "888":
+        "archive_url_format": "https://888.hu/888/"
+
+    "century-on":
+        "archive_url_format": "https://888.hu/century-on/"
+
+    "szabad-vasarnap":
+        "archive_url_format": "https://888.hu/szabad-vasarnap/"
+
+    "bulvar":
+        "archive_url_format": "https://888.hu/bulvar/"
+
+    "okojobb":
+        "archive_url_format": "https://888.hu/okojobb/"
+
+    "maccabi":
+        "archive_url_format": "https://888.hu/maccabi/"
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_news_pgvmt.py"
+"extract_next_page_url_fun": "extract_next_page_url_888"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_888"
+
+"next_url_by_pagenum": false
+"infinite_scrolling": false
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": false
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"
