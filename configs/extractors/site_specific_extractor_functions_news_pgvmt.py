@@ -2,6 +2,7 @@
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
 import json
+from itertools import chain
 from os.path import abspath, dirname, join as os_path_join
 
 from bs4 import BeautifulSoup
@@ -101,8 +102,8 @@ def extract_article_urls_from_page_888(archive_page_raw_html):
     :return: list that contains URLs
     """
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    main_container = soup.find_all('div', class_='fig-wrap') + soup.find_all('div', class_='text-frame') + \
-        soup.find_all('div', class_='bg-stretch')  # Articles are found in 3 types of elements.
+    main_container = chain(soup.find_all('div', class_='fig-wrap'), soup.find_all('div', class_='text-frame'),
+                           soup.find_all('div', class_='bg-stretch'))  # Articles are found in 3 types of elements.
     urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
     return urls
 
