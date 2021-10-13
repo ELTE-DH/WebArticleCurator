@@ -332,7 +332,7 @@ def extract_article_urls_from_page_nepszava(archive_page_raw_html):
     for date_day, day_data in archive_json.items():
         for archive_item in day_data:
             if isinstance(archive_item, dict):  # Handle {"error": "404"}
-                urls.add(f'https://nepszava.hu/{archive_item["link"]}')
+                urls.add(f'https://nepszava.hu/json/cikk.json?id={archive_item["link"]}')
     return urls
 
 
@@ -550,36 +550,37 @@ def extract_article_urls_from_page_test(filename, test_logger):
     test_logger.log('INFO', 'Testing nepszava')
     text = w.download_url('https://nepszava.hu/json/list.json?type_path=tag&data_path=velemeny&pageCount=1')
     extracted = extract_article_urls_from_page_nepszava(text)
-    expected = {'https://nepszava.hu/3129925_az-afgan-kaosz-hete',
-                'https://nepszava.hu/3129772_szent-istvan-emlekezete',
-                'https://nepszava.hu/3129671_ofelsege-a-torpe',
-                'https://nepszava.hu/3129447_a-surgossegin-tul-is-van-ami-surgos',
-                'https://nepszava.hu/3129774_az-ellopott-alkotmany',
-                'https://nepszava.hu/3129336_torzszulott',
-                'https://nepszava.hu/3129451_futtyszo',
-                'https://nepszava.hu/3129335_kulon-ut',
-                'https://nepszava.hu/3129922_trojai-szent-istvan',
-                'https://nepszava.hu/3129776_hazai-rejtelmek',
-                'https://nepszava.hu/3129921_huxit',
-                'https://nepszava.hu/3129675_ebredes',
-                'https://nepszava.hu/3129450_a-szakallas-bacsi',
-                'https://nepszava.hu/3129673_valsagos-gondolatok',
-                'https://nepszava.hu/3129333_olcso-benzinnel-a-klimaert',
-                'https://nepszava.hu/3129923_vitatkozik-a-fidesz',
-                'https://nepszava.hu/3129775_rossz-es-rosszabb',
-                'https://nepszava.hu/3129448_a-szuksegtelen-nulla',
-                'https://nepszava.hu/3129565_kiterok',
-                'https://nepszava.hu/3129563_ferfias-nereny',
-                'https://nepszava.hu/3129449_beadjak',
-                'https://nepszava.hu/3129924_panoptikum',
-                'https://nepszava.hu/3129564_megszeliditve',
-                'https://nepszava.hu/3129672_hogyan-tovabb-kuba',
-                'https://nepszava.hu/3129561_kiveve-a-gyevi-birot',
-                'https://nepszava.hu/3129674_barsony',
-                'https://nepszava.hu/3129446_bekes-beketlenek',
-                'https://nepszava.hu/3129562_a-tudas-es-a-gyozelem-anyja',
-                'https://nepszava.hu/3129566_tuleles',
-                'https://nepszava.hu/3129773_otkarikas-szomszedolas',
+
+    expected = {'https://nepszava.hu/json/cikk.json?id=3129925_az-afgan-kaosz-hete',
+                'https://nepszava.hu/json/cikk.json?id=3129924_panoptikum',
+                'https://nepszava.hu/json/cikk.json?id=3129923_vitatkozik-a-fidesz',
+                'https://nepszava.hu/json/cikk.json?id=3129922_trojai-szent-istvan',
+                'https://nepszava.hu/json/cikk.json?id=3129921_huxit',
+                'https://nepszava.hu/json/cikk.json?id=3129776_hazai-rejtelmek',
+                'https://nepszava.hu/json/cikk.json?id=3129775_rossz-es-rosszabb',
+                'https://nepszava.hu/json/cikk.json?id=3129773_otkarikas-szomszedolas',
+                'https://nepszava.hu/json/cikk.json?id=3129772_szent-istvan-emlekezete',
+                'https://nepszava.hu/json/cikk.json?id=3129774_az-ellopott-alkotmany',
+                'https://nepszava.hu/json/cikk.json?id=3129671_ofelsege-a-torpe',
+                'https://nepszava.hu/json/cikk.json?id=3129672_hogyan-tovabb-kuba',
+                'https://nepszava.hu/json/cikk.json?id=3129673_valsagos-gondolatok',
+                'https://nepszava.hu/json/cikk.json?id=3129674_barsony',
+                'https://nepszava.hu/json/cikk.json?id=3129675_ebredes',
+                'https://nepszava.hu/json/cikk.json?id=3129561_kiveve-a-gyevi-birot',
+                'https://nepszava.hu/json/cikk.json?id=3129562_a-tudas-es-a-gyozelem-anyja',
+                'https://nepszava.hu/json/cikk.json?id=3129563_ferfias-nereny',
+                'https://nepszava.hu/json/cikk.json?id=3129564_megszeliditve',
+                'https://nepszava.hu/json/cikk.json?id=3129565_kiterok',
+                'https://nepszava.hu/json/cikk.json?id=3129566_tuleles',
+                'https://nepszava.hu/json/cikk.json?id=3129446_bekes-beketlenek',
+                'https://nepszava.hu/json/cikk.json?id=3129447_a-surgossegin-tul-is-van-ami-surgos',
+                'https://nepszava.hu/json/cikk.json?id=3129448_a-szuksegtelen-nulla',
+                'https://nepszava.hu/json/cikk.json?id=3129449_beadjak',
+                'https://nepszava.hu/json/cikk.json?id=3129450_a-szakallas-bacsi',
+                'https://nepszava.hu/json/cikk.json?id=3129451_futtyszo',
+                'https://nepszava.hu/json/cikk.json?id=3129333_olcso-benzinnel-a-klimaert',
+                'https://nepszava.hu/json/cikk.json?id=3129335_kulon-ut',
+                'https://nepszava.hu/json/cikk.json?id=3129336_torzszulott'
                 }
     assert (extracted, len(extracted)) == (expected, 30)
 
