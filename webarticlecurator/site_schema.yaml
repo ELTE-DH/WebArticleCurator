@@ -19,7 +19,7 @@ ignore_archive_cache: bool()
 new_article_url_threshold: int(min=0, required=False, none=False)
 
 # corpus_converter_file can be None if corpus_converter == 'dummy-converter'
-corpus_converter_file: any([str(min=1), null()])
+corpus_converter_file: any(str(min=1), null())
 corpus_converter: str(min=1)
 ---
 column:
