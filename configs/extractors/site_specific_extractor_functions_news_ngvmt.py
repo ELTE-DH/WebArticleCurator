@@ -727,7 +727,7 @@ def next_page_of_article_merce(archive_page_raw_html):
     return ret
 
 
-def next_page_of_article_rangado24(curr_html):
+def next_page_of_article_rangado_24hu(curr_html):
     bs = BeautifulSoup(curr_html, 'lxml')
     if bs.find('span', class_='page-numbers current') is not None:
         current_page = int(bs.find('span', class_='page-numbers current').getText())
@@ -765,32 +765,32 @@ def next_page_of_article_test(filename, test_logger):
                           '-keleti_kilatasok/')
     assert next_page_of_article_merce(text) is None
 
-    test_logger.log('INFO', 'Testing rangado24')
+    test_logger.log('INFO', 'Testing rangado_24hu')
     text = w.download_url('https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/2/')
-    assert next_page_of_article_rangado24(
+    assert next_page_of_article_rangado_24hu(
         text) == 'https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/1/'
     text = w.download_url('https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/3/')
-    assert next_page_of_article_rangado24(
+    assert next_page_of_article_rangado_24hu(
         text) == 'https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/2/'
     text = w.download_url('https://rangado.24.hu/magyar_foci/2019/06/08/eb-selejtezo-azerbajdzsan-magyarorszag/')
-    assert next_page_of_article_rangado24(
+    assert next_page_of_article_rangado_24hu(
         text) == 'https://rangado.24.hu/magyar_foci/2019/06/08/eb-selejtezo-azerbajdzsan-magyarorszag/1/'
     text = w.download_url('https://rangado.24.hu/nemzetkozi_foci/2019/05/29/chelsea-arsenal-europa-liga-donto-baku/')
-    assert next_page_of_article_rangado24(
+    assert next_page_of_article_rangado_24hu(
         text) == 'https://rangado.24.hu/nemzetkozi_foci/2019/05/29/chelsea-arsenal-europa-liga-donto-baku/1/'
     text = w.download_url('https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/1/')
-    assert next_page_of_article_rangado24(text) is None
+    assert next_page_of_article_rangado_24hu(text) is None
     text = w.download_url(
         'https://rangado.24.hu/nemzetkozi_foci/2019/05/01/bajnokok-ligaja-elodonto-barcelona-liverpool/1/')
-    assert next_page_of_article_rangado24(text) is None
+    assert next_page_of_article_rangado_24hu(text) is None
     text = w.download_url(
         'https://rangado.24.hu/nemzetkozi_foci/2020/03/10/bl-nyolcaddonto-leipzig-tottenham-valencia-atalanta-elo/')
-    assert next_page_of_article_rangado24(text) is None
+    assert next_page_of_article_rangado_24hu(text) is None
     text = w.download_url('https://rangado.24.hu/magyar_foci/2019/11/07/europa-liga-ftc-cszka-moszkva-elo/1/')
-    assert next_page_of_article_rangado24(text) is None
+    assert next_page_of_article_rangado_24hu(text) is None
     text = w.download_url('https://rangado.24.hu/magyar_foci/2021/10/11/tenyleg-van-visszaut-boli-ujra-a-fradi-elso'
                           '-csapataval-edzett/')
-    assert next_page_of_article_rangado24(text) is None
+    assert next_page_of_article_rangado_24hu(text) is None
 
     test_logger.log('INFO', 'Testing HVG')
     text = w.download_url('https://hvg.hu/itthon/20100112_bkv_sztrajk_januar_12_hirek')
