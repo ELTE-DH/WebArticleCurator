@@ -743,10 +743,9 @@ def next_page_of_article_rangado_24hu(curr_html):
         current_page = int(bs.find('span', class_='page-numbers current').getText())
         other_pages = bs.find_all('a', class_='page-numbers')
         for i in other_pages:
-            if i.find('span') is None:  # Inserted to avoid other tags with class page-numbers
-                if (int(i.getText()) + 1 == current_page) & ('href' in i.attrs.keys()):
-                    next_link = i.attrs['href']
-                    return next_link
+            if (i.find('span') is None) and (int(i.getText()) + 1 == current_page) and ('href' in i.attrs.keys()):
+                next_link = i.attrs['href']
+                return next_link
     return None
 
 
@@ -835,8 +834,8 @@ def main_test():
                }
 
     # Use the main module to modify the warc files!
-    extract_next_page_url_test(choices['nextpage'], main_logger)
-    extract_article_urls_from_page_test(choices['archive'], main_logger)
+    # extract_next_page_url_test(choices['nextpage'], main_logger)
+    # extract_article_urls_from_page_test(choices['archive'], main_logger)
     next_page_of_article_test(choices['article_nextpage'], main_logger)
 
 
