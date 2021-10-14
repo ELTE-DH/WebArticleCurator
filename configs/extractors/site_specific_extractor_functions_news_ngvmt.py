@@ -834,8 +834,8 @@ def main_test():
                }
 
     # Use the main module to modify the warc files!
-    # extract_next_page_url_test(choices['nextpage'], main_logger)
-    # extract_article_urls_from_page_test(choices['archive'], main_logger)
+    extract_next_page_url_test(choices['nextpage'], main_logger)
+    extract_article_urls_from_page_test(choices['archive'], main_logger)
     next_page_of_article_test(choices['article_nextpage'], main_logger)
 
 
