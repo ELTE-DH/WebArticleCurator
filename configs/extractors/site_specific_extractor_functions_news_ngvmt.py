@@ -789,7 +789,7 @@ def next_page_of_article_test(filename, test_logger):
 def main_test():
     main_logger = Logger()
 
-    # Relateive path from this directory to the files in the project's test directory
+    # Relative path from this directory to the files in the project's test directory
     choices = {'nextpage': os_path_join(dirname(abspath(__file__)), '../../tests/next_page_url_news_ngvmt.warc.gz'),
                'article_nextpage': os_path_join(dirname(abspath(__file__)), '../../tests/next_page_of_article_'
                                                                             'news_ngvmt.warc.gz'),
