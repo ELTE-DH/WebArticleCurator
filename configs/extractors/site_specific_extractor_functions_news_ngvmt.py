@@ -727,6 +727,19 @@ def next_page_of_article_merce(archive_page_raw_html):
     return ret
 
 
+def next_page_of_article_rangado24(curr_html):
+    bs = BeautifulSoup(curr_html, 'lxml')
+    if bs.find('span', class_='page-numbers current') is not None:
+        current_page = int(bs.find('span', class_='page-numbers current').getText())
+        other_pages = bs.find_all('a', class_='page-numbers')
+        for i in other_pages:
+            if i.find('span') is None:  # Inserted to avoid other tags with class page-numbers
+                if (int(i.getText()) + 1 == current_page) & ('href' in i.attrs.keys()):
+                    next_link = i.attrs['href']
+                    return next_link
+    return None
+
+
 def next_page_of_article_test(filename, test_logger):
     """Quick test for extracting URLs form an archive page"""
     # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
@@ -740,6 +753,34 @@ def next_page_of_article_test(filename, test_logger):
     text = w.download_url('https://merce.hu/2015/10/12/nincs_mas_valasztas_baratkozni_kell_irannal_kozel'
                           '-keleti_kilatasok/')
     assert next_page_of_article_merce(text) is None
+
+    test_logger.log('INFO', 'Testing rangado24')
+    text = w.download_url('https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/2/')
+    assert next_page_of_article_rangado24(
+        text) == 'https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/1/'
+    text = w.download_url('https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/3/')
+    assert next_page_of_article_rangado24(
+        text) == 'https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/2/'
+    text = w.download_url('https://rangado.24.hu/magyar_foci/2019/06/08/eb-selejtezo-azerbajdzsan-magyarorszag/')
+    assert next_page_of_article_rangado24(
+        text) == 'https://rangado.24.hu/magyar_foci/2019/06/08/eb-selejtezo-azerbajdzsan-magyarorszag/1/'
+    text = w.download_url('https://rangado.24.hu/nemzetkozi_foci/2019/05/29/chelsea-arsenal-europa-liga-donto-baku/')
+    assert next_page_of_article_rangado24(
+        text) == 'https://rangado.24.hu/nemzetkozi_foci/2019/05/29/chelsea-arsenal-europa-liga-donto-baku/1/'
+    text = w.download_url('https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/1/')
+    assert next_page_of_article_rangado24(text) is None
+    text = w.download_url(
+        'https://rangado.24.hu/nemzetkozi_foci/2019/05/01/bajnokok-ligaja-elodonto-barcelona-liverpool/1/')
+    assert next_page_of_article_rangado24(text) is None
+    text = w.download_url(
+        'https://rangado.24.hu/nemzetkozi_foci/2020/03/10/bl-nyolcaddonto-leipzig-tottenham-valencia-atalanta-elo/')
+    assert next_page_of_article_rangado24(text) is None
+    text = w.download_url('https://rangado.24.hu/magyar_foci/2019/11/07/europa-liga-ftc-cszka-moszkva-elo/1/')
+    assert next_page_of_article_rangado24(text) is None
+    text = w.download_url('https://rangado.24.hu/magyar_foci/2021/10/11/tenyleg-van-visszaut-boli-ujra-a-fradi-elso'
+                          '-csapataval-edzett/')
+    assert next_page_of_article_rangado24(text) is None
+
     test_logger.log('INFO', 'Test OK!')
 
 
