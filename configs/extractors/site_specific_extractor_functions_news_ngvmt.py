@@ -740,6 +740,17 @@ def next_page_of_article_rangado24(curr_html):
     return None
 
 
+def next_page_of_article_hvg(curr_html):
+    bs = BeautifulSoup(curr_html, 'lxml')
+    if bs.find('div', class_='G-pagination') is not None:
+        next_tag = bs.find('a', {'class': 'arrow next', 'rel': 'next', 'href': True})
+        if next_tag is not None:
+            next_link = next_tag.attrs['href'].replace('amp;', '')
+            link = f'https://hvg.hu{next_link}'
+            return link
+    return None
+
+
 def next_page_of_article_test(filename, test_logger):
     """Quick test for extracting URLs form an archive page"""
     # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
@@ -780,6 +791,22 @@ def next_page_of_article_test(filename, test_logger):
     text = w.download_url('https://rangado.24.hu/magyar_foci/2021/10/11/tenyleg-van-visszaut-boli-ujra-a-fradi-elso'
                           '-csapataval-edzett/')
     assert next_page_of_article_rangado24(text) is None
+
+    test_logger.log('INFO', 'Testing HVG')
+    text = w.download_url('https://hvg.hu/itthon/20100112_bkv_sztrajk_januar_12_hirek')
+    assert next_page_of_article_hvg(
+        text) == 'https://hvg.hu/itthon/20100112_bkv_sztrajk_januar_12_hirek/2?isPrintView=False&liveReportItemId=' \
+                 '0&isPreview=False&ver=1&order=desc'
+    text = w.download_url(
+        'https://hvg.hu/itthon/20091023_oktober_23_partok/2?isPrintView=False&liveReportItemId=0&isPreview=False&ver='
+        '1&order=asc')
+    assert next_page_of_article_hvg(
+        text) == 'https://hvg.hu/itthon/20091023_oktober_23_partok/3?isPrintView=False&liveReportItemId=0&isPreview=' \
+                 'False&ver=1&order=asc'
+    text = w.download_url(
+        'https://hvg.hu/itthon/20091023_oktober_23_partok/4?isPrintView=False&liveReportItemId=0&isPreview=False&ver='
+        '1&order=desc')
+    assert next_page_of_article_hvg(text) is None
 
     test_logger.log('INFO', 'Test OK!')
 
