@@ -265,9 +265,19 @@ def extract_article_urls_from_page_hvg(archive_page_raw_html):
     main_container = soup.find_all('h2', class_='heading-3')
     if len(main_container) == 0:  # The "nagyitas" column has a different structure
         main_container = soup.find_all('h1')
-    urls = {f'https://hvg.hu{link}' for link in safe_extract_hrefs_from_a_tags(main_container)
-            if not link.startswith('brandcontent/')}  # Filter "brandcontent" - the same articles appear on every page.
-    return urls
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    urls_fixed = set()
+    for url in urls:
+        if not url.startswith('/'):  # Some of the links do not start with '/'.
+            url = f'/{url}'
+        if not url.startswith('https://hvg.hu'):
+            url = f'https://hvg.hu{url}'
+        urls_fixed.add(url)
+    if not all(url.startswith('https://hvg.hu/brandc') for url in urls_fixed):
+        urls_fixed = {url for url in urls_fixed if not url.startswith('https://hvg.hu/brandc')}
+    # Filter "brandcontent" and "brandchannel", the same ads appear on every page,
+    # it keeps them in the brandcontent column.
+    return urls_fixed
 
 
 def extract_article_urls_from_page_istentudja_roboraptor_24hu(archive_page_raw_html):
