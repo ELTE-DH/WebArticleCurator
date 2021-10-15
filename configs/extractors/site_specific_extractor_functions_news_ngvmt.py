@@ -740,7 +740,7 @@ def next_page_of_article_merce(archive_page_raw_html):
 def next_page_of_article_rangado_24hu(curr_html):
     bs = BeautifulSoup(curr_html, 'lxml')
     if bs.find('span', class_='page-numbers current') is not None:
-        current_page = int(bs.find('span', class_='page-numbers current').getText())
+        current_page = int(bs.find('span', class_='page-numbers current').get_text())
         other_pages = bs.find_all('a', class_='page-numbers')
         for i in other_pages:
             if (i.find('span') is None) and (int(i.getText()) + 1 == current_page) and ('href' in i.attrs.keys()):
