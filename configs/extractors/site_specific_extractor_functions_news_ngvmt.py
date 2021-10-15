@@ -744,7 +744,8 @@ def next_page_of_article_rangado_24hu(curr_html):
         current_page = int(bs.find('span', class_='page-numbers current').get_text())
         other_pages = bs.find_all('a', class_='page-numbers')
         for i in other_pages:
-            if (i.find('span') is None) and (int(i.get_text()) + 1 == current_page) and ('href' in i.attrs.keys()):
+            # Filter span to avoid other tags with class page-numbers (next page button is unreliable!)
+            if i.find('span') is None and int(i.get_text()) + 1 == current_page and 'href' in i.attrs.keys():
                 next_link = i.attrs['href']
                 return next_link
     return None
@@ -777,24 +778,24 @@ def next_page_of_article_test(filename, test_logger):
 
     test_logger.log('INFO', 'Testing rangado_24hu')
     text = w.download_url('https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/2/')
-    assert next_page_of_article_rangado_24hu(
-        text) == 'https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/1/'
+    assert next_page_of_article_rangado_24hu(text) == \
+           'https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/1/'
     text = w.download_url('https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/3/')
-    assert next_page_of_article_rangado_24hu(
-        text) == 'https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/2/'
+    assert next_page_of_article_rangado_24hu(text) == \
+           'https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/2/'
     text = w.download_url('https://rangado.24.hu/magyar_foci/2019/06/08/eb-selejtezo-azerbajdzsan-magyarorszag/')
-    assert next_page_of_article_rangado_24hu(
-        text) == 'https://rangado.24.hu/magyar_foci/2019/06/08/eb-selejtezo-azerbajdzsan-magyarorszag/1/'
+    assert next_page_of_article_rangado_24hu(text) == \
+           'https://rangado.24.hu/magyar_foci/2019/06/08/eb-selejtezo-azerbajdzsan-magyarorszag/1/'
     text = w.download_url('https://rangado.24.hu/nemzetkozi_foci/2019/05/29/chelsea-arsenal-europa-liga-donto-baku/')
-    assert next_page_of_article_rangado_24hu(
-        text) == 'https://rangado.24.hu/nemzetkozi_foci/2019/05/29/chelsea-arsenal-europa-liga-donto-baku/1/'
+    assert next_page_of_article_rangado_24hu(text) == \
+           'https://rangado.24.hu/nemzetkozi_foci/2019/05/29/chelsea-arsenal-europa-liga-donto-baku/1/'
     text = w.download_url('https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/1/')
     assert next_page_of_article_rangado_24hu(text) is None
-    text = w.download_url(
-        'https://rangado.24.hu/nemzetkozi_foci/2019/05/01/bajnokok-ligaja-elodonto-barcelona-liverpool/1/')
+    text = w.download_url('https://rangado.24.hu/nemzetkozi_foci/2019/05/01/bajnokok-ligaja-elodonto-barcelona-'
+                          'liverpool/1/')
     assert next_page_of_article_rangado_24hu(text) is None
-    text = w.download_url(
-        'https://rangado.24.hu/nemzetkozi_foci/2020/03/10/bl-nyolcaddonto-leipzig-tottenham-valencia-atalanta-elo/')
+    text = w.download_url('https://rangado.24.hu/nemzetkozi_foci/2020/03/10/bl-nyolcaddonto-leipzig-tottenham-'
+                          'valencia-atalanta-elo/')
     assert next_page_of_article_rangado_24hu(text) is None
     text = w.download_url('https://rangado.24.hu/magyar_foci/2019/11/07/europa-liga-ftc-cszka-moszkva-elo/1/')
     assert next_page_of_article_rangado_24hu(text) is None
@@ -804,18 +805,16 @@ def next_page_of_article_test(filename, test_logger):
 
     test_logger.log('INFO', 'Testing HVG')
     text = w.download_url('https://hvg.hu/itthon/20100112_bkv_sztrajk_januar_12_hirek')
-    assert next_page_of_article_hvg(
-        text) == 'https://hvg.hu/itthon/20100112_bkv_sztrajk_januar_12_hirek/2?isPrintView=False&liveReportItemId=' \
-                 '0&isPreview=False&ver=1&order=desc'
-    text = w.download_url(
-        'https://hvg.hu/itthon/20091023_oktober_23_partok/2?isPrintView=False&liveReportItemId=0&isPreview=False&ver='
-        '1&order=asc')
-    assert next_page_of_article_hvg(
-        text) == 'https://hvg.hu/itthon/20091023_oktober_23_partok/3?isPrintView=False&liveReportItemId=0&isPreview=' \
-                 'False&ver=1&order=asc'
-    text = w.download_url(
-        'https://hvg.hu/itthon/20091023_oktober_23_partok/4?isPrintView=False&liveReportItemId=0&isPreview=False&ver='
-        '1&order=desc')
+    assert next_page_of_article_hvg(text) == \
+           'https://hvg.hu/itthon/20100112_bkv_sztrajk_januar_12_hirek/2?isPrintView=False&liveReportItemId=0' \
+           '&isPreview=False&ver=1&order=desc'
+    text = w.download_url('https://hvg.hu/itthon/20091023_oktober_23_partok/2?isPrintView=False&liveReportItemId=0'
+                          '&isPreview=False&ver=1&order=asc')
+    assert next_page_of_article_hvg(text) == \
+           'https://hvg.hu/itthon/20091023_oktober_23_partok/3?isPrintView=False&liveReportItemId=0&isPreview=' \
+           'False&ver=1&order=asc'
+    text = w.download_url('https://hvg.hu/itthon/20091023_oktober_23_partok/4?isPrintView=False&liveReportItemId=0'
+                          '&isPreview=False&ver=1&order=desc')
     assert next_page_of_article_hvg(text) is None
 
     test_logger.log('INFO', 'Test OK!')
