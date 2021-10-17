@@ -21,6 +21,12 @@
     "author-kuno":
         "archive_url_format": "https://sokszinuvidek.24.hu/author/kuno/"
 
+    "author-ardaya":
+        "archive_url_format": "https://sokszinuvidek.24.hu/author/ardaya/"
+
+    "author-duboczkyk":
+        "archive_url_format": "https://sokszinuvidek.24.hu/author/duboczkyk/"
+
     "author-szponzoralt-tartalom":
         "archive_url_format": "https://sokszinuvidek.24.hu/author/szponzoralt-tartalom/"
 
