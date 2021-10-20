@@ -23,7 +23,7 @@ def str2bool(v):
 
 def parse_args_crawl(parser):
     parser.add_argument(dest='command', choices={'crawl'}, metavar='crawl',
-                        help='Crawl a portal with the supplied configuation and arguments')
+                        help='Crawl a portal with the supplied configuration and arguments')
     parser.add_argument('config', type=str, help='Portal configfile (see configs folder for examples!)')
     parser.add_argument('--old-archive-warc', type=str, help='Existing WARC archives of the portal\'s archive '
                                                              '(Use them as cache)', nargs='+', default=None)
@@ -120,7 +120,7 @@ def parse_args_sample(parser):
                              '(not mandatory when --offline is True)')
     parser.add_argument('-i', '--input-urls', dest='url_input_stream', type=FileType(), default=sys.stdin,
                         help='Use input file instead of STDIN (one URL per line)', metavar='FILE', required=False)
-    parser.add_argument('target_warcfile', type=str, metavar='TARGET_WARFCILE', help='The name of the target warc file')
+    parser.add_argument('target_warcfile', type=str, metavar='TARGET_WARCFILE', help='The name of the target warc file')
     parser.add_argument('--offline', type=str2bool, nargs='?', const=True, default=True, metavar='True/False',
                         help='Download URLs which are not present in the source archive (default True)')
     args = parser.parse_args()
@@ -146,10 +146,10 @@ def parse_args_cat(parser):
 
 
 def parse_args_donwload(parser):
-    parser.add_argument(dest='command', choices={'download'}, metavar='downlaod',
+    parser.add_argument(dest='command', choices={'download'}, metavar='download',
                         help='Download a single URL to a warc file')
     parser.add_argument('source_url', type=str, metavar='URL', help='The URL to download')
-    parser.add_argument('target_warcfile', type=str, metavar='TARGET_WARFCILE', help='The name of the target warc file')
+    parser.add_argument('target_warcfile', type=str, metavar='TARGET_WARCFILE', help='The name of the target warc file')
     return parser.parse_args()
 
 
@@ -201,7 +201,7 @@ def main_cat_and_sample(args):
 
 
 def main_download(args):
-    """ __file__ download [URL] [target warfile] """
+    """ __file__ download [URL] [target warcfile] """
     main_logger = Logger()
     main_logger.log('INFO', 'Adding URL to', args.target_warcfile, ':')
     online_test(args.source_url, args.target_warcfile, main_logger)
@@ -216,7 +216,7 @@ def main():
                 'cat': (parse_args_cat, main_cat_and_sample), 'crawl': (parse_args_crawl, main_crawl)}
     parser = ArgumentParser()
     parser.add_argument('command', choices=commands.keys(), metavar='COMMAND',
-                        help='Please choose from the available commands ({0}) to set mode and see deatiled help!'.
+                        help='Please choose from the available commands ({0}) to set mode and see detailed help!'.
                         format(set(commands.keys())))
 
     command = parser.parse_args(sys.argv[1:2]).command  # Route ArgumentParser before reparsing the whole CLI
