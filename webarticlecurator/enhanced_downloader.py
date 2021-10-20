@@ -142,7 +142,7 @@ class WarcDownloader:
         self._logger = _logger
         self._req_headers = {'Accept-Encoding': 'identity', 'User-agent': user_agent}
         self._error_count = 0
-        self._error_threshold = err_threshold  # Set the error threshold which cause aborting to prevent deinal
+        self._error_threshold = err_threshold  # Set the error threshold which cause aborting to prevent denial
 
         # Setup download function
         if not stay_offline:
