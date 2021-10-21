@@ -740,15 +740,19 @@ def next_page_of_article_merce(archive_page_raw_html):
 
 def next_page_of_article_rangado_24hu(curr_html):
     bs = BeautifulSoup(curr_html, 'lxml')
-    if bs.find('span', class_='page-numbers current') is not None:
-        current_page = int(bs.find('span', class_='page-numbers current').get_text())
-        other_pages = bs.find_all('a', class_='page-numbers')
-        for i in other_pages:
-            # Filter span to avoid other tags with class page-numbers (next page button is unreliable!)
-            if i.find('span') is None and int(i.get_text()) + 1 == current_page and 'href' in i.attrs.keys():
-                next_link = i.attrs['href']
-                return next_link
-    return None
+    page_num = bs.find('ul', class_='page-numbers')
+    if page_num is not None:
+        main_url = bs.find('meta', {'property': 'og:url'}).attrs['content']
+        links = {link for link in safe_extract_hrefs_from_a_tags(page_num)}
+        act_pagenum = main_url[-2]
+        if act_pagenum.isdigit():
+            nextp = f'{main_url[:-2]}{str(int(act_pagenum) + 1)}/'
+        else:
+            nextp = f'{main_url}1/'
+        if nextp in links:
+            return nextp
+        else:
+            return None
 
 
 def next_page_of_article_hvg(curr_html):
@@ -779,10 +783,7 @@ def next_page_of_article_test(filename, test_logger):
     test_logger.log('INFO', 'Testing rangado_24hu')
     text = w.download_url('https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/2/')
     assert next_page_of_article_rangado_24hu(text) == \
-           'https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/1/'
-    text = w.download_url('https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/3/')
-    assert next_page_of_article_rangado_24hu(text) == \
-           'https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/2/'
+           'https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/3/'
     text = w.download_url('https://rangado.24.hu/magyar_foci/2019/06/08/eb-selejtezo-azerbajdzsan-magyarorszag/')
     assert next_page_of_article_rangado_24hu(text) == \
            'https://rangado.24.hu/magyar_foci/2019/06/08/eb-selejtezo-azerbajdzsan-magyarorszag/1/'
@@ -790,14 +791,13 @@ def next_page_of_article_test(filename, test_logger):
     assert next_page_of_article_rangado_24hu(text) == \
            'https://rangado.24.hu/nemzetkozi_foci/2019/05/29/chelsea-arsenal-europa-liga-donto-baku/1/'
     text = w.download_url('https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/1/')
-    assert next_page_of_article_rangado_24hu(text) is None
-    text = w.download_url('https://rangado.24.hu/nemzetkozi_foci/2019/05/01/bajnokok-ligaja-elodonto-barcelona-'
-                          'liverpool/1/')
-    assert next_page_of_article_rangado_24hu(text) is None
+    assert next_page_of_article_rangado_24hu(text) == \
+           'https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/2/'
+    text = w.download_url('https://rangado.24.hu/magyar_foci/2019/11/07/europa-liga-ftc-cszka-moszkva-elo/1/')
+    assert next_page_of_article_rangado_24hu(text) == \
+           'https://rangado.24.hu/magyar_foci/2019/11/07/europa-liga-ftc-cszka-moszkva-elo/2/'
     text = w.download_url('https://rangado.24.hu/nemzetkozi_foci/2020/03/10/bl-nyolcaddonto-leipzig-tottenham-'
                           'valencia-atalanta-elo/')
-    assert next_page_of_article_rangado_24hu(text) is None
-    text = w.download_url('https://rangado.24.hu/magyar_foci/2019/11/07/europa-liga-ftc-cszka-moszkva-elo/1/')
     assert next_page_of_article_rangado_24hu(text) is None
     text = w.download_url('https://rangado.24.hu/magyar_foci/2021/10/11/tenyleg-van-visszaut-boli-ujra-a-fradi-elso'
                           '-csapataval-edzett/')
