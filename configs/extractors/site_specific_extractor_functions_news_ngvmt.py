@@ -739,20 +739,18 @@ def next_page_of_article_merce(archive_page_raw_html):
 
 
 def next_page_of_article_rangado_24hu(curr_html):
+    # Rangado 24.hu operates with a reverse multipage logic: the start page is the newest page of the article
     bs = BeautifulSoup(curr_html, 'lxml')
-    page_num = bs.find('ul', class_='page-numbers')
-    if page_num is not None:
-        main_url = bs.find('meta', {'property': 'og:url'}).attrs['content']
-        links = {link for link in safe_extract_hrefs_from_a_tags(page_num)}
-        act_pagenum = main_url[-2]
-        if act_pagenum.isdigit():
-            nextp = f'{main_url[:-2]}{str(int(act_pagenum) + 1)}/'
-        else:
-            nextp = f'{main_url}1/'
-        if nextp in links:
-            return nextp
-        else:
-            return None
+    current_page = bs.find('span', class_='page-numbers current')
+    if current_page is not None:
+        current_page_num = int(current_page.get_text())
+        other_pages = bs.find_all('a', class_='page-numbers')
+        for i in other_pages:
+            # Filter span to avoid other tags with class page-numbers (next page button is unreliable!)
+            if i.find('span') is None and int(i.get_text()) + 1 == current_page_num and 'href' in i.attrs.keys():
+                next_link = i.attrs['href']
+                return next_link
+    return None
 
 
 def next_page_of_article_hvg(curr_html):
