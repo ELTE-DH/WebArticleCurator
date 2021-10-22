@@ -743,13 +743,14 @@ def next_page_of_article_rangado_24hu(curr_html):
     bs = BeautifulSoup(curr_html, 'lxml')
     current_page = bs.find('span', class_='page-numbers current')
     if current_page is not None:
-        current_page_num = int(current_page.get_text())
-        other_pages = bs.find_all('a', class_='page-numbers')
-        for i in other_pages:
-            # Filter span to avoid other tags with class page-numbers (next page button is unreliable!)
-            if i.find('span') is None and int(i.get_text()) + 1 == current_page_num and 'href' in i.attrs.keys():
-                next_link = i.attrs['href']
-                return next_link
+        if current_page.get_text().isdecimal():
+            current_page_num = int(current_page.get_text())
+            other_pages = bs.find_all('a', class_='page-numbers')
+            for i in other_pages:
+                # Filter span to avoid other tags with class page-numbers (next page button is unreliable!)
+                if i.find('span') is None and int(i.get_text()) + 1 == current_page_num and 'href' in i.attrs.keys():
+                    next_link = i.attrs['href']
+                    return next_link
     return None
 
 
