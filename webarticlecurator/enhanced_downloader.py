@@ -26,8 +26,8 @@ respv_str = {10: '1.0', 11: '1.1'}
 
 class WarcCachingDownloader:
     """
-        This class optionally applies the supplied existing warc archive to retrive the downloaded pages from cache
-         in case of hit and writes the retrived page to the newly created archive file.
+        This class optionally applies the supplied existing warc archive to retrieve the downloaded pages from cache
+         in case of hit and writes the retrieved page to the newly created archive file.
          When the requested page is not present in the archive, it downloads the page and saves it into the new archive.
 
         It basically wraps WarcReader and WarcDownloader classes which do the hard work.
@@ -85,7 +85,7 @@ class WarcCachingDownloader:
         # 4) If we have the URL cached...
         if cached_content is not None:
             if not ignore_cache:
-                # 4a) and we do not expliticly ignore the cache, return the cached content!
+                # 4a) and we do not explicitly ignore the cache, return the cached content!
                 return cached_content
             else:
                 # 4b) Log that we ignored the cached_content and do noting!
@@ -142,7 +142,7 @@ class WarcDownloader:
         self._logger = _logger
         self._req_headers = {'Accept-Encoding': 'identity', 'User-agent': user_agent}
         self._error_count = 0
-        self._error_threshold = err_threshold  # Set the error threshold which cause aborting to prevent deinal
+        self._error_threshold = err_threshold  # Set the error threshold which cause aborting to prevent denial
 
         # Setup download function
         if not stay_offline:
@@ -235,7 +235,7 @@ class WarcDownloader:
             try:
                 peer_name = resp.raw._connection.sock.socket.getpeername()[0]
             except AttributeError:
-                peer_name = 'None'  # Socket closed and could not derermine peername...
+                peer_name = 'None'  # Socket closed and could not determine peername...
         return peer_name
 
     def _dummy_download_url(self, _):
@@ -251,7 +251,7 @@ class WarcDownloader:
             return None
 
         scheme, netloc, path, params, query, fragment = urlparse(url)
-        # For safety urlencode the generated URL... (The URL might by modified in this step.)
+        # For safety urlencode the generated URL... (The URL might be modified in this step.)
         path = quote(path, safe='/%')
         url_reparsed = urlunparse((scheme, netloc, path, params, query, fragment))
 
@@ -413,7 +413,7 @@ class WarcReader:
         if archive_load_failed and self._strict_mode:
             raise ArchiveLoadFailed('Archive loading failed! See logs for details!')
         self._stream.seek(0)
-        self._logger.log('INFO', 'Index succesuflly created.')
+        self._logger.log('INFO', 'Index successfully created.')
 
     def get_record(self, url):
         reqv_resp_pair = self._internal_url_index.get(url)

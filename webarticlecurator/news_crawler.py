@@ -117,8 +117,8 @@ class NewsArchiveCrawler:
                 and it is complete with portal-specific ending.
             The archive can be stored in groups (mostly the creation date) or ordered in a flat list paginated.
             This two main method can also be mixed.
-            Pagination can be implemented in various vays see the appropriate function for details
-        :return: Every page of the archive contain multiple URL to the actual articles, which are extrated and
+            Pagination can be implemented in various ways, see the appropriate function for details
+        :return: Every page of the archive contain multiple URL to the actual articles, which are extracted and
          then returned as an iterator based on URLs.
         """
         for column_name, params in self._columns.items():
@@ -174,7 +174,7 @@ class NewsArchiveCrawler:
 
     def _gen_article_urls_including_subpages(self, archive_page_url_base):
         """
-            Generates article URLs from a supplied URL inlcuding the on-demand sub-pages that contains article URLs
+            Generates article URLs from a supplied URL including the on-demand sub-pages that contains article URLs
         """
         page_num = self._min_pagenum
         first_page = True
@@ -276,7 +276,7 @@ class NewsArticleCrawler:
             self._date_from = settings['date_from']
             self._date_until = settings['date_from']
 
-        # Get the initialised corpus converter (can be dummy) and set the apropriate logger
+        # Get the initialised corpus converter (can be dummy) and set the appropriate logger
         self._converter = settings['CORPUS_CONVERTER']
         self._converter.logger = self._logger
 
@@ -288,7 +288,7 @@ class NewsArticleCrawler:
             known_article_urls = self._downloader.url_index  # All URLs in the archive are known good!
 
         if archive_just_cache and articles_just_cache:
-            # Full offline mode for processing articles only withouht the archive
+            # Full offline mode for processing articles only without the archive
             self._archive_downloader = NewsArchiveDummyCrawler(self._downloader.url_index)
         else:  # known_bad_urls are common between the NewsArchiveCrawler and the NewsArticleCrawler
             # For downloading the articles from a (possibly read-only) archive
@@ -308,7 +308,7 @@ class NewsArticleCrawler:
 
     def _is_problematic_url(self, url):
         # Explicitly marked as bad URL (either Article or Archive) OR
-        # Download failed in this session and requries manual check (either Article or Archive)
+        # Download failed in this session and requires manual check (either Article or Archive)
         return url in self._downloader.bad_urls or url in self._archive_downloader.bad_urls or \
                url in self.problematic_article_urls or url in self._archive_downloader.problematic_urls
 
@@ -333,8 +333,8 @@ class NewsArticleCrawler:
                 if url in self._downloader.bad_urls or url in self._archive_downloader.bad_urls:
                     self._logger.log('DEBUG', url, 'Skipping URLs explicitly marked as bad!', sep='\t')
                     continue
-                # 1b) Download succeded in this session either Article or Archive (duplicate)
-                # 1c) Download failed in this session and requries manual check either Article or Archive (duplicate)
+                # 1b) Download succeeded in this session either Article or Archive (duplicate)
+                # 1c) Download failed in this session and requires manual check either Article or Archive (duplicate)
                 elif self._is_processed_good_url(url) or \
                         url in self.problematic_article_urls or url in self._archive_downloader.problematic_urls:
                     self._logger.log('WARNING', url, 'Not processing URL, because it is an URL already'

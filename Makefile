@@ -16,7 +16,7 @@ venv:
 	@$(PYTHON) -m venv $(VENVDIR)
 	@$(VENVPIP) install wheel twine
 	@$(VENVPIP) install -r requirements.txt
-	@echo "$(GREEN)Virtualenv is succesfully created!$(NOCOLOR)"
+	@echo "$(GREEN)Virtualenv is successfully created!$(NOCOLOR)"
 .PHONY: venv
 
 build:
@@ -25,7 +25,7 @@ build:
 install: build
 	@echo "Installing package to user..."
 	$(VENVPIP) install --upgrade dist/*.whl
-	@echo "$(GREEN)Package is succesfully installed!$(NOCOLOR)"
+	@echo "$(GREEN)Package is successfully installed!$(NOCOLOR)"
 .PHONY: install
 
 upload:
@@ -38,4 +38,4 @@ test:
 	for i in configs/config_*.yaml; do echo "Testing $${i}:"; $(VENVPYTHON) webarticlecurator/utils.py $${i} \
 	 || exit 1; done
 	for i in configs/extractors/site_specific_*.py; do $(VENVPYTHON) $${i} || exit 1; done
-	@echo "$(GREEN)All tests are succesfully passed!$(NOCOLOR)"
+	@echo "$(GREEN)All tests are successfully passed!$(NOCOLOR)"

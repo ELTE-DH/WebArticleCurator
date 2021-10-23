@@ -27,10 +27,10 @@ column:
     date_first_article: day(required=False, none=False)
     date_last_article: day(required=False, none=False)
 
-    # The url schema of the archive with optional labels #pagenum #year #month #day #nex-year #next-mondth #next-day
+    # The url schema of the archive with optional labels #pagenum #year #month #day #nex-year #next-month #next-day
     archive_url_format: str(min=1)
 
-    # If initial_pagenum is not specificed '' will be used by utils.py these used when number-based pagination is used
+    # If initial_pagenum is not specified '' will be used by utils.py these used when number-based pagination is used
     initial_pagenum: int(min=0, required=False, none=False)
     min_pagenum: int(min=0, required=False, none=False)
     max_pagenum: int(min=0, required=False, none=False)
