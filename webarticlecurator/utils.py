@@ -95,7 +95,7 @@ def wrap_input_constants(current_task_config_filename):
             # while initial_pagenum must be set
             if 'min_pagenum' not in column_settings:
                 if 'max_pagenum' in column_settings or 'initial_pagenum' not in column_settings:
-                    raise ValueError('min_pagenum can be omitted iff max_pagenum is not present'
+                    raise ValueError('min_pagenum can be omitted if max_pagenum is not present'
                                      ' and initial_pagenum is set, when next_url_by_pagenum is true!')
                 else:  # min_pagenum and max_pagenum are not set, but initial_pagenum is. -> One page column!
                     min_pagenum = 2  # so max < min and exit immediately
