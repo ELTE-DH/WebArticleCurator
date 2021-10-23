@@ -16,7 +16,7 @@ crawl_schema = yamale.make_schema(os.path.join(os.path.dirname(os.path.abspath(_
 def load_and_validate(schema, fname):
     data = yamale.make_data(fname)
     try:
-        yamale.validate(schema, data, strict=True)
+        yamale.validate(schema, data)  # strict=True
     except yamale.YamaleError as e:
         for result in e.results:
             print('Error validating data {0} with {1}:'.format(result.data, result.schema), file=sys.stderr)
@@ -91,22 +91,31 @@ def wrap_input_constants(current_task_config_filename):
         max_pagenum = column_settings.get('max_pagenum')
 
         if settings['next_url_by_pagenum']:
-            # If column consists of only one page, min_pagenum and max_pagenum must be omitted
-            # while initial_pagenum must be set
-            if 'min_pagenum' not in column_settings:
-                if 'max_pagenum' in column_settings or 'initial_pagenum' not in column_settings:
-                    raise ValueError('min_pagenum can be omitted if max_pagenum is not present'
-                                     ' and initial_pagenum is set, when next_url_by_pagenum is true!')
-                else:  # min_pagenum and max_pagenum are not set, but initial_pagenum is. -> One page column!
-                    min_pagenum = 2  # so max < min and exit immediately
-                    max_pagenum = 1
+            if 'min_pagenum' not in column_settings and 'max_pagenum' not in column_settings and \
+                    'initial_pagenum' in column_settings:
+                # One page column: min_pagenum and max_pagenum are not set, but initial_pagenum is
+                # so max < min and exit immediately
+                min_pagenum = 2
+                max_pagenum = 1
+            elif 'min_pagenum' in column_settings and 'max_pagenum' not in column_settings and \
+                    (not isinstance(initial_pagenum, int) or min_pagenum == initial_pagenum + 1):
+                # Go from  min_pagenum (with initial_pagenum) until there are articles extracted:
+                # if initial_pagenum is integer and min pagenum == initial_pagenum + 1 and no max_pagenum is set
+                pass
+            elif 'min_pagenum' in column_settings and 'max_pagenum' in column_settings and \
+                    (not isinstance(initial_pagenum, int) or min_pagenum == initial_pagenum + 1) and \
+                    (isinstance(max_pagenum, int) and min_pagenum <= max_pagenum):
+                # Go from min_pagenum (with initial_pagenum) to max_pagenum:
+                # If initial_pagenum and max_pagenum are integers,
+                # initial_pagenum + 1 == min_pagenum <= max_pagenum must be satisfied!
+                pass
             else:
-                # If initial_pagenum is explicitly set as int and min_pagenum is set,
-                #  initial_pagenum + 1 == min_pagenum <= max_pagenum must be satisfied!
-                if ((isinstance(initial_pagenum, int) and min_pagenum != initial_pagenum + 1) or
-                   (isinstance(max_pagenum, int) and min_pagenum > max_pagenum)):
-                    raise ValueError('If two or more from initial_pagenum, min_pagenum and max_pagenum are set,'
-                                     ' initial_pagenum + 1 == min_pagenum <= max_pagenum must be satisfied!')
+                raise ValueError('PagenumError: if next_url_by_pagenum is set one of the following must be satisfied:'
+                                 ' a) One page column: initial_pagenum is set, min and and max pagenum are omitted.'
+                                 ' b) No defined max_pagenum for column: min_pagenum is set and max_pagenum is omitted.'
+                                 ' c) Pagenum interval for column: min_pagenum and max_pagenum is defined.'
+                                 ' initial_pagenum can be any string and for (b) and (c) is optional.'
+                                 ' For integer values: initial_pagenum + 1 == min_pagenum <= max_pagenum must hold!')
 
         # If initial_pagenum is implicit, then it will be substituted with empty string. e.g. in &page=
         column_settings['INITIAL_PAGENUM'] = str(initial_pagenum)
