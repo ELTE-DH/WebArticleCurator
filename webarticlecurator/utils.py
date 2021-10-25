@@ -111,7 +111,7 @@ def wrap_input_constants(current_task_config_filename):
                 pass
             else:
                 raise ValueError('PagenumError: if next_url_by_pagenum is set one of the following must be satisfied:'
-                                 ' a) One page column: initial_pagenum is set, min and and max pagenum are omitted.'
+                                 ' a) One page column: initial_pagenum is set, min and max pagenum are omitted.'
                                  ' b) No defined max_pagenum for column: min_pagenum is set and max_pagenum is omitted.'
                                  ' c) Pagenum interval for column: min_pagenum and max_pagenum is defined.'
                                  ' initial_pagenum can be any string and for (b) and (c) is optional.'
