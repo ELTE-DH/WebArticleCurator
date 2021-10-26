@@ -1,71 +1,156 @@
 "site_name": "888"
 
+# Max_pagenum is set, because after the first article the most recent articles keep loading from page to page.
+# It is recommended to check the max_pagenum, it might have changed since the original crawling.
+
 "columns":
     "piszkostizenketto":
-        "archive_url_format": "https://888.hu/piszkostizenketto/"
+        "archive_url_format": "https://888.hu/piszkostizenketto/page/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum" : 2
+        "max_pagenum": 150
 
     "ketharmad":
-        "archive_url_format": "https://888.hu/ketharmad/"
+        "archive_url_format": "https://888.hu/ketharmad/page/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum" : 2
+        "max_pagenum": 1020
 
     "amerika-london-parizs":
-        "archive_url_format": "https://888.hu/amerika-london-parizs/"
+        "archive_url_format": "https://888.hu/amerika-london-parizs/page/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum" : 2
+        "max_pagenum": 1580
 
     "big-pikcsor":
-        "archive_url_format": "https://888.hu/big-pikcsor/"
+        "archive_url_format": "https://888.hu/big-pikcsor/page/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum" : 2
+        "max_pagenum": 10
 
     "hajra-magyarok":
-        "archive_url_format": "https://888.hu/hajra-magyarok/"
+        "archive_url_format": "https://888.hu/hajra-magyarok/page/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum" : 2
+        "max_pagenum": 210
 
     "csak-neked-csak-most":
-        "archive_url_format": "https://888.hu/csak-neked-csak-most/"
+        "archive_url_format": "https://888.hu/csak-neked-csak-most/page/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum" : 2
+        "max_pagenum": 20
 
     "feher-ferfi":
-        "archive_url_format": "https://888.hu/feher-ferfi/"
+        "archive_url_format": "https://888.hu/feher-ferfi/page/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum" : 2
+        "max_pagenum": 50
 
     "pszicho":
-        "archive_url_format": "https://888.hu/pszicho/"
+        "archive_url_format": "https://888.hu/pszicho/page/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum" : 2
+        "max_pagenum": 10
 
     "egy-soros-egy-forditott":
-        "archive_url_format": "https://888.hu/egy-soros-egy-forditott/"
+        "archive_url_format": "https://888.hu/egy-soros-egy-forditott/page/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum" : 2
+        "max_pagenum": 7
 
     "kinyilott-a-pitypang":
-        "archive_url_format": "https://888.hu/kinyilott-a-pitypang/"
+        "archive_url_format": "https://888.hu/kinyilott-a-pitypang/page/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum" : 2
+        "max_pagenum": 250
 
     "censored":
-        "archive_url_format": "https://888.hu/censored/"
+        "archive_url_format": "https://888.hu/censored/page/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum" : 2
+        "max_pagenum": 10
 
     "sivalkodjatok":
-        "archive_url_format": "https://888.hu/sivalkodjatok/"
+        "archive_url_format": "https://888.hu/sivalkodjatok/page/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum" : 2
+        "max_pagenum": 40
 
     "7:59":
-        "archive_url_format": "https://888.hu/759/"
+        "archive_url_format": "https://888.hu/759/page/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum" : 2
+        "max_pagenum": 150
 
     "889":
-        "archive_url_format": "https://888.hu/889/"
+        "archive_url_format": "https://888.hu/889/page/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum" : 2
+        "max_pagenum": 25
 
     "888":
-        "archive_url_format": "https://888.hu/888/"
+        "archive_url_format": "https://888.hu/888/page/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum" : 2
+        "max_pagenum": 60
 
     "century-on":
-        "archive_url_format": "https://888.hu/century-on/"
+        "archive_url_format": "https://888.hu/century-on/page/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum" : 2
+        "max_pagenum": 50
 
     "szabad-vasarnap":
-        "archive_url_format": "https://888.hu/szabad-vasarnap/"
+        "archive_url_format": "https://888.hu/szabad-vasarnap/page/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum" : 2
+        "max_pagenum": 150
 
     "bulvar":
-        "archive_url_format": "https://888.hu/bulvar/"
+        "archive_url_format": "https://888.hu/bulvar/page/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum" : 2
+        "max_pagenum": 100
 
     "okojobb":
-        "archive_url_format": "https://888.hu/okojobb/"
+        "archive_url_format": "https://888.hu/okojobb/page/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum" : 2
+        "max_pagenum": 40
 
     "maccabi":
-        "archive_url_format": "https://888.hu/maccabi/"
+        "archive_url_format": "https://888.hu/maccabi/page/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum" : 2
+        "max_pagenum": 5
+
 
 "portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_news_pgvmt.py"
-"extract_next_page_url_fun": "extract_next_page_url_888"
+# To stop the crawler at max_pagenum, it uses pagenum and not the previously written next_page_url_fun function.
+# "extract_next_page_url_fun": "extract_next_page_url_888"
 "extract_article_urls_from_page_fun": "extract_article_urls_from_page_888"
 
-"next_url_by_pagenum": false
+"next_url_by_pagenum": true
 "infinite_scrolling": false
 "archive_page_urls_by_date": false
 "go_reverse_in_archive": false
