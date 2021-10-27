@@ -342,7 +342,7 @@ def extract_article_urls_from_page_nepszava(archive_page_raw_html):
     for date_day, day_data in archive_json.items():
         for archive_item in day_data:
             if isinstance(archive_item, dict):  # Handle {"error": "404"}
-                urls.add(f'https://nepszava.hu/{archive_item["link"]}')
+                urls.add(f'https://nepszava.hu/json/cikk.json?id={archive_item["link"]}')
     return urls
 
 
