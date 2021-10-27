@@ -342,7 +342,7 @@ def extract_article_urls_from_page_nepszava(archive_page_raw_html):
     for date_day, day_data in archive_json.items():
         for archive_item in day_data:
             if isinstance(archive_item, dict):  # Handle {"error": "404"}
-                urls.add(f'https://nepszava.hu/json/cikk.json?id={archive_item["link"]}')
+                urls.add(f'https://nepszava.hu/{archive_item["link"]}')
     return urls
 
 
@@ -732,7 +732,7 @@ def next_page_of_article_merce(archive_page_raw_html):
     next_page = soup.find('a', attrs={"data-act": "load-more"})
     last_page = soup.select('div.pplive__loadmore-wrap.text-center.d-none')
     if next_page is not None and 'href' in next_page.attrs and len(last_page) == 0:
-        url = soup.find('meta', property='og:url')['content']
+        url = soup.find("meta", property="og:url")["content"]
         pars = next_page.attrs['href']
         ret = url + pars
     return ret
@@ -762,6 +762,23 @@ def next_page_of_article_hvg(curr_html):
             link = f'https://hvg.hu{next_link}'
             return link
     return None
+
+
+def next_page_of_article_alfahir(curr_html):
+    """
+        extracts and returns next page URL from an HTML code if there is one...
+        Specific for alfahir.hu
+        :returns string of url if there is one, None otherwise
+    """
+    # this function finds the next page till a next button is present on the page
+    # sometimes the same post is present on multiple pages and the last page is usually empty
+    ret = None
+    soup = BeautifulSoup(curr_html, 'lxml')
+    next_page_button = soup.find('a', {'class': 'button', 'rel': 'next'})
+    if next_page_button is not None and 'href' in next_page_button.attrs:
+        url_end = next_page_button.attrs['href']
+        ret = f'https://alfahir.hu{url_end}'
+    return ret
 
 
 def next_page_of_article_test(filename, test_logger):
@@ -828,8 +845,36 @@ def next_page_of_article_test(filename, test_logger):
 
     test_logger.log('INFO', 'Test OK!')
 
+    test_logger.log('INFO', 'Testing alfahir')
+    text = w.download_url('https://alfahir.hu/2021/08/08/olimpia_tokioi_olimpia'
+                          '_japan_hosszu_katinka_szilagyi_aron_sport_nob_lelato')
+    assert next_page_of_article_alfahir(
+        text) == 'https://alfahir.hu/2021/08/08/olimpia_tokioi_olimpia' \
+                 '_japan_hosszu_katinka_szilagyi_aron_sport_nob_lelato?page=1'
+    text = w.download_url('https://alfahir.hu/2021/08/08/olimpia_tokioi_olimpia'
+                          '_japan_hosszu_katinka_szilagyi_aron_sport_nob_lelato?page=3')
+    assert next_page_of_article_alfahir(
+        text) == 'https://alfahir.hu/2021/08/08/olimpia_tokioi_olimpia' \
+                 '_japan_hosszu_katinka_szilagyi_aron_sport_nob_lelato?page=4'
+    text = w.download_url('https://alfahir.hu/2021/08/08/olimpia_tokioi_olimpia'
+                          '_japan_hosszu_katinka_szilagyi_aron_sport_nob_lelato?page=60')
+    assert next_page_of_article_alfahir(text) is None
+    text = w.download_url('https://alfahir.hu/raketavetovel_menekulnek_a_gyilkosok')
+    assert next_page_of_article_alfahir(
+        text) == 'https://alfahir.hu/raketavetovel_menekulnek_a_gyilkosok?page=1'
+    text = w.download_url('https://alfahir.hu/raketavetovel_menekulnek_a_gyilkosok?page=1')
+    assert next_page_of_article_alfahir(
+        text) == 'https://alfahir.hu/raketavetovel_menekulnek_a_gyilkosok?page=2'
+    text = w.download_url('https://alfahir.hu/raketavetovel_menekulnek_a_gyilkosok?page=5')
+    assert next_page_of_article_alfahir(text) is None
+    text = w.download_url('https://alfahir.hu/2021/10/18/'
+                          'republikon_ellenzeki_elovalasztas')
+    assert next_page_of_article_alfahir(text) is None
+    test_logger.log('INFO', 'Test OK!')
+
 
 # END SITE SPECIFIC next_page_of_article FUNCTIONS #####################################################################
+
 
 def main_test():
     main_logger = Logger()
