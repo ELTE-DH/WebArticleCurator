@@ -73,17 +73,6 @@
         "date_first_article": 0001-01-01
         "date_last_article":  0001-01-31
 
-    # szorakozas - empty intervals are avoided with a pseudo-column.
-    "szorakozas":
-        "archive_url_format": "https://24.hu/szorakozas/#year/#month/"
-
-        "date_first_article": 2010-03-01
-
-    "szorakozas-0001-01":
-        "archive_url_format": "https://24.hu/szorakozas/#year/#month/"
-
-        "date_first_article": 0001-01-01
-        "date_last_article":  0001-01-31
 
     # The "europoli" column's articles link to articles in the main columns (e.g. belfold, kulfold, etc.).
     # No need to download these again.
@@ -94,11 +83,6 @@
 
         "date_first_article": 2010-03-01
 
-    # sport.
-    "sport":
-        "archive_url_format": "https://24.hu/sport/#year/#month/"
-
-        "date_first_article": 2011-09-01
 
     # otthon.
     "otthon":
