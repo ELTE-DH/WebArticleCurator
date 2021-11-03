@@ -1,0 +1,49 @@
+"site_name": "24hu"
+
+"columns":
+    # belfold - empty intervals are avoided with several pseudo-columns.
+    "belfold":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/"
+
+        "date_first_article": 2000-01-01
+
+    "belfold-1997-11":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/"
+
+        "date_first_article": 1997-11-01
+        "date_last_article":  1997-11-30
+
+    "belfold-1990-11":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/"
+
+        "date_first_article": 1990-11-01
+        "date_last_article":  1990-11-30
+
+    "belfold-1848-12":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/"
+
+        "date_first_article": 1848-12-01
+        "date_last_article":  1848-12-31
+
+    "belfold-0001-01":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/"
+
+        "date_first_article": 0001-01-01
+        "date_last_article":  0001-01-31
+
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_news_ngvmt.py"
+"extract_next_page_url_fun": "extract_next_page_url_24hu"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_24hu"
+
+"next_url_by_pagenum": false
+"infinite_scrolling": false
+"archive_page_urls_by_date": true
+"go_reverse_in_archive": false
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"
