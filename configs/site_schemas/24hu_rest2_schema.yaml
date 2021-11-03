@@ -1,17 +1,6 @@
 "site_name": "24hu"
 
 "columns":
-    # kultura - empty intervals are avoided with a pseudo-column.
-    "kultura":
-        "archive_url_format": "https://24.hu/kultura/#year/#month/"
-
-        "date_first_article": 2010-04-01
-
-    "kultura-0001-01":
-        "archive_url_format": "https://24.hu/kultura/#year/#month/"
-
-        "date_first_article": 0001-01-01
-        "date_last_article":  0001-01-31
 
     # tech.
     "tech":
@@ -19,35 +8,6 @@
 
         "date_first_article": 2010-04-01
 
-    # elet-stilus - empty intervals are avoided with several pseudo-columns.
-    "elet-stilus":
-        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/"
-
-        "date_first_article": 2001-02-01
-
-    "elet-stilus-2000-06":
-        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/"
-
-        "date_first_article": 2000-06-01
-        "date_last_article":  2000-06-30
-
-    "elet-stilus-1956-10":
-        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/"
-
-        "date_first_article": 1956-10-01
-        "date_last_article":  1956-10-31
-
-    "elet-stilus-1910-11":
-        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/"
-
-        "date_first_article": 1910-11-01
-        "date_last_article":  1910-11-30
-
-    "elet-stilus-0001-01":
-        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/"
-
-        "date_first_article": 0001-01-01
-        "date_last_article":  0001-01-31
 
     # kozelet.
     "kozelet":
@@ -83,21 +43,6 @@
 
         "date_first_article": 2010-03-01
 
-
-    # otthon.
-    "otthon":
-        "archive_url_format": "https://24.hu/otthon/#year/#month/"
-
-        "date_first_article": 2017-05-01
-
-    # The "velemeny" column's articles link to articles in the main columns (e.g. belfold, kulfold, etc.).
-    # No need to download these again.
-
-    # The "video" column's articles link to articles in the main columns (e.g. belfold, kulfold, etc.).
-    # No need to download these again.
-
-    # The "podcast" column's articles link to articles in the main columns (e.g. belfold, kulfold, etc.).
-    # No need to download these again.
 
 "portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_news_ngvmt.py"
 "extract_next_page_url_fun": "extract_next_page_url_24hu"
