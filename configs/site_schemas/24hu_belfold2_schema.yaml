@@ -5,7 +5,7 @@
     "belfold":
         "archive_url_format": "https://24.hu/belfold/#year/#month/"
 
-        "date_first_article": 2000-01-01
+        "date_first_article": 2010-01-01
 
 "portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_news_ngvmt.py"
 "extract_next_page_url_fun": "extract_next_page_url_24hu"
