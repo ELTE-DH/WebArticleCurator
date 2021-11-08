@@ -721,6 +721,7 @@ def extract_article_urls_from_page_test(filename, test_logger):
 # END SITE SPECIFIC extract_article_urls_from_page FUNCTIONS ###########################################################
 
 # BEGIN SITE SPECIFIC next_page_of_article FUNCTIONS ###################################################################
+
 def next_page_of_article_merce(archive_page_raw_html):
     """
         extracts and returns next page URL from an HTML code if there is one...
@@ -732,9 +733,17 @@ def next_page_of_article_merce(archive_page_raw_html):
     next_page = soup.find('a', attrs={'data-act': 'load-more'})
     last_page = soup.select('div.pplive__loadmore-wrap.text-center.d-none')
     if next_page is not None and 'href' in next_page.attrs and len(last_page) == 0:
-        url = soup.find('meta', property='og:url')['content']
-        pars = next_page.attrs['href']
-        ret = url + pars
+        # post url eg.: https://merce.hu/pp/2018/04/08/magyarorszag-valaszt/
+        # lemondott-az-egyutt-teljes-elnoksege-a-part-jovoje-is-kerdeses/"
+        # The next page link can be compiled from the page's own url and the 'loadall=1' from 'pars' (if it exists).
+        # We can compile the main url from one of the posts url with truncating the end and the 'pp/' substring
+        # which refers to the post.
+        firstpost_tag = soup.find('a', {'data-act': 'pp-item-title', 'class': 'track-act', 'href': True})
+        if firstpost_tag:
+            post_url_cut = firstpost_tag['href'][0:-1].replace('pp/', '')
+            url = post_url_cut[:post_url_cut.rfind('/')]
+            pars = next_page.attrs['href']
+            ret = f'{url}/{pars}'
     return ret
 
 
