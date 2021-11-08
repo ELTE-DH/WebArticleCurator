@@ -229,11 +229,10 @@ def extract_article_urls_from_page_24hu(archive_page_raw_html):
     # (the URLs of each post point to the same HTML) https://24.hu/kulfold/2015/11/24/terrorizmus_lelott_orosz_repulo_
     # putyin_sziria_putyin_elo/#az-egyik-pilota-biztosan-halott
     for link in safe_extract_hrefs_from_a_tags(main_container):
-        hashtag_index = link.find('#')
+        hashtag_index = link.rfind('#')
         if hashtag_index > -1:
-            urls.add(link[:link.find('#')])
-        else:
-            urls.add(link)
+            link = link[:hashtag_index]
+        urls.add(link)
     return urls
 
 
