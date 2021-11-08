@@ -795,7 +795,6 @@ def next_page_of_article_rangado_24hu(curr_html):
             # Filter span to avoid other tags with class page-numbers (next page button is unreliable!)
             if i.find('span') is None and int(i.get_text()) + 1 == current_page_num and 'href' in i.attrs.keys():
                 next_link = i.attrs['href']
-                print(next_link)
                 return next_link
     return None
 
