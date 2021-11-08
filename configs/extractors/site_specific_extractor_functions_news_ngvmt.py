@@ -309,7 +309,14 @@ def extract_article_urls_from_page_rangado_sokszinuvidek_24hu(archive_page_raw_h
     """
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all(attrs={'class': 'm-articleWidget__title -fsMedium'})
-    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    # the explanation for url filtering is the same as for extract_article_urls_from_page_24hu()
+    urls = set()
+    for link in safe_extract_hrefs_from_a_tags(main_container):
+        hashtag_index = link.find('#')
+        if hashtag_index > -1:
+            urls.add(link[:link.find('#')])
+        else:
+            urls.add(link)
     return urls
 
 
@@ -381,22 +388,27 @@ def extract_article_urls_from_page_test(filename, test_logger):
     text = w.download_url('https://24.hu/kulfold/2015/11/page/15/')
     extracted = extract_article_urls_from_page_24hu(text)
     expected = {'https://24.hu/kulfold/2015/11/24/az-easyjet-iden-mar-nem-mer-gepet-inditani-sarm-es-sejkbe/',
-                'https://24.hu/kulfold/2015/11/24/olaszorszagban-tanitottak-az-ongyilkos-merenyleteket-a-kiutasitott-marokkoiak/',
-                'https://24.hu/kulfold/2015/11/24/nem-hevertek-ki-a-negy-hettel-ezelotti-iskolai-meszarlast-svedorszagban/',
+                'https://24.hu/kulfold/2015/11/24/olaszorszagban-tanitottak-az-ongyilkos-merenyleteket-a-kiutasitott'
+                '-marokkoiak/',
+                'https://24.hu/kulfold/2015/11/24/nem-hevertek-ki-a-negy-hettel-ezelotti-iskolai-meszarlast'
+                '-svedorszagban/',
                 'https://24.hu/kulfold/2015/11/24/az-agyonlott-francia-rendorkutya-honapokra-volt-a-nyugdijtol/',
                 'https://24.hu/kulfold/2015/11/24/videofelvetelen-buktattak-le-az-iszlam-allamnak-toborzo-noket/',
                 'https://24.hu/kulfold/2015/11/24/orban-beallt-montenegro-nato-tagsaga-moge/',
                 'https://24.hu/kulfold/2015/11/24/metilalkoholbol-hamisitottak-az-oroszok-a-whiskyt-25-halott/',
                 'https://24.hu/kulfold/2015/11/24/ragyujthattak-a-hazat-a-menedekkerokre-nemetorszagban/',
                 'https://24.hu/kulfold/2015/11/24/kanada-nem-ker-az-egyedulallo-szir-ferfiakbol/',
-                'https://24.hu/kulfold/2015/11/24/a-lelott-orosz-harci-repulo-halott-pilotajarol-tettek-kozze-felvetelt/',
-                'https://24.hu/kulfold/2015/11/24/a-bevarrt-szaju-iraniak-nem-tagitanak-duzzad-a-tomeg-a-gorog-macedon-hataron/',
+                'https://24.hu/kulfold/2015/11/24/a-lelott-orosz-harci-repulo-halott-pilotajarol-tettek-kozze'
+                '-felvetelt/',
+                'https://24.hu/kulfold/2015/11/24/a-bevarrt-szaju-iraniak-nem-tagitanak-duzzad-a-tomeg-a-gorog'
+                '-macedon-hataron/',
                 'https://24.hu/kulfold/2015/11/24/terrorizmus_lelott_orosz_repulo_putyin_sziria_putyin_elo/',
                 'https://24.hu/kulfold/2015/11/24/orosz-ujsagirokat-ert-raketatalalat-sziriaban/',
                 'https://24.hu/kulfold/2015/11/24/a-cia-veszelyesen-alulertekeli-az-iszlam-allamot/',
                 'https://24.hu/kulfold/2015/11/24/orban-kinanak-kulcsszerepe-van-a-beke-vedelmeben/',
                 'https://24.hu/kulfold/2015/11/24/benzinnel-locsolta-le-beteget-az-orvos-majd-fel-akarta-gyujtani/',
-                'https://24.hu/kulfold/2015/11/24/parizsi-terrortamadas-birosag-ele-allitjak-a-terroristak-szallasadojat/',
+                'https://24.hu/kulfold/2015/11/24/parizsi-terrortamadas-birosag-ele-allitjak-a-terroristak'
+                '-szallasadojat/',
                 'https://24.hu/kulfold/2015/11/24/porosenko-a-magyar-kepviselok-kettos-allampolgarsagat-vizsgaltatja/',
                 'https://24.hu/kulfold/2015/11/24/tombol-a-vihar-gorogorszagban-kevesebb-menedekkero-erkezik/',
                 'https://24.hu/kulfold/2015/11/24/sok-menekult-meghalt-az-algeriai-menekulttaborban-pusztito-tuzben/',
