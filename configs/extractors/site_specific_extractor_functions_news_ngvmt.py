@@ -795,6 +795,7 @@ def next_page_of_article_rangado_24hu(curr_html):
             # Filter span to avoid other tags with class page-numbers (next page button is unreliable!)
             if i.find('span') is None and int(i.get_text()) + 1 == current_page_num and 'href' in i.attrs.keys():
                 next_link = i.attrs['href']
+                print(next_link)
                 return next_link
     return None
 
@@ -874,6 +875,20 @@ def next_page_of_article_test(filename, test_logger):
     text = w.download_url('https://rangado.24.hu/magyar_foci/2021/10/11/tenyleg-van-visszaut-boli-ujra-a-fradi-elso'
                           '-csapataval-edzett/')
     assert next_page_of_article_rangado_24hu(text) is None
+
+    test_logger.log('INFO', 'Testing 24hu/ belfold, kulfold, rest 1-3')
+    text = w.download_url('https://24.hu/kultura/2016/02/29/oscar-meglehet-a-magyar-oscar/')
+    assert next_page_of_article_rangado_24hu(text) == \
+           'https://24.hu/kultura/2016/02/29/oscar-meglehet-a-magyar-oscar/3/'
+    text = w.download_url('https://24.hu/kultura/2016/02/29/oscar-meglehet-a-magyar-oscar/3/')
+    assert next_page_of_article_rangado_24hu(text) == \
+           'https://24.hu/kultura/2016/02/29/oscar-meglehet-a-magyar-oscar/2/'
+    text = w.download_url('https://24.hu/kultura/2016/02/29/oscar-meglehet-a-magyar-oscar/2/')
+    assert next_page_of_article_rangado_24hu(text) == \
+           'https://24.hu/kultura/2016/02/29/oscar-meglehet-a-magyar-oscar/1/'
+    text = w.download_url('https://24.hu/kultura/2016/02/29/oscar-meglehet-a-magyar-oscar/1/')
+    assert next_page_of_article_rangado_24hu(text) is None
+    test_logger.log('INFO', 'Test OK!')
 
     test_logger.log('INFO', 'Testing HVG')
     text = w.download_url('https://hvg.hu/itthon/20100112_bkv_sztrajk_januar_12_hirek')
