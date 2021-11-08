@@ -224,7 +224,16 @@ def extract_article_urls_from_page_24hu(archive_page_raw_html):
     large = soup.find('article', class_='-largeEntryPost')
     if large is not None:
         main_container.append(large)
-    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    urls = set()
+    # Instead of the url of the posts, we need to take the main url of the article to avoid duplication
+    # (the URLs of each post point to the same HTML) https://24.hu/kulfold/2015/11/24/terrorizmus_lelott_orosz_repulo_
+    # putyin_sziria_putyin_elo/#az-egyik-pilota-biztosan-halott
+    for link in safe_extract_hrefs_from_a_tags(main_container):
+        hashtag_index = link.find('#')
+        if hashtag_index > -1:
+            urls.add(link[:link.find('#')])
+        else:
+            urls.add(link)
     return urls
 
 
@@ -368,6 +377,34 @@ def extract_article_urls_from_page_test(filename, test_logger):
     extracted = extract_article_urls_from_page_24hu(text)
     expected = {'https://24.hu/belfold/1848/12/15/amit_meg_nem_ert_el/'}
     assert (extracted, len(extracted)) == (expected, 1)
+
+    text = w.download_url('https://24.hu/kulfold/2015/11/page/15/')
+    extracted = extract_article_urls_from_page_24hu(text)
+    expected = {'https://24.hu/kulfold/2015/11/24/az-easyjet-iden-mar-nem-mer-gepet-inditani-sarm-es-sejkbe/',
+                'https://24.hu/kulfold/2015/11/24/olaszorszagban-tanitottak-az-ongyilkos-merenyleteket-a-kiutasitott-marokkoiak/',
+                'https://24.hu/kulfold/2015/11/24/nem-hevertek-ki-a-negy-hettel-ezelotti-iskolai-meszarlast-svedorszagban/',
+                'https://24.hu/kulfold/2015/11/24/az-agyonlott-francia-rendorkutya-honapokra-volt-a-nyugdijtol/',
+                'https://24.hu/kulfold/2015/11/24/videofelvetelen-buktattak-le-az-iszlam-allamnak-toborzo-noket/',
+                'https://24.hu/kulfold/2015/11/24/orban-beallt-montenegro-nato-tagsaga-moge/',
+                'https://24.hu/kulfold/2015/11/24/metilalkoholbol-hamisitottak-az-oroszok-a-whiskyt-25-halott/',
+                'https://24.hu/kulfold/2015/11/24/ragyujthattak-a-hazat-a-menedekkerokre-nemetorszagban/',
+                'https://24.hu/kulfold/2015/11/24/kanada-nem-ker-az-egyedulallo-szir-ferfiakbol/',
+                'https://24.hu/kulfold/2015/11/24/a-lelott-orosz-harci-repulo-halott-pilotajarol-tettek-kozze-felvetelt/',
+                'https://24.hu/kulfold/2015/11/24/a-bevarrt-szaju-iraniak-nem-tagitanak-duzzad-a-tomeg-a-gorog-macedon-hataron/',
+                'https://24.hu/kulfold/2015/11/24/terrorizmus_lelott_orosz_repulo_putyin_sziria_putyin_elo/',
+                'https://24.hu/kulfold/2015/11/24/orosz-ujsagirokat-ert-raketatalalat-sziriaban/',
+                'https://24.hu/kulfold/2015/11/24/a-cia-veszelyesen-alulertekeli-az-iszlam-allamot/',
+                'https://24.hu/kulfold/2015/11/24/orban-kinanak-kulcsszerepe-van-a-beke-vedelmeben/',
+                'https://24.hu/kulfold/2015/11/24/benzinnel-locsolta-le-beteget-az-orvos-majd-fel-akarta-gyujtani/',
+                'https://24.hu/kulfold/2015/11/24/parizsi-terrortamadas-birosag-ele-allitjak-a-terroristak-szallasadojat/',
+                'https://24.hu/kulfold/2015/11/24/porosenko-a-magyar-kepviselok-kettos-allampolgarsagat-vizsgaltatja/',
+                'https://24.hu/kulfold/2015/11/24/tombol-a-vihar-gorogorszagban-kevesebb-menedekkero-erkezik/',
+                'https://24.hu/kulfold/2015/11/24/sok-menekult-meghalt-az-algeriai-menekulttaborban-pusztito-tuzben/',
+                'https://24.hu/kulfold/2015/11/24/szurjak-a-koran-arusok-a-becsiek-szemet/',
+                'https://24.hu/kulfold/2015/11/24/egy-egesz-varos-osszefogott-a-felgyujtott-mecset-helyrehozasaert/',
+                'https://24.hu/kulfold/2015/11/24/terrorista-szalat-talaltak-a-bosnyak-ejszakai-robbantasban/'
+                }
+    assert (extracted, len(extracted)) == (expected, 23)
 
     test_logger.log('INFO', 'Testing alfahir')
     text = w.download_url('https://alfahir.hu/'
