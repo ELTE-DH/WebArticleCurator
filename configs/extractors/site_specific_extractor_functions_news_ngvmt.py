@@ -221,19 +221,26 @@ def extract_article_urls_from_page_24hu(archive_page_raw_html):
     """
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all('article', class_='-listPost')
-    large = soup.find('article', class_='-largeEntryPost')
-    if large is not None:
-        main_container.append(large)
+    if main_container:
+        large = soup.find('article', class_='-largeEntryPost')
+        if large is not None:
+            main_container.append(large)
+    else:
+        main_container = soup.find_all(attrs={'class': 'm-articleWidget__title -fsMedium'})  # rangado + sokszinuvidek
     urls = set()
     # Instead of the url of the posts, we need to take the main url of the article to avoid duplication
     # (the URLs of each post point to the same HTML) https://24.hu/kulfold/2015/11/24/terrorizmus_lelott_orosz_repulo_
     # putyin_sziria_putyin_elo/#az-egyik-pilota-biztosan-halott
+    safe_remove_hashtag_anchor(main_container, urls)
+    return urls
+
+
+def safe_remove_hashtag_anchor(main_container, urls):
     for link in safe_extract_hrefs_from_a_tags(main_container):
         hashtag_index = link.rfind('#')
         if hashtag_index > -1:
             link = link[:hashtag_index]
         urls.add(link)
-    return urls
 
 
 def extract_article_urls_from_page_alfahir(archive_page_raw_html):
@@ -297,25 +304,6 @@ def extract_article_urls_from_page_istentudja_roboraptor_24hu(archive_page_raw_h
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all(attrs={'class': 'm-entryPost__title'})
     urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
-    return urls
-
-
-def extract_article_urls_from_page_rangado_sokszinuvidek_24hu(archive_page_raw_html):
-    """
-        extracts and returns as a list the URLs belonging to articles from an HTML code
-    :param archive_page_raw_html: archive page containing list of articles with their URLs
-    :return: list that contains URLs
-    """
-    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    main_container = soup.find_all(attrs={'class': 'm-articleWidget__title -fsMedium'})
-    # the explanation for url filtering is the same as for extract_article_urls_from_page_24hu()
-    urls = set()
-    for link in safe_extract_hrefs_from_a_tags(main_container):
-        hashtag_index = link.find('#')
-        if hashtag_index > -1:
-            urls.add(link[:link.find('#')])
-        else:
-            urls.add(link)
     return urls
 
 
@@ -644,7 +632,7 @@ def extract_article_urls_from_page_test(filename, test_logger):
 
     test_logger.log('INFO', 'Testing rangado_24hu')
     text = w.download_url('https://rangado.24.hu/author/dajkab/page/29/')
-    extracted = extract_article_urls_from_page_rangado_sokszinuvidek_24hu(text)
+    extracted = extract_article_urls_from_page_24hu(text)
     expected = {'https://rangado.24.hu/magyar_foci/2020/09/23/dzsudzsak-balazs-debrecen-mezszam-dombi-tibor/',
                 'https://rangado.24.hu/nemzetkozi_foci/2020/09/22/luis-suarez-juventus-olasz-allampolgarsagi-'
                 'vizsga-csalas/',
@@ -734,7 +722,7 @@ def extract_article_urls_from_page_test(filename, test_logger):
 
     test_logger.log('INFO', 'Testing sokszinuvidek_24hu')
     text = w.download_url('https://sokszinuvidek.24.hu/author/kuno/page/6/')
-    extracted = extract_article_urls_from_page_rangado_sokszinuvidek_24hu(text)
+    extracted = extract_article_urls_from_page_24hu(text)
     expected = {'https://sokszinuvidek.24.hu/otthon-keszult/2020/02/29/kavekapszula-ekszerek-ujrahasznositas/',
                 'https://sokszinuvidek.24.hu/kertunk-portank/2020/02/26/haz-hazfelujitas-kiskunmajsa/',
                 'https://sokszinuvidek.24.hu/otthon-keszult/2020/02/24/csutka-eszti-csutkamanok-tunderek/',
