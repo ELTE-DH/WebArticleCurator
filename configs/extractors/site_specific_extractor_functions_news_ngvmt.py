@@ -213,6 +213,23 @@ def safe_extract_hrefs_from_a_tags(main_container):
             yield a_tag_a['href']
 
 
+def safe_remove_hashtag_anchor(main_container, urls):
+    """
+    Instead of the URL of the posts, we need to take the main URL of the article to avoid duplication
+     (the URLs of each post point to the same HTML)
+     e.g. https://24.hu/kulfold/2015/11/24/terrorizmus_lelott_orosz_repulo_putyin_sziria_putyin_
+           elo/#az-egyik-pilota-biztosan-halott
+          ->
+          https://24.hu/kulfold/2015/11/24/terrorizmus_lelott_orosz_repulo_putyin_sziria_putyin_elo/
+    """
+
+    for link in safe_extract_hrefs_from_a_tags(main_container):
+        hashtag_index = link.rfind('#')
+        if hashtag_index > -1:
+            link = link[:hashtag_index]
+        urls.add(link)
+
+
 def extract_article_urls_from_page_24hu(archive_page_raw_html):
     """
         extracts and returns as a list the URLs belonging to articles from an HTML code
@@ -221,10 +238,14 @@ def extract_article_urls_from_page_24hu(archive_page_raw_html):
     """
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all('article', class_='-listPost')
-    large = soup.find('article', class_='-largeEntryPost')
-    if large is not None:
-        main_container.append(large)
-    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    if len(main_container) > 0:
+        large = soup.find('article', class_='-largeEntryPost')
+        if large is not None:
+            main_container.append(large)
+    else:
+        main_container = soup.find_all(attrs={'class': 'm-articleWidget__title -fsMedium'})  # rangado + sokszinuvidek
+    urls = set()
+    safe_remove_hashtag_anchor(main_container, urls)
     return urls
 
 
@@ -288,18 +309,6 @@ def extract_article_urls_from_page_istentudja_roboraptor_24hu(archive_page_raw_h
     """
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all(attrs={'class': 'm-entryPost__title'})
-    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
-    return urls
-
-
-def extract_article_urls_from_page_rangado_sokszinuvidek_24hu(archive_page_raw_html):
-    """
-        extracts and returns as a list the URLs belonging to articles from an HTML code
-    :param archive_page_raw_html: archive page containing list of articles with their URLs
-    :return: list that contains URLs
-    """
-    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    main_container = soup.find_all(attrs={'class': 'm-articleWidget__title -fsMedium'})
     urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
     return urls
 
@@ -368,6 +377,39 @@ def extract_article_urls_from_page_test(filename, test_logger):
     extracted = extract_article_urls_from_page_24hu(text)
     expected = {'https://24.hu/belfold/1848/12/15/amit_meg_nem_ert_el/'}
     assert (extracted, len(extracted)) == (expected, 1)
+
+    text = w.download_url('https://24.hu/kulfold/2015/11/page/15/')
+    extracted = extract_article_urls_from_page_24hu(text)
+    expected = {'https://24.hu/kulfold/2015/11/24/az-easyjet-iden-mar-nem-mer-gepet-inditani-sarm-es-sejkbe/',
+                'https://24.hu/kulfold/2015/11/24/olaszorszagban-tanitottak-az-ongyilkos-merenyleteket-a-kiutasitott'
+                '-marokkoiak/',
+                'https://24.hu/kulfold/2015/11/24/nem-hevertek-ki-a-negy-hettel-ezelotti-iskolai-meszarlast'
+                '-svedorszagban/',
+                'https://24.hu/kulfold/2015/11/24/az-agyonlott-francia-rendorkutya-honapokra-volt-a-nyugdijtol/',
+                'https://24.hu/kulfold/2015/11/24/videofelvetelen-buktattak-le-az-iszlam-allamnak-toborzo-noket/',
+                'https://24.hu/kulfold/2015/11/24/orban-beallt-montenegro-nato-tagsaga-moge/',
+                'https://24.hu/kulfold/2015/11/24/metilalkoholbol-hamisitottak-az-oroszok-a-whiskyt-25-halott/',
+                'https://24.hu/kulfold/2015/11/24/ragyujthattak-a-hazat-a-menedekkerokre-nemetorszagban/',
+                'https://24.hu/kulfold/2015/11/24/kanada-nem-ker-az-egyedulallo-szir-ferfiakbol/',
+                'https://24.hu/kulfold/2015/11/24/a-lelott-orosz-harci-repulo-halott-pilotajarol-tettek-kozze'
+                '-felvetelt/',
+                'https://24.hu/kulfold/2015/11/24/a-bevarrt-szaju-iraniak-nem-tagitanak-duzzad-a-tomeg-a-gorog'
+                '-macedon-hataron/',
+                'https://24.hu/kulfold/2015/11/24/terrorizmus_lelott_orosz_repulo_putyin_sziria_putyin_elo/',
+                'https://24.hu/kulfold/2015/11/24/orosz-ujsagirokat-ert-raketatalalat-sziriaban/',
+                'https://24.hu/kulfold/2015/11/24/a-cia-veszelyesen-alulertekeli-az-iszlam-allamot/',
+                'https://24.hu/kulfold/2015/11/24/orban-kinanak-kulcsszerepe-van-a-beke-vedelmeben/',
+                'https://24.hu/kulfold/2015/11/24/benzinnel-locsolta-le-beteget-az-orvos-majd-fel-akarta-gyujtani/',
+                'https://24.hu/kulfold/2015/11/24/parizsi-terrortamadas-birosag-ele-allitjak-a-terroristak'
+                '-szallasadojat/',
+                'https://24.hu/kulfold/2015/11/24/porosenko-a-magyar-kepviselok-kettos-allampolgarsagat-vizsgaltatja/',
+                'https://24.hu/kulfold/2015/11/24/tombol-a-vihar-gorogorszagban-kevesebb-menedekkero-erkezik/',
+                'https://24.hu/kulfold/2015/11/24/sok-menekult-meghalt-az-algeriai-menekulttaborban-pusztito-tuzben/',
+                'https://24.hu/kulfold/2015/11/24/szurjak-a-koran-arusok-a-becsiek-szemet/',
+                'https://24.hu/kulfold/2015/11/24/egy-egesz-varos-osszefogott-a-felgyujtott-mecset-helyrehozasaert/',
+                'https://24.hu/kulfold/2015/11/24/terrorista-szalat-talaltak-a-bosnyak-ejszakai-robbantasban/'
+                }
+    assert (extracted, len(extracted)) == (expected, 23)
 
     test_logger.log('INFO', 'Testing alfahir')
     text = w.download_url('https://alfahir.hu/'
@@ -596,7 +638,7 @@ def extract_article_urls_from_page_test(filename, test_logger):
 
     test_logger.log('INFO', 'Testing rangado_24hu')
     text = w.download_url('https://rangado.24.hu/author/dajkab/page/29/')
-    extracted = extract_article_urls_from_page_rangado_sokszinuvidek_24hu(text)
+    extracted = extract_article_urls_from_page_24hu(text)
     expected = {'https://rangado.24.hu/magyar_foci/2020/09/23/dzsudzsak-balazs-debrecen-mezszam-dombi-tibor/',
                 'https://rangado.24.hu/nemzetkozi_foci/2020/09/22/luis-suarez-juventus-olasz-allampolgarsagi-'
                 'vizsga-csalas/',
@@ -686,7 +728,7 @@ def extract_article_urls_from_page_test(filename, test_logger):
 
     test_logger.log('INFO', 'Testing sokszinuvidek_24hu')
     text = w.download_url('https://sokszinuvidek.24.hu/author/kuno/page/6/')
-    extracted = extract_article_urls_from_page_rangado_sokszinuvidek_24hu(text)
+    extracted = extract_article_urls_from_page_24hu(text)
     expected = {'https://sokszinuvidek.24.hu/otthon-keszult/2020/02/29/kavekapszula-ekszerek-ujrahasznositas/',
                 'https://sokszinuvidek.24.hu/kertunk-portank/2020/02/26/haz-hazfelujitas-kiskunmajsa/',
                 'https://sokszinuvidek.24.hu/otthon-keszult/2020/02/24/csutka-eszti-csutkamanok-tunderek/',
@@ -747,7 +789,7 @@ def next_page_of_article_merce(archive_page_raw_html):
     return ret
 
 
-def next_page_of_article_rangado_24hu(curr_html):
+def next_page_of_article_24hu(curr_html):
     # Rangado 24.hu operates with a reverse multipage logic: the start page is the newest page of the article
     bs = BeautifulSoup(curr_html, 'lxml')
     current_page = bs.find('span', class_='page-numbers current')
@@ -807,36 +849,50 @@ def next_page_of_article_test(filename, test_logger):
     test_logger.log('INFO', 'Testing rangado_24hu')
     # Test example, 3-page-long-article: starting page without page number [3] >> 2 >> 1 >> None
     text = w.download_url('https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/')
-    assert next_page_of_article_rangado_24hu(text) == \
+    assert next_page_of_article_24hu(text) == \
            'https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/2/'
     text = w.download_url('https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/2/')
-    assert next_page_of_article_rangado_24hu(text) == \
+    assert next_page_of_article_24hu(text) == \
            'https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/1/'
     text = w.download_url('https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/1/')
-    assert next_page_of_article_rangado_24hu(text) is None
+    assert next_page_of_article_24hu(text) is None
     # Test example, 2-page-long-article: starting page without page number [2] >> 1
     text = w.download_url('https://rangado.24.hu/magyar_foci/2019/06/08/eb-selejtezo-azerbajdzsan-magyarorszag/')
-    assert next_page_of_article_rangado_24hu(text) == \
+    assert next_page_of_article_24hu(text) == \
            'https://rangado.24.hu/magyar_foci/2019/06/08/eb-selejtezo-azerbajdzsan-magyarorszag/1/'
     # Test example, 2-page-long-article: starting page without page number [2] >> 1
     text = w.download_url('https://rangado.24.hu/nemzetkozi_foci/2019/05/29/chelsea-arsenal-europa-liga-donto-baku/')
-    assert next_page_of_article_rangado_24hu(text) == \
+    assert next_page_of_article_24hu(text) == \
            'https://rangado.24.hu/nemzetkozi_foci/2019/05/29/chelsea-arsenal-europa-liga-donto-baku/1/'
     # Test example, 1-page-long-article: 1 >> None
     text = w.download_url('https://rangado.24.hu/nemzetkozi_foci/2019/05/01/bajnokok-ligaja-elodonto-barcelona'
                           '-liverpool/1/')
-    assert next_page_of_article_rangado_24hu(text) is None
+    assert next_page_of_article_24hu(text) is None
     # Test example, 1-page-long-article: 1 >> None
     text = w.download_url('https://rangado.24.hu/magyar_foci/2019/11/07/europa-liga-ftc-cszka-moszkva-elo/1/')
-    assert next_page_of_article_rangado_24hu(text) is None
+    assert next_page_of_article_24hu(text) is None
     # Test example, 1-page-long-article: starting page without page number [1] >> None
     text = w.download_url('https://rangado.24.hu/nemzetkozi_foci/2020/03/10/bl-nyolcaddonto-leipzig-tottenham-valencia'
                           '-atalanta-elo/')
-    assert next_page_of_article_rangado_24hu(text) is None
+    assert next_page_of_article_24hu(text) is None
     # Test example, 1-page-long-article: starting page without page number [1] >> None
     text = w.download_url('https://rangado.24.hu/magyar_foci/2021/10/11/tenyleg-van-visszaut-boli-ujra-a-fradi-elso'
                           '-csapataval-edzett/')
-    assert next_page_of_article_rangado_24hu(text) is None
+    assert next_page_of_article_24hu(text) is None
+
+    test_logger.log('INFO', 'Testing 24hu/ belfold, kulfold, rest 1-3')
+    text = w.download_url('https://24.hu/kultura/2016/02/29/oscar-meglehet-a-magyar-oscar/')
+    assert next_page_of_article_24hu(text) == \
+           'https://24.hu/kultura/2016/02/29/oscar-meglehet-a-magyar-oscar/3/'
+    text = w.download_url('https://24.hu/kultura/2016/02/29/oscar-meglehet-a-magyar-oscar/3/')
+    assert next_page_of_article_24hu(text) == \
+           'https://24.hu/kultura/2016/02/29/oscar-meglehet-a-magyar-oscar/2/'
+    text = w.download_url('https://24.hu/kultura/2016/02/29/oscar-meglehet-a-magyar-oscar/2/')
+    assert next_page_of_article_24hu(text) == \
+           'https://24.hu/kultura/2016/02/29/oscar-meglehet-a-magyar-oscar/1/'
+    text = w.download_url('https://24.hu/kultura/2016/02/29/oscar-meglehet-a-magyar-oscar/1/')
+    assert next_page_of_article_24hu(text) is None
+    test_logger.log('INFO', 'Test OK!')
 
     test_logger.log('INFO', 'Testing HVG')
     text = w.download_url('https://hvg.hu/itthon/20100112_bkv_sztrajk_januar_12_hirek')
