@@ -213,6 +213,23 @@ def safe_extract_hrefs_from_a_tags(main_container):
             yield a_tag_a['href']
 
 
+def safe_remove_hashtag_anchor(main_container, urls):
+    """
+    Instead of the URL of the posts, we need to take the main URL of the article to avoid duplication
+     (the URLs of each post point to the same HTML)
+     e.g. https://24.hu/kulfold/2015/11/24/terrorizmus_lelott_orosz_repulo_putyin_sziria_putyin_
+           elo/#az-egyik-pilota-biztosan-halott
+          ->
+          https://24.hu/kulfold/2015/11/24/terrorizmus_lelott_orosz_repulo_putyin_sziria_putyin_elo/
+    """
+
+    for link in safe_extract_hrefs_from_a_tags(main_container):
+        hashtag_index = link.rfind('#')
+        if hashtag_index > -1:
+            link = link[:hashtag_index]
+        urls.add(link)
+
+
 def extract_article_urls_from_page_24hu(archive_page_raw_html):
     """
         extracts and returns as a list the URLs belonging to articles from an HTML code
@@ -221,26 +238,15 @@ def extract_article_urls_from_page_24hu(archive_page_raw_html):
     """
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all('article', class_='-listPost')
-    if main_container:
+    if len(main_container) > 0:
         large = soup.find('article', class_='-largeEntryPost')
         if large is not None:
             main_container.append(large)
     else:
         main_container = soup.find_all(attrs={'class': 'm-articleWidget__title -fsMedium'})  # rangado + sokszinuvidek
     urls = set()
-    # Instead of the url of the posts, we need to take the main url of the article to avoid duplication
-    # (the URLs of each post point to the same HTML) https://24.hu/kulfold/2015/11/24/terrorizmus_lelott_orosz_repulo_
-    # putyin_sziria_putyin_elo/#az-egyik-pilota-biztosan-halott
     safe_remove_hashtag_anchor(main_container, urls)
     return urls
-
-
-def safe_remove_hashtag_anchor(main_container, urls):
-    for link in safe_extract_hrefs_from_a_tags(main_container):
-        hashtag_index = link.rfind('#')
-        if hashtag_index > -1:
-            link = link[:hashtag_index]
-        urls.add(link)
 
 
 def extract_article_urls_from_page_alfahir(archive_page_raw_html):
