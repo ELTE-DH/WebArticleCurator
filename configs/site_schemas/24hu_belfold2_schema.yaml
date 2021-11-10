@@ -1,11 +1,60 @@
 "site_name": "24hu"
 
 "columns":
-    # belfold - empty intervals are avoided with several pseudo-columns.
-    "belfold":
+    # Problematic intervalls are separated and crawler with daily archive
+    # to avoid the random ordering of articles with extactly matching date accross archive pages
+    "belfold_1":
         "archive_url_format": "https://24.hu/belfold/#year/#month/"
 
         "date_first_article": 2010-01-01
+        "date_last_article": 2012-01-31
+
+    "belfold_2":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/#day"
+
+        "date_first_article": 2012-02-01
+        "date_last_article": 2012-02-29
+
+    "belfold_3":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/"
+
+        "date_first_article": 2012-03-01
+        "date_last_article": 2012-04-30
+
+    "belfold_4":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/#day"
+
+        "date_first_article": 2012-05-01
+        "date_last_article": 2012-05-31
+
+    "belfold_5":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/"
+
+        "date_first_article": 2012-06-01
+        "date_last_article": 2012-06-30
+
+    "belfold_6":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/#day"
+
+        "date_first_article": 2012-07-01
+        "date_last_article": 2012-07-31
+
+    "belfold_7":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/"
+
+        "date_first_article": 2012-08-01
+        "date_last_article": 2013-11-30
+
+    "belfold_8":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/#day"
+
+        "date_first_article": 2013-12-01
+        "date_last_article": 2013-12-31
+
+    "belfold_9":
+        "archive_url_format": "https://24.hu/belfold/#year/#month/"
+
+        "date_first_article": 2014-01-01
 
 "portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_news_ngvmt.py"
 "extract_next_page_url_fun": "extract_next_page_url_24hu"
