@@ -27,6 +27,25 @@ def extract_next_page_url_888(archive_page_raw_html):
     return ret
 
 
+def extract_next_page_url_feol(archive_page_raw_html):
+    """
+        extracts and returns next page URL from an HTML code if there is one...
+        Specific for feol.hu
+        From the second page, only the end of the url is in the html, not the full url.
+        :returns string of url if there is one, None otherwise
+    """
+    ret = None
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    next_page_url = soup.find('div', class_='enews-bottom-pagination-right')
+    if next_page_url is not None:
+        url_end = next_page_url.parent['href']
+        if url_end.startswith('https'):
+            ret = url_end
+        elif url_end.startswith('/'):  # From the second page the url does not contain the resource name.
+            ret = f'https://www.feol.hu{url_end}'
+    return ret
+
+
 def extract_next_page_url_test(filename, test_logger):
     """Quick test for extracting "next page" URLs when needed"""
     # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
@@ -75,6 +94,20 @@ def extract_next_page_url_test(filename, test_logger):
     text = w.download_url('https://888.hu/maccabi/page/2/')
     assert extract_next_page_url_888(text) == 'https://888.hu/maccabi/page/3/'
 
+    test_logger.log('INFO', 'Testing feol')
+    text = w.download_url('https://www.feol.hu/sport/page/4523/')
+    assert extract_next_page_url_feol(text) == 'https://www.feol.hu/sport/page/4524/'
+    text = w.download_url('https://www.feol.hu/kek-hirek/page/75/')
+    assert extract_next_page_url_feol(text) == 'https://www.feol.hu/kek-hirek/page/76/'
+    text = w.download_url('https://www.feol.hu/orszag-vilag/page/169/')
+    assert extract_next_page_url_feol(text) == 'https://www.feol.hu/orszag-vilag/page/170/'
+    text = w.download_url('https://www.feol.hu/kultura/')
+    assert extract_next_page_url_feol(text) == 'https://www.feol.hu/kultura/page/2'
+    text = w.download_url('https://www.feol.hu/gazdasag/page/369/')
+    assert extract_next_page_url_feol(text) == 'https://www.feol.hu/gazdasag/page/370/'
+    text = w.download_url('https://www.feol.hu/kozelet/page/7268/')
+    assert extract_next_page_url_feol(text) is None
+
     test_logger.log('INFO', 'Test OK!')
 
 
@@ -121,6 +154,18 @@ def extract_article_urls_from_page_hirado(archive_page_raw_html):
         if not url.startswith('https:'):  # In some cases, the protocol is missing from the start of the url.
             url = f'https:{url}'
         urls.add(url)
+    return urls
+
+
+def extract_article_urls_from_page_feol(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all('div', class_='et_pb_column enews-tax-article')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
     return urls
 
 
@@ -244,6 +289,43 @@ def extract_article_urls_from_page_test(filename, test_logger):
                 'https://hirado.hu/tudomany-high-tech/minden-mas/galeria/2019/05/22/arveresre-kerulnek-a-mult-kincsei',
                 'https://hirado.hu/tudomany-high-tech/galeria/2019/08/29/megtalalhattak-ii-andras-kiraly-es-'
                 'felesege-sirhelyenek-alapjat'
+                }
+    assert (extracted, len(extracted)) == (expected, 10)
+
+    test_logger.log('INFO', 'Testing feol')
+    text = w.download_url('https://www.feol.hu/orszag-vilag/page/169/')
+    extracted = extract_article_urls_from_page_feol(text)
+    expected = {'https://www.feol.hu/orszag-vilag/felrobbantottak-egy-leanyiskolat-pakisztanban-5302736/',
+                'https://www.feol.hu/orszag-vilag/babis-migracio-helyett-a-szuletesek-szamat-kell-novelni-5302694/',
+                'https://www.feol.hu/orszag-vilag/letartoztattak-a-gyermekvedelmi-torvenyt-kritizalo-amerikai-ujsagirot'
+                '-kotel-volt-a-nemi-szervehez-kotve-5302514/',
+                'https://www.feol.hu/orszag-vilag/janez-jansa-a-demografia-orszagaink-jovojerol-szol-5302454/',
+                'https://www.feol.hu/orszag-vilag/itt-az-uj-metoo-botrany-a-foszereplo-ismet-havas-henrik-5302445/',
+                'https://www.feol.hu/orszag-vilag/tobb-mint-3700-fiatal-tehetseg-fejlodeset-segiti-az-mcc-az-uj-'
+                'tanevben-5302439/',
+                'https://www.feol.hu/orszag-vilag/a-kemfonok-szerint-hazugsag-hogy-ujabb-orosz-hirszerzot-gyanusitottak'
+                '-meg-a-szkripal-ugyben-5302379/',
+                'https://www.feol.hu/orszag-vilag/hamarosan-orban-viktor-is-felszolal-a-demografiai-csucson-elo'
+                '-5302313/',
+                'https://www.feol.hu/orszag-vilag/vucic-amikor-demografiarol-beszelunk-akkor-a-tulelesrol-beszelunk'
+                '-5302175/',
+                'https://www.feol.hu/orszag-vilag/novak-a-kormany-tizenkettedik-eve-a-csaladokert-dolgozik-5302121/'
+                }
+    assert (extracted, len(extracted)) == (expected, 10)
+
+    text = w.download_url('https://www.feol.hu/kek-hirek/page/996/')
+    extracted = extract_article_urls_from_page_feol(text)
+    expected = {'https://www.feol.hu/rendorsegi/hetvenmillios-zsakmany-kabitoszerre-bukkantak-egy-garazsban-1114783/',
+                'https://www.feol.hu/rendorsegi/videora-vettek-a-csoportos-nemi-eroszakot-1114779/',
+                'https://www.feol.hu/rendorsegi/metanrobbanas-volt-egy-ukran-banyaban-1114776/',
+                'https://www.feol.hu/rendorsegi/magyar-kerult-a-naci-haborus-bunosok-listajanak-elere-1114771/',
+                'https://www.feol.hu/rendorsegi/kokain-a-szupermarketben-1114701/',
+                'https://www.feol.hu/rendorsegi/elozetesben-a-soproni-kettos-gyilkossag-gyanusitottjai-1114685/',
+                'https://www.feol.hu/rendorsegi/hamis-potencianovelok-indiabol-1114648/',
+                'https://www.feol.hu/rendorsegi/munkagodorbe-esett-egy-rakodogep-budapesten-1114647/',
+                'https://www.feol.hu/rendorsegi/ot-ev-bortonre-iteltek-egy-csalassal-vadolt-banki-alkalmazottat-'
+                '1114642/',
+                'https://www.feol.hu/rendorsegi/buszt-lopott-a-palyaudvarrol-1114792/'
                 }
     assert (extracted, len(extracted)) == (expected, 10)
 
