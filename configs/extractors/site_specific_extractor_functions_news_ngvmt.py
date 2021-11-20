@@ -242,8 +242,8 @@ def extract_article_urls_from_page_24hu(archive_page_raw_html):
         large = soup.find('article', class_='-largeEntryPost')
         if large is not None:
             main_container.append(large)
-    else:
-        main_container = soup.find_all(attrs={'class': 'm-articleWidget__title -fsMedium'})  # rangado + sokszinuvidek
+    else:  # rangado + sokszinuvidek
+        main_container = soup.find_all('h3', attrs={'class': 'm-articleWidget__title -fsMedium'})
     urls = set()
     safe_remove_hashtag_anchor(main_container, urls)
     return urls
@@ -361,6 +361,12 @@ def extract_article_urls_from_page_test(filename, test_logger):
     w = WarcCachingDownloader(filename, None, test_logger, just_cache=True, download_params={'stay_offline': True})
 
     test_logger.log('INFO', 'Testing 24')
+
+    text = w.download_url('https://24.hu/kulfold/2002/12/')
+    extracted = extract_article_urls_from_page_24hu(text)
+    expected = set()
+    assert (extracted, len(extracted)) == (expected, 0)
+
     text = w.download_url('https://24.hu/fn/gazdasag/2009/07/30/')
     extracted = extract_article_urls_from_page_24hu(text)
     expected = {'https://24.hu/fn/gazdasag/2009/07/30/267_alatt_euro/',
