@@ -36,13 +36,18 @@ def extract_next_page_url_feol(archive_page_raw_html):
     """
     ret = None
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    next_page_url = soup.find('div', class_='enews-bottom-pagination-right')
-    if next_page_url is not None:
-        url_end = next_page_url.parent['href']
-        if url_end.startswith('https'):
-            ret = url_end
-        elif url_end.startswith('/'):  # From the second page the url does not contain the resource name.
-            ret = f'https://www.feol.hu{url_end}'
+    next_page = soup.find('div', class_='enews-pagination-right')
+    if next_page is not None:
+        for next_page_url in next_page.find_all('a', recursive=False):
+            if next_page_url.find('div', class_='enews-bottom-pagination-box enews-bottom-pagination-right') \
+                    is not None and 'href' in next_page_url.attrs:
+                url_end = next_page_url.attrs['href']
+                if url_end.startswith('https'):
+                    ret = url_end
+                    break
+                elif url_end.startswith('/'):  # From the second page the url does not contain the resource name.
+                    ret = f'https://www.feol.hu{url_end}'
+                    break
     return ret
 
 
