@@ -28,6 +28,7 @@ The program can be used in multiple ways:
 - Sampling a previously created WARC file based on a list of URLs (one URL per line, URLs not present in the source archive are downloaded if `--offline` is False): `python3 -m webarticlecurator sample -s SOURCE_WARC -i selected_urls.txt TARGET_WARC --offline True/False`
 - Printing the content of the selected URLs into an empty directory: `python3 -m webarticlecurator cat -s SOURCE_WARC -i selected_urls.txt TARGET_DIR`
 - Downloading a single URL (for testing purposes): `python3 -m webarticlecurator download SOURCE_URL TARGET_WARC`
+- Check URLs in the extracted article urls of an archive warc (for debugging a portal): `python3 -m webarticlecurator checkurls -s SOURCE_WARC -i selected_urls.txt -d TARGET_DIR CONFIGURATION`
 
 # Configuration schema
 

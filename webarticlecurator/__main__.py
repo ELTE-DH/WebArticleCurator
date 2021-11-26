@@ -5,7 +5,7 @@ import sys
 from argparse import ArgumentParser, ArgumentTypeError, FileType
 
 from webarticlecurator import wrap_input_constants, NewsArchiveCrawler, NewsArticleCrawler, sample_warc_by_urls, \
-    validate_warc_file, online_test, Logger, __version__
+    validate_warc_file, online_test, archive_page_contains_article_url, Logger, __version__
 
 
 def str2bool(v):
@@ -153,6 +153,19 @@ def parse_args_donwload(parser):
     return parser.parse_args()
 
 
+def parse_args_checkurls(parser):
+    parser.add_argument(dest='command', choices={'checkurls'}, metavar='crawl',
+                        help='Extract HTML content for archive URLs which contains input-urls as article urls '
+                             '(for debugging the portal)')
+    parser.add_argument('config', type=str, help='Portal configfile (see configs folder for examples!)')
+    parser.add_argument('-s', '--source-warcfile', type=str, metavar='SOURCE WARCFILE', nargs='+',
+                        help='A warc file (created by this program) to work from')
+    parser.add_argument('-i', '--input-urls', dest='url_input_stream', type=FileType(), default=sys.stdin,
+                        help='Use input file instead of STDIN (one URL per line)', metavar='FILE')
+    parser.add_argument('-d ', '--out-dir', type=str, help='Output directory (must be empty)', metavar='DIR')
+    return parser.parse_args()
+
+
 def main_crawl(args):
     """ read input data from the given files, initialize variables """
     portal_settings = wrap_input_constants(args.config)
@@ -200,6 +213,15 @@ def main_cat_and_sample(args):
     main_logger.log('INFO', 'Done!')
 
 
+def main_checkurls(args):
+    """ __file__ checkurls [source warcfiles] [urls list file or stdin] [out_dir] [config] """
+    main_logger = Logger()
+    out_dir = getattr(args, 'out_dir', None)
+    main_logger.log('INFO', 'Adding URLs to', out_dir, ':')
+    archive_page_contains_article_url(args.config, args.source_warcfile, args.url_input_stream, main_logger, out_dir)
+    main_logger.log('INFO', 'Done!')
+
+
 def main_download(args):
     """ __file__ download [URL] [target warcfile] """
     main_logger = Logger()
@@ -213,7 +235,8 @@ def main():
     commands = {'validate': (parse_args_validate_and_list, main_validate_and_list),
                 'listurls': (parse_args_validate_and_list, main_validate_and_list),
                 'sample': (parse_args_sample, main_cat_and_sample), 'download': (parse_args_donwload, main_download),
-                'cat': (parse_args_cat, main_cat_and_sample), 'crawl': (parse_args_crawl, main_crawl)}
+                'cat': (parse_args_cat, main_cat_and_sample), 'crawl': (parse_args_crawl, main_crawl),
+                'checkurls': (parse_args_checkurls, main_checkurls)}
     parser = ArgumentParser()
     parser.add_argument('command', choices=commands.keys(), metavar='COMMAND',
                         help='Please choose from the available commands ({0}) to set mode and see detailed help!'.

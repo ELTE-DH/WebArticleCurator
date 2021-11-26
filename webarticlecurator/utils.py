@@ -6,11 +6,13 @@ import sys
 import importlib.util
 from argparse import Namespace
 from datetime import datetime, date, timedelta
+from os.path import join as os_path_join, exists as os_path_exists, dirname as os_path_dirname,\
+    abspath as os_path_abspath
 
 import yamale
 
-site_schema = yamale.make_schema(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'site_schema.yaml'))
-crawl_schema = yamale.make_schema(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'crawl_schema.yaml'))
+site_schema = yamale.make_schema(os_path_join(os_path_dirname(os_path_abspath(__file__)), 'site_schema.yaml'))
+crawl_schema = yamale.make_schema(os_path_join(os_path_dirname(os_path_abspath(__file__)), 'crawl_schema.yaml'))
 
 
 def load_and_validate(schema, fname):
@@ -47,11 +49,11 @@ def wrap_input_constants(current_task_config_filename):
     settings = load_and_validate(crawl_schema, current_task_config_filename)
 
     # The directory name of the configs
-    settings['DIR_NAME'] = os.path.dirname(os.path.abspath(current_task_config_filename))
+    settings['DIR_NAME'] = os_path_dirname(os_path_abspath(current_task_config_filename))
 
     # Technical data about the website to crawl
-    site_schema_fname = os.path.join(settings['DIR_NAME'], settings['schema'])
-    settings['SITE_SCHEMA_DIR_NAME'] = os.path.dirname(os.path.abspath(site_schema_fname))
+    site_schema_fname = os_path_join(settings['DIR_NAME'], settings['schema'])
+    settings['SITE_SCHEMA_DIR_NAME'] = os_path_dirname(os_path_abspath(site_schema_fname))
     current_site_schema = load_and_validate(site_schema, site_schema_fname)
     settings.update(current_site_schema)
 
@@ -127,7 +129,7 @@ def wrap_input_constants(current_task_config_filename):
     # Portal specific functions
     file_path = settings['portal_specific_exctractor_functions_file']
     module = import_python_file('portal_specific_exctractor_functions',
-                                os.path.join(settings['SITE_SCHEMA_DIR_NAME'], file_path))
+                                os_path_join(settings['SITE_SCHEMA_DIR_NAME'], file_path))
     for attr_name, attr_name_dest, mandatory in \
             (('extract_next_page_url_fun', 'EXTRACT_NEXT_PAGE_URL_FUN', False),
              ('extract_article_urls_from_page_fun', 'EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN', True),
@@ -155,11 +157,30 @@ def wrap_input_constants(current_task_config_filename):
         file_path = settings['corpus_converter_file']
         if file_path is None:
             raise ValueError('corpus_converter is {0}, but {1} is unset!'.format(corp_conv, file_path))
-        module = import_python_file('corpus_converter', os.path.join(settings['SITE_SCHEMA_DIR_NAME'], file_path))
+        module = import_python_file('corpus_converter', os_path_join(settings['SITE_SCHEMA_DIR_NAME'], file_path))
         corpus_converter_class = getattr(module, corp_conv)
     settings['CORPUS_CONVERTER'] = corpus_converter_class(settings)
 
     return settings
+
+
+def write_content_to_url_named_file(url, cont, out_dir):
+    safe_url = ''.join(char if char.isalnum() else '_' for char in url).rstrip('_')[:200]
+    i, fname = 0, os_path_join(out_dir, '{0}_{1}.html'.format(safe_url, 0))
+    while os_path_exists(fname):
+        i += 1
+        fname = os_path_join(out_dir, '{0}_{1}.html'.format(safe_url, i))
+    with open(fname, 'w', encoding='UTF-8') as fh:
+        fh.write(cont)
+
+    return fname
+
+
+def create_or_check_clean_dir(out_dir):
+    os.makedirs(out_dir, exist_ok=True)
+    if len(os.listdir(out_dir)) != 0:
+        print('Supplied output directory ({0}) is not empty!'.format(out_dir), file=sys.stderr)
+        exit(1)
 
 
 class DummyConverter:  # No output corpus
