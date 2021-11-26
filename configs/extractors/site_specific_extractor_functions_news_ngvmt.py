@@ -245,7 +245,8 @@ def extract_article_urls_from_page_24hu(archive_page_raw_html):
     if len(middle_columns_of_article) > 0:
         main_container.extend(middle_columns_of_article)
     else:  # rangado + sokszinuvidek
-        main_container = soup.find_all('h3', attrs={'class': 'm-articleWidget__title -fsMedium'})
+        middle_col_b = soup.find_all('h3', attrs={'class': 'm-articleWidget__title -fsMedium'})
+        main_container.extend(middle_col_b)
     urls = set()
     safe_remove_hashtag_anchor(main_container, urls)
     return urls
@@ -363,6 +364,11 @@ def extract_article_urls_from_page_test(filename, test_logger):
     w = WarcCachingDownloader(filename, None, test_logger, just_cache=True, download_params={'stay_offline': True})
 
     test_logger.log('INFO', 'Testing 24')
+
+    text = w.download_url('https://24.hu/belfold/2021/08/page/39/')
+    extracted = extract_article_urls_from_page_24hu(text)
+    expected = {'https://24.hu/belfold/2021/08/01/harmadik-oltas-alternativ-eljarasrend-vakcinak-keverese/'}
+    assert (extracted, len(extracted)) == (expected, 1)
 
     text = w.download_url('https://24.hu/kulfold/2002/12/')
     extracted = extract_article_urls_from_page_24hu(text)
