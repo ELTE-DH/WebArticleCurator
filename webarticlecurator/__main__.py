@@ -123,6 +123,8 @@ def parse_args_sample(parser):
     parser.add_argument('target_warcfile', type=str, metavar='TARGET_WARCFILE', help='The name of the target warc file')
     parser.add_argument('--offline', type=str2bool, nargs='?', const=True, default=True, metavar='True/False',
                         help='Download URLs which are not present in the source archive (default True)')
+    parser.add_argument('-n', '--negative', type=str2bool, nargs='?', const=True, default=False, metavar='True/False',
+                        help='Sample input-urls URLs which are not present in the source archive (default False)')
     args = parser.parse_args()
     if (args.source_warcfile is None or len(args.source_warcfile) == 0) and args.offline:
         print('Must specify at least one SOURCE_WARC if --offline is False!', file=sys.stderr)
@@ -208,17 +210,20 @@ def main_cat_and_sample(args):
     target = out_dir if out_dir is not None else target_warcfile
     main_logger.log('INFO', 'Adding URLs to', target, ':')
     offline = getattr(args, 'offline', True)  # Sample can be online or offline, but we write warc only when sampling!
+    negative = getattr(args, 'negative', False)  # Sample URLs from warc not in input_stream
     sample_warc_by_urls(args.source_warcfile, args.url_input_stream, main_logger, target_warcfile=target_warcfile,
-                        offline=offline, out_dir=out_dir, just_cache=args.command == 'cat')
+                        offline=offline, out_dir=out_dir, just_cache=args.command == 'cat', negative=negative)
     main_logger.log('INFO', 'Done!')
 
 
 def main_checkurls(args):
     """ __file__ checkurls [source warcfiles] [urls list file or stdin] [out_dir] [config] """
+    extract_article_urls_from_page_fun = wrap_input_constants(args.config)['EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN']
     main_logger = Logger()
     out_dir = getattr(args, 'out_dir', None)
     main_logger.log('INFO', 'Adding URLs to', out_dir, ':')
-    archive_page_contains_article_url(args.config, args.source_warcfile, args.url_input_stream, main_logger, out_dir)
+    archive_page_contains_article_url(extract_article_urls_from_page_fun, args.source_warcfile, args.url_input_stream,
+                                      main_logger, out_dir)
     main_logger.log('INFO', 'Done!')
 
 

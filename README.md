@@ -25,7 +25,7 @@ The program can be used in multiple ways:
 - Crawling (see the options below): `python3 -m webarticlecurator crawl CONFIGURATION [parameters]`
 - Listing URLs in a previously created WARC file: `python3 -m webarticlecurator listurls -s SOURCE_WARC`
 - Validating a previously created WARC file (with [warcio](https://github.com/webrecorder/warcio)): `python3 -m webarticlecurator validate -s SOURCE_WARC`
-- Sampling a previously created WARC file based on a list of URLs (one URL per line, URLs not present in the source archive are downloaded if `--offline` is False): `python3 -m webarticlecurator sample -s SOURCE_WARC -i selected_urls.txt TARGET_WARC --offline True/False`
+- Sampling a previously created WARC file based on a list of URLs (one URL per line, URLs not present in the source archive are downloaded if `--offline` is False. If `--negative` is specified all URLs are sampled except ones from the list): `python3 -m webarticlecurator sample -s SOURCE_WARC -i selected_urls.txt TARGET_WARC --offline True/False --negative True/False`
 - Printing the content of the selected URLs into an empty directory: `python3 -m webarticlecurator cat -s SOURCE_WARC -i selected_urls.txt TARGET_DIR`
 - Downloading a single URL (for testing purposes): `python3 -m webarticlecurator download SOURCE_URL TARGET_WARC`
 - Check URLs in the extracted article urls of an archive warc (for debugging a portal): `python3 -m webarticlecurator checkurls -s SOURCE_WARC -i selected_urls.txt -d TARGET_DIR CONFIGURATION`
