@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
+from itertools import groupby
 from collections import defaultdict
 
 from webarticlecurator.enhanced_downloader import WarcCachingDownloader
@@ -46,7 +47,7 @@ def sample_warc_by_urls(source_warcfiles, new_urls, sampler_logger, target_warcf
             sampler_logger.log('ERROR', 'URL not present in archive', url)
 
 
-def archive_page_contains_article_url(extract_article_urls_from_page_fun, source_warcfiles, checked_urls,
+def archive_page_contains_article_url(extract_article_urls_from_page_plus_fun, source_warcfiles, checked_urls,
                                       sampler_logger, out_dir):
     """Extract HTML content for archive URLs which contains checked_urls as article urls (for debugging the portal)"""
 
@@ -56,24 +57,46 @@ def archive_page_contains_article_url(extract_article_urls_from_page_fun, source
     w = WarcCachingDownloader(source_warcfiles, None, sampler_logger, just_cache=True,
                               download_params={'stay_offline': True})
 
+    url_to_fname = {}
     archive_page_for_checked_urls = defaultdict(set)
     for url in w.url_index:
         raw_html = w.download_url(url)
         if raw_html is not None:
-            article_urls = extract_article_urls_from_page_fun(raw_html)
-            if len(article_urls) > 0:
-                checked_urls_in_page = sorted(article_urls & checked_urls)
-                if len(checked_urls_in_page) > 0:
-                    fname = write_content_to_url_named_file(checked_urls_in_page[0], raw_html, out_dir)
-                    for checked_url in checked_urls_in_page:
-                        archive_page_for_checked_urls[checked_url].add((url, fname))
+            article_urls_w_meta = extract_article_urls_from_page_plus_fun(raw_html)
+            if len(article_urls_w_meta) > 0:
+                checked_urls_in_page = sorted((e for e in article_urls_w_meta if e[0] in checked_urls))
+                for checked_url, *checked_url_meta in checked_urls_in_page:
+                    # Defaultdict-like behaviour for writing a file only once
+                    fn = url_to_fname.get(url)
+                    if fn is None:
+                        fn = write_content_to_url_named_file(url, raw_html, out_dir)
+                        url_to_fname[url] = fn
+                    archive_page_for_checked_urls[checked_url].add((tuple(checked_url_meta), url, fn))
             else:
                 sampler_logger.log('WARNING', url, 'Could not extract URLs from the archive!', sep='\t')
         else:
             sampler_logger.log('ERROR', 'URL present in index, but not present in archive!', url, sep='\t')
 
+    unique_metas_list = []
     sampler_logger.log('INFO', 'Summary:')
-    for checked_url, urls in archive_page_for_checked_urls.items():
-        sampler_logger.log('INFO', checked_url, 'has found in the following files:')
-        for url, fname in sorted(urls):
-            sampler_logger.log('INFO', '', url, fname, sep='\t')
+    for checked_url, occurences in archive_page_for_checked_urls.items():
+        duplicates_w_uniq_metas = set()
+        occurences = sorted(occurences)  # Sort on the first elem of the tuple (metas)
+        for k, group_iter in groupby(occurences, key=lambda x: x[0]):
+            group = list(group_iter)
+            # Separate matching metas (real duplicates, should not occur)
+            # from direct linked subelements of live event commentaries (duplicates to be ignored)
+            if len(group) > 1:
+                sampler_logger.log('INFO', checked_url, 'has found in the following files (with matching metas):')
+                for ch_url_metas, url, fn in group:
+                    sampler_logger.log('INFO', '', url, fn, sep='\t')
+                    duplicates_w_uniq_metas.add((ch_url_metas, url, fn))
+            else:
+                duplicates_w_uniq_metas.add(group[0])
+        unique_metas_list.append((checked_url, duplicates_w_uniq_metas))
+
+    # Write duplicates with unique metas separately (after all matching metas has written)
+    for checked_url, duplicates_w_uniq_metas in unique_metas_list:
+        sampler_logger.log('INFO', checked_url, 'has found in the following files (with unique metas):')
+        for metas, url, fn in duplicates_w_uniq_metas:
+            sampler_logger.log('INFO', '', url, *metas, fn, sep='\t')

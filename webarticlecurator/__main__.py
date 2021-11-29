@@ -218,12 +218,13 @@ def main_cat_and_sample(args):
 
 def main_checkurls(args):
     """ __file__ checkurls [source warcfiles] [urls list file or stdin] [out_dir] [config] """
-    extract_article_urls_from_page_fun = wrap_input_constants(args.config)['EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN']
+    extract_article_urls_from_page_plus_fun = \
+        wrap_input_constants(args.config)['EXTRACT_ARTICLE_URLS_FROM_PAGE_PLUS_FUN']
     main_logger = Logger()
     out_dir = getattr(args, 'out_dir', None)
     main_logger.log('INFO', 'Adding URLs to', out_dir, ':')
-    archive_page_contains_article_url(extract_article_urls_from_page_fun, args.source_warcfile, args.url_input_stream,
-                                      main_logger, out_dir)
+    archive_page_contains_article_url(extract_article_urls_from_page_plus_fun, args.source_warcfile,
+                                      args.url_input_stream, main_logger, out_dir)
     main_logger.log('INFO', 'Done!')
 
 

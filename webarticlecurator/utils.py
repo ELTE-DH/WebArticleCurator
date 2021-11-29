@@ -133,6 +133,7 @@ def wrap_input_constants(current_task_config_filename):
     for attr_name, attr_name_dest, mandatory in \
             (('extract_next_page_url_fun', 'EXTRACT_NEXT_PAGE_URL_FUN', False),
              ('extract_article_urls_from_page_fun', 'EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN', True),
+             ('extract_article_urls_from_page_plus_fun', 'EXTRACT_ARTICLE_URLS_FROM_PAGE_PLUS_FUN', False),
              ('next_page_of_article_fun', 'NEXT_PAGE_OF_ARTICLE_FUN', False)):
         settings[attr_name_dest] = getattr(module, settings.get(attr_name, ''), None)
         if mandatory and settings[attr_name_dest] is None:
