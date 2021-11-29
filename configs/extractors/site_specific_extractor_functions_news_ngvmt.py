@@ -244,9 +244,6 @@ def extract_article_urls_from_page_24hu(archive_page_raw_html):
         main_container.append(large)
     if len(middle_columns_of_article) > 0:
         main_container.extend(middle_columns_of_article)
-    else:  # rangado + sokszinuvidek
-        middle_col_b = soup.find_all('h3', attrs={'class': 'm-articleWidget__title -fsMedium'})
-        main_container.extend(middle_col_b)
     urls = set()
     safe_remove_hashtag_anchor(main_container, urls)
     return urls
@@ -954,6 +951,101 @@ def next_page_of_article_test(filename, test_logger):
 
 # END SITE SPECIFIC next_page_of_article FUNCTIONS #####################################################################
 
+def extract_article_urls_plus_from_page_24hu(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs + title + date belonging to articles from an HTML code
+        for filtering the two tipes of duplication
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list of tuples that contains URL+title+date per article
+    """
+    main_container = []
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    middle_columns_of_article = soup.find_all('article', class_='-listPost')
+    large = soup.find('article', class_='-largeEntryPost')
+    if large is not None:
+        main_container.append(large)
+    if len(middle_columns_of_article) > 0:
+        main_container.extend(middle_columns_of_article)
+    meta_set = []
+    for article in main_container:
+        a_tag_a = article.find('a', {'href': True})
+        link = ''
+        if a_tag_a is not None:
+            link = a_tag_a['href']
+            hashtag_index = link.rfind('#')
+            if hashtag_index > -1:
+                link = link[:hashtag_index]
+        a_title = article.find(['h3', 'h2']).text.strip()
+        a_date = article.find('span', class_='a-date').text.strip()
+        meta_set.append((link, a_title, a_date))
+    return meta_set
+
+
+def extract_article_urls_from_page_plus_test(filename, test_logger):
+    """"""
+    # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
+    w = WarcCachingDownloader(filename, None, test_logger, just_cache=True, download_params={'stay_offline': True})
+
+    test_logger.log('INFO', 'Testing 24 PLUS')
+
+    text = w.download_url('https://24.hu/belfold/2021/08/page/39/')
+    extracted = extract_article_urls_plus_from_page_24hu(text)
+    expected = [('https://24.hu/belfold/2021/08/01/harmadik-oltas-alternativ-eljarasrend-vakcinak-keverese/',
+                 'Kutatók és gyakorló orvosok alternatív eljárásrendet dolgoztak ki a harmadik oltásra',
+                 '2021. 08. 01. 07:36')]
+    assert (extracted, len(extracted)) == (expected, 1)
+
+    text = w.download_url('https://24.hu/kulfold/2002/12/')
+    extracted = extract_article_urls_plus_from_page_24hu(text)
+    expected = []
+    assert (extracted, len(extracted)) == (expected, 0)
+
+    text = w.download_url('https://24.hu/fn/gazdasag/2009/07/30/')
+    extracted = extract_article_urls_plus_from_page_24hu(text)
+    expected = [('https://24.hu/fn/gazdasag/2009/07/30/267_alatt_euro/', '267 alatt az euró', '2009. 07. 30. 20:20'),
+                ('https://24.hu/fn/gazdasag/2009/07/30/tudomanyos_tippek_magyar_kilabalasra/', 'Tudományos tippek a magyar kilábalásra', '2009. 07. 30. 20:00'),
+                ('https://24.hu/fn/gazdasag/2009/07/30/euforikus_hangulatban_emelkedett_bux/', 'Euforikus hangulatban emelkedett a BUX', '2009. 07. 30. 18:47'),
+                ('https://24.hu/fn/gazdasag/2009/07/30/london_240_alatt_lehet/', 'London: 240 alatt lehet az euró', '2009. 07. 30. 17:57'),
+                ('https://24.hu/fn/gazdasag/2009/07/30/harmas_kormanynak_heim_petertol/', 'Hármas a kormánynak Heim Pétertől', '2009. 07. 30. 14:42'),
+                ('https://24.hu/fn/gazdasag/2009/07/30/meleg_ellenere_sem_fogy/', 'A meleg ellenére sem fogy több sör', '2009. 07. 30. 13:12'),
+                ('https://24.hu/fn/gazdasag/2009/07/30/makroadatokra_figyel_bet/', 'Makroadatokra figyel a BÉT', '2009. 07. 30. 09:05')
+                ]
+    assert (extracted, len(extracted)) == (expected, 7)
+
+    text = w.download_url('https://24.hu/belfold/1848/12/15/')
+    extracted = extract_article_urls_plus_from_page_24hu(text)
+    expected = [('https://24.hu/belfold/1848/12/15/amit_meg_nem_ert_el/', 'Állami szervek a narancshálón kívül', '1848. 12. 15. 12:00')]
+    assert (extracted, len(extracted)) == (expected, 1)
+
+    text = w.download_url('https://24.hu/kulfold/2015/11/page/15/')
+    extracted = extract_article_urls_plus_from_page_24hu(text)
+    expected = [('https://24.hu/kulfold/2015/11/24/terrorizmus_lelott_orosz_repulo_putyin_sziria_putyin_elo/', 'Rendkívüli NATO-tanácskozás lesz a lelőtt orosz gép miatt', '2015. 11. 24. 13:17'),
+                ('https://24.hu/kulfold/2015/11/24/videofelvetelen-buktattak-le-az-iszlam-allamnak-toborzo-noket/', 'Videofelvételen buktatták le az Iszlám Államnak toborzó nőket', '2015. 11. 24. 13:54'),
+                ('https://24.hu/kulfold/2015/11/24/porosenko-a-magyar-kepviselok-kettos-allampolgarsagat-vizsgaltatja/', 'Porosenko a magyar képviselők kettős állampolgárságát vizsgáltatja', '2015. 11. 24. 13:54'),
+                ('https://24.hu/kulfold/2015/11/24/olaszorszagban-tanitottak-az-ongyilkos-merenyleteket-a-kiutasitott-marokkoiak/', 'Olaszországban tanították az öngyilkos merényleteket a kiutasított marokkóiak', '2015. 11. 24. 13:50'),
+                ('https://24.hu/kulfold/2015/11/24/az-easyjet-iden-mar-nem-mer-gepet-inditani-sarm-es-sejkbe/', 'Az easyJet idén már nem mer gépet indítani Sarm-es-Sejkbe', '2015. 11. 24. 13:33'),
+                ('https://24.hu/kulfold/2015/11/24/sok-menekult-meghalt-az-algeriai-menekulttaborban-pusztito-tuzben/', 'Sok menekült meghalt az algériai menekülttáborban pusztító tűzben', '2015. 11. 24. 13:11'),
+                ('https://24.hu/kulfold/2015/11/24/benzinnel-locsolta-le-beteget-az-orvos-majd-fel-akarta-gyujtani/', 'Benzinnel locsolta le betegét az orvos, majd fel akarta gyújtani', '2015. 11. 24. 13:08'),
+                ('https://24.hu/kulfold/2015/11/24/tombol-a-vihar-gorogorszagban-kevesebb-menedekkero-erkezik/', 'Tombol a vihar Görögországban: kevesebb menedékkérő érkezik', '2015. 11. 24. 12:59'),
+                ('https://24.hu/kulfold/2015/11/24/a-lelott-orosz-harci-repulo-halott-pilotajarol-tettek-kozze-felvetelt/', 'Brutális videó a lelőtt orosz harci repülő pilótájáról', '2015. 11. 24. 12:53'),
+                ('https://24.hu/kulfold/2015/11/24/orosz-ujsagirokat-ert-raketatalalat-sziriaban/', 'Orosz újságírókat ért rakétatalálat Szíriában', '2015. 11. 24. 12:46'),
+                ('https://24.hu/kulfold/2015/11/24/parizsi-terrortamadas-birosag-ele-allitjak-a-terroristak-szallasadojat/', 'Párizsi terrortámadás: bíróság elé állítják a terroristák szállásadóját', '2015. 11. 24. 12:42'),
+                ('https://24.hu/kulfold/2015/11/24/egy-egesz-varos-osszefogott-a-felgyujtott-mecset-helyrehozasaert/', 'Egy egész város összefogott a felgyújtott mecset helyrehozásáért', '2015. 11. 24. 12:37'),
+                ('https://24.hu/kulfold/2015/11/24/az-agyonlott-francia-rendorkutya-honapokra-volt-a-nyugdijtol/', 'Az agyonlőtt francia rendőrkutya hónapokra volt a nyugdíjtól', '2015. 11. 24. 12:30'),
+                ('https://24.hu/kulfold/2015/11/24/terrorista-szalat-talaltak-a-bosnyak-ejszakai-robbantasban/', 'Terrorista szálat találtak a bosnyák éjszakai robbantásban', '2015. 11. 24. 12:29'),
+                ('https://24.hu/kulfold/2015/11/24/nem-hevertek-ki-a-negy-hettel-ezelotti-iskolai-meszarlast-svedorszagban/', 'Nem heverték ki a négy héttel ezelőtti iskolai mészárlást Svédországban', '2015. 11. 24. 12:23'),
+                ('https://24.hu/kulfold/2015/11/24/kanada-nem-ker-az-egyedulallo-szir-ferfiakbol/', 'Kanada nem kér az egyedülálló szír férfiakból', '2015. 11. 24. 11:20'),
+                ('https://24.hu/kulfold/2015/11/24/metilalkoholbol-hamisitottak-az-oroszok-a-whiskyt-25-halott/', 'Metilalkoholból hamisították az oroszok a whiskyt, 25 halott', '2015. 11. 24. 11:00'),
+                ('https://24.hu/kulfold/2015/11/24/ragyujthattak-a-hazat-a-menedekkerokre-nemetorszagban/', 'Rágyújthatták a házat a menedékkérőkre Németországban', '2015. 11. 24. 10:45'),
+                ('https://24.hu/kulfold/2015/11/24/orban-kinanak-kulcsszerepe-van-a-beke-vedelmeben/', 'Orbán: Kínának kulcsszerepe van a béke védelmében', '2015. 11. 24. 10:37'),
+                ('https://24.hu/kulfold/2015/11/24/szurjak-a-koran-arusok-a-becsiek-szemet/', 'Szúrják a Korán-árusok a bécsiek szemét', '2015. 11. 24. 10:35'),
+                ('https://24.hu/kulfold/2015/11/24/a-bevarrt-szaju-iraniak-nem-tagitanak-duzzad-a-tomeg-a-gorog-macedon-hataron/', 'A bevarrt szájú irániak nem tágítanak - duzzad a tömeg a görög-macedón határon', '2015. 11. 24. 10:20'),
+                ('https://24.hu/kulfold/2015/11/24/terrorizmus_lelott_orosz_repulo_putyin_sziria_putyin_elo/', 'Lelőttek egy orosz repülőgépet a török-szír határon', '2015. 11. 24. 09:07'),
+                ('https://24.hu/kulfold/2015/11/24/orban-beallt-montenegro-nato-tagsaga-moge/', 'Orbán beállt Montenegró NATO-tagsága mögé', '2015. 11. 24. 08:46'),
+                ('https://24.hu/kulfold/2015/11/24/a-cia-veszelyesen-alulertekeli-az-iszlam-allamot/', '„A CIA veszélyesen alulértékeli az Iszlám Államot”', '2015. 11. 24. 08:41')
+                ]
+    assert (extracted, len(extracted)) == (expected, 24)    # mert ebben a módban benne marad a poszt-duplikáció
+
 
 def main_test():
     main_logger = Logger()
@@ -963,13 +1055,16 @@ def main_test():
                'article_nextpage': os_path_join(dirname(abspath(__file__)), '../../tests/next_page_of_article_'
                                                                             'news_ngvmt.warc.gz'),
                'archive': os_path_join(dirname(abspath(__file__)),
-                                       '../../tests/extract_article_urls_from_page_news_ngvmt.warc.gz')
+                                       '../../tests/extract_article_urls_from_page_news_ngvmt.warc.gz'),
+               'archive_plus': os_path_join(dirname(abspath(__file__)),
+                                            '../../tests/extract_article_urls_from_page_news_ngvmt.warc.gz')
                }
 
     # Use the main module to modify the warc files!
     extract_next_page_url_test(choices['nextpage'], main_logger)
     extract_article_urls_from_page_test(choices['archive'], main_logger)
     next_page_of_article_test(choices['article_nextpage'], main_logger)
+    extract_article_urls_from_page_plus_test(choices['archive_plus'], main_logger)
 
 
 if __name__ == '__main__':
