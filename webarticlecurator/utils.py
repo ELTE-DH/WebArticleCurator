@@ -138,6 +138,9 @@ def wrap_input_constants(current_task_config_filename):
         settings[attr_name_dest] = getattr(module, settings.get(attr_name, ''), None)
         if mandatory and settings[attr_name_dest] is None:
             raise ValueError('{0} is unset!'.format(attr_name))
+        elif settings.get(attr_name, None) is not None and settings[attr_name_dest] is None:
+            raise ValueError('Cannot find python function for {0} with value \'{1}\' !'.
+                             format(attr_name, settings.get(attr_name, None)))
 
     if settings['infinite_scrolling']:
         if not settings['next_url_by_pagenum']:
