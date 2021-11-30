@@ -23,6 +23,60 @@ from ratelimit import limits, sleep_and_retry
 
 respv_str = {10: '1.0', 11: '1.1'}
 
+# Patch get_encoding_from_headers in requests
+
+
+def _parse_content_type_header(header):
+    """Returns content type and parameters from given header
+
+    :param header: string
+    :return: tuple containing content type and dictionary of
+         parameters
+    """
+
+    tokens = header.split(';')
+    content_type, params = tokens[0].strip(), tokens[1:]
+    params_dict = {}
+    items_to_strip = "\"' "
+
+    for param in params:
+        param = param.strip()
+        if param:
+            key, value = param, True
+            index_of_equals = param.find("=")
+            if index_of_equals != -1:
+                key = param[:index_of_equals].strip(items_to_strip)
+                value = param[index_of_equals + 1:].strip(items_to_strip)
+            params_dict[key.lower()] = value
+    return content_type, params_dict
+
+
+def patched_get_encoding_from_headers(headers):
+    """Returns encodings from given HTTP Header Dict.
+
+    :param headers: dictionary to extract encoding from.
+    :rtype: str
+    """
+
+    content_type = headers.get('content-type')
+
+    if not content_type:
+        return None
+
+    content_type, params = _parse_content_type_header(content_type)
+
+    if 'charset' in params:
+        return params['charset'].strip("'\"")
+
+    if 'text' in content_type:
+        # PATCH: Do not fallback to Latin1! Detect encoding instead!
+        # Further info: https://github.com/psf/requests/issues/480#issuecomment-7901023
+        return None
+
+    if 'application/json' in content_type:
+        # Assume UTF-8 based on RFC 4627: https://www.ietf.org/rfc/rfc4627.txt since the charset was unset
+        return 'utf-8'
+
 
 class WarcCachingDownloader:
     """
@@ -301,7 +355,8 @@ class WarcDownloader:
         if data.endswith(b'\r\n'):  # TODO: Warcio bugreport!
             data = data.rstrip()
 
-        enc = resp.encoding  # Get or detect encoding to decode the bytes of the text to str
+        # Get or detect encoding to decode the bytes of the text to str
+        enc = patched_get_encoding_from_headers(resp.headers)
         if enc is None:
             enc = detect(data)['encoding']
         try:
