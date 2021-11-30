@@ -2,7 +2,7 @@ language: python
 dist: bionic
 sudo: true
 python:
-  - '3.6'
+  - '3.7'
 install:
   - make venv install
 script:

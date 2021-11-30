@@ -24,9 +24,11 @@ setuptools.setup(
         'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)',
         'Operating System :: POSIX :: Linux',
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     install_requires=['pyyaml', 'chardet', 'requests', 'urllib3', 'warcio', 'ratelimit', 'beautifulsoup4', 'yamale',
                       'newspaper3k'],  # Newspaper3k is optional!
+    # pip install webarticlecurator[newspaper3k]
+    extras_require={'newspaper3k': ['newspaper3k>=0.2.8,<1.0.0']},
     include_package_data=True,
     entry_points={
         'console_scripts': [

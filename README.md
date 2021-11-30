@@ -4,8 +4,8 @@ A crawler program which can be used for downloading the content of portals (news
 
 ## Requirements
 
-- Python 3.6+
-- (optional) for Newspaper3k, the installation of the following packages must precede the installation of this program: python3-dev libxml2-dev libxslt-dev libjpeg-dev zlib1g-dev libpng12-dev
+- Python 3.7+
+- (optional for corpus converter if installed as `webarticlecurator[newspaper3k]`) for Newspaper3k, the installation of the following packages must precede the installation of this program: python3-dev libxml2-dev libxslt-dev libjpeg-dev zlib1g-dev libpng12-dev
 
 ## Install
 
