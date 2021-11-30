@@ -25,8 +25,8 @@ setuptools.setup(
         'Operating System :: POSIX :: Linux',
     ],
     python_requires='>=3.7',
-    install_requires=['pyyaml', 'chardet', 'requests', 'urllib3', 'warcio', 'ratelimit', 'beautifulsoup4', 'yamale',
-                      'newspaper3k'],  # Newspaper3k is optional!
+    install_requires=['pyyaml', 'chardet', 'requests', 'urllib3', 'warcio', 'ratelimit', 'beautifulsoup4', 'lxml',
+                      'yamale'],
     # pip install webarticlecurator[newspaper3k]
     extras_require={'newspaper3k': ['newspaper3k>=0.2.8,<1.0.0']},
     include_package_data=True,

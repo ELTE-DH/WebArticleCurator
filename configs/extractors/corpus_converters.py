@@ -7,13 +7,15 @@ from argparse import Namespace
 from datetime import datetime
 
 import yaml
-from newspaper import Article
 
 """Here comes the stuff to extract data from a specific downloaded webpage (article)"""
 
 
 class CorpusConverterNewspaper:  # Mimic CorpusConverter
     def __init__(self, settings):
+        from newspaper import Article
+        self._article = Article
+
         self._logger = Namespace(log=print)  # Hack to be able to monkeypatch logger
 
         # Set output_file handle
@@ -35,13 +37,12 @@ class CorpusConverterNewspaper:  # Mimic CorpusConverter
                          'NO MATCHING COLUMN_RE PATTERN! IGNORING ARTICLE!', sep='\t', file=sys.stderr)
         return None
 
-    @staticmethod
-    def extract_article_date(url, article_raw_html, scheme):
+    def extract_article_date(self, url, article_raw_html, scheme):
         """
             extracts and returns next page URL from an HTML code if there is one...
         """
         _ = url, scheme  # Silence dummy IDE
-        article = Article(url, memoize_articles=False, language='hu')
+        article = self._article(url, memoize_articles=False, language='hu')
         article.download(input_html=article_raw_html)
         article.parse()
         article.nlp()
@@ -50,7 +51,7 @@ class CorpusConverterNewspaper:  # Mimic CorpusConverter
 
     def article_to_corpus(self, url, article_raw_html, scheme):
         _ = scheme  # Silence dummy IDE
-        article = Article(url, memoize_articles=False, language='hu')
+        article = self._article(url, memoize_articles=False, language='hu')
         article.download(input_html=article_raw_html)
         article.parse()
         article.nlp()

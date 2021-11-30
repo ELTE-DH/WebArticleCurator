@@ -5,6 +5,7 @@ urllib3
 warcio
 ratelimit
 beautifulsoup4
+lxml
 yamale
 # Optional
 # newspaper3k
