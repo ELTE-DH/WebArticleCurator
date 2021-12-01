@@ -2,10 +2,22 @@
 
 "columns":
     # kultura - empty intervals are avoided with a pseudo-column.
-    "kultura":
+    "kultura1":
         "archive_url_format": "https://24.hu/kultura/#year/#month/"
 
         "date_first_article": 2010-04-01
+        "date_last_article":  2012-05-31
+
+    "kultura2":
+        "archive_url_format": "https://24.hu/kultura/#year/#month/#day/"
+
+        "date_first_article": 2012-06-01
+        "date_last_article":  2012-08-31
+
+    "kultura3":
+        "archive_url_format": "https://24.hu/kultura/#year/#month/"
+
+        "date_first_article": 2012-09-01
 
     "kultura-0001-01":
         "archive_url_format": "https://24.hu/kultura/#year/#month/"
@@ -13,11 +25,25 @@
         "date_first_article": 0001-01-01
         "date_last_article":  0001-01-31
 
+    # Problematic intervalls are separated and crawler with daily archive
+    # to avoid the random ordering of articles with extactly matching date accross archive pages
     # elet-stilus - empty intervals are avoided with several pseudo-columns.
-    "elet-stilus":
+    "elet-stilus1":
         "archive_url_format": "https://24.hu/elet-stilus/#year/#month/"
 
         "date_first_article": 2001-02-01
+        "date_last_article":  2005-05-31
+
+    "elet-stilus2":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/"
+
+        "date_first_article": 2005-06-01
+        "date_last_article":  2010-12-31
+
+    "elet-stilus3":
+        "archive_url_format": "https://24.hu/elet-stilus/#year/#month/"
+
+        "date_first_article": 2011-01-01
 
     "elet-stilus-2000-06":
         "archive_url_format": "https://24.hu/elet-stilus/#year/#month/"

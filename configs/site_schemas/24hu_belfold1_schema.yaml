@@ -1,7 +1,8 @@
 "site_name": "24hu"
 
 "columns":
-    # belfold - Splitted to avoid duplications due to exactly matching dates
+    # Problematic intervalls are separated and crawler with daily archive
+    # to avoid the random ordering of articles with extactly matching date accross archive pages
     "belfold1":
         "archive_url_format": "https://24.hu/belfold/#year/#month/"
 
