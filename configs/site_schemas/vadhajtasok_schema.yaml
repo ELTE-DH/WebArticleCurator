@@ -1,0 +1,76 @@
+"site_name": "vadhajtasok"
+
+# It is a column-based archive. Duplications may occur if an article is in more than one column.
+# It works with pagenum because the next_page url often goes back to the first page. Max_pagenum needs to be updated.
+
+"columns":
+    "nulla_huszonnegy":
+        "archive_url_format": "https://www.vadhajtasok.hu/0-24/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum": 2
+        "max_pagenum": 1390
+
+    "belfold":
+        "archive_url_format": "https://www.vadhajtasok.hu/belfold/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum": 2
+        "max_pagenum": 615
+
+    "kulfold":
+        "archive_url_format": "https://www.vadhajtasok.hu/kulfold/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum": 2
+        "max_pagenum": 342
+
+    "velemenyek":
+        "archive_url_format": "https://www.vadhajtasok.hu/velemenyek/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum": 2
+        "max_pagenum": 220
+
+    "sport":
+        "archive_url_format": "https://www.vadhajtasok.hu/sport/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum": 2
+        "max_pagenum": 51
+
+    "europa":
+        "archive_url_format": "https://www.vadhajtasok.hu/ebredj-europa/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum": 2
+        "max_pagenum": 72
+
+    "videok":
+        "archive_url_format": "https://www.vadhajtasok.hu/videok/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum": 2
+        "max_pagenum": 55
+
+    "tortenelem":
+        "archive_url_format": "https://www.vadhajtasok.hu/tortenelem/#pagenum"
+
+        "initial_pagenum" : 1
+        "min_pagenum": 2
+        "max_pagenum": 34
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_kuruc_vadh.py"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_vadhajtasok"
+
+"next_url_by_pagenum": true
+"infinite_scrolling": false
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": false
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"
