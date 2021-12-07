@@ -1,0 +1,12 @@
+"schema": "site_schemas/kuruc_schema.yaml"
+
+# "output_corpus": "kuruc_corpus.txt"
+
+"log_file_articles": "logs/kuruc_articles_log.txt"
+"log_file_archive": "logs/kuruc_archive_log.txt"
+"new_problematic_urls": "logs/kuruc_new_problematic_urls.txt"
+"new_good_urls": "logs/kuruc_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/kuruc_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/kuruc_new_good_archive_urls.txt"
+
+# "date_from": 2000-01-01
