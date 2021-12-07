@@ -88,12 +88,13 @@ def extract_article_urls_from_page_vadhajtasok(archive_page_raw_html):
     :param archive_page_raw_html: archive page containing list of articles with their URLs
     :return: list that contains URLs
     """
+    urls = set()
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     container = soup.find('div', attrs={'id': 'primary'})
     if container is not None:
         main_container = container.find_all('h2', class_='cs-entry__title')
         urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
-        return urls
+    return urls
 
 
 def extract_article_urls_from_page_test(filename, test_logger):
@@ -134,8 +135,6 @@ def extract_article_urls_from_page_test(filename, test_logger):
                 'https://www.vadhajtasok.hu/2019/10/30/megint-viktornak-neveztek-az-olah-orban-t',
                 'https://www.vadhajtasok.hu/2019/10/30/jair-netanjahu-soros-szervezetei-belulrol-romboljak-izraelt',
                 'https://www.vadhajtasok.hu/2019/10/29/torokorszagbol-elkezdtek-gorogorszagba-szivarogni-a-migransok',
-                'https://www.vadhajtasok.hu/2019/10/26/elismerte-egy-olasz-liberalis-politikus-hogy-penzt-kaptak-'
-                'sorostol',
                 'https://www.vadhajtasok.hu/2019/10/27/minden-afrikai-edesanyja-lett-angela-merkel',
                 'https://www.vadhajtasok.hu/2019/10/28/salviniek-nyertek-a-balos-umbriaban',
                 'https://www.vadhajtasok.hu/2019/10/28/a-spanyolok-is-utcara-vonultak-kataloniaban',
