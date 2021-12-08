@@ -42,6 +42,9 @@ class NewsArchiveCrawler:
         self._infinite_scrolling = None
         self._extract_article_urls_from_page_fun = None
         self._find_next_page_url = None
+        self._max_tries = None
+        self._no_check_duplicates = None
+        self._allowed_dupl_urls = None
 
         # Save the original settings for using it with all columns
         self._settings = settings
@@ -101,6 +104,16 @@ class NewsArchiveCrawler:
                                              self._settings['next_url_by_pagenum'],
                                              self._settings['infinite_scrolling'], column_spec_settings['max_pagenum'],
                                              self._settings['new_article_url_threshold'], self.known_article_urls)
+
+        # Initialize URL retry mechanism
+        self._max_tries = self._settings.get('max_tries', 1)
+        self._no_check_duplicates = self._settings.get('no_check_duplicates', True)
+        allowed_dupl_urls = self._settings.get('allowed_dupl_urls')
+        if allowed_dupl_urls is not None:  # Setup the list of allowed duplicate URLs to check them later
+            with open(allowed_dupl_urls, encoding='UTF-8') as fh:
+                self._allowed_dupl_urls = {line.strip() for line in fh}
+        else:
+            self._allowed_dupl_urls = set()
 
     def __del__(self):  # Write newly found URLs to files when output files supplied...
         # Save the good URLs...
@@ -176,31 +189,47 @@ class NewsArchiveCrawler:
         """
             Generates article URLs from a supplied URL including the on-demand sub-pages that contains article URLs
         """
-        page_num = self._min_pagenum
         first_page = True
+        tries_left = self._max_tries
+        page_num = self._min_pagenum
         next_page_url = archive_page_url_base.replace('#pagenum', self._initial_page_num)
-        while next_page_url is not None:
-            archive_page_raw_html = self._downloader.download_url(next_page_url, self._ignore_archive_cache)
+        while next_page_url is not None or tries_left > 0:
+            reqv, resp, archive_page_raw_html = self._downloader.download_url(next_page_url, self._ignore_archive_cache,
+                                                                              return_warc_records_wo_writing=True)
+            tries_left -= 1
             curr_page_url = next_page_url
+            next_page_url = None
+            article_urls = []
+            url_ok = False  # Yield nothing and terminate crawling
             if archive_page_raw_html is not None:  # Download succeeded
-                self._good_urls_add(next_page_url)
-                # 1) We need article URLs here to reliably determine the end of pages in some cases
+                # 1a) We need article URLs here to reliably determine the end of pages in some cases
                 article_urls = self._extract_article_urls_from_page_fun(archive_page_raw_html)
                 if len(article_urls) == 0 and (not self._infinite_scrolling or first_page):
-                    self._logger.log('WARNING', next_page_url, 'Could not extract URLs from the archive!', sep='\t')
-                # 2) Generate next-page URL or None if there should not be any
-                next_page_url = self._find_next_page_url(archive_page_url_base, page_num, archive_page_raw_html,
-                                                         article_urls)
-            else:  # Download failed
-                if next_page_url not in self.bad_urls and next_page_url not in self._downloader.good_urls and \
-                        next_page_url not in self._downloader.url_index:  # URLs in url_index should not be a problem
-                    self._problematic_urls_add(next_page_url)  # New possibly bad URL
-                next_page_url = None
-                article_urls = []
-            page_num += 1
+                    self._logger.log('WARNING', curr_page_url, 'Could not extract URLs from the archive!', sep='\t')
+                # 1b) We need to check for unintentional duplicates (e.g. random article order + pagination
+                #     due to matching sort key). We can not handle if an allowed_dupl_url displaces a required one!
+                url_ok = self._no_check_duplicates or \
+                    len(self.good_urls & (article_urls - self._allowed_dupl_urls)) == 0
+                if url_ok:
+                    self._downloader.write_records_for_url(curr_page_url, reqv, resp)
+                    self._good_urls_add(curr_page_url)
+                    # 2) Generate next-page URL or None if there should not be any
+                    next_page_url = self._find_next_page_url(archive_page_url_base, page_num, archive_page_raw_html,
+                                                             article_urls)
+                elif tries_left == 0:  # Terminate crawling as no next_page_url is specified!
+                    self._logger.log('ERROR', curr_page_url, f'There are no tries left for URL!', sep='\t')
+                else:
+                    self._logger.log('WARNING',
+                                     curr_page_url, f'Retrying URL ({self._max_tries - tries_left})!', sep='\t')
+            elif curr_page_url not in self.bad_urls and curr_page_url not in self._downloader.good_urls and \
+                    curr_page_url not in self._downloader.url_index:  # URLs in url_index should not be a problem
+                self._problematic_urls_add(curr_page_url)  # Download failed, add new possibly bad URL to the list
+            # 3) Yield results if there are any
             self._logger.log('DEBUG', 'URLs/ARCHIVE PAGE', curr_page_url, len(article_urls), sep='\t')
-            yield from article_urls
-            first_page = False
+            if url_ok:
+                page_num += 1
+                yield from article_urls
+                first_page = False
 
     @staticmethod
     def _find_next_page_url_factory(extract_next_page_url_fun, next_url_by_pagenum, infinite_scrolling, max_pagenum,

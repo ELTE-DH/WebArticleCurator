@@ -115,7 +115,7 @@ class WarcCachingDownloader:
         else:
             self._new_downloads = WarcDownloader(new_warc_filename, _logger, info_record_data, **download_params)
 
-    def download_url(self, url, ignore_cache=False):
+    def download_url(self, url, ignore_cache=False, return_warc_records_wo_writing=False):
         # 1) Check if the URL is explicitly marked as bad...
         if url in self._new_downloads.bad_urls:
             self._logger.log('WARNING', url, 'Skipping URL explicitly marked as bad!', sep='\t')
@@ -127,12 +127,15 @@ class WarcCachingDownloader:
             return None
         # 3) Check if the URL presents in the cached_content...
         elif url in self.url_index:
-            # 3a) ...copy it! (from the last source WARC where the URL is found in)
+            # 3a) ...retrieve it! (from the last source WARC where the URL is found in)
             cache, reqv, resp = self.get_records(url)
-            self._new_downloads.write_record(reqv, url)
-            self._new_downloads.write_record(resp, url)
             # 3b) Get content even if the URL is a duplicate, because ignore_cache knows better what to do with it
             cached_content = cache.download_url(url)
+            # 3c) Decide to return the records with the content XOR write the records and return the content only
+            if return_warc_records_wo_writing:
+                cached_content = (reqv, resp, cached_content)
+            else:
+                self._new_downloads.write_records_for_url(url, reqv, resp)
         else:
             cached_content = None
 
@@ -146,7 +149,11 @@ class WarcCachingDownloader:
                 self._logger.log('INFO', 'Ignoring cached_content for URL:', url)
 
         # 5) Really download the URL! (url not in cached_content or cached_content is ignored)
-        return self._new_downloads.download_url(url)  # Still check if the URL is already downloaded!
+        #    Still check if the URL is already downloaded!
+        return self._new_downloads.download_url(url, return_warc_records_wo_writing)
+
+    def write_records_for_url(self, url, reqv, resp):
+        self._new_downloads.write_records_for_url(url, reqv, resp)
 
     def get_records(self, url):
         for cache in reversed(self._cached_downloads):
@@ -176,11 +183,15 @@ class WarcDummyDownloader:
         self.good_urls = set()
 
     @staticmethod
-    def download_url(_):
+    def download_url(*_, **__):
         return None
 
     @staticmethod
-    def write_record(*_):
+    def write_records_for_url(*_, **__):
+        return None
+
+    @staticmethod
+    def write_record(*_, **__):
         return None
 
 
@@ -292,10 +303,10 @@ class WarcDownloader:
                 peer_name = 'None'  # Socket closed and could not determine peername...
         return peer_name
 
-    def _dummy_download_url(self, _):
+    def _dummy_download_url(self, *_, **__):
         raise NotImplementedError
 
-    def _download_url(self, url):
+    def _download_url(self, url, return_warc_records_wo_writing=False):
         if url in self.bad_urls:
             self._logger.log('DEBUG', 'Not downloading known bad URL:', url)
             return None
@@ -372,15 +383,20 @@ class WarcDownloader:
                                                       http_headers=resp_http_headers,
                                                       warc_headers_dict={'WARC-IP-Address': peer_name,
                                                                          'WARC-X-Detected-Encoding': enc})
-        # Everything is OK, write the two WARC records
-        self.write_record(reqv_record, url)
-        self.write_record(resp_record, url)
+        # Everything is OK
+        if return_warc_records_wo_writing:
+            # Return the WARC records and the text content
+            return reqv_record, resp_record, text
+        else:
+            # Write the two WARC records and return the text content only
+            self.write_records_for_url(url, reqv_record, resp_record)
 
-        return text
+            return text
 
-    def write_record(self, record, url):
+    def write_records_for_url(self, url, reqv_record, resp_record):
         self.good_urls.add(url)
-        self._writer.write_record(record)
+        self._writer.write_record(reqv_record)
+        self._writer.write_record(resp_record)
 
 
 class WarcReader:
