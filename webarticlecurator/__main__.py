@@ -125,6 +125,8 @@ def parse_args_sample(parser):
                         help='Download URLs which are not present in the source archive (default True)')
     parser.add_argument('-n', '--negative', type=str2bool, nargs='?', const=True, default=False, metavar='True/False',
                         help='Sample input-urls URLs which are not present in the source archive (default False)')
+    parser.add_argument('-c', '--config', type=str, default=None, metavar='CONFIG_FILE_NAME',
+                        help='Portal configfile (see configs folder for examples!)')
     args = parser.parse_args()
     if (args.source_warcfile is None or len(args.source_warcfile) == 0) and args.offline:
         print('Must specify at least one SOURCE_WARC if --offline is False!', file=sys.stderr)
@@ -204,6 +206,8 @@ def main_validate_and_list(args):
 
 def main_cat_and_sample(args):
     """ __file__ sample [source warcfiles or None] [urls list file or stdin] [target warcfile] [Online or Offline] """
+    extract_article_urls_from_page_plus_fun = \
+        wrap_input_constants(args.config)['EXTRACT_ARTICLE_URLS_FROM_PAGE_PLUS_FUN']
     main_logger = Logger()
     out_dir = getattr(args, 'out_dir', None)
     target_warcfile = getattr(args, 'target_warcfile', None)
@@ -212,7 +216,8 @@ def main_cat_and_sample(args):
     offline = getattr(args, 'offline', True)  # Sample can be online or offline, but we write warc only when sampling!
     negative = getattr(args, 'negative', False)  # Sample URLs from warc not in input_stream
     sample_warc_by_urls(args.source_warcfile, args.url_input_stream, main_logger, target_warcfile=target_warcfile,
-                        offline=offline, out_dir=out_dir, just_cache=args.command == 'cat', negative=negative)
+                        offline=offline, out_dir=out_dir, just_cache=args.command == 'cat', negative=negative,
+                        extract_article_urls_from_page_plus_fun=extract_article_urls_from_page_plus_fun)
     main_logger.log('INFO', 'Done!')
 
 

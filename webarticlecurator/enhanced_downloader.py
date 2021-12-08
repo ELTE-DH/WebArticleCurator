@@ -488,7 +488,7 @@ class WarcReader:
 
     def get_record(self, url):
         reqv_resp_pair = self._internal_url_index.get(url)
-        if reqv_resp_pair is not None:
+        if reqv_resp_pair is not None:  # TODO separate record extraction because if seeking far zlib fails!
             self._stream.seek(reqv_resp_pair[0][0])
             reqv = next(iter(ArchiveIterator(self._stream, check_digests=self._check_digest)))
             self._stream.seek(reqv_resp_pair[1][0])
