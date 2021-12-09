@@ -133,9 +133,9 @@ class WarcCachingDownloader:
             cached_content = cache.download_url(url)
             # 3c) Decide to return the records with the content XOR write the records and return the content only
             if return_warc_records_wo_writing:
-                cached_content = (reqv, resp, cached_content)
+                cached_content = ((cache, reqv, resp), cached_content)
             else:
-                self._new_downloads.write_records_for_url(url, reqv, resp)
+                self._new_downloads.write_records_for_url(url, (cache, reqv, resp))
         else:
             cached_content = None
 
@@ -152,13 +152,13 @@ class WarcCachingDownloader:
         #    Still check if the URL is already downloaded!
         return self._new_downloads.download_url(url, return_warc_records_wo_writing)
 
-    def write_records_for_url(self, url, reqv, resp):
-        self._new_downloads.write_records_for_url(url, reqv, resp)
+    def write_records_for_url(self, url, rec):
+        self._new_downloads.write_records_for_url(url, rec)
 
     def get_records(self, url):
         for cache in reversed(self._cached_downloads):
             if url in cache.url_index:
-                reqv, resp = cache.get_record(url)
+                reqv, resp = cache.get_record_data(url)
                 break
         else:
             raise ValueError('INTERNAL ERROR: {0} not found in any supplied source WARC file,'
@@ -386,17 +386,25 @@ class WarcDownloader:
         # Everything is OK
         if return_warc_records_wo_writing:
             # Return the WARC records and the text content
-            return reqv_record, resp_record, text
+            return (None, reqv_record, resp_record), text
         else:
             # Write the two WARC records and return the text content only
-            self.write_records_for_url(url, reqv_record, resp_record)
+            self.write_records_for_url(url, (None, reqv_record, resp_record))
 
             return text
 
-    def write_records_for_url(self, url, reqv_record, resp_record):
+    def write_records_for_url(self, url, rec):
         self.good_urls.add(url)
-        self._writer.write_record(reqv_record)
-        self._writer.write_record(resp_record)
+        if rec[0] is not None:
+            cache, (reqv_offset, _), (resp_offset, _) = rec
+            reqv_record = cache.get_record(reqv_offset)  # Seek to the appropriate pos in the WARC to retrive the record
+            self._writer.write_record(reqv_record)       # else random zlib errors happen when the payload is removed
+            resp_record = cache.get_record(resp_offset)  # from the cache
+            self._writer.write_record(resp_record)
+        else:
+            _, reqv_record, resp_record = rec
+            self._writer.write_record(reqv_record)
+            self._writer.write_record(resp_record)
 
 
 class WarcReader:
@@ -486,16 +494,17 @@ class WarcReader:
         self._stream.seek(0)
         self._logger.log('INFO', 'Index successfully created.')
 
-    def get_record(self, url):
+    def get_record_data(self, url):
         reqv_resp_pair = self._internal_url_index.get(url)
-        if reqv_resp_pair is not None:  # TODO separate record extraction because if seeking far zlib fails!
-            self._stream.seek(reqv_resp_pair[0][0])
-            reqv = next(iter(ArchiveIterator(self._stream, check_digests=self._check_digest)))
-            self._stream.seek(reqv_resp_pair[1][0])
-            resp = next(iter(ArchiveIterator(self._stream, check_digests=self._check_digest)))
-            return reqv, resp
+        if reqv_resp_pair is not None:
+            return reqv_resp_pair  # ((offset, length), (offset, length))
         else:
             raise KeyError('The request or response is missing from the archive for URL: {0}'.format(url))
+
+    def get_record(self, offset):
+        self._stream.seek(offset)
+        rec = next(iter(ArchiveIterator(self._stream, check_digests=self._check_digest)))
+        return rec
 
     def download_url(self, url):
         text = None

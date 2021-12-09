@@ -40,7 +40,7 @@ def sample_warc_by_urls(source_warcfiles, new_urls, sampler_logger, target_warcf
             return True
 
     w = WarcCachingDownloader(source_warcfiles, target_warcfile, sampler_logger, just_cache=just_cache,
-                              download_params={'stay_offline': offline})
+                              download_params={'stay_offline': offline, 'allow_cookies': False})  # TODO CLI!
 
     new_urls = {url.strip() for url in new_urls}
     if negative:
@@ -53,21 +53,22 @@ def sample_warc_by_urls(source_warcfiles, new_urls, sampler_logger, target_warcf
             url_ok = False
             tries_left = max_tries
             while not url_ok and tries_left > 0:
-                reqv, resp, raw_html = w.download_url(url, return_warc_records_wo_writing=True)
+                rec, raw_html = w.download_url(url, ignore_cache=tries_left < max_tries,
+                                               return_warc_records_wo_writing=True)
                 tries_left -= 1
                 if raw_html is not None:
                     url_ok = test_raw_html(raw_html, already_seen_urls)
                     if url_ok:
-                        w.write_records_for_url(url, reqv, resp)
+                        w.write_records_for_url(url, rec)
                         if is_out_dir_mode and raw_html is not None:
                             fname = write_content_to_url_named_file(url, raw_html, out_dir)
                             sampler_logger.log('INFO', 'Creating file', fname)
-                elif tries_left == 0:  # Terminate crawling as no next_page_url is specified!
-                    sampler_logger.log('ERROR', url, f'There are no tries left for URL!', sep='\t')
-                else:
-                    sampler_logger.log('WARNING', url, f'Retrying URL ({max_tries - tries_left})!', sep='\t')
+                    elif tries_left == 0:
+                        sampler_logger.log('ERROR', url, f'There are no tries left for URL!', sep='\t')
+                    else:
+                        sampler_logger.log('WARNING', url, f'Retrying URL ({max_tries - tries_left})!', sep='\t')
         else:
-            sampler_logger.log('ERROR', 'URL not present in archive', url)
+            sampler_logger.log('ERROR', 'URL not present in archive or can not be dowloaded', url)
 
 
 def archive_page_contains_article_url(extract_article_urls_from_page_plus_fun, source_warcfiles, checked_urls,
