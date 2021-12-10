@@ -23,7 +23,8 @@ def online_test(url='https://index.hu/belfold/2018/08/27/fidesz_media_helyreigaz
 
 
 def sample_warc_by_urls(source_warcfiles, new_urls, sampler_logger, target_warcfile=None, out_dir=None, offline=True,
-                        just_cache=False, negative=False, extract_article_urls_from_page_plus_fun=None, max_tries=10):
+                        just_cache=False, negative=False, extract_article_urls_from_page_plus_fun=None, max_tries=3,
+                        allow_cookies=False):
     """ Create new warc file for the supplied list of URLs from an existing warc file """
     is_out_dir_mode = out_dir is not None
     if is_out_dir_mode:
@@ -40,23 +41,23 @@ def sample_warc_by_urls(source_warcfiles, new_urls, sampler_logger, target_warcf
             return True
 
     w = WarcCachingDownloader(source_warcfiles, target_warcfile, sampler_logger, just_cache=just_cache,
-                              download_params={'stay_offline': offline, 'allow_cookies': False})  # TODO CLI!
+                              download_params={'stay_offline': offline, 'allow_cookies': allow_cookies})
 
     new_urls = {url.strip() for url in new_urls}
     if negative:
         new_urls = w.url_index - new_urls
 
     already_seen_urls = set()
-    for url in new_urls:
+    for url in sorted(new_urls):
         sampler_logger.log('INFO', 'Adding url', url)
         if not offline or url in w.url_index:
             url_ok = False
             tries_left = max_tries
             while not url_ok and tries_left > 0:
-                rec, raw_html = w.download_url(url, ignore_cache=tries_left < max_tries,
-                                               return_warc_records_wo_writing=True)
+                resp = w.download_url(url, ignore_cache=tries_left < max_tries, return_warc_records_wo_writing=True)
                 tries_left -= 1
-                if raw_html is not None:
+                if resp is not None:
+                    rec, raw_html = resp
                     url_ok = test_raw_html(raw_html, already_seen_urls)
                     if url_ok:
                         w.write_records_for_url(url, rec)
@@ -65,10 +66,11 @@ def sample_warc_by_urls(source_warcfiles, new_urls, sampler_logger, target_warcf
                             sampler_logger.log('INFO', 'Creating file', fname)
                     elif tries_left == 0:
                         sampler_logger.log('ERROR', url, f'There are no tries left for URL!', sep='\t')
+                        w.write_records_for_url(url, rec)  # Keep the URL anyway
                     else:
                         sampler_logger.log('WARNING', url, f'Retrying URL ({max_tries - tries_left})!', sep='\t')
         else:
-            sampler_logger.log('ERROR', 'URL not present in archive or can not be dowloaded', url)
+            sampler_logger.log('ERROR', 'URL not present in archive and can not be downloaded (offline True)', url)
 
 
 def archive_page_contains_article_url(extract_article_urls_from_page_plus_fun, source_warcfiles, checked_urls,

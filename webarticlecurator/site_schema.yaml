@@ -35,6 +35,3 @@ column:
     initial_pagenum: int(min=0, required=False, none=False)
     min_pagenum: int(min=0, required=False, none=False)
     max_pagenum: int(min=0, required=False, none=False)
-    max_tries: int(min=1, required=False, none=False)
-    no_check_duplicates: bool(required=False, none=False)
-    allowed_dupl_urls: str(min=1, required=False, none=False)

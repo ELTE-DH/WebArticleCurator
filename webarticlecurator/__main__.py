@@ -127,6 +127,10 @@ def parse_args_sample(parser):
                         help='Sample input-urls URLs which are not present in the source archive (default False)')
     parser.add_argument('-c', '--config', type=str, default=None, metavar='CONFIG_FILE_NAME',
                         help='Portal configfile (see configs folder for examples!)')
+    parser.add_argument('--allow-cookies', type=str2bool, nargs='?', const=True, default=False, metavar='True/False',
+                        help='Allow session cookies')
+    parser.add_argument('--max-tries', type=int, help='No of maximal tries if the download fails because duplicate '
+                                                      'articles', default=3)
     args = parser.parse_args()
     if (args.source_warcfile is None or len(args.source_warcfile) == 0) and args.offline:
         print('Must specify at least one SOURCE_WARC if --offline is False!', file=sys.stderr)
@@ -217,7 +221,8 @@ def main_cat_and_sample(args):
     negative = getattr(args, 'negative', False)  # Sample URLs from warc not in input_stream
     sample_warc_by_urls(args.source_warcfile, args.url_input_stream, main_logger, target_warcfile=target_warcfile,
                         offline=offline, out_dir=out_dir, just_cache=args.command == 'cat', negative=negative,
-                        extract_article_urls_from_page_plus_fun=extract_article_urls_from_page_plus_fun)
+                        extract_article_urls_from_page_plus_fun=extract_article_urls_from_page_plus_fun,
+                        max_tries=args.max_tries, allow_cookies=args.allow_cookies)
     main_logger.log('INFO', 'Done!')
 
 

@@ -85,9 +85,6 @@ In the `columns` dictionary, the following features can be set for each column (
 - `initial_pagenum` (optional): The initial page number which could be omitted (an empty string if not set, else it should be `min_pagenum` - 1)
 - `min_pagenum` (optional): The "first" page number to increment (e.g. initial_pagenum + 1 = min_pagenum <= max_pagenum if not a single page column where only initial_pagenum must be specified, min_pagenum and max_pagenum must be omitted)
 - `max_pagenum` (optional): The upper bound of the number of pages for safety or for stop criteria
-- `max_tries` (optional): How many times should we try to download an archive URL (to avoid article duplications)? (defautlt: 1)
-- `no_check_duplicates` (optional): Should we check for duplicates in the portal's archives? (default: True)
-- `allowed_dupl_urls` (optional): The list of allowed duplicate URLs which should not trigger the duplicate checker (e.g. parts of live events which links to the same URL.). (filename, one URL per line) 
 - `archive_url_format`: The schema for the archive URL of the portal/column (supply `#year`, `#month`, `#day` and
  `#next-year`, `#next-month`, `#next-day` tags which have to be replaced with the actual field of date, and
  `#pagenum` with the actual page number during the crawling)
