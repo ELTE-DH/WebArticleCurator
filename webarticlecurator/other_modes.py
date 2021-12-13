@@ -85,7 +85,7 @@ def archive_page_contains_article_url(extract_article_urls_from_page_plus_fun, s
 
     url_to_fname = {}
     archive_page_for_checked_urls = defaultdict(set)
-    for url in w.url_index:
+    for url in sorted(w.url_index):
         raw_html = w.download_url(url)
         if raw_html is not None:
             article_urls_w_meta = extract_article_urls_from_page_plus_fun(raw_html)
