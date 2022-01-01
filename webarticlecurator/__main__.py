@@ -126,7 +126,7 @@ def parse_args_sample(parser):
     parser.add_argument('-n', '--negative', type=str2bool, nargs='?', const=True, default=False, metavar='True/False',
                         help='Sample input-urls URLs which are not present in the source archive (default False)')
     parser.add_argument('-c', '--config', type=str, default=None, metavar='CONFIG_FILE_NAME',
-                        help='Portal configfile (see configs folder for examples!)')
+                        help='Portal configfile (see configs folder for examples!)', required=True)
     parser.add_argument('--allow-cookies', type=str2bool, nargs='?', const=True, default=False, metavar='True/False',
                         help='Allow session cookies')
     parser.add_argument('--max-tries', type=int, help='No of maximal tries if the download fails because duplicate '

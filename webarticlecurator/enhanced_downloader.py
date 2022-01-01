@@ -128,7 +128,7 @@ class WarcCachingDownloader:
         # 3) Check if the URL presents in the cached_content...
         elif url in self.url_index:
             # 3a) ...retrieve it! (from the last source WARC where the URL is found in)
-            cache, reqv, resp = self.get_records(url)
+            cache, reqv, resp = self.get_records_offset(url)
             # 3b) Get content even if the URL is a duplicate, because ignore_cache knows better what to do with it
             cached_content = cache.download_url(url)
             # 3c) Decide to return the records with the content XOR write the records and return the content only
@@ -155,7 +155,7 @@ class WarcCachingDownloader:
     def write_records_for_url(self, url, rec):
         self._new_downloads.write_records_for_url(url, rec)
 
-    def get_records(self, url):
+    def get_records_offset(self, url):
         for cache in reversed(self._cached_downloads):
             if url in cache.url_index:
                 reqv, resp = cache.get_record_data(url)
@@ -164,6 +164,12 @@ class WarcCachingDownloader:
             raise ValueError('INTERNAL ERROR: {0} not found in any supplied source WARC file,'
                              ' but is in the URL index!'.format(url))
         return cache, reqv, resp
+
+    def get_records(self, url):
+        cache, reqv, resp = self.get_records_offset(url)
+        reqv_rec = cache.get_record(reqv[0])
+        resp_rec = cache.get_record(resp[0])
+        return cache, reqv_rec, resp_rec
 
     @property
     def bad_urls(self):  # Ready-only property for shortcut

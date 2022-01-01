@@ -10,4 +10,5 @@ from webarticlecurator.other_modes import validate_warc_file, online_test, sampl
 from webarticlecurator.news_crawler import NewsArchiveCrawler, NewsArticleCrawler
 from webarticlecurator.version import __version__
 
-__all__ = ['NewsArchiveCrawler', 'NewsArticleCrawler', 'DummyConverter', 'WarcCachingDownloader', 'Logger', 'wrap_input_constants', __version__]
+__all__ = ['NewsArchiveCrawler', 'NewsArticleCrawler', 'DummyConverter', 'WarcCachingDownloader', 'Logger',
+           'wrap_input_constants', __version__]
