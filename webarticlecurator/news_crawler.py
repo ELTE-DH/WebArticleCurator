@@ -84,6 +84,7 @@ class NewsArchiveCrawler:
         # Settings for URL iterator
         self._archive_page_urls_by_date = self._settings['archive_page_urls_by_date']
         self._archive_url_format = column_spec_settings['archive_url_format']
+        self._max_tries = column_spec_settings.get('max_tries', 1)
         if self._archive_page_urls_by_date:
             self._date_from = column_spec_settings['DATE_FROM']
             self._date_until = column_spec_settings['DATE_UNTIL']
@@ -102,7 +103,6 @@ class NewsArchiveCrawler:
                                              self._settings['next_url_by_pagenum'],
                                              self._settings['infinite_scrolling'], column_spec_settings['max_pagenum'],
                                              self._settings['new_article_url_threshold'], self.known_article_urls)
-        self._max_tries = self._settings.get('max_tries', 1)
 
     def __del__(self):  # Write newly found URLs to files when output files supplied...
         # Save the good URLs...
@@ -189,29 +189,28 @@ class NewsArchiveCrawler:
             curr_page_url = next_page_url
             next_page_url = None
             if archive_page_raw_html is not None:  # Download succeeded
-                self._good_urls_add(next_page_url)
+                self._good_urls_add(curr_page_url)
                 # 1) We need article URLs here to reliably determine the end of pages in some cases
                 article_urls = self._extract_article_urls_from_page_fun(archive_page_raw_html)
                 if len(article_urls) == 0 and (not self._infinite_scrolling or first_page):
-                    self._logger.log('WARNING', next_page_url, 'Could not extract URLs from the archive!', sep='\t')
+                    self._logger.log('WARNING', curr_page_url, 'Could not extract URLs from the archive!', sep='\t')
                 # 2) Generate next-page URL or None if there should not be any
                 next_page_url = self._find_next_page_url(archive_page_url_base, page_num, archive_page_raw_html,
                                                          article_urls)
                 tries_left = self._max_tries  # Restore tries_left
-            elif tries_left == 0:  # Download failed
-                if next_page_url not in self.bad_urls and next_page_url not in self._downloader.good_urls and \
-                        next_page_url not in self._downloader.url_index:  # URLs in url_index should not be a problem
-                    self._problematic_urls_add(next_page_url)  # New possibly bad URL
-                    self._logger.log('ERROR', curr_page_url, f'There are no tries left for URL!', sep='\t')
-                next_page_url = None
-            else:
-                self._logger.log('WARNING',
-                                 curr_page_url, f'Retrying URL ({self._max_tries - tries_left})!', sep='\t')
-            if next_page_url is not None or tries_left == 0:
-                page_num += 1
+                page_num += 1  # Bump pagenum for next round
+                first_page = False
                 self._logger.log('DEBUG', 'URLs/ARCHIVE PAGE', curr_page_url, len(article_urls), sep='\t')
                 yield from article_urls
-                first_page = False
+            elif tries_left == 0:  # Download failed
+                if curr_page_url not in self.bad_urls and curr_page_url not in self._downloader.good_urls and \
+                        curr_page_url not in self._downloader.url_index:  # URLs in url_index should not be a problem
+                    self._problematic_urls_add(curr_page_url)  # New possibly bad URL
+                    self._logger.log('ERROR', curr_page_url, f'There are no tries left for URL!', sep='\t')
+            else:  # Retry download
+                self._logger.log('WARNING',
+                                 curr_page_url, f'Retrying URL ({self._max_tries - tries_left})!', sep='\t')
+                next_page_url = curr_page_url  # Restore URL for retrying
 
     @staticmethod
     def _find_next_page_url_factory(extract_next_page_url_fun, next_url_by_pagenum, infinite_scrolling, max_pagenum,
