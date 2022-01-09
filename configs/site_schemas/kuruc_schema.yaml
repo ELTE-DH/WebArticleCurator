@@ -5,108 +5,143 @@
 "columns":
     "main-column":
         "archive_url_format": "https://kuruc.info/to/1/10/"
+        "max_tries": 5
 
     "friss_hirek":
         "archive_url_format": "https://kuruc.info/t/1/"
+        "max_tries": 5
 
     "anyaorszag":
         "archive_url_format": "https://kuruc.info/t/2/"
+        "max_tries": 5
 
     "elcsatolt_reszek":
         "archive_url_format": "https://kuruc.info/t/3/"
+        "max_tries": 5
 
     "kulfold":
         "archive_url_format": "https://kuruc.info/t/4/"
+        "max_tries": 5
 
     "extra":
         "archive_url_format": "https://kuruc.info/t/6/"
+        "max_tries": 5
 
     "publicisztika":
         "archive_url_format": "https://kuruc.info/t/7/"
+        "max_tries": 5
 
     "lapszemle":
         "archive_url_format": "https://kuruc.info/t/8/"
+        "max_tries": 5
 
     "tanulmanyok":
         "archive_url_format": "https://kuruc.info/t/9/"
+        "max_tries": 5
 
     "olvasoi_levelek":
         "archive_url_format": "https://kuruc.info/t/20/"
+        "max_tries": 5
 
     "jo_es_szep":
         "archive_url_format": "https://kuruc.info/t/21/"
+        "max_tries": 5
 
     "humor":
         "archive_url_format": "https://kuruc.info/t/22/"
+        "max_tries": 5
 
     "programajanlo":
         "archive_url_format": "https://kuruc.info/t/23/"
+        "max_tries": 5
 
     "antimagyarizmus":
         "archive_url_format": "https://kuruc.info/t/26/"
+        "max_tries": 5
 
     "video":
         "archive_url_format": "https://kuruc.info/t/34/"
+        "max_tries": 5
 
     "cigany_b":
         "archive_url_format": "https://kuruc.info/t/35/"
+        "max_tries": 5
 
     "rendor_b":
         "archive_url_format": "https://kuruc.info/t/37/"
+        "max_tries": 5
 
     "mozi":
         "archive_url_format": "https://kuruc.info/t/38/"
+        "max_tries": 5
 
     "zsido_b":
         "archive_url_format": "https://kuruc.info/t/39/"
+        "max_tries": 5
 
     "english":
         "archive_url_format": "https://kuruc.info/t/40/"
+        "max_tries": 5
 
     "gazdasag":
         "archive_url_format": "https://kuruc.info/t/42/"
+        "max_tries": 5
 
     "gentemeto":
         "archive_url_format": "https://kuruc.info/t/46/"
+        "max_tries": 5
 
     "sport":
         "archive_url_format": "https://kuruc.info/t/49/"
+        "max_tries": 5
 
     "reklam":
         "archive_url_format": "https://kuruc.info/t/50/"
+        "max_tries": 5
 
     "valasztas_2010":
         "archive_url_format": "https://kuruc.info/t/52/"
+        "max_tries": 5
 
     "politikus_b":
         "archive_url_format": "https://kuruc.info/t/53/"
+        "max_tries": 5
 
     "olimpia_2012":
         "archive_url_format": "https://kuruc.info/t/54/"
+        "max_tries": 5
 
     "holokamu":
         "archive_url_format": "https://kuruc.info/t/56/"
+        "max_tries": 5
 
     "valasztas_2014":
         "archive_url_format": "https://kuruc.info/t/57/"
+        "max_tries": 5
 
     "tudomany_technika":
         "archive_url_format": "https://kuruc.info/t/58/"
+        "max_tries": 5
 
     "bevandorlo_b":
         "archive_url_format": "https://kuruc.info/t/59/"
+        "max_tries": 5
 
     "igy_irtak_ok":
         "archive_url_format": "https://kuruc.info/t/61/"
+        "max_tries": 5
 
     "kultura":
         "archive_url_format": "https://kuruc.info/t/62/"
+        "max_tries": 5
 
     "koronavirus":
         "archive_url_format": "https://kuruc.info/t/64/"
+        "max_tries": 5
 
     "lmbtqp":
         "archive_url_format": "https://kuruc.info/t/66/"
+        "max_tries": 5
 
 
 "portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_kuruc_vadh.py"

@@ -88,6 +88,7 @@ In the `columns` dictionary, the following features can be set for each column (
 - `archive_url_format`: The schema for the archive URL of the portal/column (supply `#year`, `#month`, `#day` and
  `#next-year`, `#next-month`, `#next-day` tags which have to be replaced with the actual field of date, and
  `#pagenum` with the actual page number during the crawling)
+- `max_tries` (optional): How many times should we try to download an archive URL? (defautlt: 1)
 
 Note: One can iterate the archive by months or years by omitting `#day` (`#next-day`) or `#month` (`#next-month`) 
 
