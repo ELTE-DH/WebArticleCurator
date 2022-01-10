@@ -142,11 +142,26 @@ def wrap_input_constants(current_task_config_filename):
             raise ValueError('Cannot find python function for {0} with value \'{1}\' !'.
                              format(attr_name, settings.get(attr_name, None)))
 
+    settings.setdefault('stop_on_empty_archive_page', False)
+    if settings.setdefault('stop_on_taboo_set', False):
+        taboo_urls = set()
+        if isinstance(settings.get('taboo_article_urls', []), list):
+            for url in settings.get('taboo_article_urls', []):
+                taboo_urls.add(url)
+        if len(taboo_urls) > 0:
+            settings['TABOO_ARTICLE_URLS'] = taboo_urls
+        else:
+            raise ValueError('If stop_on_taboo_set is true, taboo_article_urls must be list of URLs!')
+    else:
+        settings['TABOO_ARTICLE_URLS'] = set()
+
     if settings['infinite_scrolling']:
         if not settings['next_url_by_pagenum']:
             raise ValueError('If infinite_scrolling is true, next_url_by_pagenum must be also true!')
         if settings['EXTRACT_NEXT_PAGE_URL_FUN'] is not None:
             raise ValueError('If infinite_scrolling is true, extract_next_page_url_fun must be None!')
+        if settings['stop_on_empty_archive_page']:
+            raise ValueError('If infinite_scrolling is true, stop_on_empty_archive_page must not be true!')
 
     # Set and init converter class which is dummy-converter by default
     corp_conv = settings.get('corpus_converter', 'dummy-converter')

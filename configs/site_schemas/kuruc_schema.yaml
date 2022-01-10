@@ -154,6 +154,7 @@
 "go_reverse_in_archive": false
 "verify_request": true
 "ignore_archive_cache": false
+"stop_on_empty_archive_page": true
 
 # "new_article_url_threshold": 0
 

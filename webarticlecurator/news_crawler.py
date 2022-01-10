@@ -102,7 +102,9 @@ class NewsArchiveCrawler:
             self._find_next_page_url_factory(self._settings['EXTRACT_NEXT_PAGE_URL_FUN'],
                                              self._settings['next_url_by_pagenum'],
                                              self._settings['infinite_scrolling'], column_spec_settings['max_pagenum'],
-                                             self._settings['new_article_url_threshold'], self.known_article_urls)
+                                             self._settings['new_article_url_threshold'], self.known_article_urls,
+                                             self._settings['stop_on_empty_archive_page'],
+                                             self._settings['stop_on_taboo_set'], self._settings['TABOO_ARTICLE_URLS'])
 
     def __del__(self):  # Write newly found URLs to files when output files supplied...
         # Save the good URLs...
@@ -214,7 +216,8 @@ class NewsArchiveCrawler:
 
     @staticmethod
     def _find_next_page_url_factory(extract_next_page_url_fun, next_url_by_pagenum, infinite_scrolling, max_pagenum,
-                                    art_url_threshold, known_article_urls):
+                                    art_url_threshold, known_article_urls, stop_on_empty_archive_page,
+                                    stop_on_taboo_set, taboo_article_urls):
 
         def find_nex_page_url_spec(archive_page_url_base, page_num, raw_html, article_urls):
             """
@@ -227,15 +230,19 @@ class NewsArchiveCrawler:
             """
             # Method #1: No pagination (default) or no page left
             next_page_url = None
-            # Method #2: Use special function to follow the link to the next page
-            if extract_next_page_url_fun is not None:
+            # Method #2: Stop on empty archive or on taboo URLs if they are defined
+            if (stop_on_empty_archive_page and len(article_urls) == 0) or \
+                    (stop_on_taboo_set and len(taboo_article_urls.intersection(article_urls)) > 0):
+                next_page_url = None
+            # Method #3: Use special function to follow the link to the next page
+            elif extract_next_page_url_fun is not None:
                 next_page_url = extract_next_page_url_fun(raw_html)
             elif (next_url_by_pagenum and  # There are page numbering
-                    # Method #3: No link, but infinite scrolling! (also good for inactive archive, without other clues)
+                    # Method #4: No link, but infinite scrolling! (also good for inactive archive, without other clues)
                     ((infinite_scrolling and len(article_urls) > 0) or
-                     # Method #4: Has predefined max_pagenum! (also good for inactive archive, with known max_pagenum)
+                     # Method #5: Has predefined max_pagenum! (also good for inactive archive, with known max_pagenum)
                      (max_pagenum is not None and page_num <= max_pagenum) or
-                     # Method #5: Active archive, just pages -> We allow intersecting elements
+                     # Method #6: Active archive, just pages -> We allow intersecting elements
                      #  as the archive may have been moved
                      (art_url_threshold is not None and
                       (len(known_article_urls) == 0 or

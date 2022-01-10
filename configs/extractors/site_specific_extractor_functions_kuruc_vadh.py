@@ -25,7 +25,9 @@ def extract_next_page_url_kuruc(archive_page_raw_html):
             current_pagenum = current_page_a.text.strip()
             if current_pagenum.isdigit():
                 next_pagenum = int(current_pagenum) + 1
-            next_page = next_page_list.find('a', string=next_pagenum)
+            else:
+                raise ValueError(f'ERROR: kuruc.info extract_next_page_url() pagenum ({current_pagenum}) is not digit!')
+            next_page = next_page_list.find('a', string=str(next_pagenum))
             if next_page is not None and 'href' in next_page.attrs:
                 url_end = next_page.attrs['href']
                 ret = f'https://kuruc.info{url_end}'

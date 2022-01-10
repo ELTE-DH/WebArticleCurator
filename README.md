@@ -75,6 +75,8 @@ Boolean features to describe the site:
 - `go_reverse_in_archive`: Go reverse (backwards in time) in the archive by date (when the earliest article is not known)
 - `verify_request`: Suppress complaining about invalid HTTPS certificates
 - `ignore_archive_cache`: Ignore archive cache (for those portals which only use pagination)
+- `stop_on_empty_archive_page` (optional): Stop archive crawling if no articles extracted from page (default: false)
+- `stop_on_taboo_set` (optional): Stop archive crawling when one or more URLs in `taboo_article_urls` list is specified (default: false)
 
 Column definitions:
 

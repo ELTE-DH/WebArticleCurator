@@ -16,6 +16,9 @@ archive_page_urls_by_date: bool()
 go_reverse_in_archive: bool()
 verify_request: bool()
 ignore_archive_cache: bool()
+stop_on_empty_archive_page: bool(required=False)
+stop_on_taboo_set: bool(required=False)
+taboo_article_urls: list(str(min=1,none=False), required=False)
 
 new_article_url_threshold: int(min=0, required=False, none=False)
 
