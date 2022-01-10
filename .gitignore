@@ -101,9 +101,9 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# egyéb
+# Others (project specific)
 warcs
 logs
 
 #PyCharm
-.idea
+.idea/

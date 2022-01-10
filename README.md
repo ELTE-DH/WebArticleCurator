@@ -4,7 +4,7 @@ A crawler program which can be used for downloading the content of portals (news
 
 ## Requirements
 
-- Python 3.7+
+- Python 3.8+
 - (optional for corpus converter if installed as `webarticlecurator[newspaper3k]`) for Newspaper3k, the installation of the following packages must precede the installation of this program: python3-dev libxml2-dev libxslt-dev libjpeg-dev zlib1g-dev libpng12-dev
 
 ## Install
@@ -13,10 +13,27 @@ A crawler program which can be used for downloading the content of portals (news
 
 `pip3 install webarticlecurator`
 
+The following extras can be installed:
+
+- Newspaper3k: `newspaper`
+- All the above: `full`
+
+E.g. `pip3 install webarticlecurator[full]`
+
 ### Manual
 
+[_Poetry_](https://python-poetry.org/) and (optionally) [_GNU Make_](https://www.gnu.org/software/make/) are reqired.
+
 1. `git clone https://github.com/ELTE-DH/webarticlecurator.git`
-2. Run `python3 setup.py install` (you may have to use `sudo` at the beginning of this command)
+2. Run `make`
+
+On Windows or without Make (after cloning the repository):
+
+1. `poetry install --no-root`
+2. `poetry build`
+3. `poetry run pip install --upgrade dist/*.whl` (the correct filename must be specified on Windows)
+
+To install extras run: `poetry install -E [NAME OF THE EXTRA TO INSTALL]`
 
 ## Usage
 

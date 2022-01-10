@@ -7,17 +7,19 @@ import os
 import sys
 from io import BytesIO
 from collections import Counter
+from urllib.parse import urlparse, quote, urlunparse
 
 from warcio.warcwriter import WARCWriter
+from warcio.exceptions import ArchiveLoadFailed
 from warcio.archiveiterator import ArchiveIterator
 from warcio.statusandheaders import StatusAndHeaders
-from warcio.exceptions import ArchiveLoadFailed
 
 from requests import Session
-from urllib.parse import urlparse, quote, urlunparse
 from requests.exceptions import RequestException
-from urllib3.exceptions import ProtocolError, InsecureRequestWarning, LocationParseError
+
 from urllib3 import disable_warnings
+from urllib3.exceptions import ProtocolError, InsecureRequestWarning, LocationParseError
+
 from chardet import detect
 from ratelimit import limits, sleep_and_retry
 

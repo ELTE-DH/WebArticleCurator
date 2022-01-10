@@ -1,0 +1,44 @@
+[tool.poetry]
+name = "webarticlecurator"
+version = "1.9.0"
+description = "A crawler program to download content from portals (news, forums, blogs) and convert it to the desired output format according to the configuration."
+readme = "README.md"
+repository = "https://github.com/ELTE-DH/WebArticleCurator"
+authors = ["dlazesz"]
+license = "LGPLv3"
+# License and required Python version is automatically added
+classifiers = [
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Operating System :: OS Independent",
+    "Development Status :: 5 - Production/Stable",
+]
+include = ["webarticlecurator/crawl_schema.yaml", "webarticlecurator/site_schema.yaml"]
+
+[tool.poetry.scripts]
+webarticlecurator = "webarticlecurator.__main__:main"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+beautifulsoup4 = "^4.9.0"
+lxml = "^4.5.0"
+pyyaml = "^6.0.0"
+warcio = "^1.7.0"
+chardet = "^4.0.0"
+requests = "^2.26.0"
+urllib3 = "^1.26.7"
+ratelimit = "^2.2.1"
+yamale = "^4.0.2"
+# A list of all of the optional dependencies, some of which are included in the
+# below `extras`. They can be opted into by apps.
+newspaper3k = { version = "^0.2.8", optional = true }
+
+[tool.poetry.extras]
+newspaper3k = ["newspaper3k"]
+full = ["newspaper3k"]
+
+[tool.poetry.dev-dependencies]
+pytest = "^6"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

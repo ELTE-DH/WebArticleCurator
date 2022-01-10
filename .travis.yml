@@ -1,9 +1,39 @@
 language: python
-dist: bionic
-sudo: true
+os: linux
+dist: focal
 python:
-  - '3.7'
+  - '3.8'
+before_install:
+  - pip install poetry
 install:
-  - make venv install
+  # Install packages with APT
+  # - make install-dep-packages
+  # When cython is needed to be installed separately
+  # - pip install cython
+  - make venv
+  # - make install-dep-packages
 script:
-  - make test
+  - make install test
+deploy:
+  - provider: releases
+    skip_cleanup: true
+    # Create a personal access token and store it in travis-ci as an environment variable
+    api_key: $GITHUB_TOKEN
+    file_glob: true
+    file: dist/*
+    on:
+      repo: ELTE-DH/WebArticleCurator
+      branch: master
+      tags: true
+      condition: $TRAVIS_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+$
+  - provider: script
+    skip_cleanup: true
+    # Upload to PyPi with poetry (create a token and store it in travis-ci as PYPI_TOKEN environment variable)
+    script: make upload
+    on:
+      repo: ELTE-DH/WebArticleCurator
+      branch: master
+      tags: true
+      condition: $TRAVIS_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+$
+notifications:
+    email: false
