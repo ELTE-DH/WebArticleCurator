@@ -28,14 +28,13 @@ all: clean venv install test
 
 install-dep-packages:
 	@echo "Installing needed packages from Aptfile..."
-	@command -v apt-get >/dev/null 2>&1 || \
-			(echo >&2 "$(RED)Command 'apt-get' could not be found!$(NOCOLOR)"; exit 1)
 	@# Aptfile can be omited if empty
-	@[[ ! -f "$(CURDIR)/Aptfile" ]] || \
-	    ([[ $$(dpkg -l | grep -wcf $(CURDIR)/Aptfile) -eq $$(cat $(CURDIR)/Aptfile | wc -l) ]] || \
-		(sudo -E apt-get update && \
-		sudo -E apt-get -yq --no-install-suggests --no-install-recommends $(travis_apt_get_options) install \
-			`cat $(CURDIR)/Aptfile`))
+	@[[ ! -s "$(CURDIR)/Aptfile" ]] || \
+	  ((command -v apt >/dev/null 2>&1 || (echo >&2 "$(RED)Command 'apt' could not be found!$(NOCOLOR)"; exit 1)) && \
+	   ([[ $$(dpkg -l | grep -wcf $(CURDIR)/Aptfile) -ne $$(cat $(CURDIR)/Aptfile | wc -l) ]] || \
+	    (sudo -E apt-get update && \
+	     sudo -E apt-get -yq --no-install-suggests --no-install-recommends $(travis_apt_get_options) \
+	      install `cat $(CURDIR)/Aptfile`)))
 	@echo "$(GREEN)Needed packages are succesfully installed!$(NOCOLOR)"
 .PHONY: install-dep-packages
 
