@@ -24,8 +24,12 @@ def extract_next_page_url_pestisracok(archive_page_raw_html):
         url = next_page_link['href']
     elif next_page_link is None:
         curr_page = soup.find('span', class_='current')
-        if curr_page.next_sibling is not None and 'href' in curr_page.next_sibling.attrs:
-            url = curr_page.next_sibling['href']
+        curr_pagenum = curr_page.text.strip()
+        if curr_pagenum.isdigit():
+            next_pagenum = int(curr_pagenum) + 1
+            next_page_link2 = soup.find('a', string=str(next_pagenum))
+            if next_page_link2 is not None and 'href' in next_page_link2.attrs:
+                url = next_page_link2['href']
     return url
 
 
@@ -51,13 +55,13 @@ def extract_next_page_url_test(filename, test_logger):
     assert extract_next_page_url_pestisracok(text) == 'https://pestisracok.hu/category/sport/page/35/'
     text = w.download_url('https://pestisracok.hu/category/exkluziv/halozati-titkok/page/4/')
     assert extract_next_page_url_pestisracok(text) == 'https://pestisracok.hu/category/exkluziv/halozati-titkok/page/5/'
-    text = w.download_url('https://pestisracok.hu/category/exkluziv/arcok/page/2/')
-    assert extract_next_page_url_pestisracok(text) == 'https://pestisracok.hu/category/exkluziv/arcok/page/3/'
     text = w.download_url('https://pestisracok.hu/category/vesztegzar/page/5/')
     assert extract_next_page_url_pestisracok(text) == 'https://pestisracok.hu/category/vesztegzar/page/6/'
     text = w.download_url('https://pestisracok.hu/category/koronavirus/page/75/')
     assert extract_next_page_url_pestisracok(text) == 'https://pestisracok.hu/category/koronavirus/page/76/'
-    text = w.download_url('https://pestisracok.hu/category/eco/page/34/')
+    text = w.download_url('https://pestisracok.hu/category/eco/page/35/')
+    assert extract_next_page_url_pestisracok(text) is None
+    text = w.download_url('https://pestisracok.hu/category/exkluziv/arcok/page/5/')
     assert extract_next_page_url_pestisracok(text) is None
 
     test_logger.log('INFO', 'Test OK!')
