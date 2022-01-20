@@ -1,0 +1,10 @@
+"schema": "site_schemas/forum_index_schema.yaml"
+
+# "output_corpus": "forum_index_corpus.txt"
+
+"log_file_articles": "logs/forum_index_articles_log.txt"
+"log_file_archive": "logs/forum_index_archive_log.txt"
+"new_problematic_urls": "logs/forum_index_new_problematic_urls.txt"
+"new_good_urls": "logs/forum_index_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/forum_index_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/forum_index_new_good_archive_urls.txt"
