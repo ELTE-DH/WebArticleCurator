@@ -1,4 +1,4 @@
-"site_name": "kuruc"
+"site_name": "kurucinfo"
 
 # It is a column-based archive. Duplications may occur if an article is in more than one column.
 
@@ -144,9 +144,9 @@
         "max_tries": 5
 
 
-"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_kuruc_vadh.py"
-"extract_next_page_url_fun": "extract_next_page_url_kuruc"
-"extract_article_urls_from_page_fun": "extract_article_urls_from_page_kuruc"
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_kurucinfo_vadh.py"
+"extract_next_page_url_fun": "extract_next_page_url_kurucinfo"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_kurucinfo"
 
 "next_url_by_pagenum": false
 "infinite_scrolling": false

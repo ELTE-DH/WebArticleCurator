@@ -1,4 +1,4 @@
-"site_name": "sokszinuvidek_24hu"
+"site_name": "p24_sokszinuvidek"
 
 # There are no columns on this site. This is an author-based schema.
 
@@ -31,8 +31,8 @@
         "archive_url_format": "https://sokszinuvidek.24.hu/author/szponzoralt-tartalom/"
 
 "portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_news_ngvmt.py"
-"extract_next_page_url_fun": "extract_next_page_url_24hu"
-"extract_article_urls_from_page_fun": "extract_article_urls_from_page_24hu"
+"extract_next_page_url_fun": "extract_next_page_url_p24"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_p24"
 
 "next_url_by_pagenum": false
 "infinite_scrolling": false

@@ -1,0 +1,10 @@
+"schema": "site_schemas/p24_roboraptor_schema.yaml"
+
+# "output_corpus": "p24_roboraptor_corpus.txt"
+
+"log_file_articles": "logs/p24_roboraptor_articles_log.txt"
+"log_file_archive": "logs/p24_roboraptor_archive_log.txt"
+"new_problematic_urls": "logs/p24_roboraptor_new_problematic_urls.txt"
+"new_good_urls": "logs/p24_roboraptor_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/p24_roboraptor_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/p24_roboraptor_new_good_archive_urls.txt"

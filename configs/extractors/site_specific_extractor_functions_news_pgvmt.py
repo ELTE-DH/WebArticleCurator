@@ -11,7 +11,7 @@ from webarticlecurator import WarcCachingDownloader, Logger
 
 
 # BEGIN SITE SPECIFIC extract_next_page_url FUNCTIONS ##################################################################
-def extract_next_page_url_888(archive_page_raw_html):
+def extract_next_page_url_p888(archive_page_raw_html):
     """
         extracts and returns next page URL from an HTML code if there is one...
         Specific for 888.hu
@@ -57,47 +57,47 @@ def extract_next_page_url_test(filename, test_logger):
     w = WarcCachingDownloader(filename, None, test_logger, just_cache=True, download_params={'stay_offline': True})
 
     # Some of these are intentionally yields None
-    test_logger.log('INFO', 'Testing 888')
+    test_logger.log('INFO', 'Testing p888')
     text = w.download_url('https://888.hu/piszkostizenketto/page/75/')
-    assert extract_next_page_url_888(text) == 'https://888.hu/piszkostizenketto/page/76/'
+    assert extract_next_page_url_p888(text) == 'https://888.hu/piszkostizenketto/page/76/'
     text = w.download_url('https://888.hu/ketharmad/page/58/')
-    assert extract_next_page_url_888(text) == 'https://888.hu/ketharmad/page/59/'
+    assert extract_next_page_url_p888(text) == 'https://888.hu/ketharmad/page/59/'
     text = w.download_url('https://888.hu/amerika-london-parizs/page/1/')
-    assert extract_next_page_url_888(text) == 'https://888.hu/amerika-london-parizs/page/2/'
+    assert extract_next_page_url_p888(text) == 'https://888.hu/amerika-london-parizs/page/2/'
     text = w.download_url('https://888.hu/big-pikcsor/page/3/')
-    assert extract_next_page_url_888(text) == 'https://888.hu/big-pikcsor/page/4/'
+    assert extract_next_page_url_p888(text) == 'https://888.hu/big-pikcsor/page/4/'
     text = w.download_url('https://888.hu/hajra-magyarok/page/13/')
-    assert extract_next_page_url_888(text) == 'https://888.hu/hajra-magyarok/page/14/'
+    assert extract_next_page_url_p888(text) == 'https://888.hu/hajra-magyarok/page/14/'
     text = w.download_url('https://888.hu/csak-neked-csak-most/page/7/')
-    assert extract_next_page_url_888(text) == 'https://888.hu/csak-neked-csak-most/page/8/'
+    assert extract_next_page_url_p888(text) == 'https://888.hu/csak-neked-csak-most/page/8/'
     text = w.download_url('https://888.hu/feher-ferfi/page/2/')
-    assert extract_next_page_url_888(text) == 'https://888.hu/feher-ferfi/page/3/'
+    assert extract_next_page_url_p888(text) == 'https://888.hu/feher-ferfi/page/3/'
     text = w.download_url('https://888.hu/pszicho/page/6/')
-    assert extract_next_page_url_888(text) == 'https://888.hu/pszicho/page/7/'
+    assert extract_next_page_url_p888(text) == 'https://888.hu/pszicho/page/7/'
     text = w.download_url('https://888.hu/egy-soros-egy-forditott/page/1/')
-    assert extract_next_page_url_888(text) == 'https://888.hu/egy-soros-egy-forditott/page/2/'
+    assert extract_next_page_url_p888(text) == 'https://888.hu/egy-soros-egy-forditott/page/2/'
     text = w.download_url('https://888.hu/kinyilott-a-pitypang/page/9/')
-    assert extract_next_page_url_888(text) == 'https://888.hu/kinyilott-a-pitypang/page/10/'
+    assert extract_next_page_url_p888(text) == 'https://888.hu/kinyilott-a-pitypang/page/10/'
     text = w.download_url('https://888.hu/censored/page/12/')
-    assert extract_next_page_url_888(text) is None
+    assert extract_next_page_url_p888(text) is None
     text = w.download_url('https://888.hu/sivalkodjatok/page/5/')
-    assert extract_next_page_url_888(text) == 'https://888.hu/sivalkodjatok/page/6/'
+    assert extract_next_page_url_p888(text) == 'https://888.hu/sivalkodjatok/page/6/'
     text = w.download_url('https://888.hu/759/page/17/')
-    assert extract_next_page_url_888(text) == 'https://888.hu/759/page/18/'
+    assert extract_next_page_url_p888(text) == 'https://888.hu/759/page/18/'
     text = w.download_url('https://888.hu/889/page/22/')
-    assert extract_next_page_url_888(text) == 'https://888.hu/889/page/23/'
+    assert extract_next_page_url_p888(text) == 'https://888.hu/889/page/23/'
     text = w.download_url('https://888.hu/888/page/42/')
-    assert extract_next_page_url_888(text) == 'https://888.hu/888/page/43/'
+    assert extract_next_page_url_p888(text) == 'https://888.hu/888/page/43/'
     text = w.download_url('https://888.hu/century-on/page/4/')
-    assert extract_next_page_url_888(text) == 'https://888.hu/century-on/page/5/'
+    assert extract_next_page_url_p888(text) == 'https://888.hu/century-on/page/5/'
     text = w.download_url('https://888.hu/szabad-vasarnap/page/17/')
-    assert extract_next_page_url_888(text) == 'https://888.hu/szabad-vasarnap/page/18/'
+    assert extract_next_page_url_p888(text) == 'https://888.hu/szabad-vasarnap/page/18/'
     text = w.download_url('https://888.hu/bulvar/page/159/')
-    assert extract_next_page_url_888(text) is None
+    assert extract_next_page_url_p888(text) is None
     text = w.download_url('https://888.hu/okojobb/page/11/')
-    assert extract_next_page_url_888(text) == 'https://888.hu/okojobb/page/12/'
+    assert extract_next_page_url_p888(text) == 'https://888.hu/okojobb/page/12/'
     text = w.download_url('https://888.hu/maccabi/page/2/')
-    assert extract_next_page_url_888(text) == 'https://888.hu/maccabi/page/3/'
+    assert extract_next_page_url_p888(text) == 'https://888.hu/maccabi/page/3/'
 
     test_logger.log('INFO', 'Testing feol')
     text = w.download_url('https://www.feol.hu/sport/page/4523/')
@@ -133,7 +133,7 @@ def safe_extract_hrefs_from_a_tags(main_container):
             yield a_tag_a['href']
 
 
-def extract_article_urls_from_page_888(archive_page_raw_html):
+def extract_article_urls_from_page_p888(archive_page_raw_html):
     """
         extracts and returns as a list the URLs belonging to articles from an HTML code
     :param archive_page_raw_html: archive page containing list of articles with their URLs
@@ -179,9 +179,9 @@ def extract_article_urls_from_page_test(filename, test_logger):
     # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
     w = WarcCachingDownloader(filename, None, test_logger, just_cache=True, download_params={'stay_offline': True})
 
-    test_logger.log('INFO', 'Testing 888')
+    test_logger.log('INFO', 'Testing p888')
     text = w.download_url('https://888.hu/ketharmad/page/21/')
-    extracted = extract_article_urls_from_page_888(text)
+    extracted = extract_article_urls_from_page_p888(text)
     expected = {'https://888.hu/ketharmad/kidolgoztak-a-harmadik-oltas-beadasanak-eljarasrendjet-4326717/',
                 'https://888.hu/ketharmad/kontroll-nelkul-kerulnek-szembe-a-fiatalok-a-szexualis-'
                 'mediatartalmakkal-4326733/',
@@ -214,7 +214,7 @@ def extract_article_urls_from_page_test(filename, test_logger):
     assert (extracted, len(extracted)) == (expected, 20)
 
     text = w.download_url('https://888.hu/pszicho/page/2/')
-    extracted = extract_article_urls_from_page_888(text)
+    extracted = extract_article_urls_from_page_p888(text)
     expected = {'https://888.hu/pszicho/migransmesekonyvek-hateveseknek-4283097/',
                 'https://888.hu/pszicho/nincs-itt-semmi-latnivalo-szex-es-eroszak-az-rtl-klub-on-4295622/',
                 'https://888.hu/pszicho/marcius-15-nyerj-amennyit-csak-tudsz-4234889/',
