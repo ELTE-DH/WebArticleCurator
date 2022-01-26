@@ -1,0 +1,13 @@
+"schema": "site_schemas/p888_schema.yaml"
+
+# "output_corpus": "p888_corpus.txt"
+
+"log_file_articles": "logs/p888_articles_log.txt"
+"log_file_archive": "logs/p888_archive_log.txt"
+"new_problematic_urls": "logs/p888_new_problematic_urls.txt"
+"new_good_urls": "logs/p888_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/p888_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/p888_new_good_archive_urls.txt"
+
+# "date_from": 2000-01-01
+# "date_until": 2100-01-01

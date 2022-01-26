@@ -1,4 +1,4 @@
-"site_name": "888"
+"site_name": "p888"
 
 # Max_pagenum is set, because after the first article the most recent articles keep loading from page to page.
 # It is recommended to check the max_pagenum, it might have changed since the original crawling.
@@ -147,8 +147,8 @@
 
 "portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_news_pgvmt.py"
 # To stop the crawler at max_pagenum, it uses pagenum and not the previously written next_page_url_fun function.
-# "extract_next_page_url_fun": "extract_next_page_url_888"
-"extract_article_urls_from_page_fun": "extract_article_urls_from_page_888"
+# "extract_next_page_url_fun": "extract_next_page_url_p888"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_p888"
 
 "next_url_by_pagenum": true
 "infinite_scrolling": false

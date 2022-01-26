@@ -10,7 +10,7 @@ from webarticlecurator import WarcCachingDownloader, Logger
 
 
 # BEGIN SITE SPECIFIC extract_next_page_url FUNCTIONS ##################################################################
-def extract_next_page_url_24hu(archive_page_raw_html):
+def extract_next_page_url_p24(archive_page_raw_html):
     """
         extracts and returns next page URL from an HTML code if there is one...
         Specific for 24.hu
@@ -93,45 +93,45 @@ def extract_next_page_url_test(filename, test_logger):
     w = WarcCachingDownloader(filename, None, test_logger, just_cache=True, download_params={'stay_offline': True})
 
     # Some of these are intentionally yields None
-    test_logger.log('INFO', 'Testing 24hu')
+    test_logger.log('INFO', 'Testing p24')
     text = w.download_url('https://24.hu/kultura/2019/03/15/')
-    assert extract_next_page_url_24hu(text) is None
+    assert extract_next_page_url_p24(text) is None
     text = w.download_url('https://24.hu/szorakozas/2018/04/18/')
-    assert extract_next_page_url_24hu(text) == 'https://24.hu/szorakozas/2018/04/18/page/2/'
+    assert extract_next_page_url_p24(text) == 'https://24.hu/szorakozas/2018/04/18/page/2/'
     text = w.download_url('https://24.hu/belfold/2018/04/08/')
-    assert extract_next_page_url_24hu(text) == 'https://24.hu/belfold/2018/04/08/page/2/'
+    assert extract_next_page_url_p24(text) == 'https://24.hu/belfold/2018/04/08/page/2/'
     text = w.download_url('https://24.hu/belfold/2018/04/08/page/5/')
-    assert extract_next_page_url_24hu(text) == 'https://24.hu/belfold/2018/04/08/page/6/'
+    assert extract_next_page_url_p24(text) == 'https://24.hu/belfold/2018/04/08/page/6/'
     text = w.download_url('https://24.hu/belfold/2018/04/08/page/9/')
-    assert extract_next_page_url_24hu(text) is None
+    assert extract_next_page_url_p24(text) is None
     text = w.download_url('https://24.hu/fn/gazdasag/2014/04/16/')
-    assert extract_next_page_url_24hu(text) is None
+    assert extract_next_page_url_p24(text) is None
     text = w.download_url('https://24.hu/fn/kozelet/2017/03/13/')
-    assert extract_next_page_url_24hu(text) is None
+    assert extract_next_page_url_p24(text) is None
 
-    test_logger.log('INFO', 'Testing istentudja_24hu')
+    test_logger.log('INFO', 'Testing p24_istentudja')
     text = w.download_url('https://istentudja.24.hu/tag/bun-es-bunhodes/')
-    assert extract_next_page_url_24hu(text) == 'https://istentudja.24.hu/tag/bun-es-bunhodes/page/2/'
+    assert extract_next_page_url_p24(text) == 'https://istentudja.24.hu/tag/bun-es-bunhodes/page/2/'
     text = w.download_url('https://istentudja.24.hu/tag/csaladi-otthonteremtesi-kedvezmeny-csok/')
-    assert extract_next_page_url_24hu(text) is None
+    assert extract_next_page_url_p24(text) is None
 
-    test_logger.log('INFO', 'Testing rangado_24hu')
+    test_logger.log('INFO', 'Testing p24_rangado')
     text = w.download_url('https://rangado.24.hu/author/rangado/')
-    assert extract_next_page_url_24hu(text) == 'https://rangado.24.hu/author/rangado/page/2/'
+    assert extract_next_page_url_p24(text) == 'https://rangado.24.hu/author/rangado/page/2/'
     text = w.download_url('https://rangado.24.hu/author/pincesil/page/5/')
-    assert extract_next_page_url_24hu(text) is None
+    assert extract_next_page_url_p24(text) is None
 
-    test_logger.log('INFO', 'Testing roboraptor_24hu')
+    test_logger.log('INFO', 'Testing p24_roboraptor')
     text = w.download_url('https://roboraptor.24.hu/film/')
-    assert extract_next_page_url_24hu(text) == 'https://roboraptor.24.hu/film/page/2/'
+    assert extract_next_page_url_p24(text) == 'https://roboraptor.24.hu/film/page/2/'
     text = w.download_url('https://roboraptor.24.hu/kepregeny/page/11/')
-    assert extract_next_page_url_24hu(text) is None
+    assert extract_next_page_url_p24(text) is None
 
-    test_logger.log('INFO', 'Testing sokszinuvidek_24hu')
+    test_logger.log('INFO', 'Testing p24_sokszinuvidek')
     text = w.download_url('https://sokszinuvidek.24.hu/author/sokszinuvidek/')
-    assert extract_next_page_url_24hu(text) == 'https://sokszinuvidek.24.hu/author/sokszinuvidek/page/2/'
+    assert extract_next_page_url_p24(text) == 'https://sokszinuvidek.24.hu/author/sokszinuvidek/page/2/'
     text = w.download_url('https://sokszinuvidek.24.hu/author/dobocsa/page/3/')
-    assert extract_next_page_url_24hu(text) is None
+    assert extract_next_page_url_p24(text) is None
 
     test_logger.log('INFO', 'Testing alfahir')
     text = w.download_url('https://alfahir.hu/kereso?kereses=&from=2015-08-31&to=2015-08-31&'
@@ -230,7 +230,7 @@ def safe_remove_hashtag_anchor(main_container, urls):
         urls.add(link)
 
 
-def extract_article_urls_from_page_24hu(archive_page_raw_html):
+def extract_article_urls_from_page_p24(archive_page_raw_html):
     """
         extracts and returns as a list the URLs belonging to articles from an HTML code
     :param archive_page_raw_html: archive page containing list of articles with their URLs
@@ -301,7 +301,7 @@ def extract_article_urls_from_page_hvg(archive_page_raw_html):
     return urls_fixed
 
 
-def extract_article_urls_from_page_istentudja_roboraptor_24hu(archive_page_raw_html):
+def extract_article_urls_from_page_p24_istentudja_roboraptor(archive_page_raw_html):
     """
         extracts and returns as a list the URLs belonging to articles from an HTML code
     :param archive_page_raw_html: archive page containing list of articles with their URLs
@@ -363,17 +363,17 @@ def extract_article_urls_from_page_test(filename, test_logger):
     test_logger.log('INFO', 'Testing 24')
 
     text = w.download_url('https://24.hu/belfold/2021/08/page/39/')
-    extracted = extract_article_urls_from_page_24hu(text)
+    extracted = extract_article_urls_from_page_p24(text)
     expected = {'https://24.hu/belfold/2021/08/01/harmadik-oltas-alternativ-eljarasrend-vakcinak-keverese/'}
     assert (extracted, len(extracted)) == (expected, 1)
 
     text = w.download_url('https://24.hu/kulfold/2002/12/')
-    extracted = extract_article_urls_from_page_24hu(text)
+    extracted = extract_article_urls_from_page_p24(text)
     expected = set()
     assert (extracted, len(extracted)) == (expected, 0)
 
     text = w.download_url('https://24.hu/fn/gazdasag/2009/07/30/')
-    extracted = extract_article_urls_from_page_24hu(text)
+    extracted = extract_article_urls_from_page_p24(text)
     expected = {'https://24.hu/fn/gazdasag/2009/07/30/267_alatt_euro/',
                 'https://24.hu/fn/gazdasag/2009/07/30/tudomanyos_tippek_magyar_kilabalasra/',
                 'https://24.hu/fn/gazdasag/2009/07/30/euforikus_hangulatban_emelkedett_bux/',
@@ -385,12 +385,12 @@ def extract_article_urls_from_page_test(filename, test_logger):
     assert (extracted, len(extracted)) == (expected, 7)
 
     text = w.download_url('https://24.hu/belfold/1848/12/15/')
-    extracted = extract_article_urls_from_page_24hu(text)
+    extracted = extract_article_urls_from_page_p24(text)
     expected = {'https://24.hu/belfold/1848/12/15/amit_meg_nem_ert_el/'}
     assert (extracted, len(extracted)) == (expected, 1)
 
     text = w.download_url('https://24.hu/kulfold/2015/11/page/15/')
-    extracted = extract_article_urls_from_page_24hu(text)
+    extracted = extract_article_urls_from_page_p24(text)
     expected = {'https://24.hu/kulfold/2015/11/24/az-easyjet-iden-mar-nem-mer-gepet-inditani-sarm-es-sejkbe/',
                 'https://24.hu/kulfold/2015/11/24/olaszorszagban-tanitottak-az-ongyilkos-merenyleteket-a-kiutasitott'
                 '-marokkoiak/',
@@ -533,9 +533,9 @@ def extract_article_urls_from_page_test(filename, test_logger):
                 }
     assert (extracted, len(extracted)) == (expected, 10)
 
-    test_logger.log('INFO', 'Testing istentudja_24hu')
+    test_logger.log('INFO', 'Testing p24_istentudja')
     text = w.download_url('https://istentudja.24.hu/tag/agyhalal/')
-    extracted = extract_article_urls_from_page_istentudja_roboraptor_24hu(text)
+    extracted = extract_article_urls_from_page_p24_istentudja_roboraptor(text)
     expected = {'https://istentudja.24.hu/2018/05/20/ki-dont-egy-haldoklo-gyermekrol-isten-tudja/',
                 'https://istentudja.24.hu/2014/02/05/ki-dont-eletrol-es-halalrol/'
                 }
@@ -647,9 +647,9 @@ def extract_article_urls_from_page_test(filename, test_logger):
                 }
     assert (extracted, len(extracted)) == (expected, 30)
 
-    test_logger.log('INFO', 'Testing rangado_24hu')
+    test_logger.log('INFO', 'Testing p24_rangado')
     text = w.download_url('https://rangado.24.hu/author/dajkab/page/29/')
-    extracted = extract_article_urls_from_page_24hu(text)
+    extracted = extract_article_urls_from_page_p24(text)
     expected = {'https://rangado.24.hu/magyar_foci/2020/09/23/dzsudzsak-balazs-debrecen-mezszam-dombi-tibor/',
                 'https://rangado.24.hu/nemzetkozi_foci/2020/09/22/luis-suarez-juventus-olasz-allampolgarsagi-'
                 'vizsga-csalas/',
@@ -690,9 +690,9 @@ def extract_article_urls_from_page_test(filename, test_logger):
                 }
     assert (extracted, len(extracted)) == (expected, 24)
 
-    test_logger.log('INFO', 'Testing roboraptor_24hu')
+    test_logger.log('INFO', 'Testing p24_roboraptor')
     text = w.download_url('https://roboraptor.24.hu/konyv/page/7/')
-    extracted = extract_article_urls_from_page_istentudja_roboraptor_24hu(text)
+    extracted = extract_article_urls_from_page_p24_istentudja_roboraptor(text)
     expected = {'https://roboraptor.24.hu/2018/08/30/a-ferfi-aki-verrel-irta-at-a-civilizaciok-tortenelmet-iain-m-'
                 'banks-fegyver-a-kezben-konyvkritika/',
                 'https://roboraptor.24.hu/2018/08/25/kapudrog-az-irodalomhoz-megszolalnak-a-magyar-ya-sok/',
@@ -737,9 +737,9 @@ def extract_article_urls_from_page_test(filename, test_logger):
                 }
     assert (extracted, len(extracted)) == (expected, 24)
 
-    test_logger.log('INFO', 'Testing sokszinuvidek_24hu')
+    test_logger.log('INFO', 'Testing p24_sokszinuvidek')
     text = w.download_url('https://sokszinuvidek.24.hu/author/kuno/page/6/')
-    extracted = extract_article_urls_from_page_24hu(text)
+    extracted = extract_article_urls_from_page_p24(text)
     expected = {'https://sokszinuvidek.24.hu/otthon-keszult/2020/02/29/kavekapszula-ekszerek-ujrahasznositas/',
                 'https://sokszinuvidek.24.hu/kertunk-portank/2020/02/26/haz-hazfelujitas-kiskunmajsa/',
                 'https://sokszinuvidek.24.hu/otthon-keszult/2020/02/24/csutka-eszti-csutkamanok-tunderek/',
@@ -800,7 +800,7 @@ def next_page_of_article_merce(archive_page_raw_html):
     return ret
 
 
-def next_page_of_article_24hu(curr_html):
+def next_page_of_article_p24(curr_html):
     # Rangado 24.hu operates with a reverse multipage logic: the start page is the newest page of the article
     bs = BeautifulSoup(curr_html, 'lxml')
     current_page = bs.find('span', class_='page-numbers current')
@@ -857,52 +857,52 @@ def next_page_of_article_test(filename, test_logger):
                           '-keleti_kilatasok/')
     assert next_page_of_article_merce(text) is None
 
-    test_logger.log('INFO', 'Testing rangado_24hu')
+    test_logger.log('INFO', 'Testing p24_rangado')
     # Test example, 3-page-long-article: starting page without page number [3] >> 2 >> 1 >> None
     text = w.download_url('https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/')
-    assert next_page_of_article_24hu(text) == \
+    assert next_page_of_article_p24(text) == \
            'https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/2/'
     text = w.download_url('https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/2/')
-    assert next_page_of_article_24hu(text) == \
+    assert next_page_of_article_p24(text) == \
            'https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/1/'
     text = w.download_url('https://rangado.24.hu/magyar_foci/2019/10/10/eb-selejtezo-horvat-magyar/1/')
-    assert next_page_of_article_24hu(text) is None
+    assert next_page_of_article_p24(text) is None
     # Test example, 2-page-long-article: starting page without page number [2] >> 1
     text = w.download_url('https://rangado.24.hu/magyar_foci/2019/06/08/eb-selejtezo-azerbajdzsan-magyarorszag/')
-    assert next_page_of_article_24hu(text) == \
+    assert next_page_of_article_p24(text) == \
            'https://rangado.24.hu/magyar_foci/2019/06/08/eb-selejtezo-azerbajdzsan-magyarorszag/1/'
     # Test example, 2-page-long-article: starting page without page number [2] >> 1
     text = w.download_url('https://rangado.24.hu/nemzetkozi_foci/2019/05/29/chelsea-arsenal-europa-liga-donto-baku/')
-    assert next_page_of_article_24hu(text) == \
+    assert next_page_of_article_p24(text) == \
            'https://rangado.24.hu/nemzetkozi_foci/2019/05/29/chelsea-arsenal-europa-liga-donto-baku/1/'
     # Test example, 1-page-long-article: 1 >> None
     text = w.download_url('https://rangado.24.hu/nemzetkozi_foci/2019/05/01/bajnokok-ligaja-elodonto-barcelona'
                           '-liverpool/1/')
-    assert next_page_of_article_24hu(text) is None
+    assert next_page_of_article_p24(text) is None
     # Test example, 1-page-long-article: 1 >> None
     text = w.download_url('https://rangado.24.hu/magyar_foci/2019/11/07/europa-liga-ftc-cszka-moszkva-elo/1/')
-    assert next_page_of_article_24hu(text) is None
+    assert next_page_of_article_p24(text) is None
     # Test example, 1-page-long-article: starting page without page number [1] >> None
     text = w.download_url('https://rangado.24.hu/nemzetkozi_foci/2020/03/10/bl-nyolcaddonto-leipzig-tottenham-valencia'
                           '-atalanta-elo/')
-    assert next_page_of_article_24hu(text) is None
+    assert next_page_of_article_p24(text) is None
     # Test example, 1-page-long-article: starting page without page number [1] >> None
     text = w.download_url('https://rangado.24.hu/magyar_foci/2021/10/11/tenyleg-van-visszaut-boli-ujra-a-fradi-elso'
                           '-csapataval-edzett/')
-    assert next_page_of_article_24hu(text) is None
+    assert next_page_of_article_p24(text) is None
 
-    test_logger.log('INFO', 'Testing 24hu/ belfold, kulfold, rest 1-3')
+    test_logger.log('INFO', 'Testing p24/ belfold, kulfold, rest 1-3')
     text = w.download_url('https://24.hu/kultura/2016/02/29/oscar-meglehet-a-magyar-oscar/')
-    assert next_page_of_article_24hu(text) == \
+    assert next_page_of_article_p24(text) == \
            'https://24.hu/kultura/2016/02/29/oscar-meglehet-a-magyar-oscar/3/'
     text = w.download_url('https://24.hu/kultura/2016/02/29/oscar-meglehet-a-magyar-oscar/3/')
-    assert next_page_of_article_24hu(text) == \
+    assert next_page_of_article_p24(text) == \
            'https://24.hu/kultura/2016/02/29/oscar-meglehet-a-magyar-oscar/2/'
     text = w.download_url('https://24.hu/kultura/2016/02/29/oscar-meglehet-a-magyar-oscar/2/')
-    assert next_page_of_article_24hu(text) == \
+    assert next_page_of_article_p24(text) == \
            'https://24.hu/kultura/2016/02/29/oscar-meglehet-a-magyar-oscar/1/'
     text = w.download_url('https://24.hu/kultura/2016/02/29/oscar-meglehet-a-magyar-oscar/1/')
-    assert next_page_of_article_24hu(text) is None
+    assert next_page_of_article_p24(text) is None
     test_logger.log('INFO', 'Test OK!')
 
     test_logger.log('INFO', 'Testing HVG')
@@ -951,7 +951,7 @@ def next_page_of_article_test(filename, test_logger):
 
 # END SITE SPECIFIC next_page_of_article FUNCTIONS #####################################################################
 
-def extract_article_urls_from_page_plus_24hu(archive_page_raw_html):
+def extract_article_urls_from_page_plus_p24(archive_page_raw_html):
     """
         extracts and returns as a list the URLs + title + date belonging to articles from an HTML code
         for filtering the two tipes of duplication
@@ -989,19 +989,19 @@ def extract_article_urls_from_page_plus_test(filename, test_logger):
     test_logger.log('INFO', 'Testing 24 PLUS')
 
     text = w.download_url('https://24.hu/belfold/2021/08/page/39/')
-    extracted = extract_article_urls_from_page_plus_24hu(text)
+    extracted = extract_article_urls_from_page_plus_p24(text)
     expected = [('https://24.hu/belfold/2021/08/01/harmadik-oltas-alternativ-eljarasrend-vakcinak-keverese/',
                  'Kutatók és gyakorló orvosok alternatív eljárásrendet dolgoztak ki a harmadik oltásra',
                  '2021. 08. 01. 07:36')]
     assert (extracted, len(extracted)) == (expected, 1)
 
     text = w.download_url('https://24.hu/kulfold/2002/12/')
-    extracted = extract_article_urls_from_page_plus_24hu(text)
+    extracted = extract_article_urls_from_page_plus_p24(text)
     expected = []
     assert (extracted, len(extracted)) == (expected, 0)
 
     text = w.download_url('https://24.hu/fn/gazdasag/2009/07/30/')
-    extracted = extract_article_urls_from_page_plus_24hu(text)
+    extracted = extract_article_urls_from_page_plus_p24(text)
     expected = [('https://24.hu/fn/gazdasag/2009/07/30/267_alatt_euro/', '267 alatt az euró', '2009. 07. 30. 20:20'),
                 ('https://24.hu/fn/gazdasag/2009/07/30/tudomanyos_tippek_magyar_kilabalasra/',
                  'Tudományos tippek a magyar kilábalásra', '2009. 07. 30. 20:00'),
@@ -1019,13 +1019,13 @@ def extract_article_urls_from_page_plus_test(filename, test_logger):
     assert (extracted, len(extracted)) == (expected, 7)
 
     text = w.download_url('https://24.hu/belfold/1848/12/15/')
-    extracted = extract_article_urls_from_page_plus_24hu(text)
+    extracted = extract_article_urls_from_page_plus_p24(text)
     expected = [('https://24.hu/belfold/1848/12/15/amit_meg_nem_ert_el/', 'Állami szervek a narancshálón kívül',
                  '1848. 12. 15. 12:00')]
     assert (extracted, len(extracted)) == (expected, 1)
 
     text = w.download_url('https://24.hu/kulfold/2015/11/page/15/')
-    extracted = extract_article_urls_from_page_plus_24hu(text)
+    extracted = extract_article_urls_from_page_plus_p24(text)
     expected = [('https://24.hu/kulfold/2015/11/24/terrorizmus_lelott_orosz_repulo_putyin_sziria_putyin_elo/',
                  'Rendkívüli NATO-tanácskozás lesz a lelőtt orosz gép miatt', '2015. 11. 24. 13:17'),
                 ('https://24.hu/kulfold/2015/11/24/videofelvetelen-buktattak-le-az-iszlam-allamnak-toborzo-noket/',

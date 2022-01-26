@@ -60,7 +60,7 @@
         "min_pagenum": 2
         "max_pagenum": 34
 
-"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_kuruc_vadh.py"
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_kurucinfo_vadh.py"
 "extract_article_urls_from_page_fun": "extract_article_urls_from_page_vadhajtasok"
 
 "next_url_by_pagenum": true

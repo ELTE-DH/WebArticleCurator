@@ -1,4 +1,4 @@
-"site_name": "24hu"
+"site_name": "p24"
 
 "columns":
     # Problematic intervalls are separated and crawler with daily archive
@@ -57,10 +57,10 @@
         "date_first_article": 2014-01-01
 
 "portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_news_ngvmt.py"
-"extract_next_page_url_fun": "extract_next_page_url_24hu"
-"extract_article_urls_from_page_fun": "extract_article_urls_from_page_24hu"
-"next_page_of_article_fun": "next_page_of_article_24hu"
-"extract_article_urls_from_page_plus_fun": "extract_article_urls_from_page_plus_24hu"
+"extract_next_page_url_fun": "extract_next_page_url_p24"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_p24"
+"next_page_of_article_fun": "next_page_of_article_p24"
+"extract_article_urls_from_page_plus_fun": "extract_article_urls_from_page_plus_p24"
 
 "next_url_by_pagenum": false
 "infinite_scrolling": false

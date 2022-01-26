@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 # BEGIN SITE SPECIFIC extract_next_page_url FUNCTIONS ##################################################################
 
 
-def extract_next_page_url_kuruc(archive_page_raw_html):
+def extract_next_page_url_kurucinfo(archive_page_raw_html):
     """
         extracts and returns next page URL from an HTML code if there is one...
         Specific for kuruc.info
@@ -40,17 +40,17 @@ def extract_next_page_url_test(filename, test_logger):
     w = WarcCachingDownloader(filename, None, test_logger, just_cache=True, download_params={'stay_offline': True})
 
     # Some of these are intentionally yields None
-    test_logger.log('INFO', 'Testing kuruc')
+    test_logger.log('INFO', 'Testing kurucinfo')
     text = w.download_url('https://kuruc.info/t/26/')
-    assert extract_next_page_url_kuruc(text) == 'https://kuruc.info/to/26/20/'
+    assert extract_next_page_url_kurucinfo(text) == 'https://kuruc.info/to/26/20/'
     text = w.download_url('https://kuruc.info/t/1/')
-    assert extract_next_page_url_kuruc(text) == 'https://kuruc.info/to/1/20/'
+    assert extract_next_page_url_kurucinfo(text) == 'https://kuruc.info/to/1/20/'
     text = w.download_url('https://kuruc.info/to/57/70/')
-    assert extract_next_page_url_kuruc(text) == 'https://kuruc.info/to/57/80/'
+    assert extract_next_page_url_kurucinfo(text) == 'https://kuruc.info/to/57/80/'
     text = w.download_url('https://kuruc.info/to/66/60/')
-    assert extract_next_page_url_kuruc(text) == 'https://kuruc.info/to/66/70/'
+    assert extract_next_page_url_kurucinfo(text) == 'https://kuruc.info/to/66/70/'
     text = w.download_url('https://kuruc.info/to/22/2899/')
-    assert extract_next_page_url_kuruc(text) is None
+    assert extract_next_page_url_kurucinfo(text) is None
 
     test_logger.log('INFO', 'Test OK!')
 
@@ -72,7 +72,7 @@ def safe_extract_hrefs_from_a_tags(main_container):
             yield a_tag_a['href']
 
 
-def extract_article_urls_from_page_kuruc(archive_page_raw_html):
+def extract_article_urls_from_page_kurucinfo(archive_page_raw_html):
     """
         extracts and returns as a list the URLs belonging to articles from an HTML code
     :param archive_page_raw_html: archive page containing list of articles with their URLs
@@ -104,9 +104,9 @@ def extract_article_urls_from_page_test(filename, test_logger):
     # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
     w = WarcCachingDownloader(filename, None, test_logger, just_cache=True, download_params={'stay_offline': True})
 
-    test_logger.log('INFO', 'Testing kuruc')
+    test_logger.log('INFO', 'Testing kurucinfo')
     text = w.download_url('https://kuruc.info/t/52/')
-    extracted = extract_article_urls_from_page_kuruc(text)
+    extracted = extract_article_urls_from_page_kurucinfo(text)
     expected = {'https://kuruc.info/r/2/67543/',
                 'https://kuruc.info/r/2/67568/',
                 'https://kuruc.info/r/2/67587/',
@@ -121,7 +121,7 @@ def extract_article_urls_from_page_test(filename, test_logger):
     assert (extracted, len(extracted)) == (expected, 10)
 
     text = w.download_url('https://kuruc.info/to/22/2899/')
-    extracted = extract_article_urls_from_page_kuruc(text)
+    extracted = extract_article_urls_from_page_kurucinfo(text)
     expected = {'https://kuruc.info/r/22/1136/',
                 'https://kuruc.info/r/22/1020/',
                 'https://kuruc.info/r/22/848/',
@@ -227,11 +227,11 @@ if __name__ == '__main__':
     main_logger = Logger()
 
     # Relateive path from this directory to the files in the project's test directory
-    choices = {'nextpage': os_path_join(dirname(abspath(__file__)), '../../tests/next_page_url_kuruc_vadh.warc.gz'),
+    choices = {'nextpage': os_path_join(dirname(abspath(__file__)), '../../tests/next_page_url_kurucinfo_vadh.warc.gz'),
                'article_nextpage': os_path_join(dirname(abspath(__file__)),
-                                                '../../tests/next_page_of_article_kuruc_vadh.warc.gz'),
+                                                '../../tests/next_page_of_article_kurucinfo_vadh.warc.gz'),
                'archive': os_path_join(dirname(abspath(__file__)),
-                                       '../../tests/extract_article_urls_from_page_kuruc_vadh.warc.gz')
+                                       '../../tests/extract_article_urls_from_page_kurucinfo_vadh.warc.gz')
                }
 
     # Use the main module to modify the warc files!

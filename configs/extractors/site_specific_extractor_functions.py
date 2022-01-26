@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 # BEGIN SITE SPECIFIC extract_next_page_url FUNCTIONS ##################################################################
 
 
-def extract_next_page_url_444(archive_page_raw_html):
+def extract_next_page_url_p444(archive_page_raw_html):
     """
         extracts and returns next page URL from an HTML code if there is one...
         Specific for 444.hu
@@ -138,11 +138,11 @@ def extract_next_page_url_test(filename, test_logger):
     # Some of these are intentionally yields None
     test_logger.log('INFO', 'Testing 444')
     text = w.download_url('https://444.hu/2018/04/08')
-    assert extract_next_page_url_444(text) == 'https://444.hu/2018/04/08?page=2'
+    assert extract_next_page_url_p444(text) == 'https://444.hu/2018/04/08?page=2'
     text = w.download_url('https://444.hu/2018/04/08?page=3')
-    assert extract_next_page_url_444(text) is None
+    assert extract_next_page_url_p444(text) is None
     text = w.download_url('https://444.hu/2013/04/13')
-    assert extract_next_page_url_444(text) is None
+    assert extract_next_page_url_p444(text) is None
 
     test_logger.log('INFO', 'Testing magyarnemzet')
     text = w.download_url('https://magyarnemzet.hu/archivum/page/99643')
@@ -240,7 +240,7 @@ def extract_article_urls_from_page_origo(archive_page_raw_html):
     return urls
 
 
-def extract_article_urls_from_page_444(archive_page_raw_html):
+def extract_article_urls_from_page_p444(archive_page_raw_html):
     """
         extracts and returns as a list the URLs belonging to articles from an HTML code
     :param archive_page_raw_html: archive page containing list of articles with their URLs
@@ -584,7 +584,7 @@ def extract_article_urls_from_page_test(filename, test_logger):
 
     test_logger.log('INFO', 'Testing 444')
     text = w.download_url('https://444.hu/2019/07/06')
-    extracted = extract_article_urls_from_page_444(text)
+    extracted = extract_article_urls_from_page_p444(text)
     expected = {'https://444.hu/2019/07/06/azt-hiszed-szar-iroasztalod-van-nezd-meg-hova-ultettek-ursula-von-der-'
                 'leyent',
                 'https://444.hu/2019/07/06/kendernay-janos-lett-az-lmp-tars-nelkul-tarselnoke',
@@ -1197,7 +1197,7 @@ def next_page_of_article_telex(curr_html):  # https://telex.hu/koronavirus/2020/
     return None
 
 
-def next_page_of_article_444(curr_html):
+def next_page_of_article_p444(curr_html):
     bs = BeautifulSoup(curr_html, 'lxml')
     next_page_cont1 = bs.find('li', class_='arrow')
     next_page_link2 = bs.find('a', {'class': 'page-link', 'aria-label': 'Következő »'})
@@ -1263,13 +1263,13 @@ def next_page_of_article_test(filename, test_logger):
     assert next_page_of_article_telex(text) is None
 
     text = w.download_url('https://444.hu/2014/03/02/mindjart-kezdodik-az-oscar-dij-atadas')
-    assert next_page_of_article_444(text) == 'https://444.hu/2014/03/02/mindjart-kezdodik-az-oscar-dij-atadas?page=2'
+    assert next_page_of_article_p444(text) == 'https://444.hu/2014/03/02/mindjart-kezdodik-az-oscar-dij-atadas?page=2'
     text = w.download_url('https://444.hu/2014/03/02/mindjart-kezdodik-az-oscar-dij-atadas?page=4')
-    assert next_page_of_article_444(text) is None
+    assert next_page_of_article_p444(text) is None
     text = w.download_url('https://444.hu/2014/03/23/real-madrid-barcelona-elo')
-    assert next_page_of_article_444(text) == 'https://444.hu/2014/03/23/real-madrid-barcelona-elo?page=2'
+    assert next_page_of_article_p444(text) == 'https://444.hu/2014/03/23/real-madrid-barcelona-elo?page=2'
     text = w.download_url('https://444.hu/2014/03/23/real-madrid-barcelona-elo?page=7')
-    assert next_page_of_article_444(text) is None
+    assert next_page_of_article_p444(text) is None
 
     text = w.download_url('http://valasz.hu/itthon/percrol-percre-az-onkormanyzati-valasztasokrol-105350?page=3')
     assert next_page_of_article_valasz(text) == 'http://valasz.hu/itthon/percrol-percre-az-onkormanyzati' \
