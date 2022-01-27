@@ -3,8 +3,10 @@
 
 from importlib import metadata
 
-__version__ = metadata.version('webarticlecurator')
-
+try:
+    __version__ = metadata.version('webarticlecurator')
+except ModuleNotFoundError:
+    __version__ = 'THIS IS NOT A PACKAGE!'
 
 if __name__ == '__main__':
     print(__version__)

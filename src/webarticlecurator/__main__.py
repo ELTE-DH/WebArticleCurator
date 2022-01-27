@@ -4,7 +4,7 @@
 import sys
 from argparse import ArgumentParser, ArgumentTypeError, FileType
 
-from webarticlecurator import wrap_input_constants, NewsArchiveCrawler, NewsArticleCrawler, sample_warc_by_urls, \
+from . import wrap_input_constants, NewsArchiveCrawler, NewsArticleCrawler, sample_warc_by_urls, \
     validate_warc_file, online_test, archive_page_contains_article_url, Logger, __version__
 
 
