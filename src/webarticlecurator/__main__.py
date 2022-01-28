@@ -4,8 +4,12 @@
 import sys
 from argparse import ArgumentParser, ArgumentTypeError, FileType
 
-from . import wrap_input_constants, NewsArchiveCrawler, NewsArticleCrawler, sample_warc_by_urls, \
-    validate_warc_file, online_test, archive_page_contains_article_url, Logger, __version__
+from mplogger import Logger
+
+from .version import  __version__
+from .utils import wrap_input_constants
+from .news_crawler import NewsArchiveCrawler, NewsArticleCrawler
+from .other_modes import validate_warc_file, online_test, sample_warc_by_urls, archive_page_contains_article_url
 
 
 def str2bool(v):

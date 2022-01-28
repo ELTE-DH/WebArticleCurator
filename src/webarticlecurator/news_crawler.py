@@ -4,8 +4,9 @@
 from datetime import timedelta
 from calendar import monthrange, isleap
 
-from webarticlecurator import WarcCachingDownloader, Logger
+from mplogger import Logger
 
+from .enhanced_downloader import WarcCachingDownloader
 
 def add_and_write_factory(attr, fname):
     """A helper function to write gathered URLs to a file handle if it is supplied"""

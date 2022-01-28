@@ -28,6 +28,7 @@ requests = "^2.26.0"
 urllib3 = "^1.26.7"
 ratelimit = "^2.2.1"
 yamale = "^4.0.2"
+mplogger = "^1.0.0"
 # A list of all of the optional dependencies, some of which are included in the
 # below `extras`. They can be opted into by apps.
 newspaper3k = { version = "^0.2.8", optional = true }

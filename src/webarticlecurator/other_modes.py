@@ -4,7 +4,8 @@
 from itertools import groupby
 from collections import defaultdict
 
-from . import WarcCachingDownloader, create_or_check_clean_dir, write_content_to_url_named_file
+from .enhanced_downloader import WarcCachingDownloader
+from .utils import create_or_check_clean_dir, write_content_to_url_named_file
 
 
 def validate_warc_file(source_warcfiles, validator_logger):

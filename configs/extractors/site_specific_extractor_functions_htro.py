@@ -3,9 +3,10 @@
 
 from os.path import abspath, dirname, join as os_path_join
 
+from mplogger import Logger
 from bs4 import BeautifulSoup
 
-from webarticlecurator import WarcCachingDownloader, Logger
+from webarticlecurator import WarcCachingDownloader
 
 # BEGIN SITE SPECIFIC extract_next_page_url FUNCTIONS ##################################################################
 

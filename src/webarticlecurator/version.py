@@ -8,5 +8,6 @@ try:
 except ModuleNotFoundError:
     __version__ = 'THIS IS NOT A PACKAGE!'
 
+
 if __name__ == '__main__':
     print(__version__)

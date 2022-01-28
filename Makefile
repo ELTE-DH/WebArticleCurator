@@ -4,7 +4,6 @@ SHELL := /bin/bash -o pipefail
 RED := $(shell tput setaf 1)
 GREEN := $(shell tput setaf 2)
 NOCOLOR := $(shell tput sgr0)
-PYTHON := python3
 
 # Module specific parameters
 MODULE := webarticlecurator

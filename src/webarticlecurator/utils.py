@@ -6,13 +6,13 @@ import sys
 import importlib.util
 from argparse import Namespace
 from datetime import datetime, date, timedelta
-from os.path import join as os_path_join, exists as os_path_exists, dirname as os_path_dirname,\
-    abspath as os_path_abspath
+from os.path import join as os_path_join, exists as os_path_exists, dirname as os_path_dirname, \
+    split as os_path_split, abspath, splitext
 
 import yamale
 
-site_schema = yamale.make_schema(os_path_join(os_path_dirname(os_path_abspath(__file__)), 'site_schema.yaml'))
-crawl_schema = yamale.make_schema(os_path_join(os_path_dirname(os_path_abspath(__file__)), 'crawl_schema.yaml'))
+site_schema = yamale.make_schema(os_path_join(os_path_dirname(abspath(__file__)), 'site_schema.yaml'))
+crawl_schema = yamale.make_schema(os_path_join(os_path_dirname(abspath(__file__)), 'crawl_schema.yaml'))
 
 
 def load_and_validate(schema, fname):
@@ -28,12 +28,14 @@ def load_and_validate(schema, fname):
     return data[0][0]
 
 
-def import_python_file(module_name, file_path):
-    # Import module from file: https://docs.python.org/3/library/importlib.html#importing-a-source-file-directly
-    spec = importlib.util.spec_from_file_location(module_name, file_path)
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[module_name] = module
-    spec.loader.exec_module(module)
+def import_python_file(file_path, package=None):
+    """Import module from file:
+       https://stackoverflow.com/questions/2349991/how-to-import-other-python-files/55892361#55892361"""
+    abs_file_path = abspath(file_path)
+    pathname, filename = os_path_split(abs_file_path)
+    sys.path.append(pathname)
+    modname = splitext(filename)[0]
+    module = importlib.import_module(modname, package)
     return module
 
 
@@ -49,11 +51,11 @@ def wrap_input_constants(current_task_config_filename):
     settings = load_and_validate(crawl_schema, current_task_config_filename)
 
     # The directory name of the configs
-    settings['DIR_NAME'] = os_path_dirname(os_path_abspath(current_task_config_filename))
+    settings['DIR_NAME'] = os_path_dirname(abspath(current_task_config_filename))
 
     # Technical data about the website to crawl
     site_schema_fname = os_path_join(settings['DIR_NAME'], settings['schema'])
-    settings['SITE_SCHEMA_DIR_NAME'] = os_path_dirname(os_path_abspath(site_schema_fname))
+    settings['SITE_SCHEMA_DIR_NAME'] = os_path_dirname(abspath(site_schema_fname))
     current_site_schema = load_and_validate(site_schema, site_schema_fname)
     settings.update(current_site_schema)
 
@@ -128,8 +130,7 @@ def wrap_input_constants(current_task_config_filename):
 
     # Portal specific functions
     file_path = settings['portal_specific_exctractor_functions_file']
-    module = import_python_file('portal_specific_exctractor_functions',
-                                os_path_join(settings['SITE_SCHEMA_DIR_NAME'], file_path))
+    module = import_python_file(os_path_join(settings['SITE_SCHEMA_DIR_NAME'], file_path), 'webarticlecurator')
     for attr_name, attr_name_dest, mandatory in \
             (('extract_next_page_url_fun', 'EXTRACT_NEXT_PAGE_URL_FUN', False),
              ('extract_article_urls_from_page_fun', 'EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN', True),
@@ -176,7 +177,7 @@ def wrap_input_constants(current_task_config_filename):
         file_path = settings['corpus_converter_file']
         if file_path is None:
             raise ValueError('corpus_converter is {0}, but {1} is unset!'.format(corp_conv, file_path))
-        module = import_python_file('corpus_converter', os_path_join(settings['SITE_SCHEMA_DIR_NAME'], file_path))
+        module = import_python_file(os_path_join(settings['SITE_SCHEMA_DIR_NAME'], file_path), 'webarticlecurator')
         corpus_converter_class = getattr(module, corp_conv)
     settings['CORPUS_CONVERTER'] = corpus_converter_class(settings)
 

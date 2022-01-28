@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from os.path import abspath, dirname, join as os_path_join
 import json
+from os.path import abspath, dirname, join as os_path_join
+
+from mplogger import Logger
 from bs4 import BeautifulSoup
+
+from webarticlecurator import WarcCachingDownloader
 
 
 # BEGIN SITE SPECIFIC extract_next_page_url FUNCTIONS ##################################################################
@@ -1321,8 +1325,6 @@ def next_page_of_article_test(filename, test_logger):
 
 
 if __name__ == '__main__':
-    from webarticlecurator import WarcCachingDownloader, Logger
-
     main_logger = Logger()
 
     # Relateive path from this directory to the files in the project's test directory
