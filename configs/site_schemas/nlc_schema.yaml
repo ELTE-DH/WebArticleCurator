@@ -1,0 +1,67 @@
+"site_name": "nlc"
+
+"columns":
+    "ezvan":
+        "archive_url_format": "https://nlc.hu/ezvan/page/1/"
+
+    "baba":
+        "archive_url_format": "https://nlc.hu/baba/page/1/"
+
+    "csalad":
+        "archive_url_format": "https://nlc.hu/csalad/page/1/"
+
+    "egeszseg":
+        "archive_url_format": "https://nlc.hu/egeszseg/page/1/"
+
+    "eletmod":
+        "archive_url_format": "https://nlc.hu/eletmod/page/1/"
+
+    "foto":
+        "archive_url_format": "https://nlc.hu/foto/page/1/"
+
+    "gasztro":
+        "archive_url_format": "https://nlc.hu/gasztro/page/1/"
+
+    "horoszkop":
+        "archive_url_format": "https://nlc.hu/horoszkop/page/1/"
+
+    "lelek":
+        "archive_url_format": "https://nlc.hu/lelek/page/1/"
+
+    "otthon":
+        "archive_url_format": "https://nlc.hu/otthon/page/1/"
+
+    "szabadido":
+        "archive_url_format": "https://nlc.hu/szabadido/page/1/"
+
+    "szexesmas":
+        "archive_url_format": "https://nlc.hu/szexesmas/page/1/"
+
+    "sztarok":
+        "archive_url_format": "https://nlc.hu/sztarok/page/1/"
+
+    "trend":
+        "archive_url_format": "https://nlc.hu/trend/page/1/"
+
+    "tv_sztarok":
+        "archive_url_format": "https://nlc.hu/tv_sztarok/page/1/"
+
+    "utazas":
+        "archive_url_format": "https://nlc.hu/utazas/page/1/"
+
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_npdn.py"
+"extract_next_page_url_fun": "extract_next_page_url_nlc"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_nlc"
+
+"next_url_by_pagenum": false
+"infinite_scrolling": false
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": true
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"
