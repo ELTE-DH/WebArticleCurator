@@ -23,6 +23,7 @@
 
 "portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions.py"
 "extract_article_urls_from_page_fun": "extract_article_urls_from_page_index"
+"next_page_of_article_fun": "next_page_of_article_index"
 
 "next_url_by_pagenum": true
 "infinite_scrolling": true
@@ -34,4 +35,4 @@
 # "new_article_url_threshold": 0
 
 "corpus_converter_file": "../extractors/corpus_converters.py"
-"corpus_converter": "dummy-converter"
+"corpus_converter": "MultiPageArticleConverter"

@@ -1285,6 +1285,8 @@ def next_page_of_article_test(filename, test_logger):
     assert next_page_of_article_valasz(text) is None
 
     test_logger.log('INFO', 'Testing Index')
+    text = w.download_url('https://index.hu/belfold/2020/04/01/koronavirus_hirek_aprilis_1/')
+    assert next_page_of_article_index(text) == 'https://index.hu/belfold/2020/04/01/koronavirus_hirek_aprilis_1/?p=1'
     text = w.download_url(
         'https://velvet.hu/gumicukor/2016/08/27/egyszerre_indul_a_valo_vilag_es_a_star_academy/palyazat_a_tv2-n/')
     assert next_page_of_article_index(
