@@ -1,0 +1,794 @@
+"site_name": "forum_index"
+
+# There are private forums (columns) and topics, as well. These pages raise 403 error. The private forums are marked.
+# There is a pop-up window in eles, fegyvertartas_es_felelem, technikak_kiegeszitok, gazfegyverek, katonasag,
+#    legfegyveres and moderacio_fegyver to warn about arms laws.
+# Adult content: holgyek_urak_szex, husz_vigalmi_negyed, szexi_kepek_topikjai, partnerkereso. There are pop-up windows
+#    in which the user has to declare he or she is at least 18 years old.
+
+"columns":
+    "a_torzsasztal":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=1&tl_o=41"
+
+    "iskolak_evszamok_horoszkopok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=31&tl_o=41"
+
+    "index_kavehaz":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=47&tl_o=41"
+
+    "internetto":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=53&tl_o=41"
+
+    "metakazamata":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=55&tl_o=41"
+
+    "moderacio_tarsalgasi":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111367&tl_o=41"
+
+    "mumu_vitaklubja":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9120052&tl_o=41"
+
+    "termeszetjaro_klub":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9129675&tl_o=41"
+
+    "moderacios_topikok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9129690&tl_o=41"
+
+    "tarsasagok_klubjai":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9145391&tl_o=41"
+
+    "cukraszda":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9145926&tl_o=41"
+
+    "moderacio_politika":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111337&tl_o=41"
+
+    "gazdasagpolitika":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111349&tl_o=41"
+
+    "harom_vig_halottmoso":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111334&tl_o=41"
+
+    "ike_klubforum":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111336&tl_o=41"
+
+    "oromtopicok_foruma":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111338&tl_o=41"
+
+    "zart_belovai_klub":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111874&tl_o=41"
+
+    "szekesfehervar":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9121752&tl_o=41"
+
+    "szolnok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9121943&tl_o=41"
+
+    "szazhalombatta":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9124776&tl_o=41"
+
+    "godollo":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9176266&tl_o=41"
+
+    "erd":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9212364&tl_o=41"
+
+    "klubtopicok_foruma_politika_light":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9123954&tl_o=41"
+
+    "kozelet":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9162966&tl_o=41"
+
+    "mayer_aranka_klub":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9163978&tl_o=41"
+
+    "szokevenyek":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9168250&tl_o=41"
+
+    "tudomanyos_klub":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9185579&tl_o=41"
+
+    "polgazd_zart_klub":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9190397&tl_o=41"
+
+    "klerikalis_reakcio":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9199975&tl_o=41"
+
+    "fradipol":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9210715&tl_o=41"
+
+    "kosarlabda":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9220554&tl_o=41"
+
+    "kultura":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=2&tl_o=41"
+
+    "pepsi_sziget":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=28&tl_o=41"
+
+    "scifi_fantasy":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=54&tl_o=41"
+
+    "tv_radio":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=60&tl_o=41"
+
+    "zene":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111347&tl_o=41"
+
+    "moderacio_kult":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111364&tl_o=41"
+
+    "szinhaz":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111515&tl_o=41"
+
+    "irodalom":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111820&tl_o=41"
+
+    "cinematrix":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9119072&tl_o=41"
+
+    "irodalmi_gyujtemenyek":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9122490&tl_o=41"
+
+    "pantheon":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9214407&tl_o=41"
+
+    "fidelio":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9222872&tl_o=41"
+
+    "vallas_filozofia":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=6&tl_o=41"
+
+    "magyarulez":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=15&tl_o=41"
+
+    "tudomany":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=26&tl_o=41"
+
+    "moderacio_fil":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111330&tl_o=41"
+
+    "tortenelem":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111340&tl_o=41"
+
+    "nyelvtudor":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9112599&tl_o=41"
+
+    "rejtelyes_dolgok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9113446&tl_o=41"
+
+    "valfil_klub":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9121861&tl_o=41"
+
+    "alternativ_elmeletek":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9148227&tl_o=41"
+
+    "uj_fizika":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9173831&tl_o=41"
+
+    "konyhaasztal":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=39&tl_o=41"
+
+    "szuloi_munkakozosseg":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=44&tl_o=41"
+
+    "hazepites_lakasugyek":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=52&tl_o=41"
+
+    "velvet":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=57&tl_o=41"
+
+    "moderacio_eletmod":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111324&tl_o=41"
+
+    "hazaselet_csaladi_elet":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111339&tl_o=41"
+
+    "torzsagy":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9120232&tl_o=41"
+
+    "eletmod_klubok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9120549&tl_o=41"
+
+    "husz_holdas_pagony":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9120722&tl_o=41"
+
+    "vega_klub":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9121320&tl_o=41"
+
+    "klubtopicok_foruma":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9125072&tl_o=41"
+
+    "nyilt_osztaly":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9125264&tl_o=41"
+
+    "celeb":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9131998&tl_o=41"
+
+    "babaszobak_beszelgetesek":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9169755&tl_o=41"
+
+    "tarsashazak_lakoparkok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9169757&tl_o=41"
+
+    "t_szerk":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9&tl_o=41"
+
+    "online_interjuk":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=29&tl_o=41"
+
+    "gamez":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=7&tl_o=41"
+
+    "torzsasztal_jatekok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=30&tl_o=41"
+
+    "utazas":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=48&tl_o=41"
+
+    "moderacio_hobbi":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111359&tl_o=41"
+
+    "kreativ_es_technikai_hobbik":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9128487&tl_o=41"
+
+    "klubok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9231826&tl_o=41"
+
+    "tibeti_baratok_klubja":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9157693&tl_o=41"
+
+    "tanacstermek":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9158591&tl_o=41"
+
+    "specialis_topikok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9169629&tl_o=41"
+
+    "gombfocista":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9233373&tl_o=41"
+
+    "kepes_jatekok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9202365&tl_o=41"
+
+    "kutyak":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9220910&tl_o=41"
+
+    "macskak":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9220911&tl_o=41"
+
+    "haszonallatok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9220912&tl_o=41"
+
+    "akvarium_terrarium":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9220913&tl_o=41"
+
+    "kalitka":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9220914&tl_o=41"
+
+    "ragcsalok_kiskedvencek":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9220915&tl_o=41"
+
+    "rovarok_izeltlabuak":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9220916&tl_o=41"
+
+    "egyebek":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9220917&tl_o=41"
+
+    "kedvencek_temetoje":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9220948&tl_o=41"
+
+    "makett_modell_borze":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9221260&tl_o=41"
+
+    "gyumolcsfak_es_bokrok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9222754&tl_o=41"
+
+    "viragok_hazai_kerti_es_szoba":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9222755&tl_o=41"
+
+    "szoleszet_boraszat":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9222756&tl_o=41"
+
+    "kert_diszkert_haszonfak":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9222757&tl_o=41"
+
+    "kerti_gepek_eszkozok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9222758&tl_o=41"
+
+    "zoldsegek_vetemenyes_folia":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9222759&tl_o=41"
+
+    "egzotikumok_uveghaz":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9222760&tl_o=41"
+
+    "betegsegek_kartevok_gyomok_gombak":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9222761&tl_o=41"
+
+    "kerteszet_egyebek":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9222762&tl_o=41"
+
+    "komposztalando_topikok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9222763&tl_o=41"
+
+    "botanikuskert":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9240048&tl_o=41"
+
+    "midi":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=14&tl_o=41"
+
+    "mp3":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=16&tl_o=41"
+
+    "foto_video":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=46&tl_o=41"
+
+    "audioland":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=61&tl_o=41"
+
+    "internet":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111345&tl_o=41"
+
+    "mobil_telefonia":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111346&tl_o=41"
+
+    "moderacio_tech":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111366&tl_o=41"
+
+    "tv_es_hazimozi_cd_es_dvd_lejatszo":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111624&tl_o=41"
+
+    "honlap":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111827&tl_o=41"
+
+    "matav_es_vezetekes_telefonia":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9112042&tl_o=41"
+
+    "honlapok_zart_klubforum":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9116254&tl_o=41"
+
+    "fotosok_klubja":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9116697&tl_o=41"
+
+    "klubforumok_gremiumai":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9116707&tl_o=41"
+
+    "fotobolondok_klubja":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9197532&tl_o=41"
+
+    "windows_es_alkalmazasok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=11&tl_o=41"
+
+    "linux_es_android":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=13&tl_o=41"
+
+    "programozas":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=50&tl_o=41"
+
+    "hardver":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=51&tl_o=41"
+
+    "virushirado":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=59&tl_o=41"
+
+    "macintosh":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111469&tl_o=41"
+
+    "alkalmazasok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9173968&tl_o=41"
+
+    "gps_pda_terkepszoftverek_egyeb_bigyok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9147505&tl_o=41"
+
+    "radiok_elektronikak":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9173043&tl_o=41"
+
+    "eles":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9215867&tl_o=41"
+
+    "fegyvertartas_es_felelem":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9215868&tl_o=41"
+
+    "technikak_kiegeszitok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9215869&tl_o=41"
+
+    "gazfegyverek":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9215870&tl_o=41"
+
+    "katonasag":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9215871&tl_o=41"
+
+    "legfegyveres":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9215872&tl_o=41"
+
+    "moderacio_fegyver":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9215893&tl_o=41"
+
+    "nba":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=10&tl_o=41"
+
+    "drukkerkocsma":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=33&tl_o=41"
+
+    "olimpia":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=34&tl_o=41"
+
+    "moderacio_sport":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111368&tl_o=41"
+
+    "kezilabda":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9118041&tl_o=41"
+
+    "sport_kosarlabda":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9118042&tl_o=41"
+
+    "jegkorong_es_mukorcsolya":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9118043&tl_o=41"
+
+    "vizilabda":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9118044&tl_o=41"
+
+    "egyeni_sportagak":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9118045&tl_o=41"
+
+    "teli_sportok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9118046&tl_o=41"
+
+    "technikai_sportok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9118047&tl_o=41"
+
+    "egyeb_csapatsportok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9118048&tl_o=41"
+
+    "kispad":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9118049&tl_o=41"
+
+    "klubtopicok_foruma_sport":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9123088&tl_o=41"
+
+    "sportmedia":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9206976&tl_o=41"
+
+    "negativ":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9208454&tl_o=41"
+
+    "sportfogadas":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9209281&tl_o=41"
+
+    "sport_pantheon":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9214406&tl_o=41"
+
+    "index_kelet":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=23&tl_o=41"
+
+    "bajai_regio":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=25&tl_o=41"
+
+    "hiros":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=42&tl_o=41"
+
+    "sopronnet":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=49&tl_o=41"
+
+    "szolnoki_forum":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=5000&tl_o=41"
+
+    "mijo_baja_klubja":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111348&tl_o=41"
+
+    "moderacio_reg":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111369&tl_o=41"
+
+    "budapest_reszben_es_egeszben":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111401&tl_o=41"
+
+    "regionalis_topikok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111755&tl_o=41"
+
+    "amerika":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111807&tl_o=41"
+
+    "balaton":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9112038&tl_o=41"
+
+    "erdely":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9112039&tl_o=41"
+
+    "magyarok_kulfoldon":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9112040&tl_o=41"
+
+    "erdiek_foruma":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9118198&tl_o=41"
+
+    "duna_tv":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9129001&tl_o=41"
+
+    "budafok_teteny":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9186756&tl_o=41"
+
+    "eszak_amerika":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9197048&tl_o=41"
+
+    "totalcar_auto":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=24&tl_o=41"
+
+    "loero_klub":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=56&tl_o=41"
+
+    "kerekparos_forum":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111344&tl_o=41"
+
+    "moderacio_kozl":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111365&tl_o=41"
+
+    # "zartkoru_klub":
+    #     "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9116245&tl_o=41"
+
+    "tomegkozlekedes_klub":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9124899&tl_o=41"
+
+    # "repulos_klub":
+    #     "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9134520&tl_o=41"
+
+    "motoros_klub":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9134675&tl_o=41"
+
+    "autosok_klubja":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9142931&tl_o=41"
+
+    "megbeszeldek_jelentkezesek_moderacio":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9143079&tl_o=41"
+
+    "vasutmodellezes":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9161267&tl_o=41"
+
+    "klubositott_topikok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9187010&tl_o=41"
+
+    "kozlekedesi_kaszino":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9181616&tl_o=41"
+
+    "volvo_klub":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9202413&tl_o=41"
+
+    "hajok_buvarok_hidroplanok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9148502&tl_o=41"
+
+    "utak_hidak_mutargyak":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9165949&tl_o=41"
+
+    "nagyvasut":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9191457&tl_o=41"
+
+    "kisvasut":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9191458&tl_o=41"
+
+    "modellvasut_virtualis_vasut":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9191459&tl_o=41"
+
+    "vasutvonalak":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9191460&tl_o=41"
+
+    "gorduloallomany":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9191461&tl_o=41"
+
+    "resti":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9191462&tl_o=41"
+
+    "geptemeto":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9191463&tl_o=41"
+
+    "vasut_mernokseg":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9191518&tl_o=41"
+
+    "totalbike_motor":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9196371&tl_o=41"
+
+    "legitarsasagok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9206823&tl_o=41"
+
+    "katonai_repules":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9206824&tl_o=41"
+
+    "repuloterek":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9206825&tl_o=41"
+
+    "hangar":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9206828&tl_o=41"
+
+    "szelek_szarnyan_szabadon":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9206829&tl_o=41"
+
+    "fonia":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9206830&tl_o=41"
+
+    "megfigyelo":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9206831&tl_o=41"
+
+    "repulogepek":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9206832&tl_o=41"
+
+    "orszagos_es_altalanos":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9220919&tl_o=41"
+
+    "budapest_es_kornyeke":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9220920&tl_o=41"
+
+    "dunan_innen":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9220921&tl_o=41"
+
+    "dunantul":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9220922&tl_o=41"
+
+    "jarmuvek":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9220923&tl_o=41"
+
+    "maskepp_foto_video_kulfold":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9220926&tl_o=41"
+
+    "mozgaskorlatozottak_kozlekedese":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9230815&tl_o=41"
+
+    "tozsde_befektetes_ado":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=32&tl_o=41"
+
+    "karrier_munka":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=58&tl_o=41"
+
+    "moderacio_uzlet":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111350&tl_o=41"
+
+    "bank":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9111828&tl_o=41"
+
+    "klubtopikok_foruma_gazdasag_light":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9207261&tl_o=41"
+
+    "altalanos_orvosi_problemak":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9122901&tl_o=41"
+
+    "rehabilitacios_gondok":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9122902&tl_o=41"
+
+    "szakapolas":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9122903&tl_o=41"
+
+    "termeszetgyogyaszat":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9122904&tl_o=41"
+
+    "egyeb_egeszsegugyi_kerdesek":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9122905&tl_o=41"
+
+    "addiktologia":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9123816&tl_o=41"
+
+    "allergologia":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9123817&tl_o=41"
+
+    "belgyogyaszat":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9123818&tl_o=41"
+
+    "borgyogyaszat":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9123819&tl_o=41"
+
+    "fogaszat":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9123820&tl_o=41"
+
+    "fogyas_hizas":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9123822&tl_o=41"
+
+    "gasztroenterologia":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9123823&tl_o=41"
+
+    "gyogyszer":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9123824&tl_o=41"
+
+    "kardiologia":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9123825&tl_o=41"
+
+    "pszichologia_pszichiatria_neurologia":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9123826&tl_o=41"
+
+    "nogyogyaszat":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9123827&tl_o=41"
+
+    "onkologia":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9123828&tl_o=41"
+
+    "ortopedia":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9123829&tl_o=41"
+
+    "reumatologia":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9123830&tl_o=41"
+
+    "sebeszet":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9123831&tl_o=41"
+
+    "szemeszet":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9123832&tl_o=41"
+
+    "urologia":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9123833&tl_o=41"
+
+    "betegek_egymas_kozt":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9123834&tl_o=41"
+
+    "betegegyesuletek":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9123835&tl_o=41"
+
+    "orr_ful_gegeszet":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9123868&tl_o=41"
+
+    "jogi_problemak":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9122907&tl_o=41"
+
+    "egyeb_problemak":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9122908&tl_o=41"
+
+    "moderacio_sos":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9122985&tl_o=41"
+
+    "beta":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=21&tl_o=41"
+
+    "forum":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9206980&tl_o=41"
+
+    "indafoto":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9206981&tl_o=41"
+
+    "inda_fotopalyazatok":
+        "archive_url_format": "http://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9208007&tl_o=41"
+
+    "gyakorlo_alforum":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9221874&tl_o=41"
+
+    "east_side":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9221879&tl_o=41"
+
+    "west_side":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9221880&tl_o=41"
+
+    "holgyek_urak_szex":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=19&tl_o=41"
+
+    "husz_vigalmi_negyed":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9134200&tl_o=41"
+
+    "szexi_kepek_topikjai":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9151649&tl_o=41"
+
+    "partnerkereso":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9215962&tl_o=41"
+
+    "moderacio_foto_video":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9212278&tl_o=41"
+
+    "filmes_analog":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9212279&tl_o=41"
+
+    "canon":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9212289&tl_o=41"
+
+    "nikon":
+        "archive_url_format": "https://forum.index.hu/Topic/showTopicList?nt_start=0&nt_step=100&t=9212290&tl_o=41"
+
+    "trollitika":
+        "archive_url_format": "https://forum.index.hu/Article/showArticle?t=9220589"
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_forum_blog.py"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_forum_index"
+"next_page_of_article_fun": "next_page_of_article_forum_index"
+"extract_next_page_url_fun": "extract_next_page_url_forum_index"
+
+
+"next_url_by_pagenum": false
+"infinite_scrolling": false
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": false
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "MultiPageArticleConverter"
