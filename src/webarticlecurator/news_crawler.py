@@ -186,7 +186,6 @@ class NewsArchiveCrawler:
         first_page = True
         next_page_url = archive_page_url_base.replace('#pagenum', self._initial_page_num)
         while next_page_url is not None or tries_left > 0:
-            article_urls = []
             archive_page_raw_html = self._downloader.download_url(next_page_url, self._ignore_archive_cache)
             tries_left -= 1
             curr_page_url = next_page_url
@@ -200,7 +199,10 @@ class NewsArchiveCrawler:
                 # 2) Generate next-page URL or None if there should not be any
                 next_page_url = self._find_next_page_url(archive_page_url_base, page_num, archive_page_raw_html,
                                                          article_urls)
-                tries_left = self._max_tries  # Restore tries_left
+                if next_page_url is not None:
+                    tries_left = self._max_tries  # Restore tries_left
+                else:
+                    tries_left = 0  # We have arrived to the end
                 page_num += 1  # Bump pagenum for next round
                 first_page = False
                 self._logger.log('DEBUG', 'URLs/ARCHIVE PAGE', curr_page_url, len(article_urls), sep='\t')
