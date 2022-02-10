@@ -214,6 +214,18 @@ def safe_extract_hrefs_from_a_tags(main_container):
             yield a_tag_a['href']
 
 
+def extract_article_urls_from_page_origo(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all(class_='archive-cikk')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
 def extract_article_urls_from_page_nol(archive_page_raw_html):
     """
         extracts and returns as a list the URLs belonging to articles from an HTML code
@@ -229,18 +241,6 @@ def extract_article_urls_from_page_nol(archive_page_raw_html):
             for a_tag_a in a_tag_as:
                 if a_tag_a is not None and 'href' in a_tag_a.attrs:
                     urls.add(a_tag_a['href'])
-    return urls
-
-
-def extract_article_urls_from_page_origo(archive_page_raw_html):
-    """
-        extracts and returns as a list the URLs belonging to articles from an HTML code
-    :param archive_page_raw_html: archive page containing list of articles with their URLs
-    :return: list that contains URLs
-    """
-    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    main_container = soup.find_all(class_='archive-cikk')
-    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
     return urls
 
 
@@ -394,7 +394,7 @@ def extract_article_urls_from_page_telex(archive_page_raw_html):
     :return: list that contains URLs
     """
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    main_container = soup.find_all('div', class_='article')
+    main_container = soup.find_all('div', class_='listing_child')
     urls = {f'https://telex.hu{link}' for link in safe_extract_hrefs_from_a_tags(main_container)}
     return urls
 
@@ -437,154 +437,6 @@ def extract_article_urls_from_page_test(filename, test_logger):
                 'http://nol.hu/archivum/archiv-442362-250411'
                 }
     assert (extracted, len(extracted)) == (expected, 7)
-
-    test_logger.log('INFO', 'Testing origo')
-    text = w.download_url('https://www.origo.hu/hir-archivum/2019/20190119.html')
-    extracted = extract_article_urls_from_page_origo(text)
-    expected = {'https://www.origo.hu/sport/csapat/20190119-kezilabda-vilagbajnoksag-a-magyarok-vbcsoportjaban-hozta-a-'
-                'kotelezot-a-sved-kezicsapat.html',
-                'https://www.origo.hu/sport/csapat/20190119-noi-kosarlabda-nb-i-magabiztosan-nyert-a-'
-                'cimvedo-sopron.html',
-                'https://www.origo.hu/techbazis/20190119-nemetorszag-apple-qualcomm-iphone-betiltas-'
-                'felrevezeto-tajekoztatas.html',
-                'https://www.origo.hu/auto/20190118-te-jo-eg-hiaba-kuzdott-a-sofor-siman-lefujta-a-szel-az-utrol-a-'
-                'teherautot.html',
-                'https://www.origo.hu/sport/futball/20190119-labdarugas-olasz-foci-serie-a-tovabb-tart-az-inter-'
-                'remalma-a-kiscsapat-ellen.html',
-                'https://www.origo.hu/sport/csapat/20190119-kezilabda-harmadszor-is-nyert-a-siofok-a-noi-kezilabda-'
-                'ehfkupaban.html',
-                'https://www.origo.hu/nagyvilag/20190119-torokorszagban-ezrek-tuntettek-egy-ehsegsztrajkot-folytato-'
-                'kepviselono-mellett.html',
-                'https://www.origo.hu/itthon/20190119-kigyulladt-egy-uzlethelyiseg-mezokovesden.html',
-                'https://www.origo.hu/nagyvilag/20190119-migranskaravan-usa-honduras-guatemala.html',
-                'https://www.origo.hu/sport/trashtalk/20190119-gregg-popovich-edzokent-rekorder-san-antonio-spurs-'
-                'nba.html',
-                'https://www.origo.hu/sport/csapat/20190119-kezilabda-nb-i-megszorongattak-a-fradit-a-noi-kezilabda-nb-'
-                'iben.html',
-                'https://www.origo.hu/sport/egyeni/20190119-fucsovics-marton-es-babos-timea-tenisztorteneti-diadala-az-'
-                'australian-openen.html',
-                'https://www.origo.hu/itthon/20190119-ket-auto-karambolozott-kulcs-kozeleben-a-balesetben-harom-ember-'
-                'megserult.html',
-                'https://www.origo.hu/gazdasag/20190118-madoff-botrany-tortenete-piramisjatek.html',
-                'https://www.origo.hu/sport/futball/20190119-bundesliga-18-fordulo-rb-leipzig-borussia-dortmund-'
-                'bajnoki-osszefoglalo-gulacsi-peter.html',
-                'https://www.origo.hu/itthon/20190119-tuntetes-eroszak.html',
-                'https://www.origo.hu/itthon/20190119-kisorsoltak-az-otos-lotto-nyeroszamait-amivel-majdnem-'
-                'ketmilliard-forintot-lehetett-nyerni.html',
-                'https://www.origo.hu/teve/20190117-videon-mutatta-meg-sulyos-balesetet-a-szinesz-matt-wilson.html',
-                'https://www.origo.hu/itthon/20190119-matol-visszatert-a-tel-orszagszerte-havazas-kezdodik.html',
-                'https://www.origo.hu/itthon/20190119-nezopont-ellenzek-kozos-ep-lista-nagy-daniel.html',
-                'https://www.origo.hu/sport/csapat/20190119-kezilabda-ferfi-vilagbajnoksag-csaszar-gabor-nyilatkozata-'
-                'a-hazautazasarol.html',
-                'https://www.origo.hu/sport/futball/20190119-labdarugas-angol-foci-premier-league-hetgolos-pldrama-'
-                'hiaba-allt-fel-ketszer-is-a-leicester-video.html',
-                'https://www.origo.hu/auto/20190117-bucsu-a-benzinmotortol-smart-eq-forfour-teszt.html',
-                'https://www.origo.hu/nagyvilag/20190119-ma-delben-elkezdodott-pawel-adamowicz-fopolgarmester-temetese-'
-                'lengyelorszagban-akit-egy-hete.html',
-                'https://www.origo.hu/sport/futball/20190119-labdarugas-bajnokok-ligaja-tuzgolyo-elkepesztoen-nez-ki-'
-                'kieseses-szakasz-uj-bllabdaja.html',
-                'https://www.origo.hu/techbazis/20190117-tmobile-huawei-lopas-amerika.html',
-                'https://www.origo.hu/sport/loero/20190119-sebestyen-peter-motorverseny-teljes-szezon-supersport-'
-                'vilagbajnoksag-ptr-honda.html',
-                'https://www.origo.hu/sport/csapat/20190119-kezilabda-ferfi-vilagbajnoksag-magyarorszag-dania-'
-                'elozetes.html',
-                'https://www.origo.hu/sport/egyeni/20190119-australian-open-djokovic-zverev-serene-williams-is-'
-                'tizenhat-kozott.html',
-                'https://www.origo.hu/itthon/20190119-a-tetejere-borult-egy-auto-kaposvaron-a-balesetben-egy-ember-'
-                'serult-meg.html',
-                'https://www.origo.hu/sport/futball/20190117-a-bajnoki-cim-amiert-semmit-sem-adnak-bundesliga-oszi-'
-                'szezon.html',
-                'https://www.origo.hu/nagyvilag/20190119-most-egy-euroert-lakast-vehet-sziciliaban.html',
-                'https://www.origo.hu/teve/20190119-gorog-zita-nehezen-fogadta-el-szules-utani-uj-kulsejet-tv.html',
-                'https://www.origo.hu/sport/csapat/20190119-kezilabda-ferfi-vilagbajnoksag-magyar-dan-meccs-hangulat-a-'
-                'meccs-elott.html',
-                'https://www.origo.hu/sport/egyeni/20190119-uszas-magyar-uszo-gyozte-le-hosszu-katinkat-antwerpenben-'
-                'szilagyi-liliana.html',
-                'https://www.origo.hu/sport/kozvetites/20190119-kezilabda-vilagbajnoksag-kozepdonto-magyarorszag-dania-'
-                'elo-kozvetites-online.html',
-                'https://www.origo.hu/techbazis/20190117-europa-felhalmozodott-iphone-keszletek-alacsony-kereslet.html',
-                'https://www.origo.hu/gazdasag/20190119-felsooktatasi-felveteli-2019-apolas-es-betegellatas.html',
-                'https://www.origo.hu/tudomany/20190119-a-hang-ugyan-nem-fizikai-objektum-megis-hat-ra-a-'
-                'gravitacio.html',
-                'https://www.origo.hu/itthon/20190119-karambol-tortent-nagykatanal.html',
-                'https://www.origo.hu/techbazis/20190118-windows-10-mobile-tamogatas-megszunese.html',
-                'https://www.origo.hu/itthon/20190119-keresi-a-rendorseg-az-idos-tolvajt-aki-alkoholszondat-'
-                'lopott.html',
-                'https://www.origo.hu/sport/egyeni/20190119-atletika-serulese-utan-gyozelemmel-tert-vissza-marton-'
-                'anita.html',
-                'https://www.origo.hu/itthon/20190118-ahmedh-tudta-ha-rendoroket-dobal-akkor-bortonbe-megy.html',
-                'https://www.origo.hu/sport/csapat/20190119-a-veszprem-jatekosa-sterbik-arpad-ugrik-be-a-spanyol-ferfi-'
-                'kezilabdavalogatotthoz-a-vbn.html',
-                'https://www.origo.hu/sport/futball/20190119-la-liga-20-fordulo-real-madrid-sevilla-osszefoglalo-video-'
-                'casemiro-luka-modric.html',
-                'https://www.origo.hu/sport/egyeni/20190119-hosszu-katinka-cseh-laszlo-milak-kristof-majusban-'
-                'budapesten-versenyez.html',
-                'https://www.origo.hu/nagyvilag/20190119-tobben-meghaltak-es-megegtek-egy-mexikoi-uzemanyagvezetek-'
-                'robbanasaban.html',
-                'https://www.origo.hu/nagyvilag/20190119-ujabb-onkormanyzat-esett-aldozatul-a-bevandorlasparti-macroni-'
-                'rezsimnek.html',
-                'https://www.origo.hu/sport/laza/20190119-labdarugas-laza-nemet-foci-rb-leipzig-gulacsi-peter-hegedure-'
-                'valtotta-a-kapuskesztyut.html',
-                'https://www.origo.hu/sport/futball/20190119-kilencet-lott-a-psg-ebbol-nyolcat-a-felelmetes-csatartrio-'
-                'cavani-mbappe-neymar.html',
-                'https://www.origo.hu/itthon/20190119-hat-fot-kellett-eltavolitania-a-rendorsegnek-a-lanchidrol.html',
-                'https://www.origo.hu/itthon/20190116-jobbik.html',
-                'https://www.origo.hu/nagyvilag/20190119-amerikai-legicsapasok-vegeztek-tobb-mint-felszaz-szomaliai-'
-                'dzsihadistaval.html',
-                'https://www.origo.hu/itthon/20190119-kormanyszovivo-a-tuntetesek-az-epvalasztasi-kampany-reszet-'
-                'kepezik.html',
-                'https://www.origo.hu/sport/laza/20190119-elo-sportkozvetitesek-a-teveben-januar-19en-szombaton.html',
-                'https://www.origo.hu/itthon/20190119-semjen-zsolt-tortenelmi-bun-a-nemet-nemzetiseg-egykori-'
-                'eluldozese.html',
-                'https://www.origo.hu/sport/futball/20190118-lasha-dvali-ferencvaros-edzotabor-belek-interju.html',
-                'https://www.origo.hu/sport/csapat/20190119-kezilabda-ferfi-vilagbajnoksag-a-magyarorszag-dania-'
-                'merkozes-osszefoglaloj.html',
-                'https://www.origo.hu/gazdasag/20190117-spotify-igy-mukodik-a-bevetel-elosztasa-jogdijak.html',
-                'https://www.origo.hu/itthon/20190119-ellenzeki-kepviselok-nagykepu-nyilatkozatai-es-csufos-'
-                'kudarcai.html',
-                'https://www.origo.hu/sport/csapat/20190119-kezilabda-ferfi-vilagbajnoksag-nyilatkozatok-a-magyar-dan-'
-                'meccs-utan.html',
-                'https://www.origo.hu/sport/futball/20190119-fc-sion-ferencvaros-felkeszulesi-merkozes-belek.html',
-                'https://www.origo.hu/itthon/20190119-ahmed-h-idegenrendeszeti-orizet.html',
-                'https://www.origo.hu/sport/futball/20190119-labdarugas-olasz-foci-serie-a-az-as-roma-kis-hijan-'
-                'elszorakozta-a-ketgolos-elonyet-video.html',
-                'https://www.origo.hu/techbazis/20190117-szexbotrany-ces-vibrator.html',
-                'https://www.origo.hu/techbazis/20190116-samsung-galaxy-a90-128-gb-tarhely.html',
-                'https://www.origo.hu/nagyvilag/20190119-migranskaravan-regisztracio-nelkul-keltek-at-illegalis-'
-                'bevandorlok-a-mexikoiguatemalai-hataron.html',
-                'https://www.origo.hu/sport/futball/20190119-bundesliga-18-fordulo-frankfurt-freiburg-leverkusen-'
-                'monchengladbach-hannover-werder-augsburg.html',
-                'https://www.origo.hu/gazdasag/20190119-felsooktatasi-felveteli-2019-gepeszmernok-szak.html',
-                'https://www.origo.hu/teve/20190119-peneszes-dohos-lakasukban-almodni-sem-mert-a-palmafakrol-liptai-'
-                'claudia.html',
-                'https://www.origo.hu/itthon/20190119-ket-auto-karambolozott-budapesten-tobben-megserultek.html',
-                'https://www.origo.hu/itthon/20190119-ma-13-eve-zuhant-le-a-szlovak-legiero-csapatszallito-gepe-hejcen-'
-                'a-helyi-emlekmunel-ma-megemlekezest.html',
-                'https://www.origo.hu/itthon/20190119-tuntetes-budapesten-szombaton.html',
-                'https://www.origo.hu/gazdasag/20190117-igy-nez-ki-a-starbucks-kaveszentelye-balin-galeria-1.html',
-                'https://www.origo.hu/itthon/20190119-lelkesz-a-vallasi-uldozesek-70-szazalekaban-kereszteny-az-'
-                'aldozat.html',
-                'https://www.origo.hu/sport/egyeni/20190119-babos-timea-fucsovics-marton-az-australian-openen-a-vegyes-'
-                'parosban.html',
-                'https://www.origo.hu/techbazis/20190118-call-of-duty-balck-ops-4-sarga-felkialtojel-bug.html',
-                'https://www.origo.hu/itthon/20190119-ellenzek-tuntetes.html',
-                'https://www.origo.hu/itthon/20190119-ep-baloldal-civilek-tamogatasa.html',
-                'https://www.origo.hu/nagyvilag/20190119-tovabb-erosodott-a-liga-olasz-kormanypart-tamogatottsaga.html',
-                'https://www.origo.hu/sport/egyeni/20190119-roger-federer-oltozo-nem-engedtek-be-australian-open.html',
-                'https://www.origo.hu/sport/egyeni/20190119-asztalitenisz-world-tour-ezustermes-a-szudi-pergel-vegyes-'
-                'paros.html',
-                'https://www.origo.hu/sport/futball/20190119-premier-league-23-fordulo-arsenal-chelsea-bajnoki-'
-                'osszefoglalo.html',
-                'https://www.origo.hu/itthon/20190119-harmas-karambol-kophazanal.html',
-                'https://www.origo.hu/sport/egyeni/20190119-vandortabor-jelentkezes-januar-vegetol.html',
-                'https://www.origo.hu/sport/futball/20190119-labdarugas-angol-foci-solskjaer-manchestere-verhetetlen-'
-                'hetgolos-dramat-nyert-a-liverpool.html',
-                'https://www.origo.hu/teve/20190117-megnyert-egy-teves-vetelkedot-de-inkabb-visszamegy-a-harcterre-'
-                'sophie-faldo.html',
-                'https://www.origo.hu/itthon/20190119-tavaly-augusztusba-egy-vaskuti-ferfi-eletveszelyesen-megkeselt-'
-                'egy-soltvadkerti-ferfit.html',
-                }
-    assert (extracted, len(extracted)) == (expected, 89)
 
     test_logger.log('INFO', 'Testing 444')
     text = w.download_url('https://444.hu/2019/07/06')
@@ -1095,97 +947,99 @@ def extract_article_urls_from_page_test(filename, test_logger):
     test_logger.log('INFO', 'Testing Telex')
     text = w.download_url('https://telex.hu/rovat/koronavirus?oldal=4')
     extracted = extract_article_urls_from_page_telex(text)
-    expected = {'https://telex.hu/koronavirus/2021/01/21/szputnyik-v-nemetorszag-orosz-vakcina-tamogatas',
-                'https://telex.hu/koronavirus/2021/01/22/nyerceknek-fejleszt-koronavirus-elleni-oltast-tobb-'
-                'amerikai-ceg-is',
-                'https://telex.hu/koronavirus/2021/01/22/vendeglatok-ettermek-koronavirus-zarva-tart-nagykanizsa',
-                'https://telex.hu/koronavirus/2021/01/23/az-usa-vezeti-a-legfertozottebb-orszagok-listajat-majdnem-25-'
-                'millio-fertozottel',
-                'https://telex.hu/koronavirus/2021/01/23/megfertozodott-a-sri-lanka-i-egeszsegugyi-miniszter-miutan-'
-                'nyilvanosan-kiallt-koronavirustol-vedo-varazsital-mellett',
-                'https://telex.hu/koronavirus/2021/01/21/specialis-oltoing-oltas-romania-miniszter',
-                'https://telex.hu/koronavirus/2021/01/21/operativ-torzs-tajekoztato-01-21',
-                'https://telex.hu/koronavirus/2021/01/22/vizsgalat-nelkul-engedelyezte-az-astra-zeneca-vakcinat-az-'
-                'ogyei',
-                'https://telex.hu/koronavirus/2021/01/22/tomeges-oltas-helyett-egymast-szurkaljak-az-europai-vezetok',
-                'https://telex.hu/koronavirus/2021/01/23/tomegkozlekedes-francia-orvos',
-                'https://telex.hu/koronavirus/2021/01/23/rendorseg-romania-karanten',
-                'https://telex.hu/koronavirus/2021/01/22/boris-johnson-nagy-britannia-koronavirus-varians',
-                'https://telex.hu/koronavirus/2021/01/22/koronavirus-vakcina-mellekhatasok-kapcsolat-pfizer-moderna',
-                'https://telex.hu/koronavirus/2021/01/23/friss-hazai-koronavirus-adatok-stagnalo-szamok',
-                'https://telex.hu/koronavirus/2021/01/21/vakcina-oltas-koronavirus-autoimmun-reakcio-hosszu-tavu-'
-                'mellekhatas-falus-andras',
-                'https://telex.hu/koronavirus/2021/01/22/joe-biden-koronavirus-intezkedes',
-                'https://telex.hu/koronavirus/2021/01/21/koronavirus-fertozes-nemetorszag',
-                'https://telex.hu/koronavirus/2021/01/23/boston-oltas-zsinor-fagyaszto',
-                'https://telex.hu/koronavirus/2021/01/21/adatok-koronavirus-magyarorszag-fertozottek-korhaz-2',
-                'https://telex.hu/koronavirus/2021/01/22/uffizi-keptar-firenze-szabalyok-ujranyitas',
-                'https://telex.hu/koronavirus/2021/01/21/albania-orosz-diplomata-kiutasitas-jarvany-szabalyok-'
-                'megsertes',
-                'https://telex.hu/koronavirus/2021/01/21/szputnyik-v-gyartas-szallitas-magyarorszag',
-                'https://telex.hu/koronavirus/2021/01/22/gyartasi-gondok-miatt-kevesebb-vakcinat-fog-az-eu-ba-'
-                'szallitani-az-astrazeneca',
-                'https://telex.hu/koronavirus/2021/01/22/anthony-fauci-donald-trump-koronavirus',
-                'https://telex.hu/koronavirus/2021/01/22/operativ-torzs-muller-cecilia-1',
-                'https://telex.hu/koronavirus/2021/01/23/svedorszagban-csak-textilmaszknal-komolyabbakat-javasolnak',
-                'https://telex.hu/koronavirus/2021/01/21/oltasprogramrol-es-vakcinaigazolasrol-is-kerdezzuk-a-'
-                'kormanyt/elo',
-                'https://telex.hu/koronavirus/2021/01/23/elmarad-az-orosz-vakcina-magyar-klinikai-vizsgalata',
-                'https://telex.hu/koronavirus/2021/01/22/rioi-karneval-elmarad',
-                'https://telex.hu/koronavirus/2021/01/22/adatok-koronavirus-fertozottek-korhaz-magyarorszag'
-                }
+    expected = {
+        'https://telex.hu/koronavirus/2022/01/19/ketszazezer-is-lehet-a-napi-fertozottek-valodi-szama-izraelben'
+        '-mondja-a-koronavirus-elleni-vedekezesert-felelos-professzor',
+        'https://telex.hu/koronavirus/2022/01/18/europai-gyogyszerugynokseg-pfizerrel-es-modernaval-terhesseg-alatt'
+        '-is-nyugodtan-lehet-oltatni-mrns-vakcina-kismamak-varandos-nok-magzat-csecsemo-biztonsagos',
+        'https://telex.hu/koronavirus/2022/01/17/romania-erdely-szekelyfold-kozvelemeny-kutatas-oltasellenesseg',
+        'https://telex.hu/koronavirus/2022/01/17/peking-irodaepulet-lezaras-koronavirus',
+        'https://telex.hu/koronavirus/2022/01/17/szennyviz-virus-orokitoanyag-emelkedes',
+        'https://telex.hu/koronavirus/2022/01/18/kina-hongkong-horcsog-kis-emlos-fertozes',
+        'https://telex.hu/kulfold/2022/01/19/kulfold-koronavirus-boris-johnson-egyesult-kiralysag-anglia-nagy'
+        '-britannia-downing-street-botrany-buli',
+        'https://telex.hu/koronavirus/2022/01/18/franciaorszag-szakerto-vedettsegi-igazolvany-halaleset-elkerules',
+        'https://telex.hu/koronavirus/2022/01/20/koronavirus-jarvany-fertozes-ovodak-karanten-bezaras',
+        'https://telex.hu/koronavirus/2022/01/18/a-brit-belfoldi-elharitas-is-megfigyelte-korabban-a-texasi-zsinagoga'
+        '-tuszejtojet',
+        'https://telex.hu/koronavirus/2022/01/16/mi-hazank-tuntetes-koronavirus-jarvany-szabalyok-korlatozasok-covid'
+        '-diktatura',
+        'https://telex.hu/koronavirus/2022/01/19/olyan-sok-az-uj-koronavirus-fertozott-szloveniaban-hogy-a-laborok'
+        '-nem-gyoznek-tesztelni',
+        'https://telex.hu/koronavirus/2022/01/20/ausztria-kotelezo-oltas',
+        'https://telex.hu/koronavirus/2022/01/20/szlavik-janos-az-omikron-sem-a-baratunk-ha-enyhebb-is-kell-ellene-az'
+        '-oltas',
+        'https://telex.hu/sport/2022/01/17/kezilabda-eb-2022-nemet-csapat-fertozes',
+        'https://telex.hu/kult/2022/01/19/grammy-dij-dijkioszto-halasztas-koronavirus-jarvany',
+        'https://telex.hu/koronavirus/2022/01/20/mar-tobb-mint-szaz-koronavirusos-eset-volt-idaig-a-magyar-szlovak'
+        '-kezi-eb-n',
+        'https://telex.hu/koronavirus/2022/01/17/ensz-fotitkar-antonio-guterres-oltas-jarvany',
+        'https://telex.hu/koronavirus/2022/01/19/negyedik-oltas-oltopont-tajekoztatas-eljarasrend-hianya',
+        'https://telex.hu/koronavirus/2022/01/18/adatok-korhaz-magyarorszag-fertozottek-1',
+        'https://telex.hu/koronavirus/2022/01/19/koronavirus-magyarorszag-jarvanyugyi-adatok-fertozes-halalozas-oltas'
+        '-otodik-hullam',
+        'https://telex.hu/koronavirus/2022/01/20/omikron-szandekos-megfertozodes-rossz-otlet',
+        'https://telex.hu/koronavirus/2022/01/16/koronavirus-oltas-negyedik-dozis-pecsi-tudomanyegyetem-klinikaja',
+        'https://telex.hu/koronavirus/2022/01/17/elfogadta-a-francia-parlament-nem-eleg-a-negativ-teszt-a-nyilvanos'
+        '-helyekre-valo-belepeshez-oltottsagi-igazolas-kell',
+        'https://telex.hu/koronavirus/2022/01/20/koronavirus-jarvany-korhaz-fertozottek-napi-adatok-magyarorszag',
+        'https://telex.hu/koronavirus/2022/01/19/intezmenyvezetok-eeszt-rendszer-tanulok-pozitiv-koronavirusteszt'
+        '-figyeles',
+        'https://telex.hu/koronavirus/2022/01/20/kunhalmi-agnes-covid-koronavirus-korhaz',
+        'https://telex.hu/koronavirus/2022/01/17/korhaz-fertozottek-magyarorszag',
+        'https://telex.hu/koronavirus/2022/01/19/omikron-koronavirus-magyarorszag-muller-cecilia',
+        'https://telex.hu/koronavirus/2022/01/16/ausztria-koronavirus-vakcina-kotelezo-oltas'}
     assert (extracted, len(extracted)) == (expected, 30)
 
-    text = w.download_url('https://telex.hu/rovat/koronavirus?oldal=39')
+    text = w.download_url('https://telex.hu/rovat/koronavirus?oldal=126')
     extracted = extract_article_urls_from_page_telex(text)
-    expected = {'https://telex.hu/koronavirus/2020/09/26/ne-higgyen-az-alhireknek-nem-mertek-felre-94-szazalekkal-a-'
-                'koronavirus-aldozatainak-szamat',
-                'https://telex.hu/koronavirus/2020/09/30/angela-merkel-koronavirus-jarvany-vakcina-szazmillio-dollar-'
-                'tamogatas',
-                'https://telex.hu/koronavirus/2020/10/01/magyarorszag-koronavirus-fertozes-napi-adatok',
-                'https://telex.hu/koronavirus/2020/09/28/magyarorszagot-telibe-kapta-a-masodik-hullam-es-meg-csak-most-'
-                'jon-a-java',
-                'https://telex.hu/koronavirus/2020/09/29/jon-a-szuksegallapot-csehorszagban',
-                'https://telex.hu/koronavirus/2020/10/01/koronavirus-terapia-dpc-gyulladas-citokinvihar-valyi-nagy-'
-                'istvan',
-                'https://telex.hu/koronavirus/2020/09/26/mar-32-5-millioan-kaptak-el-vilagszerte-a-koronavirust',
-                'https://telex.hu/koronavirus/2020/09/29/miert-erinthetetlenek-a-jarvanytagado-orvos-celebek',
-                'https://telex.hu/koronavirus/2020/09/25/927-uj-koronavirus-fertozott-fertozott-9-en-meghaltak',
-                'https://telex.hu/koronavirus/2020/09/26/kohog-lazas-volt-hat-napja-var-a-teszteredmenyere',
-                'https://telex.hu/koronavirus/2020/09/29/petro-porosenko-is-koronavirusos',
-                'https://telex.hu/koronavirus/2020/09/26/orban-viktor-van-eleg-korhazi-agy-eszkoz-es-szemelyzet-a-'
-                'vedekezeshez',
-                'https://telex.hu/koronavirus/2020/09/26/egy-maszkellenes-es-egy-turizmusvedo-tuntetest-is-hozott-a-'
-                'virus',
-                'https://telex.hu/koronavirus/2020/09/27/cikk-cime-3',
-                'https://telex.hu/koronavirus/2020/10/01/koronavirus-jarvany-csehorszag-izrael-oroszorszag',
-                'https://telex.hu/koronavirus/2020/09/29/koronavirus-magyarorszag-fertozes-influenzaoltas-kiskunhalasi-'
-                'korhaz',
-                'https://telex.hu/koronavirus/2020/09/26/50-ezer-forintra-buntethetik-aki-budapesten-megserti-a-'
-                'maszkviselesi-szabalyokat',
-                'https://telex.hu/koronavirus/2020/09/26/keresre-ingyenmaszkot-ad-a-vasarloknak-a-spar',
-                'https://telex.hu/koronavirus/2020/09/29/becs-koronavirus-teszt',
-                'https://telex.hu/koronavirus/2020/09/26/12-en-haltak-meg-589-koronavirusos-beteg-van-korhazban',
-                'https://telex.hu/koronavirus/2020/09/26/927-ujabb-koronavirusos-beteget-azonositottak',
-                'https://telex.hu/koronavirus/2020/09/26/othavi-csucsra-emelkedett-az-uj-esetek-szama-nemetorszagban',
-                'https://telex.hu/koronavirus/2020/10/01/koronavirus-magyarorszag-jakab-ferenc-virologus',
-                'https://telex.hu/koronavirus/2020/09/26/miert-erdemes-influenzaoltast-kerni-koronavirusjarvany-idejen',
-                'https://telex.hu/koronavirus/2020/10/01/emmi-van-futes-a-kiskunhalasi-mobilkorhazban-es-orvosokat-is-'
-                'vezenyelnek-oda',
-                'https://telex.hu/koronavirus/2020/09/29/kulfold-koronavirus-fertozes-gorogorszag-kirandulohajo',
-                'https://telex.hu/koronavirus/2020/09/27/937-uj-koronavirus-fertozott-hatan-meghaltak',
-                'https://telex.hu/koronavirus/2020/09/28/csaknem-33-millioan-fertozodtek-meg-koronavirussal-'
-                'vilagszerte',
-                'https://telex.hu/koronavirus/2020/09/29/ecdc-magyarorszag-koronavirus-jarvany-dania-izland-hollandia'
-                }
-    assert (extracted, len(extracted)) == (expected, 29)
-
+    expected = {
+        'https://telex.hu/koronavirus/2020/12/21/tarsasag-a-szabadsagjogokert-tasz-per-nepegeszsegugyi-kozpont-nnk-jarvanyugyi-kozerdekuadat-igenyles',
+        'https://telex.hu/belfold/2020/12/20/akar-negy-ot-orat-is-kell-varakozni-a-magyar-szerb-hataron',
+        'https://telex.hu/koronavirus/2020/12/20/a-covid-fertozottek-szama-76-3-millio-a-halalos-aldozatoke-1-68-millio-globalisan',
+        'https://telex.hu/koronavirus/2020/12/19/szlavik-vakcina-oltas-eletmento-fontos-jarvany-szovodmeny-halaleset',
+        'https://telex.hu/koronavirus/2020/12/20/uj-koronavirustorzs-nagy-britannia-vakcina-hatasos-jens-spahn-nemet-egeszsegugyi-miniszter',
+        'https://telex.hu/kulfold/2020/12/18/ausztria-koronavirus-jarvany-korlatozasok-karacsony',
+        'https://telex.hu/koronavirus/2020/12/19/koronavirus-lezarasok-korlatozasok-anglia-svajc-europa',
+        'https://telex.hu/koronavirus/2020/12/19/ferihegy-unnepek-utazas-repuloter-jarvanyugyi-intezkedesek',
+        'https://telex.hu/koronavirus/2020/12/21/karacsony-koronavirus-jarvany-szabalyok-kijarasi-tilalom-enyhites',
+        'https://telex.hu/koronavirus/2020/12/20/muller-cecilia-orszagos-tisztifoorvos-karacsony-bevasarlas-specialis-rendelkezesek-orban-viktor',
+        'https://telex.hu/koronavirus/2020/12/19/koronavirus-napi-adat-jarvany-magyarorszag-operativ-torzs',
+        'https://telex.hu/koronavirus/2020/12/19/onkormanyzatok-szolgaltatas-dija-nem-emelkedhet-2021-magyar-kozlony',
+        'https://telex.hu/koronavirus/2020/12/19/ogyei-gyogyszer-egis-favipiravir-engedelyezes',
+        'https://telex.hu/koronavirus/2020/12/19/egyesult-allamok-moderna-vakcina-koronavirus-engedelyeztek',
+        'https://telex.hu/koronavirus/2020/12/19/halott-hutokontener-nyiregyhaza',
+        'https://telex.hu/koronavirus/2020/12/20/europa-karacsony-lezaras-korlatozasok-koronavirus-jarvany-szilveszter',
+        'https://telex.hu/koronavirus/2020/12/20/koronavirus-napi-statisztika-magyarorszag-december-20',
+        'https://telex.hu/koronavirus/2020/12/21/koronavirus-nagy-britannia-franciaorszag-dover-kikoto-teherforgalom',
+        'https://telex.hu/koronavirus/2020/12/19/jair-bolsonaro-pfizer-biontech-vakcina-krokodil',
+        'https://telex.hu/kulfold/2020/12/20/motoros-mikulas-felvonulas-tokio-csaladon-beluli-eroszak-figyelemfelhivas-ajandek',
+        'https://telex.hu/koronavirus/2020/12/20/matt-hancock-egeszsegugyi-miniszter-nagy-britannia-uj-koronavirus-torzs-szigoritas',
+        'https://telex.hu/koronavirus/2020/12/19/izrael-netanjahu-oltas-vakcina-elsokent',
+        'https://telex.hu/koronavirus/2020/12/18/mike-pence-usa-alelnok-vakcina-feher-haz-donald-trump',
+        'https://telex.hu/koronavirus/2020/12/21/koronavirus-adatok-korhaz-fertozottek-magyarorszag',
+        'https://telex.hu/koronavirus/2020/12/20/a-who-is-vizsgalja-a-gyorsan-terjedo-brit-koronavirustorzset',
+        'https://telex.hu/koronavirus/2020/12/20/dania-nyerc-koronavirus',
+        'https://telex.hu/koronavirus/2020/12/21/koronavirus-percrol-percre-magyarorszag-vilagszerte-4',
+        'https://telex.hu/koronavirus/2020/12/21/orban-viktor-miniszerelnok-bejelentes-karacsony-koronavirus-jarvany-korlatozasok',
+        'https://telex.hu/video/2020/12/20/covid-koronavirus-haasz-janos-korhaz',
+        'https://telex.hu/koronavirus/2020/12/21/a-mok-mar-tiz-olyan-haziorvosrol-tud-aki-koronavirus-fertozottkent-halt-meg'}
     test_logger.log('INFO', 'Test OK!')
+    assert (extracted, len(extracted)) == (expected, 30)
 
 
 # END SITE SPECIFIC extract_article_urls_from_page FUNCTIONS ###########################################################
 
 # BEGIN SITE SPECIFIC next_page_of_article FUNCTIONS ###################################################################
+
+def next_page_of_article_origo(curr_html):
+    """bs = BeautifulSoup(curr_html, 'lxml')
+    pages = bs.find('a', {'class': 'ap-next', 'rel': 'next', 'href': True})
+    if pages:
+        link = pages['href']
+        link = f'https://www.origo.hu{link}'
+        return link"""
+    return None
 
 
 def next_page_of_article_telex(curr_html):  # https://telex.hu/koronavirus/2020/11/12/koronavirus-pp-2020-11-12/elo
@@ -1242,16 +1096,6 @@ def next_page_of_article_index(curr_html):
     return None
 
 
-def next_page_of_article_origo(curr_html):
-    bs = BeautifulSoup(curr_html, 'lxml')
-    pages = bs.find('a', {'class': 'ap-next', 'rel': 'next', 'href': True})
-    if pages:
-        link = pages['href']
-        link = f'https://www.origo.hu{link}'
-        return link
-    return None
-
-
 def next_page_of_article_test(filename, test_logger):
     """Quick test for extracting URLs form an archive page"""
     # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
@@ -1305,23 +1149,6 @@ def next_page_of_article_test(filename, test_logger):
     text = w.download_url('https://divany.hu/offline/2017/01/24/bocuse_2017/?p=3')
     assert next_page_of_article_index(text) is None
 
-    test_logger.log('INFO', 'Testing Origo')
-    text = w.download_url(
-        'https://www.origo.hu/auto/20190823-bmw-x7-m50d-teszt.html')
-    assert next_page_of_article_origo(
-        text) == 'https://www.origo.hu/auto/20190823-bmw-x7-m50d-teszt.html?pIdx=1'
-    text = w.download_url(
-        'https://www.origo.hu/auto/20190823-bmw-x7-m50d-teszt.html?pIdx=1')
-    assert next_page_of_article_origo(text) is None
-    text = w.download_url('https://www.origo.hu/itthon/20190709-tobb-gyerek-meghalt-vagy-eletveszelyesen-megserult-'
-                          'azert-mert-a-szuleik-nem-figyeltek-rajuk-elegge.html?pIdx=3')
-    assert next_page_of_article_origo(text) ==\
-           'https://www.origo.hu/itthon/20190709-tobb-gyerek-meghalt-vagy-eletveszelyesen-megserult-azert-mert-a-' \
-           'szuleik-nem-figyeltek-rajuk-elegge.html?pIdx=4'
-    text = w.download_url('https://www.origo.hu/itthon/20190709-tobb-gyerek-meghalt-vagy-eletveszelyesen-megserult-'
-                          'azert-mert-a-szuleik-nem-figyeltek-rajuk-elegge.html?pIdx=6')
-    assert next_page_of_article_origo(text) is None
-    test_logger.log('INFO', 'Test OK!')
 
 # END SITE SPECIFIC next_page_of_article FUNCTIONS #####################################################################
 
