@@ -214,6 +214,18 @@ def safe_extract_hrefs_from_a_tags(main_container):
             yield a_tag_a['href']
 
 
+def extract_article_urls_from_page_origo(archive_page_raw_html):
+    """
+        extracts and returns as a list the URLs belonging to articles from an HTML code
+    :param archive_page_raw_html: archive page containing list of articles with their URLs
+    :return: list that contains URLs
+    """
+    soup = BeautifulSoup(archive_page_raw_html, 'lxml')
+    main_container = soup.find_all(class_='archive-cikk')
+    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    return urls
+
+
 def extract_article_urls_from_page_nol(archive_page_raw_html):
     """
         extracts and returns as a list the URLs belonging to articles from an HTML code
@@ -1019,6 +1031,15 @@ def extract_article_urls_from_page_test(filename, test_logger):
 # END SITE SPECIFIC extract_article_urls_from_page FUNCTIONS ###########################################################
 
 # BEGIN SITE SPECIFIC next_page_of_article FUNCTIONS ###################################################################
+
+def next_page_of_article_origo(curr_html):
+    """bs = BeautifulSoup(curr_html, 'lxml')
+    pages = bs.find('a', {'class': 'ap-next', 'rel': 'next', 'href': True})
+    if pages:
+        link = pages['href']
+        link = f'https://www.origo.hu{link}'
+        return link"""
+    return None
 
 
 def next_page_of_article_telex(curr_html):  # https://telex.hu/koronavirus/2020/11/12/koronavirus-pp-2020-11-12/elo
