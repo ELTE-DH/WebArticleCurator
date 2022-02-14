@@ -6,6 +6,7 @@
     # The rest of the pages are formatted as https://kuruc.info/to/XX/YY (YY = 10, 20, 30, etc.)
     "friss_hirek":
         "archive_url_format": "https://kuruc.info/t/1/"
+        "last_archive_page_url": "https://kuruc.info/to/1/20/"
         "max_tries": 5
 
     # "anyaorszag":

@@ -39,3 +39,4 @@ column:
     min_pagenum: int(min=0, required=False, none=False)
     max_pagenum: int(min=0, required=False, none=False)
     max_tries: int(min=1, required=False, none=False)
+    last_archive_page_url: str(min=1, required=False, none=False)

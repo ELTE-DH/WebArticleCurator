@@ -8,6 +8,7 @@ from mplogger import Logger
 
 from .enhanced_downloader import WarcCachingDownloader
 
+
 def add_and_write_factory(attr, fname):
     """A helper function to write gathered URLs to a file handle if it is supplied"""
     if fname is None:
@@ -105,7 +106,8 @@ class NewsArchiveCrawler:
                                              self._settings['infinite_scrolling'], column_spec_settings['max_pagenum'],
                                              self._settings['new_article_url_threshold'], self.known_article_urls,
                                              self._settings['stop_on_empty_archive_page'],
-                                             self._settings['stop_on_taboo_set'], self._settings['TABOO_ARTICLE_URLS'])
+                                             self._settings['stop_on_taboo_set'], self._settings['TABOO_ARTICLE_URLS'],
+                                             column_spec_settings.get('last_archive_page_url'))
 
     def __del__(self):  # Write newly found URLs to files when output files supplied...
         # Save the good URLs...
@@ -220,7 +222,7 @@ class NewsArchiveCrawler:
     @staticmethod
     def _find_next_page_url_factory(extract_next_page_url_fun, next_url_by_pagenum, infinite_scrolling, max_pagenum,
                                     art_url_threshold, known_article_urls, stop_on_empty_archive_page,
-                                    stop_on_taboo_set, taboo_article_urls):
+                                    stop_on_taboo_set, taboo_article_urls, last_archive_page_url):
 
         def find_nex_page_url_spec(archive_page_url_base, page_num, raw_html, article_urls):
             """
@@ -240,6 +242,9 @@ class NewsArchiveCrawler:
             # Method #3: Use special function to follow the link to the next page
             elif extract_next_page_url_fun is not None:
                 next_page_url = extract_next_page_url_fun(raw_html)
+                # Method #3.b: Stop on last archive page specified in config
+                if next_page_url == last_archive_page_url:
+                    next_page_url = None
             elif (next_url_by_pagenum and  # There are page numbering
                     # Method #4: No link, but infinite scrolling! (also good for inactive archive, without other clues)
                     ((infinite_scrolling and len(article_urls) > 0) or
