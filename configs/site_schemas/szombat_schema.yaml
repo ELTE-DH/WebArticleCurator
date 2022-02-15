@@ -4,7 +4,7 @@
     "main-column":
         "archive_url_format": "https://szombat.org/archiv?q=&y=#year&mo=#month"
 
-    "date_first_article": 1989-11-01
+        "date_first_article": 1989-11-01
 
 "portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_szng.py"
 "extract_article_urls_from_page_fun": "extract_article_urls_from_page_szombat"
