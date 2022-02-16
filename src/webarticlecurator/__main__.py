@@ -219,13 +219,16 @@ def main_validate_and_list(args):
 
 def main_cat_and_sample(args):
     """ __file__ sample [source warcfiles or None] [urls list file or stdin] [target warcfile] [Online or Offline] """
-    if args.command == 'sample' and args.config is not None:
-        extract_article_urls_from_page_plus_fun = \
-            wrap_input_constants(args.config)['EXTRACT_ARTICLE_URLS_FROM_PAGE_PLUS_FUN']
+    if args.command == 'sample':
         just_cache = False
     else:
-        extract_article_urls_from_page_plus_fun = None
         just_cache = True
+
+    if args.config is not None:
+        extract_article_urls_from_page_plus_fun = \
+            wrap_input_constants(args.config)['EXTRACT_ARTICLE_URLS_FROM_PAGE_PLUS_FUN']
+    else:
+        extract_article_urls_from_page_plus_fun = None
 
     main_logger = Logger()
     out_dir = getattr(args, 'out_dir', None)
