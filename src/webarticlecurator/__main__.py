@@ -130,11 +130,16 @@ def parse_args_sample(parser):
     parser.add_argument('-n', '--negative', type=str2bool, nargs='?', const=True, default=False, metavar='True/False',
                         help='Sample input-urls URLs which are not present in the source archive (default False)')
     parser.add_argument('-c', '--config', type=str, default=None, metavar='CONFIG_FILE_NAME',
-                        help='Portal configfile (see configs folder for examples!)', required=True)
+                        help='Portal configfile (see configs folder for examples!)')
     parser.add_argument('--allow-cookies', type=str2bool, nargs='?', const=True, default=False, metavar='True/False',
                         help='Allow session cookies')
     parser.add_argument('--max-tries', type=int, help='No of maximal tries if the download fails because duplicate '
                                                       'articles', default=3)
+    parser.add_argument('--max-no-of-calls-in-period', type=int, help='Limit number of HTTP request per period',
+                        default=2)
+    parser.add_argument('--limit-period', type=int, help='Limit (seconds) the period the number of HTTP request'
+                                                         ' see also --max-no-of-calls-in-period',
+                        default=1)
     args = parser.parse_args()
     if (args.source_warcfile is None or len(args.source_warcfile) == 0) and args.offline:
         print('Must specify at least one SOURCE_WARC if --offline is False!', file=sys.stderr)
@@ -214,7 +219,7 @@ def main_validate_and_list(args):
 
 def main_cat_and_sample(args):
     """ __file__ sample [source warcfiles or None] [urls list file or stdin] [target warcfile] [Online or Offline] """
-    if args.command == 'sample':
+    if args.command == 'sample' and args.config is not None:
         extract_article_urls_from_page_plus_fun = \
             wrap_input_constants(args.config)['EXTRACT_ARTICLE_URLS_FROM_PAGE_PLUS_FUN']
         just_cache = False
@@ -234,7 +239,9 @@ def main_cat_and_sample(args):
     sample_warc_by_urls(args.source_warcfile, args.url_input_stream, main_logger, target_warcfile=target_warcfile,
                         offline=offline, out_dir=out_dir, just_cache=just_cache, negative=negative,
                         extract_article_urls_from_page_plus_fun=extract_article_urls_from_page_plus_fun,
-                        max_tries=max_tries, allow_cookies=allow_cookies)
+                        max_tries=max_tries, allow_cookies=allow_cookies,
+                        max_no_of_calls_in_period=args.max_no_of_calls_in_period,
+                        limit_period=args.limit_period)
     main_logger.log('INFO', 'Done!')
 
 

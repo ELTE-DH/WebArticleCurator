@@ -24,7 +24,7 @@ def online_test(url='https://index.hu/belfold/2018/08/27/fidesz_media_helyreigaz
 
 def sample_warc_by_urls(source_warcfiles, new_urls, sampler_logger, target_warcfile=None, out_dir=None, offline=True,
                         just_cache=False, negative=False, extract_article_urls_from_page_plus_fun=None, max_tries=3,
-                        allow_cookies=False):
+                        allow_cookies=False, max_no_of_calls_in_period=2, limit_period=1):
     """ Create new warc file for the supplied list of URLs from an existing warc file """
     is_out_dir_mode = out_dir is not None
     if is_out_dir_mode:
@@ -41,7 +41,9 @@ def sample_warc_by_urls(source_warcfiles, new_urls, sampler_logger, target_warcf
             return True
 
     w = WarcCachingDownloader(source_warcfiles, target_warcfile, sampler_logger, just_cache=just_cache,
-                              download_params={'stay_offline': offline, 'allow_cookies': allow_cookies})
+                              download_params={'stay_offline': offline, 'allow_cookies': allow_cookies,
+                                               'max_no_of_calls_in_period': max_no_of_calls_in_period,
+                                               'limit_period': limit_period})
 
     new_urls = {url.strip() for url in new_urls}
     if negative:
