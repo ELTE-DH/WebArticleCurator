@@ -210,12 +210,13 @@ class WarcDownloader:
     def __init__(self, expected_filename, _logger, warcinfo_record_data=None, program_name='WebArticleCurator',
                  user_agent=None, overwrite_warc=True, err_threshold=10, known_bad_urls=None,
                  max_no_of_calls_in_period=2, limit_period=1, proxy_url=None, allow_cookies=False, verify_request=True,
-                 stay_offline=False):
+                 stay_offline=False, max_retries=3):
         # Store variables
         self._logger = _logger
         self._req_headers = {'Accept-Encoding': 'identity', 'User-agent': user_agent}
         self._error_count = 0
         self._error_threshold = err_threshold  # Set the error threshold which cause aborting to prevent denial
+        self._max_retries = max_retries
 
         # Setup download function
         if not stay_offline:
@@ -328,17 +329,31 @@ class WarcDownloader:
         path = quote(path, safe='/%')
         url_reparsed = urlunparse((scheme, netloc, path, params, query, fragment))
 
-        try:  # The actual request (on the reparsed URL, everything else is made on the original URL)
-            resp = self._requests_get(url_reparsed, headers=self._req_headers, stream=True, verify=self._verify_request)
-        # UnicodeError is originated from idna codec error, LocationParseError is originated from URLlib3 error
-        except (UnicodeError, RequestException, LocationParseError) as err:
-            self._handle_request_exception(url, 'RequestException happened during downloading: {0} \n\n'
-                                                ' The program ignores it and jumps to the next one.'.format(err))
-            return None
+        # Try to resolve network errors with retries
+        for i in range(1, self._max_retries+1):
+            try:  # The actual request (on the reparsed URL, everything else is made on the original URL)
+                resp = self._requests_get(url_reparsed, headers=self._req_headers, stream=True,
+                                          verify=self._verify_request)
+            except RequestException as err:
+                self._handle_request_exception(url, f'RequestException happened during downloading: {err} \n\n'
+                                                    ' The program ignores it and jumps to the next one.')
+                resp = None  # Retry if there is retries left...
+            # UnicodeError is originated from idna codec error, LocationParseError is originated from URLlib3 error
+            except (UnicodeError, LocationParseError) as err:
+                self._handle_request_exception(url, f'RequestException happened during downloading: {err} \n\n'
+                                                    ' The program ignores it and jumps to the next one.')
+                return None
 
-        if resp.status_code != 200:  # Not HTTP 200 OK
-            self._handle_request_exception(url, 'Downloading failed with status code: {0} {1}'.format(resp.status_code,
-                                                                                                      resp.reason))
+            if resp is not None:
+                if resp.status_code == 200:
+                    break
+                else:  # Not HTTP 200 OK
+                    self._handle_request_exception(url, f'Downloading failed with status code: {resp.status_code} '
+                                                        f'{resp.reason}')
+                    return None
+        else:  # Out of retries -> Failed
+            self._handle_request_exception(url, 'RequestException happened during downloading: Out of retries! \n\n'
+                                                ' The program ignores it and jumps to the next one.')
             return None
 
         # REQUEST (build headers for warc)
