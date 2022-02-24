@@ -1027,18 +1027,113 @@ def extract_article_urls_from_page_test(filename, test_logger):
     test_logger.log('INFO', 'Test OK!')
     assert (extracted, len(extracted)) == (expected, 30)
 
+    test_logger.log('INFO', 'Testing origo')
+    text = w.download_url('https://www.origo.hu/hir-archivum/2019/20190119.html')
+    extracted = extract_article_urls_from_page_origo(text)
+    expected = {
+        'https://www.origo.hu/itthon/20190119-lelkesz-a-vallasi-uldozesek-70-szazalekaban-kereszteny-az-aldozat.html',
+        'https://www.origo.hu/sport/futball/20190119-la-liga-20-fordulo-real-madrid-sevilla-osszefoglalo-video-casemiro-luka'
+        '-modric.html',
+        'https://www.origo.hu/itthon/20190119-tavaly-augusztusba-egy-vaskuti-ferfi-eletveszelyesen-megkeselt-egy-soltvadkerti-ferfit.html',
+        'https://www.origo.hu/sport/egyeni/20190119-atletika-serulese-utan-gyozelemmel-tert-vissza-marton-anita.html',
+        'https://www.origo.hu/gazdasag/20190117-spotify-igy-mukodik-a-bevetel-elosztasa-jogdijak.html',
+        'https://www.origo.hu/sport/futball/20190118-lasha-dvali-ferencvaros-edzotabor-belek-interju.html',
+        'https://www.origo.hu/itthon/20190119-ma-13-eve-zuhant-le-a-szlovak-legiero-csapatszallito-gepe-hejcen-a-helyi-emlekmunel-ma-megemlekezest.html',
+        'https://www.origo.hu/sport/futball/20190117-a-bajnoki-cim-amiert-semmit-sem-adnak-bundesliga-oszi-szezon.html',
+        'https://www.origo.hu/nagyvilag/20190119-amerikai-legicsapasok-vegeztek-tobb-mint-felszaz-szomaliai-dzsihadistaval.html',
+        'https://www.origo.hu/gazdasag/20190119-felsooktatasi-felveteli-2019-gepeszmernok-szak.html',
+        'https://www.origo.hu/sport/csapat/20190119-kezilabda-ferfi-vilagbajnoksag-a-magyarorszag-dania-merkozes-osszefoglaloj.html',
+        'https://www.origo.hu/techbazis/20190117-tmobile-huawei-lopas-amerika.html',
+        'https://www.origo.hu/itthon/20190119-kisorsoltak-az-otos-lotto-nyeroszamait-amivel-majdnem-ketmilliard-forintot-lehetett-nyerni.html',
+        'https://www.origo.hu/itthon/20190119-harmas-karambol-kophazanal.html',
+        'https://www.origo.hu/nagyvilag/20190119-ma-delben-elkezdodott-pawel-adamowicz-fopolgarmester-temetese-lengyelorszagban-akit-egy-hete.html',
+        'https://www.origo.hu/sport/csapat/20190119-kezilabda-ferfi-vilagbajnoksag-magyarorszag-dania-elozetes.html',
+        'https://www.origo.hu/itthon/20190119-karambol-tortent-nagykatanal.html',
+        'https://www.origo.hu/sport/egyeni/20190119-asztalitenisz-world-tour-ezustermes-a-szudi-pergel-vegyes-paros.html',
+        'https://www.origo.hu/sport/csapat/20190119-kezilabda-ferfi-vilagbajnoksag-magyar-dan-meccs-hangulat-a-meccs-elott.html',
+        'https://www.origo.hu/sport/csapat/20190119-noi-kosarlabda-nb-i-magabiztosan-nyert-a-cimvedo-sopron.html',
+        'https://www.origo.hu/auto/20190117-bucsu-a-benzinmotortol-smart-eq-forfour-teszt.html',
+        'https://www.origo.hu/techbazis/20190117-europa-felhalmozodott-iphone-keszletek-alacsony-kereslet.html',
+        'https://www.origo.hu/sport/laza/20190119-elo-sportkozvetitesek-a-teveben-januar-19en-szombaton.html',
+        'https://www.origo.hu/sport/egyeni/20190119-australian-open-djokovic-zverev-serene-williams-is-tizenhat-kozott.html',
+        'https://www.origo.hu/gazdasag/20190118-madoff-botrany-tortenete-piramisjatek.html',
+        'https://www.origo.hu/sport/futball/20190119-labdarugas-angol-foci-solskjaer-manchestere-verhetetlen-hetgolos-dramat-nyert-a-liverpool.html',
+        'https://www.origo.hu/sport/futball/20190119-bundesliga-18-fordulo-frankfurt-freiburg-leverkusen-monchengladbach-hannover-werder-augsburg.html',
+        'https://www.origo.hu/sport/egyeni/20190119-roger-federer-oltozo-nem-engedtek-be-australian-open.html',
+        'https://www.origo.hu/itthon/20190116-jobbik.html',
+        'https://www.origo.hu/itthon/20190119-tuntetes-budapesten-szombaton.html',
+        'https://www.origo.hu/tudomany/20190119-a-hang-ugyan-nem-fizikai-objektum-megis-hat-ra-a-gravitacio.html',
+        'https://www.origo.hu/sport/egyeni/20190119-fucsovics-marton-es-babos-timea-tenisztorteneti-diadala-az-australian-openen.html',
+        'https://www.origo.hu/sport/egyeni/20190119-babos-timea-fucsovics-marton-az-australian-openen-a-vegyes-parosban.html',
+        'https://www.origo.hu/sport/futball/20190119-fc-sion-ferencvaros-felkeszulesi-merkozes-belek.html',
+        'https://www.origo.hu/itthon/20190118-ahmedh-tudta-ha-rendoroket-dobal-akkor-bortonbe-megy.html',
+        'https://www.origo.hu/gazdasag/20190117-a-bezarkozas-art-a-csaladi-cegeknek-is.html',
+        'https://www.origo.hu/itthon/20190119-hat-fot-kellett-eltavolitania-a-rendorsegnek-a-lanchidrol.html',
+        'https://www.origo.hu/techbazis/20190118-windows-10-mobile-tamogatas-megszunese.html',
+        'https://www.origo.hu/sport/csapat/20190119-kezilabda-harmadszor-is-nyert-a-siofok-a-noi-kezilabda-ehfkupaban.html',
+        'https://www.origo.hu/nagyvilag/20190119-migranskaravan-usa-honduras-guatemala.html',
+        'https://www.origo.hu/nagyvilag/20190119-tovabb-erosodott-a-liga-olasz-kormanypart-tamogatottsaga.html',
+        'https://www.origo.hu/sport/csapat/20190119-a-veszprem-jatekosa-sterbik-arpad-ugrik-be-a-spanyol-ferfi-kezilabdavalogatotthoz-a-vbn.html',
+        'https://www.origo.hu/itthon/20190119-kigyulladt-egy-uzlethelyiseg-mezokovesden.html',
+        'https://www.origo.hu/sport/csapat/20190119-kezilabda-ferfi-vilagbajnoksag-csaszar-gabor-nyilatkozata-a-hazautazasarol.html',
+        'https://www.origo.hu/gazdasag/20190118-kereskedok-figyelem-itt-lep-be-a-mesterseges-intelligencia-az-eladasba.html',
+        'https://www.origo.hu/nagyvilag/20190119-torokorszagban-ezrek-tuntettek-egy-ehsegsztrajkot-folytato-kepviselono-mellett.html',
+        'https://www.origo.hu/sport/laza/20190119-labdarugas-laza-nemet-foci-rb-leipzig-gulacsi-peter-hegedure-valtotta-a-kapuskesztyut.html',
+        'https://www.origo.hu/itthon/20190119-nezopont-ellenzek-kozos-ep-lista-nagy-daniel.html',
+        'https://www.origo.hu/gazdasag/20190117-igy-nez-ki-a-starbucks-kaveszentelye-balin-galeria-1.html',
+        'https://www.origo.hu/techbazis/20190119-nemetorszag-apple-qualcomm-iphone-betiltas-felrevezeto-tajekoztatas.html',
+        'https://www.origo.hu/sport/futball/20190119-labdarugas-bajnokok-ligaja-tuzgolyo-elkepesztoen-nez-ki-kieseses-szakasz-uj-bllabdaja.html',
+        'https://www.origo.hu/techbazis/20190118-call-of-duty-balck-ops-4-sarga-felkialtojel-bug.html',
+        'https://www.origo.hu/sport/futball/20190119-premier-league-23-fordulo-arsenal-chelsea-bajnoki-osszefoglalo.html',
+        'https://www.origo.hu/sport/futball/20190119-bundesliga-18-fordulo-rb-leipzig-borussia-dortmund-bajnoki-osszefoglalo-gulacsi-peter.html',
+        'https://www.origo.hu/sport/futball/20190119-labdarugas-angol-foci-premier-league-hetgolos-pldrama-hiaba-allt-fel-ketszer-is-a-leicester-video.html',
+        'https://www.origo.hu/nagyvilag/20190119-most-egy-euroert-lakast-vehet-sziciliaban.html',
+        'https://www.origo.hu/nagyvilag/20190119-migranskaravan-regisztracio-nelkul-keltek-at-illegalis-bevandorlok-a-mexikoiguatemalai-hataron.html',
+        'https://www.origo.hu/itthon/20190119-kormanyszovivo-a-tuntetesek-az-epvalasztasi-kampany-reszet-kepezik.html',
+        'https://www.origo.hu/sport/loero/20190119-sebestyen-peter-motorverseny-teljes-szezon-supersport-vilagbajnoksag-ptr-honda.html',
+        'https://www.origo.hu/itthon/20190119-semjen-zsolt-tortenelmi-bun-a-nemet-nemzetiseg-egykori-eluldozese.html',
+        'https://www.origo.hu/itthon/20190119-ellenzek-tuntetes.html',
+        'https://www.origo.hu/sport/csapat/20190119-kezilabda-nb-i-megszorongattak-a-fradit-a-noi-kezilabda-nb-iben.html',
+        'https://www.origo.hu/itthon/20190119-ket-auto-karambolozott-kulcs-kozeleben-a-balesetben-harom-ember-megserult.html',
+        'https://www.origo.hu/itthon/20190119-ellenzeki-kepviselok-nagykepu-nyilatkozatai-es-csufos-kudarcai.html',
+        'https://www.origo.hu/sport/egyeni/20190119-uszas-magyar-uszo-gyozte-le-hosszu-katinkat-antwerpenben-szilagyi-liliana.html',
+        'https://www.origo.hu/itthon/20190119-ket-auto-karambolozott-budapesten-tobben-megserultek.html',
+        'https://www.origo.hu/techbazis/20190117-szexbotrany-ces-vibrator.html',
+        'https://www.origo.hu/sport/egyeni/20190119-hosszu-katinka-cseh-laszlo-milak-kristof-majusban-budapesten-versenyez.html',
+        'https://www.origo.hu/itthon/20190119-matol-visszatert-a-tel-orszagszerte-havazas-kezdodik.html',
+        'https://www.origo.hu/sport/egyeni/20190119-vandortabor-jelentkezes-januar-vegetol.html',
+        'https://www.origo.hu/sport/futball/20190119-labdarugas-olasz-foci-serie-a-tovabb-tart-az-inter-remalma-a-kiscsapat-ellen.html',
+        'https://www.origo.hu/itthon/20190119-ep-baloldal-civilek-tamogatasa.html',
+        'https://www.origo.hu/nagyvilag/20190119-tobben-meghaltak-es-megegtek-egy-mexikoi-uzemanyagvezetek-robbanasaban.html',
+        'https://www.origo.hu/auto/20190118-te-jo-eg-hiaba-kuzdott-a-sofor-siman-lefujta-a-szel-az-utrol-a-teherautot.html',
+        'https://www.origo.hu/itthon/20190119-keresi-a-rendorseg-az-idos-tolvajt-aki-alkoholszondat-lopott.html',
+        'https://www.origo.hu/sport/csapat/20190119-kezilabda-ferfi-vilagbajnoksag-nyilatkozatok-a-magyar-dan-meccs-utan.html',
+        'https://www.origo.hu/gazdasag/20190119-felsooktatasi-felveteli-2019-apolas-es-betegellatas.html',
+        'https://www.origo.hu/itthon/20190119-tuntetes-eroszak.html',
+        'https://www.origo.hu/techbazis/20190116-samsung-galaxy-a90-128-gb-tarhely.html',
+        'https://www.origo.hu/itthon/20190119-ahmed-h-idegenrendeszeti-orizet.html',
+        'https://www.origo.hu/nagyvilag/20190119-ujabb-onkormanyzat-esett-aldozatul-a-bevandorlasparti-macroni-rezsimnek.html',
+        'https://www.origo.hu/sport/trashtalk/20190119-gregg-popovich-edzokent-rekorder-san-antonio-spurs-nba.html',
+        'https://www.origo.hu/sport/futball/20190119-labdarugas-olasz-foci-serie-a-az-as-roma-kis-hijan-elszorakozta-a-ketgolos-elonyet-video.html',
+        'https://www.origo.hu/sport/csapat/20190119-kezilabda-vilagbajnoksag-a-magyarok-vbcsoportjaban-hozta-a-kotelezot-a-sved-kezicsapat.html',
+        'https://www.origo.hu/sport/kozvetites/20190119-kezilabda-vilagbajnoksag-kozepdonto-magyarorszag-dania-elo-kozvetites-online.html',
+        'https://www.origo.hu/sport/futball/20190119-kilencet-lott-a-psg-ebbol-nyolcat-a-felelmetes-csatartrio-cavani-mbappe-neymar.html',
+        'https://www.origo.hu/itthon/20190119-a-tetejere-borult-egy-auto-kaposvaron-a-balesetben-egy-ember-serult-meg.html'
+                }
+    assert (extracted, len(extracted)) == (expected, 87)
+
 
 # END SITE SPECIFIC extract_article_urls_from_page FUNCTIONS ###########################################################
 
 # BEGIN SITE SPECIFIC next_page_of_article FUNCTIONS ###################################################################
 
 def next_page_of_article_origo(curr_html):
-    """bs = BeautifulSoup(curr_html, 'lxml')
+    bs = BeautifulSoup(curr_html, 'lxml')
     pages = bs.find('a', {'class': 'ap-next', 'rel': 'next', 'href': True})
     if pages:
         link = pages['href']
         link = f'https://www.origo.hu{link}'
-        return link"""
+        return link
     return None
 
 
@@ -1149,6 +1244,23 @@ def next_page_of_article_test(filename, test_logger):
     text = w.download_url('https://divany.hu/offline/2017/01/24/bocuse_2017/?p=3')
     assert next_page_of_article_index(text) is None
 
+    test_logger.log('INFO', 'Testing Origo')
+    text = w.download_url(
+        'https://www.origo.hu/auto/20190823-bmw-x7-m50d-teszt.html')
+    assert next_page_of_article_origo(
+        text) == 'https://www.origo.hu/auto/20190823-bmw-x7-m50d-teszt.html?pIdx=1'
+    text = w.download_url(
+        'https://www.origo.hu/auto/20190823-bmw-x7-m50d-teszt.html?pIdx=1')
+    assert next_page_of_article_origo(text) is None
+    text = w.download_url('https://www.origo.hu/itthon/20190709-tobb-gyerek-meghalt-vagy-eletveszelyesen-megserult-'
+                          'azert-mert-a-szuleik-nem-figyeltek-rajuk-elegge.html?pIdx=3')
+    assert next_page_of_article_origo(text) == \
+           'https://www.origo.hu/itthon/20190709-tobb-gyerek-meghalt-vagy-eletveszelyesen-megserult-azert-mert-a-' \
+           'szuleik-nem-figyeltek-rajuk-elegge.html?pIdx=4'
+    text = w.download_url('https://www.origo.hu/itthon/20190709-tobb-gyerek-meghalt-vagy-eletveszelyesen-megserult-'
+                          'azert-mert-a-szuleik-nem-figyeltek-rajuk-elegge.html?pIdx=6')
+    assert next_page_of_article_origo(text) is None
+    test_logger.log('INFO', 'Test OK!')
 
 # END SITE SPECIFIC next_page_of_article FUNCTIONS #####################################################################
 
