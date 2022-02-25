@@ -35,11 +35,13 @@ def extract_next_page_url_blikk(archive_page_raw_html):
     """
     ret = None
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    next_page = soup.find(class_='archiveDayRow2')
+    next_page = soup.find('section', class_='text-left') # <section class="text-left pt-5 w-100 mb-5">
     if next_page is not None:
-        next_page_a = next_page.find('a', text='Következő oldal')
-        if next_page_a is not None and 'href' in next_page_a.attrs:
-            ret = 'https:{0}'.format(next_page_a['href'])
+        for a in next_page.find_all('a', {'href': True}):
+            if 'Következő oldal' in a.text:
+                url_end = a['href']
+                if len(url_end) > 0:
+                    ret = f'https://www.blikk.hu{url_end}'
     return ret
 
 
@@ -155,9 +157,9 @@ def extract_next_page_url_test(filename, test_logger):
     assert extract_next_page_url_mno(text) is None
 
     test_logger.log('INFO', 'Testing blikk')
-    text = w.download_url('https://www.blikk.hu/archivum/online?date=2018-10-15')
-    assert extract_next_page_url_blikk(text) == 'https://www.blikk.hu/archivum/online?date=2018-10-15&page=1'
-    text = w.download_url('https://www.blikk.hu/archivum/online?date=2018-10-15&page=4')
+    text = w.download_url('https://www.blikk.hu/archivum/online?date=2020-06-01&page=2')
+    assert extract_next_page_url_blikk(text) == 'https://www.blikk.hu/archivum/online?date=2020-06-01&page=3'
+    text = w.download_url('https://www.blikk.hu/archivum/online?date=2020-06-01&page=4')
     assert extract_next_page_url_blikk(text) is None
 
     test_logger.log('INFO', 'Testing budapestbeacon')
@@ -264,7 +266,8 @@ def extract_article_urls_from_page_blikk(archive_page_raw_html):
     :return: list that contains URLs
     """
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    main_container = soup.find_all(class_='archiveDayRow')
+    main_col = soup.find('ul', class_='newestArticles')
+    main_container = main_col.find_all('li')
     urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
     return urls
 
@@ -500,45 +503,50 @@ def extract_article_urls_from_page_test(filename, test_logger):
     assert (extracted, len(extracted)) == (expected, 37)
 
     test_logger.log('INFO', 'Testing blikk')
-    text = w.download_url('https://www.blikk.hu/archivum/online?date=2018-11-13&page=0')
+    text = w.download_url('https://www.blikk.hu/archivum/online?date=2020-06-01&page=2')
     extracted = extract_article_urls_from_page_blikk(text)
-    expected = {'https://www.blikk.hu/aktualis/belfold/szorenyi-levente/cr10wsw',
-                'https://www.blikk.hu/sztarvilag/sztarsztorik/sokk-kritika-konyhafonok-vip-sef/x7tzj86',
-                'https://www.blikk.hu/sport/magyar-foci/megszolalt-merkozes-kozben-elhunyt-csornai-focista-menyasszony/'
-                'ffe6ejf',
-                'https://www.blikk.hu/sport/csapat/gyozelem-ferfi-vizilabda-gyozelem-oroszorszag/ewz4ql8',
-                'https://www.blikk.hu/aktualis/belfold/penzvalto-rablas-motorosok-menekules-arulas-budapest/rfh8vr0',
-                'https://www.blikk.hu/sport/magyar-foci/magyar-valogatott-ugrai-roland-bokaserules/96hfqer',
-                'https://www.blikk.hu/sztarvilag/filmklikk/tronok-harca-uj-evead-hbo/lhvv61q',
-                'https://www.blikk.hu/sztarvilag/sztarsztorik/gaspar-evelin-torta-sutes-ruzsa-magdi/5bs2fe5',
-                'https://www.blikk.hu/aktualis/belfold/motorost-gazolt-halalra-egy-kamion-hodmezovasarhelynel/8mh263s',
-                'https://www.blikk.hu/sztarvilag/sztarsztorik/dobo-kata-lampalaz-szineszet/f0vdqnq',
-                'https://www.blikk.hu/sztarvilag/sztarsztorik/szabo-gyozo-horkolas/xrp8rcd',
-                'https://www.blikk.hu/sztarvilag/sztarsztorik/a-legbatrabb-paros-kieso-cooky-sztarchat/7elsdbx',
-                'https://www.blikk.hu/sztarvilag/sztarsztorik/halle-berry-marokko-szahara/g9ntm4l',
-                'https://www.blikk.hu/sztarvilag/sztarsztorik/ratajkowski-bikini-napfeny/zyl4gld',
-                'https://www.blikk.hu/aktualis/politika/poszony-cseh-andrej-babis/mnfhl9w',
-                'https://www.blikk.hu/sztarvilag/sztarsztorik/koncert-ingyenes-hosoktere/w2lfk5q',
-                'https://www.blikk.hu/aktualis/kulfold/szaud-arabia-tronorokos-szaudi-ujsagiro/y9lchkn',
-                'https://www.blikk.hu/sport/kulfoldi-foci/feczesin-robert-adana-torokorszag-foci-lovoldozes/k9xj0kz',
-                'https://www.blikk.hu/aktualis/belfold/idojaras-tel-egyik-naprol-a-masikra-fagyok-magyarorszag-havazas-'
-                'ho/203mly4',
-                'https://www.blikk.hu/aktualis/belfold/szkopje-nikola-gruevszki-macedon-miniszterelnok-budapest/'
-                'dhdnknm',
-                'https://www.blikk.hu/sztarvilag/sztarsztorik/stan-lee-marvel-elhunyt-felesege-halala-problemak-'
-                'betegseg/b76ynlf',
-                'https://www.blikk.hu/sport/kulfoldi-foci/gonzalo-higuain-ac-milan-eltiltas/h79v0dp',
-                'https://www.blikk.hu/sztarvilag/sztarsztorik/r-karpati-peter-szinesz/6whxb0h',
-                'https://www.blikk.hu/sport/spanyol-foci/2021-real-madrid-kispad-edzo-santaigo-solari-szerzodes/'
-                'tscq598',
-                'https://www.blikk.hu/aktualis/politika/rick-perry-orban-viktor-ajandek-amerika/znw4rrw',
-                'https://www.blikk.hu/aktualis/belfold/diak-szex-tanarno-szekesfehervar/n3z5ljp',
-                'https://www.blikk.hu/sztarvilag/sztarsztorik/vajna-timi-szexi-pucsit/2gslgww',
-                'https://www.blikk.hu/sztarvilag/sztarsztorik/birsag-buntetes-autosok/x4zd3xp',
-                'https://www.blikk.hu/hoppa/wtf/samsung-agyhullam-iranyitas/we73y0t',
-                'https://www.blikk.hu/eletmod/egeszseg/film-cukorbetegseg-diabetesz-etkezes/35z7vws'
-                }
+    expected = {'https://www.blikk.hu/aktualis/belfold/szuleteset-es-gyogyulasat-is-segesdnek-koszonheti-hanna-szent-kut/xh2p993',
+                'https://www.blikk.hu/sztarvilag/sztarsztorik/oszinten-vallott-maganeleterol-hodi-pamela/kv59dsz',
+                'https://www.blikk.hu/sport/magyar-foci/a-fradi-jatekosa-a-polojan-uzent-igazsagot-george-floydnak/mrmb4n9',
+                'https://www.blikk.hu/aktualis/belfold/karacsony-gergely-lmbtq-humen-magazin-budapest-pride-felvonulas-koszonto/0vw285p',
+                'https://www.blikk.hu/aktualis/krimi/letartoztattak-a-ferfit-aki-eltorte-egy-rendor-kezet-szigethalmon/6pgvnxn',
+                'https://www.blikk.hu/aktualis/kulfold/koronavirus-gocpont-banya-csehorszag-lengyelorszag-uj-fertozes/0gy3ys7',
+                'https://www.blikk.hu/aktualis/belfold/oroszlan-szokott-ki-egy-magyar-allatkertbol-veresegyhaza/wrlbpzr',
+                'https://www.blikk.hu/aktualis/belfold/koronavirus-jarvany-elhunyt-tiz-nap-alatt-edesanyja-nagymamaja-hamis-adatok/htn0fwj',
+                'https://www.blikk.hu/aktualis/kulfold/nagy-britanniaban-reszlegesen-ujraindult-az-oktatas/4hh51qv',
+                'https://www.blikk.hu/aktualis/belfold/ujabb-valtozas-a-benzinkutakon/mdq1dzf',
+                'https://www.blikk.hu/eletmod/egeszseg/ez-okozhatja-a-menstruacios-ciklus-csuszasat-befolyasolo-tenyezok/f9pzj38',
+                'https://www.blikk.hu/sztarvilag/zene/star-academy-dontos-kertesz-ivan-masodik-lemez/108f4lm',
+                'https://www.blikk.hu/aktualis/kulfold/elasott-kisgyerek-ersekujvar-tetem-hazugsag-borzalmas-halalokozas/kb00d8f',
+                'https://www.blikk.hu/aktualis/kulfold/uj-remeny-a-vilag-legveszelyeztetettebb-foemlosfajanak-fennmaradasara/2q34ntn',
+                'https://www.blikk.hu/sztarvilag/sztarsztorik/10-honap-utan-ujra-kocogni-kezdett-tatar-csilla/x2rbznf',
+                'https://www.blikk.hu/sport/spanyol-foci/alaba-nem-szerzodik-spanyolorszagba/lgqtds9',
+                'https://www.blikk.hu/aktualis/kulfold/schwarzenegger-az-eroszak-ellen-van-de-egyetert-a-tiltakozokkal-usa-george-floyd/x1wgmee',
+                'https://www.blikk.hu/sport/magyar-foci/igy-juthatnak-be-a-fradi-szurkolok-a-diosgyor-elleni-rangadora/2wfmb51',
+                'https://www.blikk.hu/sztarvilag/zene/trap-kapitany-toth-gabi-volt-szerelem-uzenet/2d0n37b',
+                'https://www.blikk.hu/sztarvilag/sztarsztorik/rendorok-tamadtak-josh-cusack-szineszre-egy-tuntetesen/jkz8r3n',
+                'https://www.blikk.hu/aktualis/belfold/gyogyito-ereje-van-a-mariaremetei-festmenynek/80yvxs9',
+                'https://www.blikk.hu/aktualis/kulfold/2017-ota-nem-latott-kitorest-produkalt-a-nap/d6ec0xk',
+                'https://www.blikk.hu/ogy-a-veszelyhelyzet-megszunteteserol-targyal-a-haz/qf3t39l',
+                'https://www.blikk.hu/aktualis/belfold/a-dunaba-ugrott-a-lanchidrol-egy-ferfi-keresik/8nzw72m',
+                'https://www.blikk.hu/hamarosan-indul-az-uj-nemzeti-konzultacio/87zttdg',
+                'https://www.blikk.hu/aktualis/kulfold/ormeny-miniszterelnok-csaladja-koronavirusos-karanten/hdkcenp',
+                'https://www.blikk.hu/aktualis/belfold/ujraindult-a-belfoldi-turizmus-a-punkosdi-hosszu-hetvegen-koronavirus/7jm4dw5',
+                'https://www.blikk.hu/sztarvilag/sztarsztorik/csosz-boglarka-foto-szexi-terpeszt-nosztalgia-furdoruhas-szexi/6klp1lm',
+                'https://www.blikk.hu/eletmod/egeszseg/tenyek-es-tevhitek-az-alternativ-orvoslasban/zldqm49',
+                'https://www.blikk.hu/sztarvilag/sztarsztorik/halle-berry-53-evesen-is-mutogatja-kockahasat/epebk2b'}
     assert (extracted, len(extracted)) == (expected, 30)
+    text = w.download_url('https://www.blikk.hu/archivum/online?date=2020-06-01&page=4')
+    extracted = extract_article_urls_from_page_blikk(text)
+    expected = {'https://www.blikk.hu/sport/egyeni/fabio-lombini-uszo-gyasz-22-eves/d2njfe7',
+                'https://www.blikk.hu/ezt-igerik-a-csillagok-a-hetre/znk5wcs',
+                'https://www.blikk.hu/aktualis/veszhelyzet/16-az-uj-fertozottek-szama-es-egy-idos-kronikus-beteg-hunyt-el-koronavirus/q6xd46q',
+                'https://www.blikk.hu/aktualis/krimi/racs-mogott-az-unokazos-csalok/g6epkql',
+                'https://www.blikk.hu/eletmod/lelek/mindenki-sorsa-megpecsetelodik-ezen-a-heten-heti-horoszkop/h0d5555',
+                'https://www.blikk.hu/aktualis/belfold/idojaras-borongos-ido-zapor-zivatar-meleg-nyar/mfrwzhc',
+                'https://www.blikk.hu/sztarvilag/sztarsztorik/csobot-adel-bicikli-szabadsag-szorakozas/xwrhft6',
+                'https://www.blikk.hu/aktualis/kulfold/gyujtogattak-a-feher-haz-kornyeken-donald-trump-es-csaladja/qtvk114'}
+    assert (extracted, len(extracted)) == (expected, 8)
 
     test_logger.log('INFO', 'Testing index')
     text = w.download_url('https://index.hu/24ora?s=&tol=2019-07-12&ig=2019-07-12&tarskiadvanyokbanis=1&profil=&rovat='
