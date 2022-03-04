@@ -561,86 +561,73 @@ def extract_article_urls_from_page_test(filename, test_logger):
 
     test_logger.log('INFO', 'Testing index')
     text = w.download_url(
-        'https://index.hu/24ora?s=&tol=2019-07-12&ig=2019-07-12&tarskiadvanyokbanis=1&profil=&rovat=&cimke=&word=1&pepe=1&page=')
+        'https://index.hu/24ora?s=&tol=2019-07-12&ig=2019-07-12&tarskiadvanyokbanis=1&profil=&rovat=&cimke=&word=1&pepe=1&p=0')
     extracted = extract_article_urls_from_page_index(text)
-    expected = {'https://index.hu/gazdasag/2019/07/12/ujabb_allami_ceg_dobta_meg_nehany_tizmillioval_a_rogan_cecilia-fele_fitneszrendezvenyeket/',
-                'https://index.hu/belfold/2019/07/12/elhagyott_a_brfk_egy_pendrive-ot_az_osszes_munkatarsuk_szemelyes_adataval/',
-                'https://index.hu/sport/atletika/2019/07/12/atletikai_vilagcsucs_megdolt_noi_egy_merfold_sifan_hassan_monaco_gyemant_liga/',
-                'https://index.hu/kultur/2019/07/12/egy_honap_es_jon_a_mindhunter_masodik_evada/',
-                'https://index.hu/mindekozben/poszt/2019/07/12/',
-                'https://index.hu/nagykep/2019/07/12/rendszervaltas_kiallitas_bankuti_andras/',
-                'https://index.hu/sport/uszas/2019/07/12/vizes_vb_2019_varakozasok_sportagak/',
-                'https://index.hu/gazdasag/2019/07/12/ujabb_vizsgalatok_a_johnson_johnson_ellen_a_rakkelto_hintopor_miatt/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_wimbledon_elodonto_legyozte_djokovic/',
-                'https://divany.hu/offline/2019/07/12/szinfalak-mogotti-sztorik/',
+    expected = {'https://index.hu/sport/uszas/2019/07/12/vizes_vb_2019_varakozasok_sportagak/',
                 'https://index.hu/sport/2019/07/12/toroltek_a_red_bull_air_race_szabadedzeseinek_repuleseit/',
-                'https://index.hu/kultur/zene/2019/07/12/pataky_attila_kohaszruhaban_lepett_fel/',
-                'https://index.hu/techtud/2019/07/12/5_milliard_dollart_fizetne_a_facebook_hogy_elsimitsa_az_adatvedelmi_vizsgalatot/',
-                'https://index.hu/kultur/cinematrix/2019/07/12/leonardo_dicaprio_forrongo_jeg_ice_on_fire_dokumentumfilm_klimavaltozas/',
-                'https://galeria.totalcar.hu/blogok/2019/07/12/a_holdra_szallas_elozmenyei/',
-                'https://index.hu/sport/futball/2019/07/12/szalai_adam_bundesliga_legszebb_tamadas_gol_video/',
+                'https://index.hu/mindekozben/poszt/2019/07/12/',
+                'https://index.hu/kulfold/2019/07/12/trump_megerositette_vasarnap_10_varosban_megkezdik_a_kitoloncolast/',
+                'https://index.hu/belfold/2019/07/12/szombaton_visszaterhet_a_kanikula/',
+                'https://index.hu/gazdasag/2019/07/12/ujabb_vizsgalatok_a_johnson_johnson_ellen_a_rakkelto_hintopor_miatt/',
+                'https://index.hu/sport/atletika/2019/07/12/atletikai_vilagcsucs_megdolt_noi_egy_merfold_sifan_hassan_monaco_gyemant_liga/',
+                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_wimbledon_elodonto_legyozte_djokovic/',
+                'https://index.hu/sport/futball/2019/07/12/antoine_griezmann_atletico_madrid_jogi_lepesek_barcelona_igazolas/',
                 'https://index.hu/gazdasag/2019/07/12/hol_a_penz_14_fesztival_kadar_tamas/',
                 'https://index.hu/kulfold/2019/07/12/papirok_nelkuli_bevandorlok_rohantak_meg_a_parizsi_pantheont/',
-                'https://index.hu/sport/futball/2019/07/12/antoine_griezmann_atletico_madrid_jogi_lepesek_barcelona_igazolas/',
-                'https://galeria.index.hu/sport/tenisz/2019/07/12/nadal_es_federer_meccs_wimbledon/',
-                'https://index.hu/belfold/2019/07/12/szombaton_visszaterhet_a_kanikula/'}
-
+                'https://index.hu/techtud/2019/07/12/5_milliard_dollart_fizetne_a_facebook_hogy_elsimitsa_az_adatvedelmi_vizsgalatot/',
+                'https://index.hu/belfold/2019/07/12/elhagyott_a_brfk_egy_pendrive-ot_az_osszes_munkatarsuk_szemelyes_adataval/',
+                'https://divany.hu/offline/2019/07/12/szinfalak-mogotti-sztorik/',
+                'https://index.hu/gazdasag/2019/07/12/ujabb_allami_ceg_dobta_meg_nehany_tizmillioval_a_rogan_cecilia-fele_fitneszrendezvenyeket/',
+                'https://index.hu/kultur/2019/07/12/egy_honap_es_jon_a_mindhunter_masodik_evada/',
+                'https://index.hu/sport/futball/2019/07/12/szalai_adam_bundesliga_legszebb_tamadas_gol_video/',
+                'https://index.hu/kultur/cinematrix/2019/07/12/leonardo_dicaprio_forrongo_jeg_ice_on_fire_dokumentumfilm_klimavaltozas/',
+                'https://index.hu/kultur/zene/2019/07/12/pataky_attila_kohaszruhaban_lepett_fel/',
+                'https://index.hu/nagykep/2019/07/12/rendszervaltas_kiallitas_bankuti_andras/',
+                'https://femina.hu/terasz/globalis-felmelegedes-csokkentese/'}
     assert (extracted, len(extracted)) == (expected, 21)
 
     text = w.download_url(
-        'https://index.hu/24ora?s=&tol=2020-07-13&ig=2020-07-13&tarskiadvanyokbanis=1&profil=&rovat=&cimke=&word=1&pepe=1&page=3')
+        'https://index.hu/24ora?s=&tol=2019-07-12&ig=2019-07-12&tarskiadvanyokbanis=1&profil=&rovat=&cimke=&word=1&pepe=1&p=1')
     extracted = extract_article_urls_from_page_index(text)
-    expected = {'https://index.hu/belfold/2020/07/13/kigyulladt_egy_csarnokepulet_teteje_a_fovarosi_orczy_uton/',
-                'https://index.hu/belfold/2020/07/13/tatarkispeter_alairas_feljelentesek_ugyeszseg_hando_tunde_level/',
-                'https://index.hu/sport/futball/2020/07/13/premier_league_35._fordulo_manchaster_united_southampton/',
-                'https://index.hu/belfold/2020/07/13/egy_21_eves_reszeg_kocsolai_fiatal_tundoklese_es_nyomorusaga/',
-                'https://index.hu/belfold/2020/07/13/a_virus_miatt_felfuggesztik_a_vasuti_forgalmat_szerbia_es_magyarorszag_kozott/',
-                'https://index.hu/kulfold/eurologus/2020/07/13/kulugyi_tanacs_europai_unio_szijjarto_peter_torokorszag_josep_borrell_migracio/',
-                'https://divany.hu/szuloseg/2020/07/13/enido-nem-onzoseg/',
-                'https://index.hu/belfold/2020/07/13/magyar_nemzet_1_6_milliardot_koltott_a_rendorseg_a_jarvanyhelyzet_miatt/',
-                'https://index.hu/belfold/2020/07/13/koronavirus_jarvany_merkely_bela_nyaralas_horvatorszag_teszteles_masodik_hullam/',
-                'https://index.hu/kultur/media/2020/07/13/naya_rivera_glee_baleset_halal/',
-                'https://index.hu/belfold/2020/07/13/tata_luxusszalloda_avalon_beruhazoi_reakcio_oreg-to_tuntetes_tiltakozas_hiszteria/',
-                'https://index.hu/gazdasag/2020/07/13/mercedes_gyar_kecskemet_leallas/',
-                'https://index.hu/gazdasag/2020/07/13/kozel_10_szazalekos_minuszba_mehetett_a_magyar_gazdasag_a_masodik_negyedevben/',
-                'https://index.hu/sport/bringa/2020/07/13/gella_kupa_totvazsony_tomegbukas/',
-                'https://index.hu/kultur/2020/07/13/mi_videkunk_heves_megye_gasztro_matrai_borvidek_egri_borvidek_boraszatok/',
-                'https://femina.hu/gyerek/golya-baba-mitologia-tortenet/',
-                'https://totalcar.hu/magazin/hirek/2020/07/13/terep-kupet_faragnak_a_peugeot_3008-asbol/',
-                'https://index.hu/belfold/2020/07/13/robbanotestet_talaltak_a_gardonyi_szabadstrandnal/',
-                'https://femina.hu/egeszseg/eros-menstruacio-okok/',
-                'https://index.hu/kulfold/2020/07/13/hajtovadaszat_indult_a_negy_nemet_rendort_lefegyverzo_ferfi_miatt/',
-                'https://index.hu/gazdasag/2020/07/13/muji_csodvedelem/',
-                'https://totalcar.hu/magazin/hirek/2020/07/13/hatmeteres_terepjaro_luxuslimo_erkezik/',
-                'https://femina.hu/vilagsztar/john-travolta-kelly-preston/',
-                'https://index.hu/belfold/2020/07/13/parlament_orszaggyules_julius_13._azonnali_kerdes/',
-                'https://index.hu/sport/amerikaifutball/2020/07/13/nfl-washington-redskins-nevvaltas-rasszizmus-serto-nev/',
-                'https://divany.hu/eletem/2020/07/13/utazas-lelek/',
-                'https://index.hu/kulfold/2020/07/13/koronavirus_jarvany_horvatorszag_szlovenia_merseklodott_csokkent_napi_uj_esetszam/',
-                'https://femina.hu/terasz/arccsere-app/', 'https://index.hu/gazdasag/2020/07/13/ader_janos_koltsegvetes_adok_kata_alairta/',
-                'https://index.hu/kulfold/2020/07/13/koronavirus_jarvany_csehorszag_cseh_turistak_fertozes_behurcolas_magyarorszagrol/',
-                'https://velvet.hu/helyszinelo/2020/07/13/giancarlo_albanese_richard_rose_koronavirus_konteo_osszeeskuves-elmelet/',
-                'https://femina.hu/terasz/kis-panda/', 'https://index.hu/techtud/2020/07/13/romaniaban_a_racsos_agyhoz_lancolva_tartottak_az_aids-es_gyerekek_ezreit/',
-                'https://index.hu/techtud/2020/07/13/kinai_koronavirus_lama_antitest_kutatas/',
-                'https://index.hu/techtud/2020/07/13/mars_nasa_perseverance_marsjaro_ingenuity/',
-                'https://index.hu/belfold/2020/07/13/a_julius_10-en_elhunyt_koncz_ferenc_fideszes_kepviselojere_emlekeztek_a_parlamentben/',
-                'https://femina.hu/hazai_sztar/liptai-claudia-piros-ruhaban/',
-                'https://index.hu/kulfold/2020/07/13/a_cseh_kormany_tamogatja_a_fegyveres_onvedelmet/',
-                'https://index.hu/kultur/cinematrix/2020/07/13/star_wars_the_bad_batch_uj_animacios_sorozat_disney_plus_dave_filoni/',
-                'https://index.hu/kulfold/2020/07/13/koronavirus_jarvany_olaszorszag_lombardia_bergamo_aldozatok_csaladja_emberiesseg_elleni_buncselekmeny/',
-                'https://index.hu/gazdasag/2020/07/13/elmaradt_berukert_demonstraltak_a_vasarosnamenyi_ruhagyar_dolgozoi/',
-                'https://index.hu/sport/kosarlabda/2020/07/13/koronavirus_jarvany_nba_kosarlabda_russell_westbrook_fertozott_koronavirusos/',
-                'https://index.hu/belfold/2020/07/13/kaleta_gabor_kaleta-ugy_kulugyminiszterium_nemeth_zsolt/',
-                'https://velvet.hu/gumicukor/2020/07/13/kylie_jenner_kendall_jenner_testverek_galeria/',
-                'https://index.hu/techtud/2020/07/13/urkutatas_hold_oroszorszag_kina_kozos_holdbazis/',
-                'https://index.hu/mindekozben/poszt/2020/07/13/',
-                'https://index.hu/video/2020/07/13/kaleta-ugy_miert_nem_arulnak_el_fontos_reszleteket/',
-                'https://index.hu/belfold/2020/07/13/piroson_athajtott_biciklis_no_rendorautora_tepert_kihallgatas/'}
+    expected = {'https://femina.hu/kapcsolat/ferfiak-csajos-kepei/',
+                'https://index.hu/sport/bringa/2019/07/12/tour_de_france_7._szakasz_chalon-sur-saone_hajra/',
+                'https://index.hu/kulfold/2019/07/12/szudan_tiltakozas_milicia_kozvetites_hemeti/',
+                'https://index.hu/belfold/2019/07/12/feljelentest_tesz_a_momentum_egy_pesti_sracok-cikk_miatt/',
+                'https://totalcar.hu/magazin/technika/2019/07/12/eromero_porsche_911_cabrio_3_4/',
+                'https://index.hu/kulfold/2019/07/12/megerkeztek_torokorszagba_az_orosz_legvedelmi_rendszer_elso_alkatreszei/',
+                'https://femina.hu/otthon/konyha-haromszog-elrendezes/',
+                'https://index.hu/english/2019/07/12/deutsche_telekom_hungary_acquisition_t-systems_4ig_gellert_jaszai_lorinc_meszaros_it_solutions/',
+                'https://index.hu/mindekozben/poszt/2019/07/12/',
+                'https://index.hu/video/2019/07/12/hableany_hajobaleset_duna_megemlekezes_bucsuztatas_viking_sigyn/',
+                'https://index.hu/kultur/media/2019/07/12/stranger_things_netflix_3_harmadik_evad_kritika/',
+                'https://index.hu/gazdasag/2019/07/12/visszater_a_trafikpalyazatokat_felugyelo_miniszter/',
+                'https://totalcar.hu/magazin/2019/07/12/hungaroring_classic_2019_0_nap_galeria/',
+                'https://index.hu/kulfold/2019/07/12/horvatorszag_autopalya_bmw_baleset/',
+                'https://index.hu/belfold/2019/07/12/kozos_jeloltet_inditanak_a_veszpremi_ellenzeki_partok/',
+                'https://femina.hu/hazai_sztar/kiszel-tunde-es-donatella-osszeoltoztek/',
+                'https://index.hu/sport/tenisz/2019/07/12/novak_djokovic_elodonto_wimbledon/',
+                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/',
+                'https://index.hu/belfold/2019/07/12/a_pecsi_gyermekklinikan_operaciokat_kell_elhalasztani_a_klimagondok_miatt/',
+                'https://index.hu/kulfold/2019/07/12/lemondott_az_amerikai_munkaugyi_miniszter_az_epstein-botrany_miatt/',
+                'https://index.hu/sport/vizilabda/2019/07/12/benedek_tibor_olimpiai_csapat_koszonto/',
+                'https://index.hu/belfold/2019/07/12/ket_ember_meghalt_kozlekedesi_balesetben_szolnok_kornyeken/',
+                'https://index.hu/belfold/2019/07/12/bemutattak_az_uj_honvedsegi_koznapi_egyenruhat/'}
 
-    assert (extracted, len(extracted)) == (expected, 48)
+    assert (extracted, len(extracted)) == (expected, 23)
+
+    text = w.download_url(
+        'https://index.hu/24ora?s=&tol=2020-07-13&ig=2020-07-13&tarskiadvanyokbanis=1&profil=&rovat=&cimke=&word=1&pepe=1&p=3')
+    extracted = extract_article_urls_from_page_index(text)
+    expected = {'https://index.hu/gazdasag/penzbeszel/2020/07/13/jaratlan_utakon_a_fiskalis_es_a_monetaris_politika_a_jarvany_ota/',
+                'https://index.hu/kulfold/2020/07/13/tuz_utott_ki_egy_amerikai_hadihajon/',
+                'https://divany.hu/vilagom/2020/07/13/varosvadasz/',
+                'https://index.hu/tudomany/til/2020/07/13/sztalin_unokaja_egy_szettetovalt_amerikai_punk/',
+                'https://femina.hu/hazai_sztar/rekasi-karoly-som-balogh-edina/',
+                'https://divany.hu/kultbait/2020/07/13/rubik-erno/'}
+    assert (extracted, len(extracted)) == (expected, 6)
 
     test_logger.log('INFO', 'Testing velvet')
-    text = w.download_url('https://velvet.hu/24ora?s=&tol=2019-08-03&ig=2019-08-04&profil=&rovat=&cimke=&word=1&pepe=1')
+    text = w.download_url('https://velvet.hu/24ora?s=&tol=2019-08-03&ig=2019-08-04&profil=&rovat=&cimke=&word=1&pepe=1&p=0')
     extracted = extract_article_urls_from_page_index(text)
     expected = {'https://velvet.hu/nyar/2019/08/04/sziget_nagyszinpad_fellepok_heti_trend/',
                 'https://velvet.hu/randi/2019/08/04/randiblog_inbox_a_felesegem_mellett_van_2_szeretom/',
