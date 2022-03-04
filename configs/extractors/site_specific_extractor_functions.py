@@ -35,7 +35,7 @@ def extract_next_page_url_blikk(archive_page_raw_html):
     """
     ret = None
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    next_page = soup.find('section', class_='text-left') # <section class="text-left pt-5 w-100 mb-5">
+    next_page = soup.find('section', class_='text-left')  # <section class="text-left pt-5 w-100 mb-5">
     if next_page is not None:
         for a in next_page.find_all('a', {'href': True}):
             if 'Következő oldal' in a.text:
@@ -279,8 +279,18 @@ def extract_article_urls_from_page_index(archive_page_raw_html):
     :return: list that contains URLs
     """
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    main_container = soup.find_all('article')
-    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    main_container = []
+    # own unique links for report-type article's posts must be filtered out to prevent duplication
+    for article in soup.find_all('article'):
+        if article.find('a', {'href': 'mindekozben/'}) is not None or article.find('span',
+                                                                                   {'class': 'pp-poszt'}) is None:
+            main_container.append(article)
+    all_url = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    urls = set()
+    for url in all_url:
+        if '/mindekozben/' in url:
+            url = url[:(url.rfind("/", 0, -1))+1]
+        urls.add(url)
     return urls
 
 
@@ -505,36 +515,37 @@ def extract_article_urls_from_page_test(filename, test_logger):
     test_logger.log('INFO', 'Testing blikk')
     text = w.download_url('https://www.blikk.hu/archivum/online?date=2020-06-01&page=2')
     extracted = extract_article_urls_from_page_blikk(text)
-    expected = {'https://www.blikk.hu/aktualis/belfold/szuleteset-es-gyogyulasat-is-segesdnek-koszonheti-hanna-szent-kut/xh2p993',
-                'https://www.blikk.hu/sztarvilag/sztarsztorik/oszinten-vallott-maganeleterol-hodi-pamela/kv59dsz',
-                'https://www.blikk.hu/sport/magyar-foci/a-fradi-jatekosa-a-polojan-uzent-igazsagot-george-floydnak/mrmb4n9',
-                'https://www.blikk.hu/aktualis/belfold/karacsony-gergely-lmbtq-humen-magazin-budapest-pride-felvonulas-koszonto/0vw285p',
-                'https://www.blikk.hu/aktualis/krimi/letartoztattak-a-ferfit-aki-eltorte-egy-rendor-kezet-szigethalmon/6pgvnxn',
-                'https://www.blikk.hu/aktualis/kulfold/koronavirus-gocpont-banya-csehorszag-lengyelorszag-uj-fertozes/0gy3ys7',
-                'https://www.blikk.hu/aktualis/belfold/oroszlan-szokott-ki-egy-magyar-allatkertbol-veresegyhaza/wrlbpzr',
-                'https://www.blikk.hu/aktualis/belfold/koronavirus-jarvany-elhunyt-tiz-nap-alatt-edesanyja-nagymamaja-hamis-adatok/htn0fwj',
-                'https://www.blikk.hu/aktualis/kulfold/nagy-britanniaban-reszlegesen-ujraindult-az-oktatas/4hh51qv',
-                'https://www.blikk.hu/aktualis/belfold/ujabb-valtozas-a-benzinkutakon/mdq1dzf',
-                'https://www.blikk.hu/eletmod/egeszseg/ez-okozhatja-a-menstruacios-ciklus-csuszasat-befolyasolo-tenyezok/f9pzj38',
-                'https://www.blikk.hu/sztarvilag/zene/star-academy-dontos-kertesz-ivan-masodik-lemez/108f4lm',
-                'https://www.blikk.hu/aktualis/kulfold/elasott-kisgyerek-ersekujvar-tetem-hazugsag-borzalmas-halalokozas/kb00d8f',
-                'https://www.blikk.hu/aktualis/kulfold/uj-remeny-a-vilag-legveszelyeztetettebb-foemlosfajanak-fennmaradasara/2q34ntn',
-                'https://www.blikk.hu/sztarvilag/sztarsztorik/10-honap-utan-ujra-kocogni-kezdett-tatar-csilla/x2rbznf',
-                'https://www.blikk.hu/sport/spanyol-foci/alaba-nem-szerzodik-spanyolorszagba/lgqtds9',
-                'https://www.blikk.hu/aktualis/kulfold/schwarzenegger-az-eroszak-ellen-van-de-egyetert-a-tiltakozokkal-usa-george-floyd/x1wgmee',
-                'https://www.blikk.hu/sport/magyar-foci/igy-juthatnak-be-a-fradi-szurkolok-a-diosgyor-elleni-rangadora/2wfmb51',
-                'https://www.blikk.hu/sztarvilag/zene/trap-kapitany-toth-gabi-volt-szerelem-uzenet/2d0n37b',
-                'https://www.blikk.hu/sztarvilag/sztarsztorik/rendorok-tamadtak-josh-cusack-szineszre-egy-tuntetesen/jkz8r3n',
-                'https://www.blikk.hu/aktualis/belfold/gyogyito-ereje-van-a-mariaremetei-festmenynek/80yvxs9',
-                'https://www.blikk.hu/aktualis/kulfold/2017-ota-nem-latott-kitorest-produkalt-a-nap/d6ec0xk',
-                'https://www.blikk.hu/ogy-a-veszelyhelyzet-megszunteteserol-targyal-a-haz/qf3t39l',
-                'https://www.blikk.hu/aktualis/belfold/a-dunaba-ugrott-a-lanchidrol-egy-ferfi-keresik/8nzw72m',
-                'https://www.blikk.hu/hamarosan-indul-az-uj-nemzeti-konzultacio/87zttdg',
-                'https://www.blikk.hu/aktualis/kulfold/ormeny-miniszterelnok-csaladja-koronavirusos-karanten/hdkcenp',
-                'https://www.blikk.hu/aktualis/belfold/ujraindult-a-belfoldi-turizmus-a-punkosdi-hosszu-hetvegen-koronavirus/7jm4dw5',
-                'https://www.blikk.hu/sztarvilag/sztarsztorik/csosz-boglarka-foto-szexi-terpeszt-nosztalgia-furdoruhas-szexi/6klp1lm',
-                'https://www.blikk.hu/eletmod/egeszseg/tenyek-es-tevhitek-az-alternativ-orvoslasban/zldqm49',
-                'https://www.blikk.hu/sztarvilag/sztarsztorik/halle-berry-53-evesen-is-mutogatja-kockahasat/epebk2b'}
+    expected = {
+        'https://www.blikk.hu/aktualis/belfold/szuleteset-es-gyogyulasat-is-segesdnek-koszonheti-hanna-szent-kut/xh2p993',
+        'https://www.blikk.hu/sztarvilag/sztarsztorik/oszinten-vallott-maganeleterol-hodi-pamela/kv59dsz',
+        'https://www.blikk.hu/sport/magyar-foci/a-fradi-jatekosa-a-polojan-uzent-igazsagot-george-floydnak/mrmb4n9',
+        'https://www.blikk.hu/aktualis/belfold/karacsony-gergely-lmbtq-humen-magazin-budapest-pride-felvonulas-koszonto/0vw285p',
+        'https://www.blikk.hu/aktualis/krimi/letartoztattak-a-ferfit-aki-eltorte-egy-rendor-kezet-szigethalmon/6pgvnxn',
+        'https://www.blikk.hu/aktualis/kulfold/koronavirus-gocpont-banya-csehorszag-lengyelorszag-uj-fertozes/0gy3ys7',
+        'https://www.blikk.hu/aktualis/belfold/oroszlan-szokott-ki-egy-magyar-allatkertbol-veresegyhaza/wrlbpzr',
+        'https://www.blikk.hu/aktualis/belfold/koronavirus-jarvany-elhunyt-tiz-nap-alatt-edesanyja-nagymamaja-hamis-adatok/htn0fwj',
+        'https://www.blikk.hu/aktualis/kulfold/nagy-britanniaban-reszlegesen-ujraindult-az-oktatas/4hh51qv',
+        'https://www.blikk.hu/aktualis/belfold/ujabb-valtozas-a-benzinkutakon/mdq1dzf',
+        'https://www.blikk.hu/eletmod/egeszseg/ez-okozhatja-a-menstruacios-ciklus-csuszasat-befolyasolo-tenyezok/f9pzj38',
+        'https://www.blikk.hu/sztarvilag/zene/star-academy-dontos-kertesz-ivan-masodik-lemez/108f4lm',
+        'https://www.blikk.hu/aktualis/kulfold/elasott-kisgyerek-ersekujvar-tetem-hazugsag-borzalmas-halalokozas/kb00d8f',
+        'https://www.blikk.hu/aktualis/kulfold/uj-remeny-a-vilag-legveszelyeztetettebb-foemlosfajanak-fennmaradasara/2q34ntn',
+        'https://www.blikk.hu/sztarvilag/sztarsztorik/10-honap-utan-ujra-kocogni-kezdett-tatar-csilla/x2rbznf',
+        'https://www.blikk.hu/sport/spanyol-foci/alaba-nem-szerzodik-spanyolorszagba/lgqtds9',
+        'https://www.blikk.hu/aktualis/kulfold/schwarzenegger-az-eroszak-ellen-van-de-egyetert-a-tiltakozokkal-usa-george-floyd/x1wgmee',
+        'https://www.blikk.hu/sport/magyar-foci/igy-juthatnak-be-a-fradi-szurkolok-a-diosgyor-elleni-rangadora/2wfmb51',
+        'https://www.blikk.hu/sztarvilag/zene/trap-kapitany-toth-gabi-volt-szerelem-uzenet/2d0n37b',
+        'https://www.blikk.hu/sztarvilag/sztarsztorik/rendorok-tamadtak-josh-cusack-szineszre-egy-tuntetesen/jkz8r3n',
+        'https://www.blikk.hu/aktualis/belfold/gyogyito-ereje-van-a-mariaremetei-festmenynek/80yvxs9',
+        'https://www.blikk.hu/aktualis/kulfold/2017-ota-nem-latott-kitorest-produkalt-a-nap/d6ec0xk',
+        'https://www.blikk.hu/ogy-a-veszelyhelyzet-megszunteteserol-targyal-a-haz/qf3t39l',
+        'https://www.blikk.hu/aktualis/belfold/a-dunaba-ugrott-a-lanchidrol-egy-ferfi-keresik/8nzw72m',
+        'https://www.blikk.hu/hamarosan-indul-az-uj-nemzeti-konzultacio/87zttdg',
+        'https://www.blikk.hu/aktualis/kulfold/ormeny-miniszterelnok-csaladja-koronavirusos-karanten/hdkcenp',
+        'https://www.blikk.hu/aktualis/belfold/ujraindult-a-belfoldi-turizmus-a-punkosdi-hosszu-hetvegen-koronavirus/7jm4dw5',
+        'https://www.blikk.hu/sztarvilag/sztarsztorik/csosz-boglarka-foto-szexi-terpeszt-nosztalgia-furdoruhas-szexi/6klp1lm',
+        'https://www.blikk.hu/eletmod/egeszseg/tenyek-es-tevhitek-az-alternativ-orvoslasban/zldqm49',
+        'https://www.blikk.hu/sztarvilag/sztarsztorik/halle-berry-53-evesen-is-mutogatja-kockahasat/epebk2b'}
     assert (extracted, len(extracted)) == (expected, 30)
     text = w.download_url('https://www.blikk.hu/archivum/online?date=2020-06-01&page=4')
     extracted = extract_article_urls_from_page_blikk(text)
@@ -549,112 +560,84 @@ def extract_article_urls_from_page_test(filename, test_logger):
     assert (extracted, len(extracted)) == (expected, 8)
 
     test_logger.log('INFO', 'Testing index')
-    text = w.download_url('https://index.hu/24ora?s=&tol=2019-07-12&ig=2019-07-12&tarskiadvanyokbanis=1&profil=&rovat='
-                          '&cimke=&word=1&pepe=1&page=')
+    text = w.download_url(
+        'https://index.hu/24ora?s=&tol=2019-07-12&ig=2019-07-12&tarskiadvanyokbanis=1&profil=&rovat=&cimke=&word=1&pepe=1&page=')
     extracted = extract_article_urls_from_page_index(text)
-    expected = {'https://index.hu/mindekozben/poszt/2019/07/12/mav_korhaz_vece_vakolat_csernobil/',
-                'https://index.hu/mindekozben/poszt/2019/07/12/szornyszulotteket_keszitenek_a_ketezres_evek_kedvenc_'
-                'gyerekjatekabol/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_wimbledon_elodonto_legyozte_djokovic/',
-                'https://index.hu/nagykep/2019/07/12/rendszervaltas_kiallitas_bankuti_andras/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/kettos_hibaval_ket_'
-                'breklabdahoz_jutott_nadal/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/nadalnak_a_szettben_'
-                'maradasert_kell_szervalnia/',
-                'https://index.hu/belfold/2019/07/12/elhagyott_a_brfk_egy_pendrive-ot_az_osszes_munkatarsuk_szemelyes_'
-                'adataval/',
+    expected = {'https://index.hu/gazdasag/2019/07/12/ujabb_allami_ceg_dobta_meg_nehany_tizmillioval_a_rogan_cecilia-fele_fitneszrendezvenyeket/',
+                'https://index.hu/belfold/2019/07/12/elhagyott_a_brfk_egy_pendrive-ot_az_osszes_munkatarsuk_szemelyes_adataval/',
+                'https://index.hu/sport/atletika/2019/07/12/atletikai_vilagcsucs_megdolt_noi_egy_merfold_sifan_hassan_monaco_gyemant_liga/',
                 'https://index.hu/kultur/2019/07/12/egy_honap_es_jon_a_mindhunter_masodik_evada/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/szep_pontok_egymas_'
-                'utan/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/elonyben_a_harmadik_'
-                'szettben_a_svajci/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/ujabb_ket_breklabda/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/a_meccs_legszebb_'
-                'utese_federere_de_nadal_hozta_az_adogatasat/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/15-30-cal_indult_de_'
-                'hozta_federer_a_szervajat/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/4_2/',
-                'https://index.hu/sport/atletika/2019/07/12/atletikai_vilagcsucs_megdolt_noi_egy_merfold_sifan_hassan_'
-                'monaco_gyemant_liga/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/nadal_kiegyenlitett_a_'
-                'szetteket_tekintve/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/federer_elrontotta_a_'
-                'lecsapast_breklabda/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/fontos_hosszu_'
-                'labdameneteket_is_nyert_federer/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/breklabdahoz_jutott_'
-                'federer/',
-                'https://index.hu/kultur/cinematrix/2019/07/12/leonardo_dicaprio_forrongo_jeg_ice_on_fire_'
-                'dokumentumfilm_klimavaltozas/',
-                'https://index.hu/belfold/2019/07/12/szombaton_visszaterhet_a_kanikula/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/megforditotta_a_'
-                'svajci_megerositette_a_brekelonyt/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/nadal_haritott_egy_'
-                'meccslabdat/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/magabiztosan_'
-                'erositette_meg_a_breket_federer/',
-                'https://index.hu/kultur/zene/2019/07/12/pataky_attila_kohaszruhaban_lepett_fel/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/nadal_emelt_a_jatekan_'
-                'federer_szervaja_beragadt/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/meccslabdaja_van_'
-                'federernek/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/federer_ket_labdara_'
-                'nadal_szervajanal/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/ket_meccslabdarol_'
-                'megforditotta_nadal/',
-                'https://galeria.index.hu/sport/tenisz/2019/07/12/nadal_es_federer_meccs_wimbledon/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/sima_jatek_nadaltol/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/federer_mindketten_'
-                'nagyon_magas_szinvonalon_jatszottunk/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/federer_kiharcolt_'
-                'ket_breklabdat/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/masodszor_is_'
-                'meccslabdaja_van_federernek/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/nadal_kezdte_a_'
-                'negyedik_szettet/',
-                'https://index.hu/gazdasag/2019/07/12/ujabb_allami_ceg_dobta_meg_nehany_tizmillioval_a_rogan_'
-                'cecilia-fele_fitneszrendezvenyeket/',
-                'https://index.hu/sport/futball/2019/07/12/antoine_griezmann_atletico_madrid_jogi_lepesek_barcelona_'
-                'igazolas/',
-                'https://index.hu/sport/2019/07/12/toroltek_a_red_bull_air_race_szabadedzeseinek_repuleseit/',
-                'https://index.hu/kulfold/2019/07/12/papirok_nelkuli_bevandorlok_rohantak_meg_a_parizsi_pantheont/',
-                'https://index.hu/techtud/2019/07/12/5_milliard_dollart_fizetne_a_facebook_hogy_elsimitsa_az_'
-                'adatvedelmi_vizsgalatot/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/30-30/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/nadal_masodszor_is_'
-                'lebrekelte_a_svajcit/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/federer_ujbol_semmire_'
-                'hozta_a_szervajat/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/federer_egy_jatekra_'
-                'a_gyozelemtol/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/semmire_szervalta_ki_'
-                'federer/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/ujabb_sima_jatek_'
-                'federertol/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/federer_legyozte_'
-                'nadalt_12._wimbledoni_dontojebe_jutott_be/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/gyorsan_hozta_nadal_'
-                'is/',
-                'https://index.hu/gazdasag/2019/07/12/hol_a_penz_14_fesztival_kadar_tamas/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/nadal_egy_fonak_'
-                'elutessel_haritotta/',
-                'https://index.hu/gazdasag/2019/07/12/ujabb_vizsgalatok_a_johnson_johnson_ellen_a_rakkelto_hintopor_'
-                'miatt/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/a_svajci_2_1_szett_'
-                'melle_brekelonyben/',
-                'https://divany.hu/offline/2019/07/12/szinfalak-mogotti-sztorik/',
-                'https://index.hu/sport/futball/2019/07/12/szalai_adam_bundesliga_legszebb_tamadas_gol_video/',
+                'https://index.hu/mindekozben/poszt/2019/07/12/',
+                'https://index.hu/nagykep/2019/07/12/rendszervaltas_kiallitas_bankuti_andras/',
                 'https://index.hu/sport/uszas/2019/07/12/vizes_vb_2019_varakozasok_sportagak/',
-                'https://index.hu/mindekozben/poszt/2019/07/12/az_amazonon_legalisan_lehet_venni_urant/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/haritotta_nadal_de_'
-                'asszal_negyedik_is_van_federernek/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/federer_'
-                'kiszervalhatja/',
+                'https://index.hu/gazdasag/2019/07/12/ujabb_vizsgalatok_a_johnson_johnson_ellen_a_rakkelto_hintopor_miatt/',
+                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_wimbledon_elodonto_legyozte_djokovic/',
+                'https://divany.hu/offline/2019/07/12/szinfalak-mogotti-sztorik/',
+                'https://index.hu/sport/2019/07/12/toroltek_a_red_bull_air_race_szabadedzeseinek_repuleseit/',
+                'https://index.hu/kultur/zene/2019/07/12/pataky_attila_kohaszruhaban_lepett_fel/',
+                'https://index.hu/techtud/2019/07/12/5_milliard_dollart_fizetne_a_facebook_hogy_elsimitsa_az_adatvedelmi_vizsgalatot/',
+                'https://index.hu/kultur/cinematrix/2019/07/12/leonardo_dicaprio_forrongo_jeg_ice_on_fire_dokumentumfilm_klimavaltozas/',
                 'https://galeria.totalcar.hu/blogok/2019/07/12/a_holdra_szallas_elozmenyei/',
-                'https://index.hu/sport/tenisz/2019/07/12/federer_nadal_elodonto_wimbledon_ferfi/mindkettot_haritotta_'
-                'federer/'
-                }
-    assert (extracted, len(extracted)) == (expected, 60)
+                'https://index.hu/sport/futball/2019/07/12/szalai_adam_bundesliga_legszebb_tamadas_gol_video/',
+                'https://index.hu/gazdasag/2019/07/12/hol_a_penz_14_fesztival_kadar_tamas/',
+                'https://index.hu/kulfold/2019/07/12/papirok_nelkuli_bevandorlok_rohantak_meg_a_parizsi_pantheont/',
+                'https://index.hu/sport/futball/2019/07/12/antoine_griezmann_atletico_madrid_jogi_lepesek_barcelona_igazolas/',
+                'https://galeria.index.hu/sport/tenisz/2019/07/12/nadal_es_federer_meccs_wimbledon/',
+                'https://index.hu/belfold/2019/07/12/szombaton_visszaterhet_a_kanikula/'}
+
+    assert (extracted, len(extracted)) == (expected, 21)
+
+    text = w.download_url(
+        'https://index.hu/24ora?s=&tol=2020-07-13&ig=2020-07-13&tarskiadvanyokbanis=1&profil=&rovat=&cimke=&word=1&pepe=1&page=3')
+    extracted = extract_article_urls_from_page_index(text)
+    expected = {'https://index.hu/belfold/2020/07/13/kigyulladt_egy_csarnokepulet_teteje_a_fovarosi_orczy_uton/',
+                'https://index.hu/belfold/2020/07/13/tatarkispeter_alairas_feljelentesek_ugyeszseg_hando_tunde_level/',
+                'https://index.hu/sport/futball/2020/07/13/premier_league_35._fordulo_manchaster_united_southampton/',
+                'https://index.hu/belfold/2020/07/13/egy_21_eves_reszeg_kocsolai_fiatal_tundoklese_es_nyomorusaga/',
+                'https://index.hu/belfold/2020/07/13/a_virus_miatt_felfuggesztik_a_vasuti_forgalmat_szerbia_es_magyarorszag_kozott/',
+                'https://index.hu/kulfold/eurologus/2020/07/13/kulugyi_tanacs_europai_unio_szijjarto_peter_torokorszag_josep_borrell_migracio/',
+                'https://divany.hu/szuloseg/2020/07/13/enido-nem-onzoseg/',
+                'https://index.hu/belfold/2020/07/13/magyar_nemzet_1_6_milliardot_koltott_a_rendorseg_a_jarvanyhelyzet_miatt/',
+                'https://index.hu/belfold/2020/07/13/koronavirus_jarvany_merkely_bela_nyaralas_horvatorszag_teszteles_masodik_hullam/',
+                'https://index.hu/kultur/media/2020/07/13/naya_rivera_glee_baleset_halal/',
+                'https://index.hu/belfold/2020/07/13/tata_luxusszalloda_avalon_beruhazoi_reakcio_oreg-to_tuntetes_tiltakozas_hiszteria/',
+                'https://index.hu/gazdasag/2020/07/13/mercedes_gyar_kecskemet_leallas/',
+                'https://index.hu/gazdasag/2020/07/13/kozel_10_szazalekos_minuszba_mehetett_a_magyar_gazdasag_a_masodik_negyedevben/',
+                'https://index.hu/sport/bringa/2020/07/13/gella_kupa_totvazsony_tomegbukas/',
+                'https://index.hu/kultur/2020/07/13/mi_videkunk_heves_megye_gasztro_matrai_borvidek_egri_borvidek_boraszatok/',
+                'https://femina.hu/gyerek/golya-baba-mitologia-tortenet/',
+                'https://totalcar.hu/magazin/hirek/2020/07/13/terep-kupet_faragnak_a_peugeot_3008-asbol/',
+                'https://index.hu/belfold/2020/07/13/robbanotestet_talaltak_a_gardonyi_szabadstrandnal/',
+                'https://femina.hu/egeszseg/eros-menstruacio-okok/',
+                'https://index.hu/kulfold/2020/07/13/hajtovadaszat_indult_a_negy_nemet_rendort_lefegyverzo_ferfi_miatt/',
+                'https://index.hu/gazdasag/2020/07/13/muji_csodvedelem/',
+                'https://totalcar.hu/magazin/hirek/2020/07/13/hatmeteres_terepjaro_luxuslimo_erkezik/',
+                'https://femina.hu/vilagsztar/john-travolta-kelly-preston/',
+                'https://index.hu/belfold/2020/07/13/parlament_orszaggyules_julius_13._azonnali_kerdes/',
+                'https://index.hu/sport/amerikaifutball/2020/07/13/nfl-washington-redskins-nevvaltas-rasszizmus-serto-nev/',
+                'https://divany.hu/eletem/2020/07/13/utazas-lelek/',
+                'https://index.hu/kulfold/2020/07/13/koronavirus_jarvany_horvatorszag_szlovenia_merseklodott_csokkent_napi_uj_esetszam/',
+                'https://femina.hu/terasz/arccsere-app/', 'https://index.hu/gazdasag/2020/07/13/ader_janos_koltsegvetes_adok_kata_alairta/',
+                'https://index.hu/kulfold/2020/07/13/koronavirus_jarvany_csehorszag_cseh_turistak_fertozes_behurcolas_magyarorszagrol/',
+                'https://velvet.hu/helyszinelo/2020/07/13/giancarlo_albanese_richard_rose_koronavirus_konteo_osszeeskuves-elmelet/',
+                'https://femina.hu/terasz/kis-panda/', 'https://index.hu/techtud/2020/07/13/romaniaban_a_racsos_agyhoz_lancolva_tartottak_az_aids-es_gyerekek_ezreit/',
+                'https://index.hu/techtud/2020/07/13/kinai_koronavirus_lama_antitest_kutatas/',
+                'https://index.hu/techtud/2020/07/13/mars_nasa_perseverance_marsjaro_ingenuity/',
+                'https://index.hu/belfold/2020/07/13/a_julius_10-en_elhunyt_koncz_ferenc_fideszes_kepviselojere_emlekeztek_a_parlamentben/',
+                'https://femina.hu/hazai_sztar/liptai-claudia-piros-ruhaban/',
+                'https://index.hu/kulfold/2020/07/13/a_cseh_kormany_tamogatja_a_fegyveres_onvedelmet/',
+                'https://index.hu/kultur/cinematrix/2020/07/13/star_wars_the_bad_batch_uj_animacios_sorozat_disney_plus_dave_filoni/',
+                'https://index.hu/kulfold/2020/07/13/koronavirus_jarvany_olaszorszag_lombardia_bergamo_aldozatok_csaladja_emberiesseg_elleni_buncselekmeny/',
+                'https://index.hu/gazdasag/2020/07/13/elmaradt_berukert_demonstraltak_a_vasarosnamenyi_ruhagyar_dolgozoi/',
+                'https://index.hu/sport/kosarlabda/2020/07/13/koronavirus_jarvany_nba_kosarlabda_russell_westbrook_fertozott_koronavirusos/',
+                'https://index.hu/belfold/2020/07/13/kaleta_gabor_kaleta-ugy_kulugyminiszterium_nemeth_zsolt/',
+                'https://velvet.hu/gumicukor/2020/07/13/kylie_jenner_kendall_jenner_testverek_galeria/',
+                'https://index.hu/techtud/2020/07/13/urkutatas_hold_oroszorszag_kina_kozos_holdbazis/',
+                'https://index.hu/mindekozben/poszt/2020/07/13/',
+                'https://index.hu/video/2020/07/13/kaleta-ugy_miert_nem_arulnak_el_fontos_reszleteket/',
+                'https://index.hu/belfold/2020/07/13/piroson_athajtott_biciklis_no_rendorautora_tepert_kihallgatas/'}
+
+    assert (extracted, len(extracted)) == (expected, 48)
 
     test_logger.log('INFO', 'Testing velvet')
     text = w.download_url('https://velvet.hu/24ora?s=&tol=2019-08-03&ig=2019-08-04&profil=&rovat=&cimke=&word=1&pepe=1')
@@ -1031,7 +1014,8 @@ def extract_article_urls_from_page_test(filename, test_logger):
         'https://telex.hu/koronavirus/2020/12/21/koronavirus-percrol-percre-magyarorszag-vilagszerte-4',
         'https://telex.hu/koronavirus/2020/12/21/orban-viktor-miniszerelnok-bejelentes-karacsony-koronavirus-jarvany-korlatozasok',
         'https://telex.hu/video/2020/12/20/covid-koronavirus-haasz-janos-korhaz',
-        'https://telex.hu/koronavirus/2020/12/21/a-mok-mar-tiz-olyan-haziorvosrol-tud-aki-koronavirus-fertozottkent-halt-meg'}
+        'https://telex.hu/koronavirus/2020/12/21/a-mok-mar-tiz-olyan-haziorvosrol-tud-aki-koronavirus-fertozottkent'
+        '-halt-meg'}
     test_logger.log('INFO', 'Test OK!')
     assert (extracted, len(extracted)) == (expected, 30)
 
@@ -1041,12 +1025,12 @@ def extract_article_urls_from_page_test(filename, test_logger):
 # BEGIN SITE SPECIFIC next_page_of_article FUNCTIONS ###################################################################
 
 def next_page_of_article_origo(curr_html):
-    """bs = BeautifulSoup(curr_html, 'lxml')
+    bs = BeautifulSoup(curr_html, 'lxml')
     pages = bs.find('a', {'class': 'ap-next', 'rel': 'next', 'href': True})
     if pages:
         link = pages['href']
         link = f'https://www.origo.hu{link}'
-        return link"""
+        return link
     return None
 
 
@@ -1097,10 +1081,12 @@ def next_page_of_article_index(curr_html):
                 link = p.attrs['href']
                 return link
     else:
-        pages_velvet = bs.find('a', {'data-page': True, 'class': 'next', 'href': True})
-        if pages_velvet:
-            link = pages_velvet['href']
-            return link
+        velvet_pagination = bs.find('a', {'data-page': True, 'class': 'next', 'href': True})
+        other_pagination = bs.find('a', {'class': 'onestep next1', 'href': True})
+        if velvet_pagination is not None:
+            return velvet_pagination['href']
+        elif other_pagination is not None:
+            return other_pagination['href']
     return None
 
 
@@ -1156,6 +1142,13 @@ def next_page_of_article_test(filename, test_logger):
     assert next_page_of_article_index(text) == 'https://divany.hu/offline/2017/01/24/bocuse_2017/?p=1'
     text = w.download_url('https://divany.hu/offline/2017/01/24/bocuse_2017/?p=3')
     assert next_page_of_article_index(text) is None
+    text = w.download_url('https://velvet.hu/trend/noferfi1108/')
+    assert next_page_of_article_index(text) == 'https://velvet.hu/trend/noferfi1108/2/'
+    text = w.download_url('https://totalcar.hu/tesztek/pathfinderle/')
+    assert next_page_of_article_index(text) == 'https://totalcar.hu/tesztek/pathfinderle/2/'
+    text = w.download_url('https://index.hu/kulfold/2011/02/03/harom_tengerig_nyulo_tervet_dedelgetunk/')
+    assert next_page_of_article_index(
+        text) == 'https://index.hu/kulfold/2011/02/03/harom_tengerig_nyulo_tervet_dedelgetunk/2/'
 
 
 # END SITE SPECIFIC next_page_of_article FUNCTIONS #####################################################################
@@ -1174,4 +1167,3 @@ if __name__ == '__main__':
     extract_next_page_url_test(choices['nextpage'], main_logger)
     extract_article_urls_from_page_test(choices['archive'], main_logger)
     next_page_of_article_test(choices['article_nextpage'], main_logger)
-    
