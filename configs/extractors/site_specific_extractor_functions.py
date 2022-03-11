@@ -288,6 +288,11 @@ def extract_article_urls_from_page_index(archive_page_raw_html):
     all_url = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
     urls = set()
     for url in all_url:
+        # the daily article in the 'mindeközben' column is linked multiple times (with different sub-links), but the
+        # main article contains all posts, so we keep only the main link (each link is truncated for equalization)
+        # https://index.hu/mindekozben/poszt/2019/07/12/szornyszulotteket_keszitenek_a_ketezres_evek_kedvenc_gyerekjatekabol/
+        # https://index.hu/mindekozben/poszt/2019/07/12/mav_korhaz_vece_vakolat_csernobil/
+        # >>> https://index.hu/mindekozben/poszt/2019/07/12/
         if '/mindekozben/' in url:
             url = url[:(url.rfind("/", 0, -1))+1]
         urls.add(url)
