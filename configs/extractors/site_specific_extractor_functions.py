@@ -212,8 +212,8 @@ def safe_extract_hrefs_from_a_tags(main_container):
     :return: Generator over the extracted links
     """
     for a_tag in main_container:
-        a_tag_a = a_tag.find('a')
-        if a_tag_a is not None and 'href' in a_tag_a.attrs:
+        a_tag_a = a_tag.find('a', {'href': True})
+        if a_tag_a is not None:
             yield a_tag_a['href']
 
 
@@ -227,8 +227,8 @@ def extract_article_urls_from_page_origo(archive_page_raw_html):
     main_container = soup.find_all(class_='archive-cikk')
     urls = set()
     for a_tag in main_container:
-        a_tag_a = a_tag.find('a')
-        if a_tag_a is not None and 'href' in a_tag_a.attrs:
+        a_tag_a = a_tag.find('a', {'href': True})
+        if a_tag_a is not None:
             link = a_tag_a['href']
             # replaces the urls with their live version
             link = ORIGO_URL_CHANGES.get(link, link)
