@@ -7,7 +7,7 @@ from os.path import abspath, dirname, join as os_path_join
 from mplogger import Logger
 from bs4 import BeautifulSoup
 
-from src.webarticlecurator import WarcCachingDownloader
+from webarticlecurator import WarcCachingDownloader
 
 from origo_link_fixer_dict import ORIGO_URL_CHANGES
 
@@ -226,13 +226,9 @@ def extract_article_urls_from_page_origo(archive_page_raw_html):
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all(class_='archive-cikk')
     urls = set()
-    for a_tag in main_container:
-        a_tag_a = a_tag.find('a', {'href': True})
-        if a_tag_a is not None:
-            link = a_tag_a['href']
-            # replaces the urls with their live version
-            link = ORIGO_URL_CHANGES.get(link, link)
-            urls.add(link)
+    for link in safe_extract_hrefs_from_a_tags(main_container):
+        link = ORIGO_URL_CHANGES.get(link, link)
+        urls.add(link)
     return urls
 
 
@@ -432,6 +428,7 @@ def extract_article_urls_from_page_test(filename, test_logger):
     # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
     w = WarcCachingDownloader(filename, None, test_logger, just_cache=True, download_params={'stay_offline': True})
 
+    test_logger.log('INFO', 'Testing origo')
     text = w.download_url('https://www.origo.hu/hir-archivum/2004/20040830.html')
     extracted = extract_article_urls_from_page_origo(text)
     expected = {'https://www.origo.hu/techbazis/20040830klasszikus.html', 'https://www.origo.hu/teve'
