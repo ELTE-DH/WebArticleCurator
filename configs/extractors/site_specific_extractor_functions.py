@@ -7,8 +7,9 @@ from os.path import abspath, dirname, join as os_path_join
 from mplogger import Logger
 from bs4 import BeautifulSoup
 
-from webarticlecurator import WarcCachingDownloader
+from src.webarticlecurator import WarcCachingDownloader
 
+from origo_link_fixer_dict import ORIGO_URL_CHANGES
 
 # BEGIN SITE SPECIFIC extract_next_page_url FUNCTIONS ##################################################################
 
@@ -224,7 +225,14 @@ def extract_article_urls_from_page_origo(archive_page_raw_html):
     """
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     main_container = soup.find_all(class_='archive-cikk')
-    urls = {link for link in safe_extract_hrefs_from_a_tags(main_container)}
+    urls = set()
+    for a_tag in main_container:
+        a_tag_a = a_tag.find('a')
+        if a_tag_a is not None and 'href' in a_tag_a.attrs:
+            link = a_tag_a['href']
+            # replaces the urls with their live version
+            link = ORIGO_URL_CHANGES.get(link, link)
+            urls.add(link)
     return urls
 
 
@@ -423,6 +431,67 @@ def extract_article_urls_from_page_test(filename, test_logger):
     """Quick test for extracting URLs form an archive page"""
     # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
     w = WarcCachingDownloader(filename, None, test_logger, just_cache=True, download_params={'stay_offline': True})
+
+    text = w.download_url('https://www.origo.hu/hir-archivum/2004/20040830.html')
+    extracted = extract_article_urls_from_page_origo(text)
+    expected = {'https://www.origo.hu/techbazis/20040830klasszikus.html', 'https://www.origo.hu/teve'
+                                                                          '/20040830kimcattrall.html',
+                'https://www.origo.hu/tudomany/20040830surusodo.html',
+                'https://www.origo.hu/itthon/20040830sokan.html', 'https://www.origo.hu/teve/20040830heti.html',
+                'https://www.origo.hu/filmklub/20040819beindul.html',
+                'https://www.origo.hu/gazdasag/20040830miniszteri.html',
+                'https://www.origo.hu/nagyvilag/20040830ujabb.html', 'https://www.origo.hu/teve/20040830emma.html',
+                'https://www.origo.hu/sport/futball/20040830safar.html',
+                'https://www.origo.hu/itthon/20040830medgyessy.html',
+                'https://www.origo.hu/nagyvilag/20040830megkezdodott.html',
+                'https://www.origo.hu/techbazis/20040830logitech.html',
+                'https://www.origo.hu/nagyvilag/20040830azeu.html',
+                'https://www.origo.hu/nagyvilag/20040830cseh.html',
+                'https://www.origo.hu/techbazis/20040830kesz.html',
+                'https://www.origo.hu/itthon/20040830kenyszerleszallas.html',
+                'https://www.origo.hu/sport/egyeni/20040830teniszvilagranglistak.html',
+                'https://www.origo.hu/sport/olimpia/2004/20040830rendben.html',
+                'https://www.origo.hu/tudomany/20040830szivbetegsegjarvany.html',
+                'https://www.origo.hu/itthon/20040830kiraboltak.html',
+                'https://www.origo.hu/itthon/20040830vademelesi.html',
+                'https://www.origo.hu/itthon/20040830nemgergenyit.html',
+                'https://www.origo.hu/nagyvilag/20040830atuszok.html',
+                'https://www.origo.hu/itthon/20040830csak.html', 'https://www.origo.hu/filmklub/20040830monica.html',
+                'https://www.origo.hu/sport/olimpia/2004/20040829nyolc.html',
+                'https://www.origo.hu/sport/olimpia/2004/20040830anemetek.html',
+                'https://www.origo.hu/tudomany/20040830etikatlan.html',
+                'https://www.origo.hu/nagyvilag/20040830cafolja.html',
+                'https://www.origo.hu/teve/20040830divattervezok.html',
+                'https://www.origo.hu/nagyvilag/20040830tevedesbol.html',
+                'https://www.origo.hu/sport/olimpia/2004/20040830annusugy.html',
+                'https://www.origo.hu/itthon/20040830mergezo.html', 'https://www.origo.hu/teve/20040830rendezd.html',
+                'https://www.origo.hu/nagyvilag/20040830meghosszabbitottak.html',
+                'https://www.origo.hu/gazdasag/20040830abizottsag.html',
+                'https://www.origo.hu/gazdasag/20040830biztonsagos.html',
+                'https://www.origo.hu/techbazis/20040830konzolon.html',
+                'https://www.origo.hu/sport/olimpia/2004/20040830megerkezett.html',
+                'https://www.origo.hu/nagyvilag/20040830hivatalosan.html',
+                'https://www.origo.hu/tudomany/20040830mars.html', 'https://www.origo.hu/itthon/20040830zuhant.html',
+                'https://www.origo.hu/nagyvilag/20040830aszeptemberi.html',
+                'https://www.origo.hu/teve/20040830anap.html',
+                'https://www.origo.hu/sport/futball/20040830csak1.html',
+                'https://www.origo.hu/sport/olimpia/2004/20040830magyarorszag.html',
+                'https://www.origo.hu/gazdasag/20040830szerdatol.html',
+                'https://www.origo.hu/nagyvilag/20040830portugaliaban.html',
+                'https://www.origo.hu/sport/olimpia/2004/20040830anob.html',
+                'https://www.origo.hu/filmklub/20040830jezus.html',
+                'https://www.origo.hu/nagyvilag/20040830segelyszervezetek.html',
+                'https://www.origo.hu/sport/olimpia/2004/20040830megromlott.html',
+                'https://www.origo.hu/itthon/20040830nemlesz.html',
+                'https://www.origo.hu/sport/olimpia/2004/20040830felfuggesztett.html',
+                'https://www.origo.hu/itthon/20040830szirenat.html',
+                'https://www.origo.hu/itthon/20040830ciganyozni.html',
+                'https://www.origo.hu/sport/olimpia/2004/20040830orizetben.html',
+                'https://www.origo.hu/techbazis/20040830ajatekok.html',
+                'https://www.origo.hu/gazdasag/20040830iden.html',
+                'https://www.origo.hu/itthon/20040830gyurcsanyt.html'}
+
+    assert (extracted, len(extracted)) == (expected, 61)
 
     test_logger.log('INFO', 'Testing nol')
     text = w.download_url('http://nol.hu/archivum?page=37')
