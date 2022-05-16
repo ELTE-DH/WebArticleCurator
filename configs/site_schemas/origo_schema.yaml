@@ -23,4 +23,4 @@
 # "new_article_url_threshold": 0
 
 "corpus_converter_file": "../extractors/corpus_converters.py"
-"corpus_converter": "dummy-converter"
+"corpus_converter": "MultiPageArticleConverter"
