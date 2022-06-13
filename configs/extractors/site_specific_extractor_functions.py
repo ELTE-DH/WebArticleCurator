@@ -1135,6 +1135,7 @@ def next_page_of_article_telex(curr_html):  # https://telex.hu/koronavirus/2020/
                 href = pagelink.attrs['href']
                 if href[-1].isdigit() and int(href[-1]) == current_pagenum + 1:
                     next_page = f'https://telex.hu{href}'
+                    print(next_page)
                     return next_page
     return None
 
@@ -1186,12 +1187,12 @@ def next_page_of_article_test(filename, test_logger):
     """Quick test for extracting URLs form an archive page"""
     # This function is intended to be used from this file only as the import of WarcCachingDownloader is local to main()
     w = WarcCachingDownloader(filename, None, test_logger, just_cache=True, download_params={'stay_offline': True})
-
+    text = w.download_url('https://telex.hu/koronavirus/2020/11/12/koronavirus-pp-2020-11-12')
+    assert next_page_of_article_telex(text) == 'https://telex.hu/koronavirus/2020/11/12/koronavirus-pp-2020-11-12?oldal=2'
     test_logger.log('INFO', 'Testing Telex')
-    text = w.download_url('https://telex.hu/koronavirus/2021/01/21/oltasprogramrol-es-vakcinaigazolasrol-is-kerdezzuk-'
-                          'a-kormanyt/elo')
+    text = w.download_url('https://telex.hu/koronavirus/2021/01/21/oltasprogramrol-es-vakcinaigazolasrol-is-kerdezzuk-a-kormanyt')
     assert next_page_of_article_telex(text) == 'https://telex.hu/koronavirus/2021/01/21/oltasprogramrol-es-' \
-                                               'vakcinaigazolasrol-is-kerdezzuk-a-kormanyt/elo?oldal=2'
+                                               'vakcinaigazolasrol-is-kerdezzuk-a-kormanyt?oldal=2'
     text = w.download_url('https://telex.hu/koronavirus/2021/01/21/oltasprogramrol-es-vakcinaigazolasrol-is-kerdezzuk-'
                           'a-kormanyt/elo?oldal=2')
     assert next_page_of_article_telex(text) is None
