@@ -19,16 +19,16 @@ webarticlecurator = "webarticlecurator.__main__:main"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-beautifulsoup4 = "^4.9.0"
-lxml = "^4.5.0"
-pyyaml = "^6.0.0"
+beautifulsoup4 = "^4.12.3"
+lxml = "^5.3.0"
+pyyaml = "^6.0.2"
 warcio = "^1.7.0"
-chardet = "^4.0.0"
-requests = "^2.26.0"
-urllib3 = "^1.26.7"
+chardet = "^5.2.0"
+requests = "^2.32.3"
+urllib3 = "^2.2.3"
 ratelimit = "^2.2.1"
-yamale = "^4.0.2"
-mplogger = "^1.0.0"
+yamale = "^5.2.1"
+mplogger = "^1.1.0"
 # A list of all of the optional dependencies, some of which are included in the
 # below `extras`. They can be opted into by apps.
 newspaper3k = { version = "^0.2.8", optional = true }
@@ -38,7 +38,7 @@ newspaper3k = ["newspaper3k"]
 full = ["newspaper3k"]
 
 [tool.poetry.dev-dependencies]
-pytest = "^6"
+pytest = "^8"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
