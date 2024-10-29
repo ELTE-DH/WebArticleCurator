@@ -5,6 +5,7 @@ import os
 import sys
 import importlib.util
 from argparse import Namespace
+from contextlib import contextmanager
 from datetime import datetime, date, timedelta
 from os.path import join as os_path_join, exists as os_path_exists, dirname as os_path_dirname, \
     split as os_path_split, abspath, splitext
@@ -239,6 +240,23 @@ class DummyConverter:  # No output corpus
 
     def __del__(self):
         pass
+
+
+@contextmanager
+def write_set_contents_to_file(set_instance, fname=None):
+    fh = None
+    if fname is not None:
+        fh = open(fname, 'w', encoding='UTF-8')  # To store FH (for closing it)
+
+    def _add_fun(elem):
+        set_instance.add(elem)
+        print(elem, file=fh, flush=True)
+
+    try:
+        yield _add_fun
+    finally:
+        if fh is not None:
+            fh.close()
 
 
 if __name__ == '__main__':

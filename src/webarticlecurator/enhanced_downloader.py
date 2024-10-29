@@ -410,6 +410,8 @@ class WarcDownloader:
             # committed on Jan 7, 2015
             # "Our ISO-8859-2 and windows-1250 (Hungarian) probers have been temporarily"
             # "disabled until we can retrain the models."
+            # More info: https://github.com/chardet/chardet/issues/87
+            # and https://github.com/chardet/chardet/pull/99
             enc = detect(data)['encoding']
         try:
             text = data.decode(enc)  # Normal decode process
