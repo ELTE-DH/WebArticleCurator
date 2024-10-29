@@ -82,7 +82,7 @@ def extract_next_page_url_think_transindex(archive_page_raw_html):
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
     next_page = soup.find('div', class_='pagination')
     if next_page is not None:
-        next_page_link = next_page.find('a', text='tovább >>')
+        next_page_link = next_page.find('a', string='tovább >>')
         if next_page_link is not None and 'href' in next_page_link.attrs:
             url_end = next_page_link['href']
             url = f'https://think.transindex.ro{url_end}'
