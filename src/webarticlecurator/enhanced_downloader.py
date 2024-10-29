@@ -3,9 +3,9 @@
 
 # Good for downloading archive index and also the actual articles in two separate row
 
-import os
 import sys
 from io import BytesIO
+from pathlib import Path
 from collections import Counter
 from urllib.parse import urlparse, quote, urlunparse
 
@@ -92,6 +92,7 @@ class WarcCachingDownloader:
     """
     def __init__(self, existing_warc_filenames, new_warc_filename, _logger, just_cache=False, download_params=None):
         self._logger = _logger
+        # TODO raise to normal params
         if download_params is not None:
             strict_mode = download_params.pop('strict_mode', False)
             check_digest = download_params.pop('check_digest', False)
@@ -102,14 +103,15 @@ class WarcCachingDownloader:
 
         self.url_index = set()
         info_record_data = None
-        if existing_warc_filenames is not None:  # Setup the supplied existing warc archive file as cache
-            if isinstance(existing_warc_filenames, str):  # Transform it to list
+        if existing_warc_filenames is not None:  # Setup the given existing warc archive file as cache
+            if isinstance(existing_warc_filenames, str):
                 existing_warc_filenames = [existing_warc_filenames]
             self._cached_downloads = []
             for ex_warc_filename in existing_warc_filenames:
                 cached_downloads = WarcReader(ex_warc_filename, _logger, strict_mode, check_digest)
                 self._cached_downloads.append(cached_downloads)
                 self.url_index |= cached_downloads.url_index
+                # The last, top priority info record is used
                 info_record_data = cached_downloads.info_record_data
 
         if just_cache:
@@ -135,6 +137,7 @@ class WarcCachingDownloader:
             cached_content = cache.download_url(url)
             # 3c) Decide to return the records with the content XOR write the records and return the content only
             if return_warc_records_wo_writing:
+                # E.g. for separate, optional writing with write_records_for_url() in a retry logic
                 cached_content = ((cache, reqv, resp), cached_content)
             else:
                 self._new_downloads.write_records_for_url(url, (cache, reqv, resp))
@@ -163,8 +166,8 @@ class WarcCachingDownloader:
                 reqv, resp = cache.get_record_data(url)
                 break
         else:
-            raise ValueError('INTERNAL ERROR: {0} not found in any supplied source WARC file,'
-                             ' but is in the URL index!'.format(url))
+            raise ValueError(f'INTERNAL ERROR: {url} not found in any supplied source WARC file,'
+                             f' but is in the URL index!')
         return cache, reqv, resp
 
     def get_records(self, url):
@@ -199,9 +202,12 @@ class WarcDummyDownloader:
         return None
 
     @staticmethod
-    def write_record(*_, **__):
+    def get_records_offset(*_, **__):
         return None
 
+    @staticmethod
+    def get_records(*_, **__):
+        return None
 
 class WarcDownloader:
     """
@@ -215,7 +221,7 @@ class WarcDownloader:
         self._logger = _logger
         self._req_headers = {'Accept-Encoding': 'identity', 'User-agent': user_agent}
         self._error_count = 0
-        self._error_threshold = err_threshold  # Set the error threshold which cause aborting to prevent denial
+        self._error_threshold = err_threshold  # Set the error threshold which cause aborting to prevent ban
         self._max_retries = max_retries
 
         # Setup download function
@@ -265,14 +271,17 @@ class WarcDownloader:
     def _set_target_filename(filename, overwrite_warc):
         if not overwrite_warc:  # Find out next nonexisting warc filename
             num = 0
-            while os.path.exists(filename):
-                filename2, ext = os.path.splitext(filename)  # Should be filename.warc.gz
-                if ext == '.gz' and filename2.endswith('.warc'):
-                    filename2, ext2 = os.path.splitext(filename2)  # Should be filename.warc
+            while Path(filename).exists():
+                filename2, ext = filename.stem, filename.suffix
+                # Should be filename.warc.gz
+                if filename.suffix == '.gz' and filename2.endswith('.warc'):
+                    # Should be filename.warc
+                    filename2, ext2 = filename2.stem, filename2.suffix
                     ext = ext2 + ext  # Should be .warc.gz
 
-                filename = '{0}-{1:05d}{2}'.format(filename2, num, ext)
+                filename = f'{filename2}-{num:05d}{ext}'
                 num += 1
+
         return filename
 
     def __del__(self):
@@ -298,7 +307,7 @@ class WarcDownloader:
     def _get_peer_name(resp):
         # Must get peer_name before the content is read
         # It has no official API for that:
-        # https://github.com/kennethreitz/requests/issues/2158
+        # https://github.com/psf/requests/issues/2158
         # https://github.com/urllib3/urllib3/issues/1071
         # So workaround to be compatible with windows:
         # https://stackoverflow.com/questions/22492484/how-do-i-get-the-ip-address-from-a-http-request-using-the-\
@@ -328,6 +337,8 @@ class WarcDownloader:
         # For safety urlencode the generated URL... (The URL might be modified in this step.)
         path = quote(path, safe='/%')
         url_reparsed = urlunparse((scheme, netloc, path, params, query, fragment))
+        if url != url_reparsed:
+            self._logger.log('WARNING', f'URL ({url}) changed after reparsing:', url_reparsed)
 
         # Try to resolve network errors with retries
         for i in range(1, self._max_retries+1):
@@ -335,8 +346,7 @@ class WarcDownloader:
                 resp = self._requests_get(url_reparsed, headers=self._req_headers, stream=True,
                                           verify=self._verify_request)
             except RequestException as err:
-                self._handle_request_exception(url, f'RequestException happened during downloading: {err} \n\n'
-                                                    ' The program ignores it and jumps to the next one.')
+                self._handle_request_exception(url, f'RequestException happened during downloading: {err}')
                 resp = None  # Retry if there is retries left...
             # UnicodeError is originated from idna codec error, LocationParseError is originated from URLlib3 error
             except (UnicodeError, LocationParseError) as err:
@@ -349,10 +359,11 @@ class WarcDownloader:
                     break
                 else:  # Not HTTP 200 OK
                     self._handle_request_exception(url, f'Downloading failed with status code: {resp.status_code} '
-                                                        f'{resp.reason}')
+                                                        f'{resp.reason}  \n\n'
+                                                        f' The program ignores it and jumps to the next one.')
                     return None
         else:  # Out of retries -> Failed
-            self._handle_request_exception(url, 'RequestException happened during downloading: Out of retries! \n\n'
+            self._handle_request_exception(url, 'Out of retries! \n\n'
                                                 ' The program ignores it and jumps to the next one.')
             return None
 
@@ -360,14 +371,15 @@ class WarcDownloader:
         reqv_headers = resp.request.headers
         reqv_headers['Host'] = netloc
 
-        proto = 'HTTP/{0}'.format(respv_str[resp.raw.version])  # Friendly protocol name
-        reqv_http_headers = StatusAndHeaders('GET {0} {1}'.format(urlunparse(('', '', path, params, query, fragment)),
-                                                                  proto), reqv_headers.items(), is_http_request=True)
+        proto = f'HTTP/{respv_str[resp.raw.version]}'  # Friendly protocol name
+        reqv_http_headers = StatusAndHeaders(f'GET {urlunparse(("", "", path, params, query, fragment))} {proto}',
+                                             reqv_headers.items(), is_http_request=True)
         reqv_record = self._writer.create_warc_record(url, 'request', http_headers=reqv_http_headers)
 
         # RESPONSE
-        # resp_status need to be stripped else warcio strips the spaces and digest verification will fail!
-        resp_status = '{0} {1}'.format(resp.status_code, resp.reason).strip()
+        # resp_status need to be stripped (e.g. empty reason)
+        # else warcio strips the spaces and digest verification will fail!
+        resp_status = f'{resp.status_code} {resp.reason}'.strip()
         resp_headers_list = resp.raw.headers.items()  # get raw headers from urllib3
         # Must get peer_name before the content is read
         peer_name = self._get_peer_name(resp)
@@ -375,14 +387,14 @@ class WarcDownloader:
         try:
             data = resp.raw.read()  # To be able to return decoded and also write warc
         except ProtocolError as err:
-            self._handle_request_exception(url, 'RequestException happened during downloading: {0} \n\n'
-                                                ' The program ignores it and jumps to the next one.'.format(err))
+            self._handle_request_exception(url, f'RequestException happened during downloading: {err} \n\n'
+                                                f' The program ignores it and jumps to the next one.')
             return None
 
         if len(data) == 0:
             err = 'Response data has zero length!'
-            self._handle_request_exception(url, 'RequestException happened during downloading: {0} \n\n'
-                                                ' The program ignores it and jumps to the next one.'.format(err))
+            self._handle_request_exception(url, f'RequestException happened during downloading: {err} \n\n'
+                                                f' The program ignores it and jumps to the next one.')
             return None
 
         # warcio hack as \r\n is the record separator and trailing ones will be split and digest will eventually fail!
@@ -392,6 +404,12 @@ class WarcDownloader:
         # Get or detect encoding to decode the bytes of the text to str
         enc = patched_get_encoding_from_headers(resp.headers)
         if enc is None:
+            # TODO What now?
+            # https://github.com/chardet/chardet/commit/da6c0a079c41683ca475e28364fcf9c4d34f4359
+            # Temporarily disable Hungarian probers...
+            # committed on Jan 7, 2015
+            # "Our ISO-8859-2 and windows-1250 (Hungarian) probers have been temporarily"
+            # "disabled until we can retrain the models."
             enc = detect(data)['encoding']
         try:
             text = data.decode(enc)  # Normal decode process
@@ -408,7 +426,7 @@ class WarcDownloader:
                                                                          'WARC-X-Detected-Encoding': enc})
         # Everything is OK
         if return_warc_records_wo_writing:
-            # Return the WARC records and the text content
+            # Return the WARC records and the text content. no writing (e.g. for external retry logic)
             return (None, reqv_record, resp_record), text
         else:
             # Write the two WARC records and return the text content only
@@ -421,7 +439,7 @@ class WarcDownloader:
         if rec[0] is not None:
             cache, (reqv_offset, _), (resp_offset, _) = rec
             reqv_record = cache.get_record(reqv_offset)  # Seek to the appropriate pos in the WARC to retrive the record
-            self._writer.write_record(reqv_record)       # else random zlib errors happen when the payload is removed
+            self._writer.write_record(reqv_record)       # else random zlib errors happen when the payload is retrieved
             resp_record = cache.get_record(resp_offset)  # from the cache
             self._writer.write_record(resp_record)
         else:
@@ -457,13 +475,13 @@ class WarcReader:
         return self._internal_url_index.keys()
 
     def _create_index(self):
-        self._logger.log('INFO', 'Creating index for {0}...'.format(self.filename))
+        self._logger.log('INFO', f'Creating index for {self.filename}...')
         archive_it = ArchiveIterator(self._stream, check_digests=self._check_digest)
         info_rec = next(archive_it)
         # First record should be an info record, then it should be followed by the request-response pairs
         assert info_rec.rec_type == 'warcinfo'
         try:
-            # Read out custom headers for later use
+            # Read custom headers for later use
             custom_headers_raw = info_rec.content_stream().read()  # Parse custom headers
             if len(custom_headers_raw) == 0:
                 raise ValueError('WARCINFO record payload length is 0!')
@@ -507,9 +525,13 @@ class WarcReader:
                     archive_load_failed = True
                 count += 1
         if count != len(self._internal_url_index):
-            double_urls_str = '\n'.join('{0}\t{1}'.format(url, freq) for url, freq in double_urls.most_common()
-                                        if freq > 1)
-            raise KeyError('The following double URLs detected in the WARC file:{0}'.format(double_urls_str))
+            doubles = []
+            for url, freq in double_urls.most_common():
+                if freq == 1:
+                    break
+                doubles.append(f'{url}\t{freq}')
+            double_urls_str = '\n'.join(doubles)
+            raise KeyError(f'The following double URLs detected in the WARC file:{double_urls_str}')
         if count == 0:
             raise IndexError('No index created or no response records in the WARC file!')
         if archive_load_failed and self._strict_mode:
@@ -522,7 +544,7 @@ class WarcReader:
         if reqv_resp_pair is not None:
             return reqv_resp_pair  # ((offset, length), (offset, length))
         else:
-            raise KeyError('The request or response is missing from the archive for URL: {0}'.format(url))
+            raise KeyError(f'The request or response is missing from the archive for URL: {url}')
 
     def get_record(self, offset):
         self._stream.seek(offset)
