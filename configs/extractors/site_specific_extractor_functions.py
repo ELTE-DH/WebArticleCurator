@@ -328,7 +328,7 @@ def extract_article_urls_from_page_valasz(archive_page_raw_html):
     container = soup.find('section', class_={'normal cikk lista', 'publi cikk lista'})
     if container is not None:
         main_container = container.find_all('article', itemscope='')
-        urls = {'http://valasz.hu{0}'.format(link) for link in safe_extract_hrefs_from_a_tags(main_container)}
+        urls = {f'http://valasz.hu{link}' for link in safe_extract_hrefs_from_a_tags(main_container)}
     return urls
 
 
@@ -345,7 +345,7 @@ def extract_article_urls_from_page_vs(archive_page_raw_html):
         for fragment in html_fragment['ContentBoxes']:
             soup = BeautifulSoup(fragment, 'lxml')
             for link in safe_extract_hrefs_from_a_tags([soup]):
-                urls.add('https://vs.hu{0}'.format(link))
+                urls.add(f'https://vs.hu{link}')
     return urls
 
 

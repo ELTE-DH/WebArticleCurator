@@ -49,7 +49,7 @@ def parse_args_crawl(parser):
     parser.add_argument('--strict', type=str2bool, nargs='?', const=True, default=False, metavar='True/False',
                         help='Set strict-mode in WARCReader to enable validation')
     parser.add_argument('--crawler-name', type=str, help='The name of the crawler for the WARC info record',
-                        default='WebArticleCurator {0}'.format(__version__))
+                        default=f'WebArticleCurator {__version__}')
     parser.add_argument('--user-agent', type=str, help='The User-Agent string to use in headers while downloading')
     parser.add_argument('--no-overwrite-warc', help='Do not overwrite --{archive,articles}-warc if needed',
                         action='store_false')
@@ -277,8 +277,8 @@ def main():
                 'checkurls': (parse_args_checkurls, main_checkurls)}
     parser = ArgumentParser()
     parser.add_argument('command', choices=commands.keys(), metavar='COMMAND',
-                        help='Please choose from the available commands ({0}) to set mode and see detailed help!'.
-                        format(set(commands.keys())))
+                        help=f'Please choose from the available commands ({commands.keys()})'
+                             f' to set mode and see detailed help!')
 
     command = parser.parse_args(sys.argv[1:2]).command  # Route ArgumentParser before reparsing the whole CLI
     argparse_fun, main_fun = commands[command]

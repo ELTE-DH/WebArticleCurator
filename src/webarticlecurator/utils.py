@@ -1,19 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-import os
 import sys
 import importlib.util
+from pathlib import Path
 from argparse import Namespace
 from contextlib import contextmanager
 from datetime import datetime, date, timedelta
-from os.path import join as os_path_join, exists as os_path_exists, dirname as os_path_dirname, \
-    split as os_path_split, abspath, splitext
 
 import yamale
 
-site_schema = yamale.make_schema(os_path_join(os_path_dirname(abspath(__file__)), 'site_schema.yaml'))
-crawl_schema = yamale.make_schema(os_path_join(os_path_dirname(abspath(__file__)), 'crawl_schema.yaml'))
+site_schema = yamale.make_schema(Path(__file__).absolute().parent / 'site_schema.yaml')
+crawl_schema = yamale.make_schema(Path(__file__).absolute().parent / 'crawl_schema.yaml')
 
 
 def load_and_validate(schema, fname):
@@ -22,7 +20,7 @@ def load_and_validate(schema, fname):
         yamale.validate(schema, data)  # strict=True
     except yamale.YamaleError as e:
         for result in e.results:
-            print('Error validating data {0} with {1}:'.format(result.data, result.schema), file=sys.stderr)
+            print(f'Error validating data {result.data} with {result.schema}:', file=sys.stderr)
             for error in result.errors:
                 print('', error, sep='\t', file=sys.stderr)
         exit(1)
@@ -32,10 +30,10 @@ def load_and_validate(schema, fname):
 def import_python_file(file_path, package=None):
     """Import module from file:
        https://stackoverflow.com/questions/2349991/how-to-import-other-python-files/55892361#55892361"""
-    abs_file_path = abspath(file_path)
-    pathname, filename = os_path_split(abs_file_path)
-    sys.path.append(pathname)
-    modname = splitext(filename)[0]
+    abs_file_path = Path(file_path).absolute()
+    pathname, filename = abs_file_path.parent, abs_file_path.name
+    sys.path.append(str(pathname))
+    modname = Path(filename).stem
     module = importlib.import_module(modname, package)
     return module
 
@@ -52,11 +50,11 @@ def wrap_input_constants(current_task_config_filename):
     settings = load_and_validate(crawl_schema, current_task_config_filename)
 
     # The directory name of the configs
-    settings['DIR_NAME'] = os_path_dirname(abspath(current_task_config_filename))
+    settings['DIR_NAME'] = Path(current_task_config_filename).absolute().parent
 
     # Technical data about the website to crawl
-    site_schema_fname = os_path_join(settings['DIR_NAME'], settings['schema'])
-    settings['SITE_SCHEMA_DIR_NAME'] = os_path_dirname(abspath(site_schema_fname))
+    site_schema_fname = Path(settings['DIR_NAME']) / settings['schema']
+    settings['SITE_SCHEMA_DIR_NAME'] = Path(site_schema_fname).absolute().parent
     current_site_schema = load_and_validate(site_schema, site_schema_fname)
     settings.update(current_site_schema)
 
@@ -84,12 +82,12 @@ def wrap_input_constants(current_task_config_filename):
                 raise ValueError('DateError: date_first_article and date_from is not set please'
                                  ' set at least one of them!')
             if not (column_settings['DATE_FROM'] <= column_settings['DATE_UNTIL'] < date.today()):
-                raise ValueError('DateError: DATE_FROM ({0}) <= DATE UNTIL ({1}) < date.today() ({2}) is not'
-                                 ' satisfiable! Please check date_from ({3}), date_until ({4}),'
-                                 ' date_first_article ({5}) and date_last_article ({6})!'.
-                                 format(column_settings['DATE_FROM'], column_settings['DATE_UNTIL'], date.today(),
-                                        settings['date_from'], settings['date_until'],
-                                        column_settings['date_first_article'], column_settings['date_last_article']))
+                raise ValueError(f'DateError: DATE_FROM ({column_settings["DATE_FROM"]}) <='
+                                 f' DATE UNTIL ({column_settings["DATE_UNTIL"]}) < date.today() ({date.today()}) is not'
+                                 f' satisfiable! Please check date_from ({settings["date_from"]}),'
+                                 f' date_until ({settings["date_until"]}),'
+                                 f' date_first_article ({column_settings["date_first_article"]})'
+                                 f' and date_last_article ({column_settings["date_last_article"]})!')
 
         min_pagenum = column_settings.get('min_pagenum', -1)  # Can not normally be -1!
         initial_pagenum = column_settings.get('initial_pagenum', '')
@@ -131,7 +129,7 @@ def wrap_input_constants(current_task_config_filename):
 
     # Portal specific functions
     file_path = settings['portal_specific_exctractor_functions_file']
-    module = import_python_file(os_path_join(settings['SITE_SCHEMA_DIR_NAME'], file_path), 'webarticlecurator')
+    module = import_python_file(Path(settings['SITE_SCHEMA_DIR_NAME']) / file_path, 'webarticlecurator')
     for attr_name, attr_name_dest, mandatory in \
             (('extract_next_page_url_fun', 'EXTRACT_NEXT_PAGE_URL_FUN', False),
              ('extract_article_urls_from_page_fun', 'EXTRACT_ARTICLE_URLS_FROM_PAGE_FUN', True),
@@ -139,10 +137,10 @@ def wrap_input_constants(current_task_config_filename):
              ('next_page_of_article_fun', 'NEXT_PAGE_OF_ARTICLE_FUN', False)):
         settings[attr_name_dest] = getattr(module, settings.get(attr_name, ''), None)
         if mandatory and settings[attr_name_dest] is None:
-            raise ValueError('{0} is unset!'.format(attr_name))
+            raise ValueError(f'{attr_name} is unset!')
         elif settings.get(attr_name, None) is not None and settings[attr_name_dest] is None:
-            raise ValueError('Cannot find python function for {0} with value \'{1}\' !'.
-                             format(attr_name, settings.get(attr_name, None)))
+            raise ValueError(f'Cannot find python function for {attr_name}'
+                             f' with value \'{settings.get(attr_name, None)}\' !')
 
     settings.setdefault('stop_on_empty_archive_page', False)
     if settings.setdefault('stop_on_taboo_set', False):
@@ -177,8 +175,8 @@ def wrap_input_constants(current_task_config_filename):
     else:
         file_path = settings['corpus_converter_file']
         if file_path is None:
-            raise ValueError('corpus_converter is {0}, but {1} is unset!'.format(corp_conv, file_path))
-        module = import_python_file(os_path_join(settings['SITE_SCHEMA_DIR_NAME'], file_path), 'webarticlecurator')
+            raise ValueError(f'corpus_converter is {corp_conv}, but {file_path} is unset!')
+        module = import_python_file(Path(settings['SITE_SCHEMA_DIR_NAME']) / file_path, 'webarticlecurator')
         corpus_converter_class = getattr(module, corp_conv)
     settings['CORPUS_CONVERTER'] = corpus_converter_class(settings)
 
@@ -186,11 +184,12 @@ def wrap_input_constants(current_task_config_filename):
 
 
 def write_content_to_url_named_file(url, cont, out_dir):
+    out_dir = Path(out_dir)
     safe_url = ''.join(char if char.isalnum() else '_' for char in url).rstrip('_')[:200]
-    i, fname = 0, os_path_join(out_dir, '{0}_{1}.html'.format(safe_url, 0))
-    while os_path_exists(fname):
+    i, fname = 0, out_dir / f'{safe_url}_0.html'
+    while fname.exists():
         i += 1
-        fname = os_path_join(out_dir, '{0}_{1}.html'.format(safe_url, i))
+        fname = out_dir / f'{safe_url}_{i}.html'
     with open(fname, 'w', encoding='UTF-8') as fh:
         fh.write(cont)
 
@@ -198,9 +197,10 @@ def write_content_to_url_named_file(url, cont, out_dir):
 
 
 def create_or_check_clean_dir(out_dir):
-    os.makedirs(out_dir, exist_ok=True)
-    if len(os.listdir(out_dir)) != 0:
-        print('Supplied output directory ({0}) is not empty!'.format(out_dir), file=sys.stderr)
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    if next(out_dir.iterdir(), None) is not None:
+        print(f'Supplied output directory ({out_dir}) is not empty!', file=sys.stderr)
         exit(1)
 
 
