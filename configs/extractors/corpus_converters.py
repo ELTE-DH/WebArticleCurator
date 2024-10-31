@@ -56,13 +56,13 @@ class CorpusConverterNewspaper:  # Mimic CorpusConverter
         article.parse()
         article.nlp()
 
-        html_date = '<html-date> {0} </html-date>'.format(article.publish_date.date())
+        html_date = f'<html-date> {article.publish_date.date()} </html-date>'
         html_description_lead = '<html-lead>\n </html-lead>'
         html_charset = '<html-charset> utf-8 </html-charset>'
-        html_url = '<html-url> {0} </html-url>'.format(url)
-        html_keywords = '<html-keywords> {0} </html-keywords>'.format(', '.join(article.keywords))
-        html_title = '<html-title> {0} </html-title>'.format(article.title)
-        html_body = '<html-body>\n{0} </html-body>\n'.format(article.text)
+        html_url = f'<html-url> {url} </html-url>'
+        html_keywords = f'<html-keywords> {", ".join(article.keywords)} </html-keywords>'
+        html_title = f'<html-title> {article.title} </html-title>'
+        html_body = f'<html-body>\n{article.text} </html-body>\n'
 
         print('<html_article>', html_date, html_description_lead, html_charset, html_url, html_keywords, html_title,
               html_body, '</html_article>', sep='\n', end='', file=self._file_out)

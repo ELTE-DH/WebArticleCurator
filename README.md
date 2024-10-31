@@ -46,6 +46,7 @@ The program can be used in multiple ways:
 - Printing the content of the selected URLs into an empty directory: `python3 -m webarticlecurator cat -s SOURCE_WARC -i selected_urls.txt TARGET_DIR`
 - Downloading a single URL (for testing purposes): `python3 -m webarticlecurator download SOURCE_URL TARGET_WARC`
 - Check URLs in the extracted article urls of an archive warc (for debugging a portal): `python3 -m webarticlecurator checkurls -s SOURCE_WARC -i selected_urls.txt -d TARGET_DIR CONFIGURATION`
+- As a library: Check [strategies.py](src/webarticlecurator/strategies.py) and [enhanced_downloader.py](src/webarticlecurator/enhanced_downloader.py) for details !
 
 # Configuration schema
 

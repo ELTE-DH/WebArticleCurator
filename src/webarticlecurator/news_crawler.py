@@ -1,26 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from datetime import timedelta
-from calendar import monthrange, isleap
-
 from mplogger import Logger
 
+from .utils import write_set_contents_to_file
 from .enhanced_downloader import WarcCachingDownloader
-
-
-def add_and_write_factory(attr, fname):
-    """A helper function to write gathered URLs to a file handle if it is supplied"""
-    if fname is None:
-        return None, attr.add
-    else:
-        fh = open(fname, 'w', encoding='UTF-8')  # To store FH (for closing it)
-
-        def add_fun(elem):
-            attr.add(elem)
-            print(elem, file=fh, flush=True)
-
-        return fh, add_fun
+from .strategies import date_range, gen_article_urls_and_subpages
 
 
 class NewsArchiveCrawler:
@@ -56,14 +41,12 @@ class NewsArchiveCrawler:
             debug_params = {}
         self._logger = Logger(settings['log_file_archive'], **debug_params)
 
-        # Open files for writing gathered URLs if needed,
+        # Open files for writing gathered URLs if needed
         self.good_urls = set()
-        self._new_good_archive_urls_fh, self._good_urls_add = \
-            add_and_write_factory(self.good_urls, settings.get('new_good_archive_urls'))
+        self._good_urls_filename = settings.get('new_good_archive_urls')
 
         self.problematic_urls = set()
-        self._new_problematic_archive_urls_fh, self._problematic_urls_add = \
-            add_and_write_factory(self.problematic_urls, settings.get('new_problematic_archive_urls'))
+        self._problematic_urls_filename = settings.get('new_problematic_archive_urls')
 
         # Setup the list of cached article URLs to stop archive crawling in time
         self.known_article_urls = set()
@@ -109,14 +92,6 @@ class NewsArchiveCrawler:
                                              self._settings['stop_on_taboo_set'], self._settings['TABOO_ARTICLE_URLS'],
                                              column_spec_settings.get('last_archive_page_url'))
 
-    def __del__(self):  # Write newly found URLs to files when output files supplied...
-        # Save the good URLs...
-
-        if hasattr(self, '_new_good_archive_urls_fh') and hasattr(self, 'close'):
-            self._new_good_archive_urls_fh.close()
-
-        if hasattr(self, '_new_problematic_archive_urls_fh') and hasattr(self, 'close'):
-            self._new_problematic_archive_urls_fh.close()
 
     def url_iterator(self):
         """
@@ -134,90 +109,33 @@ class NewsArchiveCrawler:
             self._store_settings(params)
             # 2) By date with optional pagination (that is handled separately)
             if self._archive_page_urls_by_date:
-                # a) Unique the generated archive page URLs using every day from date_from to the end of date_until
-                archive_page_urls = list(set(self._gen_url_from_date(self._date_from + timedelta(days=curr_day),
-                                                                     self._archive_url_format)
-                                             for curr_day in range((self._date_until - self._date_from).days + 1)))
-                # b) Sort the generated archive page URLs
-                archive_page_urls.sort(reverse=self._go_reverse_in_archive)
+                archive_page_urls = date_range(self._archive_url_format, self._date_from, self._date_until,
+                                               self._go_reverse_in_archive)
             # 3) Stored in groups represented by pagination only which will be handled separately
             else:
                 archive_page_urls = [self._archive_url_format]  # Only the base URL is added
 
             # 4) Iterate the archive URLs and process them, while generating the required page URLs on demand
-            for archive_page_url in archive_page_urls:
-                yield from self._gen_article_urls_including_subpages(archive_page_url)
+            for base_url in archive_page_urls:
+                yield from gen_article_urls_and_subpages(base_url, self.bad_urls, self._downloader,
+                                                         self._extract_articles_and_gen_next_page_link_fun,
+                                                         self.good_urls, self._good_urls_filename,
+                                                         self.problematic_urls, self._problematic_urls_filename,
+                                                         self._initial_page_num, self._min_pagenum,
+                                                         self._infinite_scrolling,
+                                                         self._max_tries, self._ignore_archive_cache,
+                                                         self._logger)
 
-    @staticmethod
-    def _gen_url_from_date(curr_date, url_format):
-        """
-            Generates the URLs of a page that contains URLs of articles published on that day.
-            This function allows URLs to be grouped by years or month as there is no guarantee that all fields exists.
-            We also enable using open ended interval of dates. eg. from 2018-04-04 to 2018-04-05 (not included)
-             or with month 2018-04-04 to 2018-05-04 (not included)
-            One must place #year #month #day and #next-year #next-month #next-day labels into the url_format variable.
-        """
-        if '#next-day' in url_format:
-            # Plus one day (open ended interval): vs.hu, hvg.hu
-            next_date = curr_date + timedelta(days=1)
-        elif '#next-month' in url_format:
-            # Plus one month (open interval): magyarnarancs.hu
-            days_in_curr_month = monthrange(curr_date.year, curr_date.month)[1]
-            next_date = curr_date + timedelta(days=days_in_curr_month - curr_date.day + 1)
-        else:
-            # Plus one year (open interval): ???
-            next_date = curr_date + timedelta(days=365 + int(isleap(curr_date.year))
-                                              - curr_date.timetuple().tm_yday + 1)
-
-        art_list_url = url_format.\
-            replace('#year', '{0:04d}'.format(curr_date.year)).\
-            replace('#month', '{0:02d}'.format(curr_date.month)).\
-            replace('#day', '{0:02d}'.format(curr_date.day)). \
-                                                              \
-            replace('#next-year', '{0:04d}'.format(next_date.year)). \
-            replace('#next-month', '{0:02d}'.format(next_date.month)). \
-            replace('#next-day', '{0:02d}'.format(next_date.day))
-        return art_list_url
-
-    def _gen_article_urls_including_subpages(self, archive_page_url_base):
-        """
-            Generates article URLs from a supplied URL including the on-demand sub-pages that contains article URLs
-        """
-        page_num = self._min_pagenum
-        tries_left = self._max_tries
-        first_page = True
-        next_page_url = archive_page_url_base.replace('#pagenum', self._initial_page_num)
-        while next_page_url is not None or tries_left > 0:
-            archive_page_raw_html = self._downloader.download_url(next_page_url, self._ignore_archive_cache)
-            tries_left -= 1
-            curr_page_url = next_page_url
-            next_page_url = None
-            if archive_page_raw_html is not None:  # Download succeeded
-                self._good_urls_add(curr_page_url)
-                # 1) We need article URLs here to reliably determine the end of pages in some cases
-                article_urls = self._extract_article_urls_from_page_fun(archive_page_raw_html)
-                if len(article_urls) == 0 and (not self._infinite_scrolling or first_page):
-                    self._logger.log('WARNING', curr_page_url, 'Could not extract URLs from the archive!', sep='\t')
-                # 2) Generate next-page URL or None if there should not be any
-                next_page_url = self._find_next_page_url(archive_page_url_base, page_num, archive_page_raw_html,
-                                                         article_urls)
-                if next_page_url is not None:
-                    tries_left = self._max_tries  # Restore tries_left
-                else:
-                    tries_left = 0  # We have arrived to the end
-                page_num += 1  # Bump pagenum for next round
-                first_page = False
-                self._logger.log('DEBUG', 'URLs/ARCHIVE PAGE', curr_page_url, len(article_urls), sep='\t')
-                yield from article_urls
-            elif tries_left == 0:  # Download failed
-                if curr_page_url not in self.bad_urls and curr_page_url not in self._downloader.good_urls and \
-                        curr_page_url not in self._downloader.url_index:  # URLs in url_index should not be a problem
-                    self._problematic_urls_add(curr_page_url)  # New possibly bad URL
-                    self._logger.log('ERROR', curr_page_url, f'There are no tries left for URL!', sep='\t')
-            else:  # Retry download
-                self._logger.log('WARNING',
-                                 curr_page_url, f'Retrying URL ({self._max_tries - tries_left})!', sep='\t')
-                next_page_url = curr_page_url  # Restore URL for retrying
+    def _extract_articles_and_gen_next_page_link_fun(self, archive_page_url_base, archive_page_raw_html, curr_page_url,
+                                                     infinite_scrolling, first_page, page_num, logger):
+        """Use preset site-specific functions to extract articles and next page link"""
+        article_urls = self._extract_article_urls_from_page_fun(archive_page_raw_html)
+        if len(article_urls) == 0 and (not infinite_scrolling or first_page):
+            logger.log('WARNING', curr_page_url, 'Could not extract URLs from the archive!', sep='\t')
+        # 2) Generate next-page URL or None if there should not be any
+        next_page_url = self._find_next_page_url(archive_page_url_base, page_num, archive_page_raw_html,
+                                                 article_urls)
+        return article_urls, next_page_url
 
     @staticmethod
     def _find_next_page_url_factory(extract_next_page_url_fun, next_url_by_pagenum, infinite_scrolling, max_pagenum,
@@ -288,12 +206,10 @@ class NewsArticleCrawler:
 
         # Open files for writing gathered URLs if needed
         self._new_urls = set()
-        self._new_good_urls_fh, self._new_urls_add = \
-            add_and_write_factory(self._new_urls, settings.get('new_good_urls'))
+        self._new_urls_filename = settings.get('new_good_urls')
 
         self.problematic_article_urls = set()
-        self._new_problematic_urls_fh, self._problematic_article_urls_add = \
-            add_and_write_factory(self.problematic_article_urls, settings.get('new_problematic_urls'))
+        self._problematic_article_urls_filename = settings.get('new_problematic_urls')
 
         # Store values at init-time
         self._filter_by_date = settings['FILTER_ARTICLES_BY_DATE']
@@ -325,12 +241,6 @@ class NewsArticleCrawler:
         if hasattr(self, '_archive_downloader'):  # Make sure that the previous files are closed...
             del self._archive_downloader
 
-        if hasattr(self, '_new_good_urls_fh') and hasattr(self, 'close'):
-            self._new_good_urls_fh.close()
-
-        if hasattr(self, '_new_problematic_urls_fh') and hasattr(self, 'close'):
-            self._new_problematic_urls_fh.close()
-
     def _is_problematic_url(self, url):
         # Explicitly marked as bad URL (either Article or Archive) OR
         # Download failed in this session and requires manual check (either Article or Archive)
@@ -348,55 +258,63 @@ class NewsArticleCrawler:
 
     def process_urls(self, it):
         urls = set()
-        for url in it:
-            urls.add(url)
-            while len(urls) > 0:
-                # This loop runs only one iteration if no URLs are extracted in step (6) else it consumes them first
-                url = urls.pop()
-                # 1) Check if the URL is
-                # 1a) Explicitly marked as bad URL (either Article or Archive) -> Skip it, only INFO log!
-                if url in self._downloader.bad_urls or url in self._archive_downloader.bad_urls:
-                    self._logger.log('DEBUG', url, 'Skipping URLs explicitly marked as bad!', sep='\t')
-                    continue
-                # 1b) Download succeeded in this session either Article or Archive (duplicate)
-                # 1c) Download failed in this session and requires manual check either Article or Archive (duplicate)
-                elif self._is_processed_good_url(url) or \
-                        url in self.problematic_article_urls or url in self._archive_downloader.problematic_urls:
-                    self._logger.log('WARNING', url, 'Not processing URL, because it is an URL already'
-                                                     ' encountered in this session (including the caches)'
-                                                     ' or it is known to point to the portal\'s archive!', sep='\t')
-                    continue
+        with write_set_contents_to_file(self.problematic_article_urls,
+                                        self._problematic_article_urls_filename) as problematic_article_urls_add, \
+                write_set_contents_to_file(self._new_urls, self._new_urls_filename) as new_urls_add:
 
-                # 2) "Download" article
-                article_raw_html = self._downloader.download_url(url)
-                if article_raw_html is None:  # Download failed, must be investigated!
-                    self._logger.log('ERROR', url, 'Article was not processed because download failed!', sep='\t')
-                    self._problematic_article_urls_add(url)  # New problematic URL for manual checking
-                    continue
-                self._new_urls_add(url)  # New article URLs
-
-                # 3) Identify the site scheme of the article to be able to look up the appropriate extracting method
-                scheme = self._converter.identify_site_scheme(url, article_raw_html)
-
-                # 4) Filter: time filtering when archive page URLs are not generated by date if needed
-                if self._filter_by_date:
-                    # a) Retrieve the date
-                    article_date = self._converter.extract_article_date(url, article_raw_html, scheme)
-                    if article_date is None:
-                        self._logger.log('ERROR', url, 'DATE COULD NOT BE PARSED!', sep='\t')
+            for url in it:
+                urls.add(url)
+                while len(urls) > 0:
+                    # This loop runs only one iteration if no URLs are extracted in step (6) else it consumes them first
+                    url = urls.pop()
+                    # 1) Check if the URL is
+                    # 1a) Explicitly marked as bad URL (either Article or Archive) -> Skip it, only INFO log!
+                    if url in self._downloader.bad_urls or url in self._archive_downloader.bad_urls:
+                        self._logger.log('DEBUG', url, 'Skipping URLs explicitly marked as bad!', sep='\t')
                         continue
-                    # b) Check date interval
-                    elif not self._date_from <= article_date <= self._date_until:
-                        self._logger.log('WARNING', url, 'Date ({0}) is not in the specified interval: {1}-{2}'
-                                                         ' didn\'t use it in the corpus'.
-                                         format(article_date, self._date_from, self._date_until), sep='\t')
+                    # 1b) Download succeeded in this session either Article or Archive (duplicate)
+                    # 1c) Download failed in this session
+                    # and requires manual check either Article or Archive (duplicate)
+                    elif self._is_processed_good_url(url) or \
+                            url in self.problematic_article_urls or url in self._archive_downloader.problematic_urls:
+                        self._logger.log('WARNING', url, 'Not processing URL, because it is an URL already'
+                                                         ' encountered in this session (including the caches)'
+                                                         ' or it is known to point to the portal\'s archive!', sep='\t')
                         continue
 
-                # 5) Extract text to corpus
-                self._converter.article_to_corpus(url, article_raw_html, scheme)
+                    # 2) "Download" article
+                    article_raw_html = self._downloader.download_url(url)
+                    if article_raw_html is None:  # Download failed, must be investigated!
+                        self._logger.log('ERROR', url, 'Article was not processed because download failed!', sep='\t')
+                        problematic_article_urls_add(url)  # New problematic URL for manual checking
+                        continue
+                    new_urls_add(url)  # New article URLs
 
-                # 6) Extract links to other articles and check for already extracted urls (also in the archive)?
-                urls_to_follow = self._converter.follow_links_on_page(url, article_raw_html, scheme)
-                # Only add those which has not been already handled to avoid loops!
-                urls |= {url for url in urls_to_follow
-                         if not self._is_processed_good_url(url) and not self._is_problematic_url(url)}
+                    # TODO Do we need this?
+                    # 3) Identify the site scheme of the article to be able to look up the appropriate extracting method
+                    scheme = self._converter.identify_site_scheme(url, article_raw_html)
+
+                    # TODO This is not used. To be removed in 2.0
+                    # 4) Filter: time filtering when archive page URLs are not generated by date if needed
+                    if self._filter_by_date:
+                        # a) Retrieve the date
+                        article_date = self._converter.extract_article_date(url, article_raw_html, scheme)
+                        if article_date is None:
+                            self._logger.log('ERROR', url, 'DATE COULD NOT BE PARSED!', sep='\t')
+                            continue
+                        # b) Check date interval
+                        elif not self._date_from <= article_date <= self._date_until:
+                            self._logger.log('WARNING', url, 'Date ({0}) is not in the specified interval: {1}-{2}'
+                                                             ' didn\'t use it in the corpus'.
+                                             format(article_date, self._date_from, self._date_until), sep='\t')
+                            continue
+
+                    # TODO This is not used. To be removed in 2.0
+                    # 5) Extract text to corpus
+                    self._converter.article_to_corpus(url, article_raw_html, scheme)
+
+                    # 6) Extract links to other articles and check for already extracted urls (also in the archive)?
+                    urls_to_follow = self._converter.follow_links_on_page(url, article_raw_html, scheme)
+                    # Only add those which has not been already handled to avoid loops!
+                    urls |= {url for url in urls_to_follow
+                             if not self._is_processed_good_url(url) and not self._is_problematic_url(url)}
