@@ -1,11 +1,13 @@
-from datetime import timedelta
+from datetime import timedelta, date
 from calendar import monthrange, isleap
+
+from mplogger import Logger, DummyLogger
 
 from .utils import write_set_contents_to_file
 
 # These are just examples and helpers and can be combined e.g. date + pagination
 
-def date_range(base_url, date_from, date_until, go_reverse_in_archive):
+def date_range(base_url: str, date_from: date, date_until: date = date.today, go_reverse_in_archive=False):
     """
         Generates the URLs of a page that contains URLs of articles published on that day.
         This function allows URLs to be grouped by years or month as there is no guarantee that all fields exists.
@@ -57,7 +59,7 @@ def next_page_by_link(raw_html, last_archive_page_url=None):
 
     return next_page_url
 
-def infinite_scrolling(base_url, article_urls, page_num):
+def infinite_scrolling(base_url: str, article_urls: set, page_num: int):
     """If there is "infinite scrolling", we use pagenum from base to infinity (=No article URLs detected)
        No link, but infinite scrolling! (also good for inactive archive, without other clues)"""
     next_page_url = None
@@ -66,7 +68,7 @@ def infinite_scrolling(base_url, article_urls, page_num):
 
     return next_page_url
 
-def until_maxpagenum(base_url, page_num, max_pagenum):
+def until_maxpagenum(base_url: str, page_num: int, max_pagenum: int):
     """Has predefined max_pagenum! (also good for inactive archive, with known max_pagenum)"""
     next_page_url = None
     if page_num <= max_pagenum:
@@ -74,15 +76,16 @@ def until_maxpagenum(base_url, page_num, max_pagenum):
 
     return next_page_url
 
-def intersecting_pages(base_url, article_urls, known_article_urls, art_url_threshold, page_num):
+def intersecting_pages(base_url: str, article_urls: set, known_article_urls: set, art_url_threshold: int,
+                       page_num: int):
     """Active archive. We allow intersecting elements as the archive may have been moved"""
     next_page_url = None
-    if len(known_article_urls) == 0 or len(article_urls.minus(known_article_urls)) > art_url_threshold:
+    if len(known_article_urls) == 0 or len(article_urls - known_article_urls) > art_url_threshold:
         next_page_url = base_url.replace('#pagenum', str(page_num))  # Must generate URL
 
     return next_page_url
 
-def stop_on_empty_or_taboo(base_url, article_urls, taboo_article_urls, page_num):
+def stop_on_empty_or_taboo(base_url: str, article_urls: set, taboo_article_urls: set, page_num: int):
     """Stop on empty archive or on taboo URLs if they are defined"""
     if len(article_urls) == 0 or len(taboo_article_urls.intersection(article_urls)) > 0:
         next_page_url = None
@@ -91,8 +94,10 @@ def stop_on_empty_or_taboo(base_url, article_urls, taboo_article_urls, page_num)
 
 # TODO there is more! E.g. when the item order is not stable
 
-def extract_articles_and_gen_next_page_link(archive_page_raw_html, base_url, curr_page_url, first_page,
-                                            is_infinite_scrolling, page_num, logger):
+def extract_articles_and_gen_next_page_link(base_url: str, curr_page_url: str, archive_page_raw_html: str,
+                                            is_infinite_scrolling: bool = False,
+                                            first_page: bool = False, page_num: int = 1,
+                                            logger: Logger = DummyLogger()):
     # 1) We need article URLs here to reliably determine the end of pages in some cases
     # TODO insert the appropriate strategy here!
     extract_article_urls_from_page_fun = lambda *x: ''
@@ -107,11 +112,20 @@ def extract_articles_and_gen_next_page_link(archive_page_raw_html, base_url, cur
 
 
 # This is a general strategy to crawl an archive
-def gen_article_urls_and_subpages(base_url, bad_urls, downloader, extract_articles_and_gen_next_page_link_fun,
-                                  good_urls, good_urls_filename, problematic_urls, problematic_urls_filename,
-                                  initial_page_num, min_pagenum, is_infinite_scrolling,
-                                  max_tries, ignore_archive_cache, logger):
+def gen_article_urls_and_subpages(base_url: str, downloader, extract_articles_and_gen_next_page_link_fun,
+                                  bad_urls: set = None, good_urls: set = None, good_urls_filename: str = None,
+                                  problematic_urls: set = None, problematic_urls_filename: str = None,
+                                  initial_page_num: str = '0', min_pagenum: int = 0,
+                                  is_infinite_scrolling: bool = False, max_tries: int = 3,
+                                  ignore_archive_cache: bool = False, logger: Logger = DummyLogger()):
     """Generates article URLs from a supplied URL including the on-demand sub-pages that contains article URLs"""
+    if bad_urls is None:
+        bad_urls = set()
+    if good_urls is None:
+        good_urls = set()
+    if problematic_urls is None:
+        problematic_urls = set()
+
     page_num = min_pagenum
     tries_left = max_tries
     first_page = True

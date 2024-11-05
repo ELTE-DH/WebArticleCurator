@@ -117,16 +117,15 @@ class NewsArchiveCrawler:
 
             # 4) Iterate the archive URLs and process them, while generating the required page URLs on demand
             for base_url in archive_page_urls:
-                yield from gen_article_urls_and_subpages(base_url, self.bad_urls, self._downloader,
+                yield from gen_article_urls_and_subpages(base_url, self._downloader,
                                                          self._extract_articles_and_gen_next_page_link_fun,
-                                                         self.good_urls, self._good_urls_filename,
+                                                         self.bad_urls, self.good_urls, self._good_urls_filename,
                                                          self.problematic_urls, self._problematic_urls_filename,
                                                          self._initial_page_num, self._min_pagenum,
-                                                         self._infinite_scrolling,
-                                                         self._max_tries, self._ignore_archive_cache,
-                                                         self._logger)
+                                                         self._infinite_scrolling, self._max_tries,
+                                                         self._ignore_archive_cache, self._logger)
 
-    def _extract_articles_and_gen_next_page_link_fun(self, archive_page_url_base, archive_page_raw_html, curr_page_url,
+    def _extract_articles_and_gen_next_page_link_fun(self, archive_page_url_base, curr_page_url, archive_page_raw_html,
                                                      infinite_scrolling, first_page, page_num, logger):
         """Use preset site-specific functions to extract articles and next page link"""
         article_urls = self._extract_article_urls_from_page_fun(archive_page_raw_html)
@@ -172,7 +171,7 @@ class NewsArchiveCrawler:
                      #  as the archive may have been moved
                      (art_url_threshold is not None and
                       (len(known_article_urls) == 0 or
-                       len(article_urls.minus(known_article_urls)) > art_url_threshold)))):
+                       len(article_urls - known_article_urls) > art_url_threshold)))):
                 next_page_url = archive_page_url_base.replace('#pagenum', str(page_num))  # must generate URL
 
             return next_page_url
