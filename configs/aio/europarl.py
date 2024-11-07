@@ -53,7 +53,7 @@ def extract_articles_and_gen_next_page_link_europarl(base_url: str, curr_page_ur
 def gen_article_links(from_year, to_year):
     base_url_template = 'https://eur-lex.europa.eu/search.html?lang=en&scope=EURLEX&type=quick&' \
                         'sortOne=IDENTIFIER_SORT&sortOneOrder=desc&&page=#pagenum&DD_YEAR=#year'
-    logger = Logger()
+    logger = Logger('europarl.log', console_level='DEBUG')
     downloader = WarcCachingDownloader(None, 'europarl.warc.gz', logger)
     for base_url in date_range(base_url_template, date(from_year, 1, 1), date(to_year, 1, 1), False):
         g = gen_article_urls_and_subpages(base_url, downloader, extract_articles_and_gen_next_page_link_europarl,
@@ -67,7 +67,7 @@ def gen_article_links_other():
     years= ['FV_OTHER', 1001, 1807, 1808, 1809, 1854, 1865, 1867, 1868, 1870, 1872, 1878, 1879, 1881, 1882, 1883, 1885,
             1889, 1897, 1900, 1902, 1903, 1904, 1906, 1909, 1917, 1918, 1921, 1922, 1924, 1925, 1927]
 
-    logger = Logger()
+    logger = Logger('europarl_other.log', console_level='DEBUG')
     downloader = WarcCachingDownloader(None, 'europarl_other.warc.gz', logger)
     for year in years:
         base_url = base_url_template.replace('#year', str(year))

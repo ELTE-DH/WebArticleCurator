@@ -248,7 +248,7 @@ def write_set_contents_to_file(set_instance, fname=None):
     if fname is not None:
         fh = open(fname, 'w', encoding='UTF-8')  # To store FH (for closing it)
 
-    def _add_fun(elem):
+    def _add_fun(elem: str):
         set_instance.add(elem)
         print(elem, file=fh, flush=True)
 

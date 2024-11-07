@@ -146,11 +146,10 @@ def gen_article_urls_and_subpages(base_url: str, downloader, extract_articles_an
                 # 3a-I) Note good URL
                 good_urls_add(curr_page_url)
                 # 3a-II) Do site-specific extractions
-                article_urls, next_page_url = extract_articles_and_gen_next_page_link_fun(base_url, raw_html,
-                                                                                          curr_page_url,
-                                                                                          first_page,
+                article_urls, next_page_url = extract_articles_and_gen_next_page_link_fun(base_url, curr_page_url,
+                                                                                          raw_html,
                                                                                           is_infinite_scrolling,
-                                                                                          page_num, logger)
+                                                                                          first_page, page_num, logger)
 
                 # 3a-III) Handle if there is a next page or not
                 if next_page_url is not None:
