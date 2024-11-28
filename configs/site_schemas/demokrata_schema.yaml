@@ -1,0 +1,425 @@
+"site_name": "demokrata"
+
+"columns":
+    "beg_0303":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-03-03
+        "date_last_article": 2005-03-03
+
+    "beg_0307":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-03-07
+        "date_last_article": 2005-03-07
+
+    "beg_0314":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-03-14
+        "date_last_article": 2005-03-14
+
+    "beg_0325":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-03-25
+        "date_last_article": 2005-03-25
+
+    "beg_0408":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-04-08
+        "date_last_article": 2005-04-08
+
+    "beg_0413":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-04-13
+        "date_last_article": 2005-04-13
+
+    "beg_0420":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-04-20
+        "date_last_article": 2005-04-20
+
+    "beg_0429":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-04-27
+        "date_last_article": 2005-04-29
+
+    "beg_050504":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-05-04
+        "date_last_article": 2005-05-04
+
+    "beg_050511":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-05-11
+        "date_last_article": 2005-05-12
+
+    "beg_050517":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-05-17
+        "date_last_article": 2005-05-17
+
+    "beg_050525":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-05-25
+        "date_last_article": 2005-05-25
+
+    "beg_050601":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-06-01
+        "date_last_article": 2005-06-01
+
+    "beg_050608":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-06-08
+        "date_last_article": 2005-06-08
+
+    "beg_050615":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-06-15
+        "date_last_article": 2005-06-16
+
+    "beg_050622":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-06-22
+        "date_last_article": 2005-06-22
+
+    "beg_050629":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-06-29
+        "date_last_article": 2005-06-29
+
+    "beg_050706":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-07-06
+        "date_last_article": 2005-07-06
+
+    "beg_050714":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-07-14
+        "date_last_article": 2005-07-14
+
+    "beg_050721":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-07-21
+        "date_last_article": 2005-07-21
+
+    "beg_050803":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-08-03
+        "date_last_article": 2005-08-03
+
+    "beg_050810":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-08-10
+        "date_last_article": 2005-08-11
+
+    "beg_050818":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-08-18
+        "date_last_article": 2005-08-18
+
+    "beg_050824":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-08-24
+        "date_last_article": 2005-08-24
+
+    "beg_050831":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-08-31
+        "date_last_article": 2005-08-31
+
+    "beg_050908":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-09-08
+        "date_last_article": 2005-09-08
+
+    "beg_050915":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-09-15
+        "date_last_article": 2005-09-15
+
+    "beg_051005":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-10-05
+        "date_last_article": 2005-10-05
+
+    "beg_051012":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2005-10-12
+        "date_last_article": 2005-10-12
+
+    "beg_060223":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-02-23
+        "date_last_article": 2006-02-23
+
+    "beg_060227":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-02-27
+        "date_last_article": 2006-02-27
+
+    "beg_060302":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-03-02
+        "date_last_article": 2006-03-02
+
+    "beg_060308":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-03-08
+        "date_last_article": 2006-03-08
+
+    "beg_060314":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-03-14
+        "date_last_article": 2006-03-14
+
+    "beg_060322":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-03-22
+        "date_last_article": 2006-03-23
+
+    "beg_060330":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-03-30
+        "date_last_article": 2006-04-06
+
+    "beg_060412":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-04-12
+        "date_last_article": 2006-04-12
+
+    "beg_060427":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-04-27
+        "date_last_article": 2006-04-27
+
+    "beg_060512":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-05-12
+        "date_last_article": 2006-05-12
+
+    "beg_060517":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-05-17
+        "date_last_article": 2006-05-17
+
+    "beg_060524":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-05-24
+        "date_last_article": 2006-05-24
+
+    "beg_060606":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-06-06
+        "date_last_article": 2006-06-06
+
+    "beg_060614":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-06-14
+        "date_last_article": 2006-06-15
+
+    "beg_060710":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-07-10
+        "date_last_article": 2006-07-10
+
+    "beg_060720":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-07-20
+        "date_last_article": 2006-07-23
+
+    "beg_060731":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-07-31
+        "date_last_article": 2006-07-31
+
+    "beg_060807":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-08-07
+        "date_last_article": 2006-08-07
+
+    "beg_060901":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-09-01
+        "date_last_article": 2006-09-01
+
+    "beg_060911":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-09-11
+        "date_last_article": 2006-09-11
+
+    "beg_060920":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-09-20
+        "date_last_article": 2006-09-21
+
+    "beg_061005":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-10-05
+        "date_last_article": 2006-10-05
+
+    "beg_061018":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-10-18
+        "date_last_article": 2006-10-18
+
+    "beg_061102":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-11-02
+        "date_last_article": 2006-11-03
+
+    "beg_061115":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-11-15
+        "date_last_article": 2006-11-15
+
+    "beg_061123":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-11-23
+        "date_last_article": 2006-11-30
+
+    "beg_061204":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-12-04
+        "date_last_article": 2006-12-04
+
+    "beg_061229":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2006-12-29
+        "date_last_article": 2006-12-29
+
+    "beg_070104":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2007-01-04
+        "date_last_article": 2007-01-04
+
+    "beg_070112":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2007-01-12
+        "date_last_article": 2007-01-12
+
+    "beg_070131":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2007-01-31
+        "date_last_article": 2007-02-15
+
+    "beg_070312":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2007-03-12
+        "date_last_article": 2007-03-16
+
+    "beg_070331":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2007-03-31
+        "date_last_article": 2007-03-31
+
+    "beg_070630":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2007-06-30
+        "date_last_article": 2007-06-30
+
+    "beg_070708":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2007-07-08
+        "date_last_article": 2007-07-08
+
+    "beg_070807":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2007-08-07
+        "date_last_article": 2007-08-07
+
+    "beg_070816":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2007-08-12
+        "date_last_article": 2007-08-16
+
+    "beg_070825":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2007-08-25
+        "date_last_article": 2007-08-25
+
+    "main-column":
+        "archive_url_format": "https://demokrata.hu/?s=&column=&pauthor=&start=#year.#month.#day&end=#year.#month.#day"
+
+        "date_first_article": 2007-09-06
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_npdn.py"
+"extract_next_page_url_fun": "extract_next_page_url_demokrata"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_demokrata"
+
+"next_url_by_pagenum": false
+"infinite_scrolling": false
+"archive_page_urls_by_date": true
+"go_reverse_in_archive": false
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"
