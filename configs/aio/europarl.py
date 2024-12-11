@@ -50,33 +50,39 @@ def extract_articles_and_gen_next_page_link_europarl(base_url: str, curr_page_ur
     next_page_url = next_page_by_link_europarl(archive_page_raw_html)
     return article_urls, next_page_url
 
-def gen_article_links(from_year, to_year):
+def gen_article_links(logger):
+    # Crawler stuff
+    downloader = WarcCachingDownloader(None, 'europarl_new.warc.gz', logger)
+
+    # Portal stuff
     base_url_template = 'https://eur-lex.europa.eu/search.html?lang=en&scope=EURLEX&type=quick&' \
                         'sortOne=IDENTIFIER_SORT&sortOneOrder=desc&&page=#pagenum&DD_YEAR=#year'
-    logger = Logger('europarl.log', console_level='DEBUG')
-    downloader = WarcCachingDownloader(None, 'europarl.warc.gz', logger)
-    for base_url in date_range(base_url_template, date(from_year, 1, 1), date(to_year, 1, 1), False):
-        g = gen_article_urls_and_subpages(base_url, downloader, extract_articles_and_gen_next_page_link_europarl,
-                                          initial_page_num='1', min_pagenum=1, logger=logger)
-        yield from g
 
-
-def gen_article_links_other():
-    base_url_template = 'https://eur-lex.europa.eu/search.html?lang=en&scope=EURLEX&type=quick&' \
-                        'sortOne=IDENTIFIER_SORT&sortOneOrder=desc&&page=#pagenum&DD_YEAR=#year'
+    # Early years not continous
     years= ['FV_OTHER', 1001, 1807, 1808, 1809, 1854, 1865, 1867, 1868, 1870, 1872, 1878, 1879, 1881, 1882, 1883, 1885,
-            1889, 1897, 1900, 1902, 1903, 1904, 1906, 1909, 1917, 1918, 1921, 1922, 1924, 1925, 1927]
+            1889, 1897, 1900, 1902, 1903, 1904, 1906, 1909, 1917, 1918, 1921, 1922, 1924, 1925, 1927] + \
+           list(range(1929, 1941))  # 1941 is missing
 
-    logger = Logger('europarl_other.log', console_level='DEBUG')
-    downloader = WarcCachingDownloader(None, 'europarl_other.warc.gz', logger)
     for year in years:
         base_url = base_url_template.replace('#year', str(year))
         g = gen_article_urls_and_subpages(base_url, downloader, extract_articles_and_gen_next_page_link_europarl,
                                           initial_page_num='1', min_pagenum=1, logger=logger)
         yield from g
 
+    # From this year all years appear
+    for base_url in date_range(base_url_template, date(1942, 1, 1), date(date.today().year + 1, 1, 1), False):
+        g = gen_article_urls_and_subpages(base_url, downloader, extract_articles_and_gen_next_page_link_europarl,
+                                          initial_page_num='1', min_pagenum=1, logger=logger)
+        yield from g
+
+    logger.log('INFO', 'Done')
+
+def main():
+    logger = Logger('europarl_new.log', logfile_level='DEBUG', console_level='DEBUG')
+    article_downloader = WarcCachingDownloader(None, 'europarl_articles.warc.gz', logger,
+                                               download_params={'err_threshold': 100})
+    for link in gen_article_links(logger):
+        article_downloader.download_url(link)
+
 if __name__ == '__main__':
-    for link in gen_article_links_other():
-        print(link)
-    for link in gen_article_links(1929, 2025):
-        print(link)
+    main()
