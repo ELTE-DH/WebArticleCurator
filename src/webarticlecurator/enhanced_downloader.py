@@ -119,7 +119,7 @@ class WarcCachingDownloader:
         else:
             self._new_downloads = WarcDownloader(new_warc_filename, _logger, info_record_data, **download_params)
 
-    def download_url(self, url, ignore_cache=False, return_warc_records_wo_writing=False):
+    def download_url(self, url, ignore_cache=False, return_warc_records_wo_writing=False, decode=True):
         # 1) Check if the URL is explicitly marked as bad...
         if url in self._new_downloads.bad_urls:
             self._logger.log('WARNING', url, 'Skipping URL explicitly marked as bad!', sep='\t')
@@ -134,7 +134,7 @@ class WarcCachingDownloader:
             # 3a) ...retrieve it! (from the last source WARC where the URL is found in)
             cache, reqv, resp = self.get_records_offset(url)
             # 3b) Get content even if the URL is a duplicate, because ignore_cache knows better what to do with it
-            cached_content = cache.download_url(url)
+            cached_content = cache.download_url(url, decode)
             # 3c) Decide to return the records with the content XOR write the records and return the content only
             if return_warc_records_wo_writing:
                 # E.g. for separate, optional writing with write_records_for_url() in a retry logic
@@ -155,7 +155,7 @@ class WarcCachingDownloader:
 
         # 5) Really download the URL! (url not in cached_content or cached_content is ignored)
         #    Still check if the URL is already downloaded!
-        return self._new_downloads.download_url(url, return_warc_records_wo_writing)
+        return self._new_downloads.download_url(url, return_warc_records_wo_writing, decode)
 
     def write_records_for_url(self, url, rec):
         self._new_downloads.write_records_for_url(url, rec)
@@ -324,7 +324,7 @@ class WarcDownloader:
     def _dummy_download_url(self, *_, **__):
         raise NotImplementedError
 
-    def _download_url(self, url, return_warc_records_wo_writing=False):
+    def _download_url(self, url, return_warc_records_wo_writing=False, decode=True):
         if url in self.bad_urls:
             self._logger.log('DEBUG', 'Not downloading known bad URL:', url)
             return None
@@ -401,25 +401,29 @@ class WarcDownloader:
         if data.endswith(b'\r\n'):  # TODO: Warcio bugreport!
             data = data.rstrip()
 
-        # Get or detect encoding to decode the bytes of the text to str
-        enc = patched_get_encoding_from_headers(resp.headers)
-        if enc is None:
-            # TODO What now?
-            # https://github.com/chardet/chardet/commit/da6c0a079c41683ca475e28364fcf9c4d34f4359
-            # Temporarily disable Hungarian probers...
-            # committed on Jan 7, 2015
-            # "Our ISO-8859-2 and windows-1250 (Hungarian) probers have been temporarily"
-            # "disabled until we can retrain the models."
-            # More info: https://github.com/chardet/chardet/issues/87
-            # and https://github.com/chardet/chardet/pull/99
-            enc = detect(data)['encoding']
-        try:
-            text = data.decode(enc)  # Normal decode process
-        except UnicodeDecodeError:
-            self._logger.log('WARNING', 'DECODE ERROR RETRYING IN \'IGNORE\' MODE:', url, enc, sep='\t')
-            text = data.decode(enc, 'ignore')
-        data_stream = BytesIO(data)  # Need the original byte stream to write the payload to the warc file
+        if decode:
+            # Get or detect encoding to decode the bytes of the text to str
+            enc = patched_get_encoding_from_headers(resp.headers)
+            if enc is None:
+                # TODO What now?
+                # https://github.com/chardet/chardet/commit/da6c0a079c41683ca475e28364fcf9c4d34f4359
+                # Temporarily disable Hungarian probers...
+                # committed on Jan 7, 2015
+                # "Our ISO-8859-2 and windows-1250 (Hungarian) probers have been temporarily"
+                # "disabled until we can retrain the models."
+                # More info: https://github.com/chardet/chardet/issues/87
+                # and https://github.com/chardet/chardet/pull/99
+                enc = detect(data)['encoding']
+                try:
+                    text = data.decode(enc)  # Normal decode process
+                except UnicodeDecodeError:
+                    self._logger.log('WARNING', 'DECODE ERROR RETRYING IN \'IGNORE\' MODE:', url, enc, sep='\t')
+                    text = data.decode(enc, 'ignore')
+        else:
+            enc = 'None'
+            text = data
 
+        data_stream = BytesIO(data)  # Need the original byte stream to write the payload to the warc file
         resp_http_headers = StatusAndHeaders(resp_status, resp_headers_list, protocol=proto)
         # Add extra headers like encoding because it is not stored any other way...
         resp_record = self._writer.create_warc_record(url, 'response', payload=data_stream,
@@ -553,7 +557,7 @@ class WarcReader:
         rec = next(iter(ArchiveIterator(self._stream, check_digests=self._check_digest)))
         return rec
 
-    def download_url(self, url):
+    def download_url(self, url, decode=True):
         text = None
         reqv_resp_pair = self._internal_url_index.get(url)
         if reqv_resp_pair is not None:
@@ -562,8 +566,11 @@ class WarcReader:
             record = next(iter(ArchiveIterator(self._stream, check_digests=self._check_digest)))
             data = record.content_stream().read()
             assert len(data) > 0
-            enc = record.rec_headers.get_header('WARC-X-Detected-Encoding', 'UTF-8')
-            text = data.decode(enc, 'ignore')
+            if decode:
+                enc = record.rec_headers.get_header('WARC-X-Detected-Encoding', 'UTF-8')
+                text = data.decode(enc, 'ignore')
+            else:
+                text = data
         else:
             self._logger.log('CRITICAL', url, 'URL not found in WARC!', sep='\t')
 
