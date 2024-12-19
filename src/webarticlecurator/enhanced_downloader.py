@@ -96,9 +96,11 @@ class WarcCachingDownloader:
         if download_params is not None:
             strict_mode = download_params.pop('strict_mode', False)
             check_digest = download_params.pop('check_digest', False)
+            allow_empty_warc = download_params.pop('allow_empty_warc', False)
         else:
             strict_mode = False
             check_digest = False
+            allow_empty_warc = False
             download_params = {}
 
         self.url_index = set()
@@ -108,7 +110,7 @@ class WarcCachingDownloader:
                 existing_warc_filenames = [existing_warc_filenames]
             self._cached_downloads = []
             for ex_warc_filename in existing_warc_filenames:
-                cached_downloads = WarcReader(ex_warc_filename, _logger, strict_mode, check_digest)
+                cached_downloads = WarcReader(ex_warc_filename, _logger, strict_mode, check_digest, allow_empty_warc)
                 self._cached_downloads.append(cached_downloads)
                 self.url_index |= cached_downloads.url_index
                 # The last, top priority info record is used
@@ -414,11 +416,11 @@ class WarcDownloader:
                 # More info: https://github.com/chardet/chardet/issues/87
                 # and https://github.com/chardet/chardet/pull/99
                 enc = detect(data)['encoding']
-                try:
-                    text = data.decode(enc)  # Normal decode process
-                except UnicodeDecodeError:
-                    self._logger.log('WARNING', 'DECODE ERROR RETRYING IN \'IGNORE\' MODE:', url, enc, sep='\t')
-                    text = data.decode(enc, 'ignore')
+            try:
+                text = data.decode(enc)  # Normal decode process
+            except UnicodeDecodeError:
+                self._logger.log('WARNING', 'DECODE ERROR RETRYING IN \'IGNORE\' MODE:', url, enc, sep='\t')
+                text = data.decode(enc, 'ignore')
         else:
             enc = 'None'
             text = data
@@ -455,7 +457,7 @@ class WarcDownloader:
 
 
 class WarcReader:
-    def __init__(self, filename, _logger, strict_mode=False, check_digest=False):
+    def __init__(self, filename, _logger, strict_mode=False, check_digest=False, allow_empty_warc=False):
         self.filename = filename
         self._stream = open(filename, 'rb')
         self._internal_url_index = {}
@@ -465,6 +467,7 @@ class WarcReader:
         if check_digest:
             check_digest = 'raise'
         self._check_digest = check_digest
+        self._allow_empty_warc = allow_empty_warc
         try:
             self._create_index()
         except KeyError as e:
@@ -508,6 +511,7 @@ class WarcReader:
         count = 0
         double_urls = Counter()
         reqv_data = (None, (None, None))  # To be able to handle the request-response pairs together
+        i = 0
         for i, record in enumerate(archive_it):
             if record.rec_type == 'request':
                 assert i % 2 == 0
@@ -539,7 +543,10 @@ class WarcReader:
             double_urls_str = '\n'.join(doubles)
             raise KeyError(f'The following double URLs detected in the WARC file:{double_urls_str}')
         if count == 0:
-            raise IndexError('No index created or no response records in the WARC file!')
+            if self._allow_empty_warc and i == 0:
+                self._logger.log('INFO', 'No response records in the WARC file (this is fine)!')
+            else:
+                raise IndexError('No index created or no response records in the WARC file!')
         if archive_load_failed and self._strict_mode:
             raise ArchiveLoadFailed('Archive loading failed! See logs for details!')
         self._stream.seek(0)
