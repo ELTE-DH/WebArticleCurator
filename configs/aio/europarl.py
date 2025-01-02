@@ -52,9 +52,13 @@ def extract_articles_and_gen_next_page_link_europarl(base_url: str, curr_page_ur
 
 def gen_article_links(logger):
     # Crawler stuff
-    downloader = WarcCachingDownloader(None, 'europarl_new.warc.gz', logger)
+    # TODO Substitute None with one or (a list of) more exsisting warc.gz files to be used as cache
+    #  (e.g. continuing the interrupted crawling)
+    downloader = WarcCachingDownloader(None,
+                                       'europarl_archive.warc.gz',
+                                       logger)
 
-    # Portal stuff
+    # Portal stuff  # TODO WARNING qid parameter is added automatically!
     base_url_template = 'https://eur-lex.europa.eu/search.html?lang=en&scope=EURLEX&type=quick&' \
                         'sortOne=IDENTIFIER_SORT&sortOneOrder=desc&&page=#pagenum&DD_YEAR=#year'
 
@@ -78,11 +82,118 @@ def gen_article_links(logger):
     logger.log('INFO', 'Done')
 
 def main():
-    logger = Logger('europarl_new.log', logfile_level='DEBUG', console_level='DEBUG')
-    article_downloader = WarcCachingDownloader(None, 'europarl_articles.warc.gz', logger,
-                                               download_params={'err_threshold': 100})
-    for link in gen_article_links(logger):
-        article_downloader.download_url(link)
+    logger = Logger('europarl.log', logfile_level='DEBUG', console_level='DEBUG')
+    # TODO Substitute None with one or (a list of) more exsisting warc.gz files to be used as cache
+    #  (e.g. continuing the interrupted crawling)
+    article_downloader = WarcCachingDownloader(None,
+                                               'europarl_articles.warc.gz',
+                                               logger,
+                                               download_params={'err_threshold': 10,  # To void ban, can be Increased
+                                                                'known_bad_urls': 'known_bad_urls.txt'})
+    LANGS = ('BG', 'ES', 'CS', 'DA', 'DE', 'ET', 'EL', 'EN', 'FR', 'GA', 'HR', 'IT', 'LV', 'LT', 'HU', 'MT', 'NL', 'PL',
+             'PT', 'RO', 'SK', 'SL', 'FI', 'SV', 'NO', 'IS')
+    # Init dowloaders
+    # TODO Substitute None with one or (a list of) more exsisting warc.gz files to be used as cache
+    #  (e.g. continuing the interrupted crawling)
+    #  (e.g. f'old/europarl_documents_{lang}_{file_format}.warc.gz')
+    downloaders = {(lang, file_format):
+                       WarcCachingDownloader(None,
+                                             f'new/europarl_documents_{lang}_{file_format}.warc.gz',
+                                             logger, download_params={'err_threshold': 10000, 'allow_empty_warc': True})
+                   for lang in LANGS for file_format
+                    in ('DOC', 'HTML', 'PDF', 'Official Journal', 'PDF - authentic OJ', 'External link', 'e-signature')}
+    # Header
+    # TODO Set filenames accordingly or it will be unconditionally overwritten!
+    with open('documents_by_lang_and_format.tsv', 'w', encoding='UTF-8') as output, \
+            open('problematic_urls_to_check.txt', 'w', encoding='UTF-8') as problematic_urls:
+        print('DOCID', *LANGS, 'LINK', sep='\t', file=output)
+        for link in gen_article_links(logger):
+            elem_html = article_downloader.download_url(link)
+            if elem_html is None:
+                # HTTP 404, 500 and similar (except the duplicates)
+                if link not in article_downloader.good_urls and link not in article_downloader.bad_urls:
+                    print(link, file=problematic_urls)
+                continue
+
+            elem_bs = BeautifulSoup(elem_html, 'lxml')
+            doc_name = elem_bs.find('p', class_='DocumentTitle pull-left')
+            if doc_name is None:
+                logger.log('ERROR', f'No Document name found: {link}')
+                continue
+            doc_name_str = str(doc_name.get_text())
+
+            # Initialise dict
+            d = {k: [] for k in LANGS}
+
+            # Exactly PubFormat nothing else
+            formats = elem_bs.find_all(lambda x: x.name == 'div' and x.attrs.get('class') == ['PubFormat'])
+            if len(formats) == 0:
+                warn = elem_bs.find('div', class_='alert')
+                # TODO Text may be available, but not handled...
+                if warn is not None and \
+                        warn.get_text().strip() in {'The HTML format is unavailable in your User interface language',
+                                                    'Text is not available.',
+                                                    'The HTML format is unavailable;'
+                                                    ' for more information please view the other tabs.',
+                                                    'The document is not available on EUR-Lex.'
+                                                    ' Use the link to the European Parliament\'s website above.'}:
+                    # We distingush this for later use
+                    if warn.get_text().strip() == 'The document is not available on EUR-Lex.' \
+                                                       ' Use the link to the European Parliament\'s website above.':
+                        logger.log('INFO', f'Link to the European Parliament\'s website for {link}')
+                    else:
+                        logger.log('INFO', f'No documents for {link}')
+                    # TAB separated values
+                    print(doc_name_str, *('_' if len(e) == 0 else ', '.join(e) for e in d.values()), link,
+                          sep='\t', file=output)
+                else:
+                    nat_website_div = elem_bs.find(lambda x: x.name == 'div' and x.attrs.get('class') == ['panel-body'])
+                    if nat_website_div is not None:
+                        nat_website_a = nat_website_div.find('a')
+                        if nat_website_a is not None:
+                            # Need to strip ZWSP separately. See https://bugs.python.org/issue13391
+                            nat_website_text = nat_website_a.get_text().strip().strip('\u200b')
+                            if nat_website_text.startswith('National website'):
+                                logger.log('INFO', f'Only national website ({nat_website_text}) for {link}')
+                                continue
+
+                    # Unify all else branches with continue
+                    logger.log('ERROR', f'No proper document missing text found: {link}')
+
+                # No format found, and all possibilities are handled -> Continue
+                continue
+
+            for doc_format in formats:
+                if len(doc_format['class']) > 1:
+                    continue  # Not what we looking for
+                format_type = doc_format.find('span', attrs=None)
+                if format_type is None:
+                    logger.log('ERROR', f'No format type found: {link}')
+                    continue
+
+                format_str = str(format_type.get_text())
+                # Langs not disabled
+                lang_elems = doc_format.find_all('li', class_=lambda x: x != 'disabled')
+                if len(lang_elems) == 0:
+                    logger.log('ERROR', f'No lang elems tag found: {link}')
+                    continue
+                for lang in lang_elems:
+                    lang_str = str(lang.a.span.get_text().strip())
+                    doc_link = str(lang.a['href']).replace('./../../../', 'https://eur-lex.europa.eu/')
+                    # Decode only on non-PDF and DOC files
+                    downloaders[(lang_str, format_str)]. \
+                     download_url(doc_link,
+                                  decode=format_str not in {'DOC', 'PDF', 'PDF - authentic OJ', 'External link'})
+                    if lang_str not in d:
+                        logger.log('ERROR', f'Unknown language ({lang_str}) for {link}')
+                        continue
+
+                    d[lang_str].append(format_str)
+
+            # No erroneous keys added that would break TSV format
+            assert len(d) == 26
+            print(doc_name_str, *('_' if len(e) == 0 else ', '.join(e) for e in d.values()), link,
+                  sep='\t', file=output)
 
 if __name__ == '__main__':
     main()
