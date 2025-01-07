@@ -73,8 +73,8 @@ def gen_article_links(logger):
                                           initial_page_num='1', min_pagenum=1, logger=logger)
         yield from g
 
-    # From this year all years appear
-    for base_url in date_range(base_url_template, date(1942, 1, 1), date(date.today().year + 1, 1, 1), False):
+    # From this year all years appear (date_range uses closed intervals!)
+    for base_url in date_range(base_url_template, date(1942, 1, 1), date(date.today().year + 1, 12, 31), False):
         g = gen_article_urls_and_subpages(base_url, downloader, extract_articles_and_gen_next_page_link_europarl,
                                           initial_page_num='1', min_pagenum=1, logger=logger)
         yield from g
@@ -82,13 +82,14 @@ def gen_article_links(logger):
     logger.log('INFO', 'Done')
 
 def main():
+    # TODO Set filenames accordingly or it will be unconditionally overwritten!
     logger = Logger('europarl.log', logfile_level='DEBUG', console_level='DEBUG')
     # TODO Substitute None with one or (a list of) more exsisting warc.gz files to be used as cache
     #  (e.g. continuing the interrupted crawling)
     article_downloader = WarcCachingDownloader(None,
                                                'europarl_articles.warc.gz',
                                                logger,
-                                               download_params={'err_threshold': 10,  # To void ban, can be Increased
+                                               download_params={'err_threshold': 10,  # To avoid ban, can be Increased
                                                                 'known_bad_urls': 'known_bad_urls.txt'})
     LANGS = ('BG', 'ES', 'CS', 'DA', 'DE', 'ET', 'EL', 'EN', 'FR', 'GA', 'HR', 'IT', 'LV', 'LT', 'HU', 'MT', 'NL', 'PL',
              'PT', 'RO', 'SK', 'SL', 'FI', 'SV', 'NO', 'IS')
@@ -99,7 +100,10 @@ def main():
     downloaders = {(lang, file_format):
                        WarcCachingDownloader(None,
                                              f'new/europarl_documents_{lang}_{file_format}.warc.gz',
-                                             logger, download_params={'err_threshold': 10000, 'allow_empty_warc': True})
+                                             logger,
+                                             download_params={'err_threshold': 10000,
+                                                              'allow_empty_warc': True,
+                                                              'known_bad_urls': 'known_bad_urls.txt'})
                    for lang in LANGS for file_format
                     in ('DOC', 'HTML', 'PDF', 'Official Journal', 'PDF - authentic OJ', 'External link', 'e-signature')}
     # Header
