@@ -54,6 +54,7 @@ def gen_article_links(logger):
     # Crawler stuff
     # TODO Substitute None with one or (a list of) more exsisting warc.gz files to be used as cache
     #  (e.g. continuing the interrupted crawling)
+    # However, if you need to discover new files, specify None for the cache as below:
     downloader = WarcCachingDownloader(None,
                                        'europarl_archive.warc.gz',
                                        logger)
