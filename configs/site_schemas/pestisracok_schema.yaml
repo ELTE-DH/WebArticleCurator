@@ -1,0 +1,51 @@
+"site_name": "pestisracok"
+
+"columns":
+    "forro-drot":
+        "archive_url_format": "https://pestisracok.hu/category/forro-drot"
+
+    "magyar-ugar":
+        "archive_url_format": "https://pestisracok.hu/category/exkluziv/magyar-ugar/"
+
+    "vilagugar":
+        "archive_url_format": "https://pestisracok.hu/category/exkluziv/vilagugar/"
+
+    "alvilag-titkai":
+        "archive_url_format": "https://pestisracok.hu/category/exkluziv/az-alvilag-titkai/"
+
+    "eco":
+       "archive_url_format": "https://pestisracok.hu/category/eco/"
+
+    "vezercikk":
+        "archive_url_format": "https://pestisracok.hu/category/exkluziv/vezercikk/"
+
+    "sport":
+        "archive_url_format": "https://pestisracok.hu/category/sport/"
+
+    "halozat":
+        "archive_url_format": "https://pestisracok.hu/category/exkluziv/halozati-titkok/"
+
+    "arcok":
+        "archive_url_format": "https://pestisracok.hu/category/exkluziv/arcok/"
+
+    "vesztegzar":
+        "archive_url_format": "https://pestisracok.hu/category/vesztegzar/"
+
+    "koronavirus":
+        "archive_url_format": "https://pestisracok.hu/category/koronavirus/"
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_pestisracok.py"
+"extract_next_page_url_fun": "extract_next_page_url_pestisracok"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_pestisracok"
+
+"next_url_by_pagenum": false
+"infinite_scrolling": false
+"archive_page_urls_by_date": false
+"go_reverse_in_archive": true
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"
