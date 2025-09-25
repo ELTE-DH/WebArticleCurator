@@ -154,6 +154,9 @@ This software is the direct continuation of [corpusbuilder](https://github.com/p
 The authors gratefully acknowledge the groundbreaking work of all pioneers who inspired this program.
 Special thanks go to Tibor Kákonyi who put the initial implementation under the GNU LGPL 3.0 license and allowing us to continue his work.
 
+# Funding
+The research was supported by the National Laboratory for Digital Heritage (Project no. 2022-2.1.1-NL-2022-00009). The project has been implemented with the support provided by the Ministry of Culture and Innovation of Hungary from the National Research, Development and Innovation Fund, financed under the 2022-2.1.1-NL funding scheme.
+
 # References
 
 The DOI of the code is: https://doi.org/10.5281/zenodo.3755323
