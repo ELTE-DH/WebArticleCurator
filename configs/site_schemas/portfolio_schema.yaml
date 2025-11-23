@@ -1,0 +1,23 @@
+"site_name": "portfolio"
+
+"columns":
+    "main-column":
+        "archive_url_format": "https://www.portfolio.hu/kereses?df=#year-#month-#day&dt=#year-#month-#day"
+
+        "date_first_article": 1999-02-09
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_npdn.py"
+"extract_next_page_url_fun": "extract_next_page_url_portfolio"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_portfolio"
+
+"next_url_by_pagenum": false
+"infinite_scrolling": false
+"archive_page_urls_by_date": true
+"go_reverse_in_archive": false
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"
