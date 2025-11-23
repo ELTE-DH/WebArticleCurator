@@ -1,0 +1,10 @@
+"schema": "site_schemas/szombat_schema.yaml"
+
+# "output_corpus": "szombat_corpus.txt"
+
+"log_file_articles": "logs/szombat_articles_log.txt"
+"log_file_archive": "logs/szombat_archive_log.txt"
+"new_problematic_urls": "logs/szombat_new_problematic_urls.txt"
+"new_good_urls": "logs/szombat_new_good_urls.txt"
+"new_problematic_archive_urls": "logs/szombat_new_problematic_archive_urls.txt"
+"new_good_archive_urls": "logs/szombat_new_good_archive_urls.txt"

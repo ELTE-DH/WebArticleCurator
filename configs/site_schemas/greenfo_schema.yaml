@@ -1,0 +1,91 @@
+"site_name": "greenfo"
+
+"columns":
+    "beg_0126":
+        "archive_url_format": "https://greenfo.hu/page/#pagenum/?post_types=all&post_date=#year-#month-#day%20#year-#month-#day"
+
+        "date_first_article": 2001-01-26
+        "date_last_article": 2001-01-27
+
+        "initial_pagenum": 1
+
+    "beg_0224":
+        "archive_url_format": "https://greenfo.hu/page/#pagenum/?post_types=all&post_date=#year-#month-#day%20#year-#month-#day"
+
+        "date_first_article": 2001-02-22
+        "date_last_article": 2001-02-24
+
+        "initial_pagenum": 1
+
+    "beg_0228":
+        "archive_url_format": "https://greenfo.hu/page/#pagenum/?post_types=all&post_date=#year-#month-#day%20#year-#month-#day"
+
+        "date_first_article": 2001-02-28
+        "date_last_article": 2001-02-28
+
+        "initial_pagenum": 1
+
+    "beg_0306":
+        "archive_url_format": "https://greenfo.hu/page/#pagenum/?post_types=all&post_date=#year-#month-#day%20#year-#month-#day"
+
+        "date_first_article": 2001-03-06
+        "date_last_article": 2001-03-12
+
+        "initial_pagenum": 1
+
+    "beg_0321":
+        "archive_url_format": "https://greenfo.hu/page/#pagenum/?post_types=all&post_date=#year-#month-#day%20#year-#month-#day"
+
+        "date_first_article": 2001-03-21
+        "date_last_article": 2001-03-24
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "beg_0329":
+        "archive_url_format": "https://greenfo.hu/page/#pagenum/?post_types=all&post_date=#year-#month-#day%20#year-#month-#day"
+
+        "date_first_article": 2001-03-29
+        "date_last_article": 2001-03-30
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "beg_0404":
+        "archive_url_format": "https://greenfo.hu/page/#pagenum/?post_types=all&post_date=#year-#month-#day%20#year-#month-#day"
+
+        "date_first_article": 2001-04-04
+        "date_last_article": 2001-04-28
+
+        "initial_pagenum": 1
+        "min_pagenum": 2
+
+    "beg_0505":
+        "archive_url_format": "https://greenfo.hu/page/#pagenum/?post_types=all&post_date=#year-#month-#day%20#year-#month-#day"
+
+        "date_first_article": 2001-05-05
+        "date_last_article": 2001-07-08
+
+        "initial_pagenum": 1
+
+    "main-column":
+        "archive_url_format": "https://greenfo.hu/page/#pagenum/?post_types=all&post_date=#year-#month-#day%20#year-#month-#day"
+
+        "date_first_article": 2001-07-16
+
+        "initial_pagenum": 1
+
+"portal_specific_exctractor_functions_file": "../extractors/site_specific_extractor_functions_szng.py"
+"extract_article_urls_from_page_fun": "extract_article_urls_from_page_greenfo"
+
+"next_url_by_pagenum": true
+"infinite_scrolling": false
+"archive_page_urls_by_date": true
+"go_reverse_in_archive": false
+"verify_request": true
+"ignore_archive_cache": false
+
+# "new_article_url_threshold": 0
+
+"corpus_converter_file": "../extractors/corpus_converters.py"
+"corpus_converter": "dummy-converter"
