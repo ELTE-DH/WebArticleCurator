@@ -2,10 +2,6 @@
 
 "columns":
     "main-column":
-        # The next pages of the archive and of the live articles are cursor-based (?after=CURSOR, see the extractors).
-        # The portal answers 429 for minutes if these URLs are requested in quick succession (e.g. with --archive
-        #  or at long live articles): 1 request / 2 sec failed after 11 pages, 1 request / 5 sec was fine (2026-10).
-        #  Use --max-no-of-calls-in-period 1 --limit-period 5 to be safe!
         "archive_url_format": "https://444.hu/#year/#month/#day/"
 
         "date_first_article": 2013-04-10
