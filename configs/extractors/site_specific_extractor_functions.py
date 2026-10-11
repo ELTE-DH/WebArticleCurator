@@ -2,6 +2,7 @@
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
 import json
+from urllib.parse import urljoin
 from os.path import abspath, dirname, join as os_path_join
 
 from mplogger import Logger
@@ -22,7 +23,11 @@ def extract_next_page_url_p444(archive_page_raw_html):
     """
     ret = None
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    next_page = soup.find(class_='infinity-next button')
+    # Current design (2026): cursor-based pagination, e.g. <link rel="next" href="https://444.hu/2018/04/08?after=...">
+    next_page = soup.find('link', rel='next', href=True)
+    if next_page is None:
+        # Old design (for archive pages cached before the redesign), e.g. https://444.hu/2018/04/08?page=2
+        next_page = soup.find(class_='infinity-next button')
     if next_page is not None and 'href' in next_page.attrs:
         ret = next_page['href']
     return ret
@@ -257,9 +262,16 @@ def extract_article_urls_from_page_p444(archive_page_raw_html):
     :return: list that contains URLs
     """
     soup = BeautifulSoup(archive_page_raw_html, 'lxml')
-    main_container = soup.find_all(class_='card')
-    # % -> %25 if not found (escaping error is introduced between 2019 and 2021)
-    urls = {link.replace('%', '%25') for link in safe_extract_hrefs_from_a_tags(main_container)}
+    # Current design (2026): the article links are relative (/YYYY/MM/DD/slug) and all are in the list container
+    main_container = soup.find_all(class_='slotDoubleColumn')
+    if len(main_container) > 0:
+        urls = {urljoin('https://444.hu', a_tag['href']) for container in main_container
+                for a_tag in container.find_all('a', {'href': True})}
+    else:
+        # Old design (for archive pages cached before the redesign)
+        main_container = soup.find_all(class_='card')
+        # % -> %25 if not found (escaping error is introduced between 2019 and 2021)
+        urls = {link.replace('%', '%25') for link in safe_extract_hrefs_from_a_tags(main_container)}
     return urls
 
 
@@ -1142,6 +1154,13 @@ def next_page_of_article_telex(curr_html):  # https://telex.hu/koronavirus/2020/
 
 def next_page_of_article_p444(curr_html):
     bs = BeautifulSoup(curr_html, 'lxml')
+    # Current design (2026): only the live articles are paginated (cursor-based), e.g.
+    #  <link rel="next" href="https://444.hu/2026/04/12/fidesz-vs-tisza-a-valasztas-napja-percrol-percre?before=...">
+    next_page_link0 = bs.find('link', rel='next', href=True)
+    if next_page_link0 is not None:
+        # The link is wrong on the portal: ?before=CURSOR returns the first page again, ?after=CURSOR is the next page
+        return next_page_link0.attrs['href'].replace('?before=', '?after=')
+    # Old design (for articles cached before the redesign)
     next_page_cont1 = bs.find('li', class_='arrow')
     next_page_link2 = bs.find('a', {'class': 'page-link', 'aria-label': 'Következő »'})
     if next_page_cont1 is not None:
